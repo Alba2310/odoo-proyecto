@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de uso - Inventario</title>
+<style>
+  :root { --acento: #0E7C7B; --texto: #1f2933; --suave: #52606d; --borde: #d9e2ec; --fondo-nota: #f0f7f7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texto); background: #fff; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+  header { border-bottom: 3px solid var(--acento); padding-bottom: 16px; margin-bottom: 24px; display: flex; gap: 16px; align-items: center; }
+  header img { width: 56px; height: 56px; }
+  h1 { margin: 0; font-size: 1.9rem; }
+  header p { margin: 2px 0 0; color: var(--suave); }
+  h2 { margin-top: 40px; color: var(--acento); border-bottom: 1px solid var(--borde); padding-bottom: 4px; }
+  h3 { margin-top: 24px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: .95rem; }
+  th, td { border: 1px solid var(--borde); padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #f5f7fa; }
+  td.num { text-align: right; }
+  .nota { background: var(--fondo-nota); border-left: 4px solid var(--acento); padding: 10px 14px; margin: 16px 0; }
+  .menu { font-weight: 600; background: #f5f7fa; border: 1px solid var(--borde); border-radius: 4px; padding: 0 6px; white-space: nowrap; }
+  .boton { font-weight: 600; color: #fff; background: var(--acento); border-radius: 4px; padding: 1px 8px; white-space: nowrap; }
+  nav ol { columns: 2; }
+  .imprimir { margin-left: auto; border: 1px solid var(--acento); color: var(--acento); background: #fff; border-radius: 4px; padding: 6px 14px; cursor: pointer; font: inherit; }
+  @media (max-width: 600px) { nav ol { columns: 1; } table { font-size: .85rem; } }
+  @media print { .imprimir { display: none; } main { padding: 0; } h2 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <img src="icon.png" alt="">
+  <div>
+    <h1>Manual de uso: Inventario</h1>
+    <p>Módulo <b>Tienda - Inventario</b> para Odoo 18</p>
+  </div>
+  <button class="imprimir" onclick="window.print()">Imprimir</button>
+</header>
+
+<nav>
+  <ol>
+    <li><a href="#para-que">Para qué sirve</a></li>
+    <li><a href="#menus">Menús</a></li>
+    <li><a href="#productos">Ver los productos</a></li>
+    <li><a href="#crear">Crear un producto</a></li>
+    <li><a href="#reponer">Reponer stock</a></li>
+    <li><a href="#ajustar">Ajustar stock (conteo físico)</a></li>
+    <li><a href="#movimientos">Movimientos de stock</a></li>
+    <li><a href="#categorias">Categorías</a></li>
+    <li><a href="#archivar">Archivar un producto</a></li>
+    <li><a href="#precargados">Productos precargados</a></li>
+    <li><a href="#faq">Preguntas frecuentes</a></li>
+  </ol>
+</nav>
+
+<h2 id="para-que">1. Para qué sirve</h2>
+<p>El módulo de Inventario lleva el control de la mercadería de la tienda:</p>
+<ul>
+  <li>Guarda la lista de productos con su código, categoría, costo y precio de venta.</li>
+  <li>Calcula el <b>stock actual</b> de cada producto.</li>
+  <li>Permite <b>reponer</b> mercadería cuando llega un pedido y <b>ajustar</b> el stock después de un conteo.</li>
+  <li>Avisa cuando un producto tiene <b>stock bajo</b>.</li>
+  <li>Registra cada entrada y salida en el historial de <b>movimientos</b>. Las ventas que se confirman en el módulo de Ventas también quedan registradas acá.</li>
+</ul>
+
+<h2 id="menus">2. Menús</h2>
+<p>Desde la pantalla principal de Odoo, haga clic en el ícono <span class="menu">Inventario</span>. Arriba verá estos menús:</p>
+<table>
+  <tr><th>Menú</th><th>Para qué se usa</th></tr>
+  <tr><td><span class="menu">Productos</span></td><td>Ver, buscar, crear y editar productos.</td></tr>
+  <tr><td><span class="menu">Stock bajo</span></td><td>Lista directa de los productos que llegaron al stock mínimo. Úsela para armar el pedido al proveedor.</td></tr>
+  <tr><td><span class="menu">Reponer stock</span></td><td>Ingresar mercadería que llegó.</td></tr>
+  <tr><td><span class="menu">Movimientos</span></td><td>Historial de todas las entradas y salidas.</td></tr>
+  <tr><td><span class="menu">Configuración › Categorías</span></td><td>Crear o renombrar categorías de productos.</td></tr>
+  <tr><td><span class="menu">Manual de uso</span></td><td>Abre este manual.</td></tr>
+</table>
+
+<h2 id="productos">3. Ver los productos</h2>
+<p>En <span class="menu">Productos</span> aparece la lista con código, nombre, categoría, precio y stock.</p>
+<ul>
+  <li><b>Filas en rojo:</b> el producto tiene stock bajo (el stock es igual o menor al stock mínimo).</li>
+  <li><b>Buscar:</b> escriba en el buscador parte del nombre o del código (por ejemplo <code>arroz</code> o <code>DES-001</code>) y presione Enter.</li>
+  <li><b>Filtros:</b> en el buscador, abra el menú de filtros y elija <i>Stock bajo</i>, <i>Sin stock</i> o <i>Archivados</i>.</li>
+  <li><b>Agrupar:</b> elija <i>Agrupar por › Categoría</i> para ver los productos por categoría.</li>
+  <li>Haga clic en un producto para abrir su ficha.</li>
+</ul>
+
+<h2 id="crear">4. Crear un producto</h2>
+<ol>
+  <li>Entre a <span class="menu">Productos</span> y haga clic en <span class="boton">Nuevo</span>.</li>
+  <li>Complete los datos (ver tabla).</li>
+  <li>Guarde con el ícono de la nube (o <kbd>Ctrl</kbd>+<kbd>S</kbd>).</li>
+  <li>Para cargar las unidades que tiene, haga clic en <span class="boton">Reponer stock</span> (ver punto 5).</li>
+</ol>
+<table>
+  <tr><th>Campo</th><th>Qué poner</th><th>¿Obligatorio?</th></tr>
+  <tr><td>Nombre</td><td>Nombre del producto, con presentación. Ej.: <i>Arroz 1 kg</i>.</td><td>Sí</td></tr>
+  <tr><td>Código</td><td>Código interno único. Ej.: <i>DES-009</i>. No puede repetirse.</td><td>Sí</td></tr>
+  <tr><td>Categoría</td><td>Grupo al que pertenece (Despensa, Bebidas, etc.).</td><td>No</td></tr>
+  <tr><td>Unidad de medida</td><td>Unidad, paquete, caja, kilogramo o litro.</td><td>Sí</td></tr>
+  <tr><td>Costo</td><td>Lo que le cuesta a la tienda. Se usa para calcular el valor del stock.</td><td>No</td></tr>
+  <tr><td>Precio de venta</td><td>Precio final al público, en guaraníes y <b>con IVA incluido</b>. Se copia automáticamente en cada venta.</td><td>Sí</td></tr>
+  <tr><td>IVA</td><td><b>10 %</b> (la mayoría de los productos), <b>5 %</b> (canasta básica: arroz, harina, aceite, yerba, leche, huevos, etc.) o <b>Exenta</b>. Por defecto, 10 %.</td><td>Sí</td></tr>
+  <tr><td>Stock mínimo</td><td>Cantidad a partir de la cual el producto se marca como "stock bajo". Por defecto, 5.</td><td>No</td></tr>
+</table>
+<div class="nota">Un producto nuevo empieza con <b>stock 0</b>. El stock no se escribe a mano: se carga con <b>Reponer stock</b> o <b>Ajustar stock</b>, para que siempre quede registrado de dónde vino cada unidad.</div>
+
+<h2 id="reponer">5. Reponer stock (cuando llega mercadería)</h2>
+<h3>Desde la ficha del producto</h3>
+<ol>
+  <li>Abra el producto.</li>
+  <li>Haga clic en <span class="boton">Reponer stock</span> (arriba a la izquierda).</li>
+  <li>En <b>Cantidad que ingresa</b>, escriba cuántas unidades llegaron.</li>
+  <li>Opcional: en <b>Referencia</b>, anote el número de factura del proveedor.</li>
+  <li>Haga clic en <span class="boton">Confirmar</span>.</li>
+</ol>
+<h3>Desde el menú</h3>
+<p>En <span class="menu">Reponer stock</span> se abre la misma ventana: primero elija el producto y después siga los pasos 3 a 5.</p>
+<p>El stock aumenta en ese momento y queda un movimiento de tipo <b>Reposición</b> en el historial.</p>
+
+<h2 id="ajustar">6. Ajustar stock (conteo físico)</h2>
+<p>Use esta opción cuando cuente la mercadería y la cantidad real no coincida con la del sistema, por ejemplo por roturas, vencimientos o errores de carga.</p>
+<ol>
+  <li>Abra el producto y haga clic en <span class="boton">Ajustar stock</span>.</li>
+  <li>En <b>Stock contado</b>, escriba la cantidad que hay realmente en la estantería y el depósito.</li>
+  <li>Opcional: en <b>Referencia</b>, anote el motivo (ej.: <i>2 botellas rotas</i>).</li>
+  <li>Haga clic en <span class="boton">Confirmar</span>.</li>
+</ol>
+<div class="nota"><b>Ejemplo:</b> el sistema dice 20 y usted cuenta 17. Escriba 17 en "Stock contado". El sistema crea un movimiento de <b>Ajuste de inventario</b> de <b>−3</b> y el stock queda en 17.</div>
+
+<h2 id="movimientos">7. Movimientos de stock</h2>
+<p>Cada vez que el stock cambia se guarda un movimiento. Los ve en <span class="menu">Movimientos</span> (todos los productos) o en la pestaña <b>Movimientos de stock</b> de cada producto.</p>
+<table>
+  <tr><th>Columna</th><th>Significado</th></tr>
+  <tr><td>Fecha</td><td>Cuándo ocurrió.</td></tr>
+  <tr><td>Tipo</td><td>Qué lo originó (ver tabla de tipos).</td></tr>
+  <tr><td>Referencia</td><td>Número de factura, número de venta o motivo.</td></tr>
+  <tr><td>Cantidad</td><td>Positiva (verde) si entró mercadería; negativa (rojo) si salió.</td></tr>
+  <tr><td>Stock resultante</td><td>Cuánto stock quedó justo después de ese movimiento.</td></tr>
+  <tr><td>Usuario</td><td>Quién lo registró.</td></tr>
+</table>
+<table>
+  <tr><th>Tipo</th><th>Cuándo se crea</th></tr>
+  <tr><td>Stock inicial</td><td>Carga inicial de los productos precargados.</td></tr>
+  <tr><td>Reposición</td><td>Al usar <i>Reponer stock</i>.</td></tr>
+  <tr><td>Ajuste de inventario</td><td>Al usar <i>Ajustar stock</i>.</td></tr>
+  <tr><td>Venta</td><td>Al confirmar una venta en el módulo de Ventas. La cantidad es negativa: es el descuento del stock.</td></tr>
+  <tr><td>Anulación de venta</td><td>Al cancelar una venta confirmada: los productos vuelven al stock.</td></tr>
+</table>
+<div class="nota">Los movimientos <b>no se pueden editar ni borrar</b>, así el historial es confiable. Si hubo un error, corríjalo con un <b>Ajuste de stock</b>.</div>
+<p>En el buscador hay filtros para ver solo <i>Entradas</i>, <i>Salidas</i>, <i>Reposiciones</i>, <i>Ajustes</i> o <i>Ventas</i>, y opciones para agrupar por producto, tipo o día.</p>
+
+<h2 id="categorias">8. Categorías</h2>
+<p>En <span class="menu">Configuración › Categorías</span> puede crear categorías nuevas (botón <span class="boton">Nuevo</span>), cambiar su nombre haciendo clic sobre él o eliminar las que no use. La columna <i>Cant. de productos</i> indica cuántos productos tiene cada una.</p>
+
+<h2 id="archivar">9. Archivar un producto</h2>
+<p>Si un producto ya no se vende, es mejor <b>archivarlo</b> que borrarlo: deja de aparecer en las listas y en las ventas, pero su historial se conserva.</p>
+<ol>
+  <li>Abra el producto.</li>
+  <li>Haga clic en el ícono de engranaje (<b>⚙ Acciones</b>) y elija <b>Archivar</b>.</li>
+</ol>
+<p>Para recuperarlo: en <span class="menu">Productos</span>, active el filtro <i>Archivados</i>, ábralo y elija <b>⚙ Acciones › Desarchivar</b>.</p>
+<div class="nota">Un producto que ya figura en alguna venta no se puede eliminar; solo archivar.</div>
+
+<h2 id="precargados">10. Productos precargados</h2>
+<p>Al instalar el módulo se cargan estos productos de ejemplo. Puede modificarlos, archivarlos o agregar los suyos. Los precios están en <b>guaraníes</b>, con IVA incluido, y son <b>aproximados</b>: revíselos y ajústelos a los de su tienda.</p>
+<table>
+  <tr><th>Código</th><th>Producto</th><th>Categoría</th><th>Costo</th><th>Precio</th><th>IVA</th><th>Stock inicial</th><th>Mínimo</th></tr>
+  <tr><td>DES-001</td><td>Arroz 1 kg</td><td>Despensa</td><td class="num">6.500</td><td class="num">8.500</td><td>5 %</td><td class="num">40</td><td class="num">10</td></tr>
+  <tr><td>DES-002</td><td>Fideos tallarín 500 g</td><td>Despensa</td><td class="num">4.500</td><td class="num">6.000</td><td>5 %</td><td class="num">50</td><td class="num">10</td></tr>
+  <tr><td>DES-003</td><td>Azúcar 1 kg</td><td>Despensa</td><td class="num">5.800</td><td class="num">7.500</td><td>5 %</td><td class="num">35</td><td class="num">10</td></tr>
+  <tr><td>DES-004</td><td>Aceite de girasol 900 ml</td><td>Despensa</td><td class="num">13.500</td><td class="num">17.000</td><td>5 %</td><td class="num">24</td><td class="num">6</td></tr>
+  <tr><td>DES-005</td><td>Yerba mate 500 g</td><td>Despensa</td><td class="num">15.000</td><td class="num">19.000</td><td>5 %</td><td class="num">30</td><td class="num">8</td></tr>
+  <tr><td>DES-006</td><td>Harina de trigo 1 kg</td><td>Despensa</td><td class="num">5.000</td><td class="num">6.500</td><td>5 %</td><td class="num">25</td><td class="num">8</td></tr>
+  <tr><td>DES-007</td><td>Sal fina 1 kg</td><td>Despensa</td><td class="num">2.500</td><td class="num">3.500</td><td>5 %</td><td class="num">20</td><td class="num">5</td></tr>
+  <tr><td>DES-008</td><td>Café instantáneo 170 g</td><td>Despensa</td><td class="num">25.000</td><td class="num">32.000</td><td>10 %</td><td class="num">4</td><td class="num">5</td></tr>
+  <tr><td>BEB-001</td><td>Gaseosa cola 2 L</td><td>Bebidas</td><td class="num">10.000</td><td class="num">13.000</td><td>10 %</td><td class="num">36</td><td class="num">12</td></tr>
+  <tr><td>BEB-002</td><td>Agua mineral 2 L</td><td>Bebidas</td><td class="num">4.200</td><td class="num">6.000</td><td>10 %</td><td class="num">48</td><td class="num">12</td></tr>
+  <tr><td>BEB-003</td><td>Jugo de naranja 1 L</td><td>Bebidas</td><td class="num">7.500</td><td class="num">10.000</td><td>10 %</td><td class="num">3</td><td class="num">6</td></tr>
+  <tr><td>LAC-001</td><td>Leche entera 1 L</td><td>Lácteos y huevos</td><td class="num">5.800</td><td class="num">7.500</td><td>5 %</td><td class="num">30</td><td class="num">10</td></tr>
+  <tr><td>LAC-002</td><td>Huevos (docena)</td><td>Lácteos y huevos</td><td class="num">11.000</td><td class="num">14.000</td><td>5 %</td><td class="num">15</td><td class="num">5</td></tr>
+  <tr><td>LIM-001</td><td>Jabón en polvo 800 g</td><td>Limpieza</td><td class="num">17.000</td><td class="num">22.000</td><td>10 %</td><td class="num">12</td><td class="num">4</td></tr>
+  <tr><td>LIM-002</td><td>Lavandina 1 L</td><td>Limpieza</td><td class="num">4.800</td><td class="num">6.500</td><td>10 %</td><td class="num">18</td><td class="num">6</td></tr>
+  <tr><td>HIG-001</td><td>Papel higiénico x4</td><td>Higiene personal</td><td class="num">9.000</td><td class="num">12.000</td><td>10 %</td><td class="num">20</td><td class="num">6</td></tr>
+  <tr><td>HIG-002</td><td>Jabón de tocador</td><td>Higiene personal</td><td class="num">3.600</td><td class="num">5.000</td><td>10 %</td><td class="num">30</td><td class="num">10</td></tr>
+</table>
+<p>El <b>café</b> y el <b>jugo de naranja</b> empiezan por debajo del mínimo a propósito, para que vea cómo funciona el aviso de stock bajo.</p>
+
+<h2 id="faq">11. Preguntas frecuentes</h2>
+<h3>¿Por qué no puedo escribir el stock directamente?</h3>
+<p>Porque el stock se calcula sumando los movimientos. Así siempre se sabe por qué cambió. Use <b>Reponer stock</b> para sumar y <b>Ajustar stock</b> para corregir.</p>
+<h3>Me equivoqué al reponer (puse 100 en vez de 10). ¿Cómo lo corrijo?</h3>
+<p>Haga un <b>Ajuste de stock</b> con la cantidad correcta que hay en la tienda. El historial mostrará la reposición y el ajuste que la corrige.</p>
+<h3>¿Cómo sé qué tengo que pedir al proveedor?</h3>
+<p>Entre a <span class="menu">Stock bajo</span>. Ahí están todos los productos que llegaron a su stock mínimo.</p>
+<h3>¿Qué IVA le pongo a cada producto?</h3>
+<p>En Paraguay la mayoría de los productos llevan <b>10 %</b>. Los de la canasta básica (arroz, harina, fideos, aceite, yerba, azúcar, sal, leche, huevos, entre otros) llevan <b>5 %</b>. Ante la duda, consulte a su contador. El precio de venta siempre se carga <b>con el IVA incluido</b>; el sistema calcula cuánto IVA hay dentro de cada venta.</p>
+<h3>¿Cómo cambio el precio de un producto?</h3>
+<p>Abra el producto y modifique <b>Precio de venta</b>. Las ventas nuevas usarán el precio nuevo; las ventas ya registradas conservan el precio con el que se hicieron.</p>
+<h3>Me aparece "Ya existe un producto con ese código"</h3>
+<p>El código debe ser único. Use otro o busque el producto existente con ese código (puede estar archivado).</p>
+</main>
+</body>
+</html>

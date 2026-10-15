@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de uso - Ventas</title>
+<style>
+  :root { --acento: #D9622B; --texto: #1f2933; --suave: #52606d; --borde: #d9e2ec; --fondo-nota: #fdf3ee; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texto); background: #fff; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+  header { border-bottom: 3px solid var(--acento); padding-bottom: 16px; margin-bottom: 24px; display: flex; gap: 16px; align-items: center; }
+  header img { width: 56px; height: 56px; }
+  h1 { margin: 0; font-size: 1.9rem; }
+  header p { margin: 2px 0 0; color: var(--suave); }
+  h2 { margin-top: 40px; color: var(--acento); border-bottom: 1px solid var(--borde); padding-bottom: 4px; }
+  h3 { margin-top: 24px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: .95rem; }
+  th, td { border: 1px solid var(--borde); padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #f5f7fa; }
+  td.num { text-align: right; }
+  .nota { background: var(--fondo-nota); border-left: 4px solid var(--acento); padding: 10px 14px; margin: 16px 0; }
+  .menu { font-weight: 600; background: #f5f7fa; border: 1px solid var(--borde); border-radius: 4px; padding: 0 6px; white-space: nowrap; }
+  .boton { font-weight: 600; color: #fff; background: var(--acento); border-radius: 4px; padding: 1px 8px; white-space: nowrap; }
+  .pasos { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .pasos div { flex: 1 1 200px; border: 1px solid var(--borde); border-top: 4px solid var(--acento); border-radius: 4px; padding: 10px 14px; }
+  .pasos b { display: block; font-size: 1.1rem; }
+  nav ol { columns: 2; }
+  .imprimir { margin-left: auto; border: 1px solid var(--acento); color: var(--acento); background: #fff; border-radius: 4px; padding: 6px 14px; cursor: pointer; font: inherit; }
+  @media (max-width: 600px) { nav ol { columns: 1; } table { font-size: .85rem; } }
+  @media print { .imprimir { display: none; } main { padding: 0; } h2 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <img src="icon.png" alt="">
+  <div>
+    <h1>Manual de uso: Ventas</h1>
+    <p>Módulo <b>Tienda - Ventas</b> para Odoo 18. Requiere el módulo <b>Tienda - Inventario</b>.</p>
+  </div>
+  <button class="imprimir" onclick="window.print()">Imprimir</button>
+</header>
+
+<nav>
+  <ol>
+    <li><a href="#para-que">Para qué sirve</a></li>
+    <li><a href="#menus">Menús</a></li>
+    <li><a href="#dia">El día de trabajo en 3 pasos</a></li>
+    <li><a href="#abrir">Abrir la caja</a></li>
+    <li><a href="#registrar">Registrar una venta</a></li>
+    <li><a href="#descuentos">Descuentos en el precio</a></li>
+    <li><a href="#iva">IVA</a></li>
+    <li><a href="#confirmar">Qué pasa al confirmar</a></li>
+    <li><a href="#ticket">Imprimir el ticket</a></li>
+    <li><a href="#sin-stock">Si no hay stock suficiente</a></li>
+    <li><a href="#cancelar">Cancelar o corregir una venta</a></li>
+    <li><a href="#cerrar">Cerrar la caja</a></li>
+    <li><a href="#consultar">Consultar ventas y cajas</a></li>
+    <li><a href="#vendidos">Productos vendidos</a></li>
+    <li><a href="#faq">Preguntas frecuentes</a></li>
+  </ol>
+</nav>
+
+<h2 id="para-que">1. Para qué sirve</h2>
+<p>El módulo de Ventas registra lo que se vende en la tienda y controla la plata de la caja:</p>
+<ul>
+  <li>Cada venta tiene un número (V00001, V00002…), fecha, cliente, vendedor y uno o más productos.</li>
+  <li>El precio de cada producto se completa solo, en <b>guaraníes y con IVA incluido</b>. Se puede aplicar un <b>descuento en %</b> por producto.</li>
+  <li>Se anota la <b>forma de pago</b> (efectivo, tarjeta o transferencia / QR) y, si paga en efectivo, el sistema calcula el <b>vuelto</b>.</li>
+  <li>Al <b>confirmar</b> la venta, el sistema <b>descuenta del stock</b> las unidades vendidas y lo deja registrado en el Inventario.</li>
+  <li>Cada cajero <b>abre la caja</b> al empezar y la <b>cierra</b> al terminar: el sistema dice cuánto efectivo debería haber y muestra si sobra o falta.</li>
+  <li>Se imprime un <b>ticket</b> para el cliente y un <b>resumen de cierre</b> para la caja.</li>
+</ul>
+
+<h2 id="menus">2. Menús</h2>
+<p>Desde la pantalla principal de Odoo, haga clic en el ícono <span class="menu">Ventas</span>.</p>
+<table>
+  <tr><th>Menú</th><th>Para qué se usa</th></tr>
+  <tr><td><span class="menu">Caja</span></td><td>Abrir la caja al empezar el turno, verla durante el día y cerrarla al final.</td></tr>
+  <tr><td><span class="menu">Ventas</span></td><td>Registrar ventas nuevas y ver las anteriores.</td></tr>
+  <tr><td><span class="menu">Productos vendidos</span></td><td>Cuántas unidades se vendieron de cada producto y por cuánto dinero.</td></tr>
+  <tr><td><span class="menu">Consultar stock</span></td><td>Ver rápidamente los productos y su stock sin salir de Ventas.</td></tr>
+  <tr><td><span class="menu">Manual de uso</span></td><td>Abre este manual.</td></tr>
+</table>
+
+<h2 id="dia">3. El día de trabajo en 3 pasos</h2>
+<div class="pasos">
+  <div><b>1. Abrir la caja</b>Al empezar el turno, con el efectivo que hay para dar vuelto.</div>
+  <div><b>2. Vender</b>Cargar cada venta, confirmarla e imprimir el ticket.</div>
+  <div><b>3. Cerrar la caja</b>Al terminar, contar el efectivo e imprimir el resumen.</div>
+</div>
+
+<h2 id="abrir">4. Abrir la caja</h2>
+<p>Sin una caja abierta <b>no se pueden confirmar ventas</b>. Cada usuario tiene su propia caja y solo puede tener una abierta a la vez.</p>
+<ol>
+  <li>Entre a <span class="menu">Caja</span> y haga clic en <span class="boton">Nuevo</span>.</li>
+  <li>En <b>Fondo inicial</b>, escriba el efectivo que hay en la caja para dar vuelto (por ejemplo, 100.000 ₲). Si no hay, deje 0.</li>
+  <li>Guarde (ícono de la nube). La caja queda <b>Abierta</b>, con un número como <i>CAJA-00001</i>.</li>
+</ol>
+<div class="nota">Si al vender aparece el aviso amarillo <b>"No tiene una caja abierta"</b>, abra la caja como se explica arriba y vuelva a la venta.</div>
+
+<h2 id="registrar">5. Registrar una venta</h2>
+<ol>
+  <li>Entre a <span class="menu">Ventas</span> y haga clic en <span class="boton">Nuevo</span>.</li>
+  <li><b>Cliente</b> (opcional): elija o escriba el nombre del cliente. Si lo deja vacío, se considera <i>consumidor final</i>.</li>
+  <li>En la pestaña <b>Productos</b>, haga clic en <b>Agregar una línea</b> y elija el <b>Producto</b> (puede escribir parte del nombre). Se completan el <b>Precio unitario</b> y el <b>IVA</b>, y se muestra el <b>Stock disponible</b>.</li>
+  <li>Escriba la <b>Cantidad</b> y, si corresponde, el <b>Desc. (%)</b>. Repita por cada producto.</li>
+  <li>En <b>Pago</b>, elija la <b>Forma de pago</b>: Efectivo, Tarjeta o Transferencia / QR.</li>
+  <li>Si paga en efectivo, escriba en <b>Efectivo recibido</b> con cuánto pagó el cliente. Aparece el <b>Vuelto</b> que hay que darle.</li>
+  <li>Haga clic en <span class="boton">Confirmar venta</span> y después en <span class="boton">Imprimir ticket</span>.</li>
+</ol>
+<div class="nota"><b>Ejemplo:</b> la venta da 71.400 ₲ y el cliente paga con 100.000 ₲. Escriba 100.000 en "Efectivo recibido": el vuelto es <b>28.600 ₲</b>.<br>
+"Efectivo recibido" es opcional. Si lo deja vacío, se entiende que pagó justo. Si escribe menos que el total, el sistema no deja confirmar.</div>
+<p>Mientras la venta está en <b>Borrador</b> se puede cambiar todo y el stock no se mueve.</p>
+
+<h2 id="descuentos">6. Descuentos en el precio</h2>
+<p>En cada línea, la columna <b>Desc. (%)</b> aplica un porcentaje de descuento a ese producto (de 0 a 100). También puede cambiar el <b>Precio unitario</b> de una línea si hace falta; el precio del producto en el inventario no cambia.</p>
+<table>
+  <tr><th>Importe</th><th>Significado</th></tr>
+  <tr><td>Subtotal</td><td>Suma de cantidad × precio, antes de descuentos.</td></tr>
+  <tr><td>Descuento</td><td>Total descontado.</td></tr>
+  <tr><td>Total</td><td>Lo que paga el cliente (con IVA incluido).</td></tr>
+</table>
+<div class="nota"><b>Ejemplo:</b> 2 gaseosas a 13.000 ₲ con 10 % de descuento → 26.000 − 2.600 = <b>23.400 ₲</b>.</div>
+
+<h2 id="iva">7. IVA</h2>
+<p>Los precios ya incluyen el IVA. Cada producto tiene su tasa (10 %, 5 % o exenta), que se configura en el Inventario. El sistema calcula cuánto IVA hay dentro de cada venta:</p>
+<table>
+  <tr><th>Tasa</th><th>Cómo se calcula</th><th>Ejemplo</th></tr>
+  <tr><td>10 %</td><td>Importe ÷ 11</td><td>11.000 ₲ → IVA 1.000 ₲</td></tr>
+  <tr><td>5 %</td><td>Importe ÷ 21</td><td>21.000 ₲ → IVA 1.000 ₲</td></tr>
+  <tr><td>Exenta</td><td>No lleva IVA</td><td>—</td></tr>
+</table>
+<p>En la venta, debajo del total, se ven <b>IVA 5 % incluido</b> e <b>IVA 10 % incluido</b>. El ticket y el resumen de caja muestran la <b>Liquidación del IVA</b>.</p>
+<div class="nota">La tasa de IVA queda guardada en cada venta. Si después cambia el IVA de un producto, las ventas anteriores no se modifican.</div>
+
+<h2 id="confirmar">8. Qué pasa al confirmar</h2>
+<ol>
+  <li>El sistema revisa que haya una caja abierta, que alcance el stock de todos los productos y que el efectivo recibido cubra el total.</li>
+  <li>Por cada producto vendido crea un <b>movimiento de stock de tipo "Venta"</b>, con cantidad negativa y el número de venta como referencia. El stock <b>baja</b> en ese momento.</li>
+  <li>La venta queda registrada en <b>su caja</b> y pasa a estado <b>Confirmada</b>. Ya no se puede modificar.</li>
+</ol>
+<div class="nota"><b>Ejemplo:</b> hay 40 paquetes de arroz. Se confirma la venta V00002 con 3 paquetes. Queda un movimiento <i>Venta · V00002 · −3 · stock resultante 37</i> y el stock del arroz pasa a <b>37</b>.</div>
+
+<h2 id="ticket">9. Imprimir el ticket</h2>
+<p>Después de confirmar la venta aparece el botón <span class="boton">Imprimir ticket</span>. Se descarga un PDF (por ejemplo <i>Ticket V00002.pdf</i>) para imprimir en la impresora de tickets.</p>
+<p>El ticket muestra los datos de la tienda, el número de venta, fecha, cliente y quién atendió; cada producto con su IVA, cantidad × precio y descuento; el <b>TOTAL</b>; la forma de pago con lo recibido y el vuelto; y la liquidación del IVA.</p>
+<p>También puede imprimirlo desde la lista de ventas: marque una o varias y elija <b>Imprimir › Ticket de venta</b>. Sale un ticket por venta.</p>
+<div class="nota">
+  <b>Datos de la tienda:</b> el ticket usa los datos de la compañía. Para cambiarlos, vaya a <span class="menu">Ajustes › Usuarios y compañías › Compañías</span>, abra la compañía y complete nombre, dirección, teléfono y el número de identificación fiscal (RUC).<br>
+  Si se imprime el ticket de una venta cancelada, sale marcado como <b>VENTA ANULADA</b>.<br>
+  El ticket es un comprobante interno: <b>no reemplaza a la factura</b>.
+</div>
+
+<h2 id="sin-stock">10. Si no hay stock suficiente</h2>
+<p>Si algún producto no alcanza, aparece un mensaje como este y la venta queda en borrador:</p>
+<div class="nota">No hay stock suficiente para confirmar la venta:<br>• Jugo de naranja 1 L: se quieren vender 5 y hay 3</div>
+<p>Puede bajar la cantidad, quitar ese producto de la venta, o ir a <span class="menu">Inventario › Reponer stock</span> si la mercadería llegó pero no se cargó. Después vuelva a confirmar.</p>
+
+<h2 id="cancelar">11. Cancelar o corregir una venta</h2>
+<h3>Cancelar</h3>
+<p>Abra la venta y haga clic en <b>Cancelar venta</b>. Odoo pide confirmación.</p>
+<ul>
+  <li>Si estaba en <b>Borrador</b>, solo cambia de estado; el stock no se toca.</li>
+  <li>Si estaba <b>Confirmada</b>, los productos <b>vuelven al stock</b> (movimiento <i>Anulación de venta</i>) y la venta deja de sumar en la caja.</li>
+  <li>Las ventas de una caja <b>ya cerrada no se pueden cancelar</b>, para que el cierre no cambie después de contado el efectivo.</li>
+</ul>
+<h3>Corregir una venta confirmada</h3>
+<ol>
+  <li>Cancele la venta (los productos vuelven al stock).</li>
+  <li>Haga clic en <b>Volver a borrador</b>, corrija lo que haga falta y vuelva a <span class="boton">Confirmar venta</span>. Conserva el mismo número.</li>
+</ol>
+<h3>Eliminar</h3>
+<p>Solo se pueden eliminar ventas en <b>Borrador</b> o <b>Cancelada</b> (⚙ Acciones › Eliminar).</p>
+
+<h2 id="cerrar">12. Cerrar la caja</h2>
+<ol>
+  <li>Entre a <span class="menu">Caja</span> y abra su caja (la que dice <b>Abierta</b>).</li>
+  <li>Revise el resumen del turno: ventas en efectivo, tarjeta y transferencia, y el <b>Efectivo esperado</b> (fondo inicial + ventas en efectivo).</li>
+  <li>Haga clic en <span class="boton">Cerrar caja</span>.</li>
+  <li>Cuente <b>todo el efectivo</b> que hay en la caja, incluido el fondo inicial, y escríbalo en <b>Efectivo contado</b>. Se muestra la <b>Diferencia</b>.</li>
+  <li>Si hay diferencia, anote el motivo en <b>Notas</b>.</li>
+  <li>Haga clic en <span class="boton">Cerrar caja e imprimir resumen</span>. Se descarga el resumen de cierre para imprimir y firmar.</li>
+</ol>
+<div class="nota"><b>Ejemplo:</b> fondo inicial 100.000 ₲ y ventas en efectivo 71.400 ₲ → esperado <b>171.400 ₲</b>. Si cuenta 169.400 ₲, el resumen muestra <b>FALTANTE −2.000 ₲</b>. Si cuenta de más, muestra <b>SOBRANTE</b>.</div>
+<p>Las ventas con tarjeta y transferencia no son efectivo: figuran en el resumen pero no se cuentan en la caja.</p>
+<p>Durante el día puede imprimir un <b>resumen parcial</b> con el botón <b>Imprimir resumen</b> de la caja; sale marcado <i>CAJA ABIERTA</i>.</p>
+<div class="nota">Una vez cerrada, la caja no se puede reabrir ni se pueden cancelar sus ventas. Para seguir vendiendo, abra una caja nueva.</div>
+
+<h2 id="consultar">13. Consultar ventas y cajas</h2>
+<p>En <span class="menu">Ventas</span> se listan todas las ventas, de la más nueva a la más vieja. Las canceladas aparecen en gris.</p>
+<ul>
+  <li><b>Buscar</b> por número, cliente o producto.</li>
+  <li><b>Filtros:</b> Borrador, Confirmadas, Canceladas, por forma de pago (Efectivo, Tarjeta, Transferencia / QR) y por fecha.</li>
+  <li><b>Agrupar por:</b> estado, forma de pago, caja, cliente, vendedor o día.</li>
+  <li>Al pie de la columna <b>Total</b> se ve la suma de las ventas listadas. Para ver solo lo vendido de verdad, active el filtro <i>Confirmadas</i>.</li>
+</ul>
+<p>En <span class="menu">Caja</span> se listan todas las cajas con sus totales y la diferencia de cada cierre (en rojo si faltó efectivo). Hay filtros para ver <i>Mis cajas</i>, <i>Abiertas</i>, <i>Cerradas</i> o <i>Con diferencia</i>, y para agrupar por cajero o día.</p>
+
+<h2 id="vendidos">14. Productos vendidos</h2>
+<p>En <span class="menu">Productos vendidos</span> se ven todas las líneas de ventas <b>confirmadas</b>, agrupadas por producto, con la cantidad vendida y el importe total. Use el filtro de fecha para ver, por ejemplo, lo vendido este mes, o agrupe por día.</p>
+
+<h2 id="faq">15. Preguntas frecuentes</h2>
+<h3>¿Cuándo se descuenta el stock?</h3>
+<p>Solo al hacer clic en <b>Confirmar venta</b>. Una venta en borrador no mueve el stock.</p>
+<h3>¿Por qué no me deja confirmar la venta?</h3>
+<p>Puede ser porque no tiene una caja abierta, porque no alcanza el stock o porque el efectivo recibido es menor que el total. El mensaje indica cuál es el caso.</p>
+<h3>Me olvidé de cerrar la caja ayer. ¿Qué hago?</h3>
+<p>Ciérrela ahora contando el efectivo. Después abra una caja nueva para las ventas de hoy.</p>
+<h3>¿Puedo vender el mismo producto en dos líneas?</h3>
+<p>Sí. Al confirmar se suma lo pedido en todas las líneas y se verifica contra el stock disponible.</p>
+<h3>Cambié el precio de un producto, ¿se modifican las ventas anteriores?</h3>
+<p>No. Cada venta guarda el precio y el IVA con los que se hizo.</p>
+<h3>¿Por qué no aparece un producto al buscarlo en la venta?</h3>
+<p>Probablemente está archivado. Desarchívelo desde <span class="menu">Inventario › Productos</span> (filtro <i>Archivados</i>).</p>
+<h3>¿Puedo imprimir el ticket en una impresora común?</h3>
+<p>Sí. Está pensado para papel de impresora térmica de 80 mm, pero el PDF se puede imprimir en cualquier impresora: sale angosto, como un ticket.</p>
+<h3>¿Puedo vender con stock en cero?</h3>
+<p>No. El sistema no permite stock negativo. Si la mercadería está en la tienda pero el sistema dice 0, haga una reposición o un ajuste en Inventario.</p>
+</main>
+</body>
+</html>

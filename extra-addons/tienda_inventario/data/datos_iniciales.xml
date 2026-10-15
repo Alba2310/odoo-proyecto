@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Productos precargados. noupdate="1": se cargan una sola vez al instalar
+     y las actualizaciones del módulo no pisan los cambios del usuario. -->
+<odoo>
+    <data noupdate="1">
+
+        <!-- Categorías -->
+        <record id="categoria_despensa" model="tienda.categoria">
+            <field name="name">Despensa</field>
+        </record>
+        <record id="categoria_bebidas" model="tienda.categoria">
+            <field name="name">Bebidas</field>
+        </record>
+        <record id="categoria_lacteos" model="tienda.categoria">
+            <field name="name">Lácteos y huevos</field>
+        </record>
+        <record id="categoria_limpieza" model="tienda.categoria">
+            <field name="name">Limpieza</field>
+        </record>
+        <record id="categoria_higiene" model="tienda.categoria">
+            <field name="name">Higiene personal</field>
+        </record>
+
+        <!-- Despensa -->
+        <record id="producto_arroz" model="tienda.producto">
+            <field name="codigo">DES-001</field>
+            <field name="name">Arroz 1 kg</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">6500</field>
+            <field name="precio_venta">8500</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">10</field>
+        </record>
+        <record id="producto_fideos" model="tienda.producto">
+            <field name="codigo">DES-002</field>
+            <field name="name">Fideos tallarín 500 g</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">4500</field>
+            <field name="precio_venta">6000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">10</field>
+        </record>
+        <record id="producto_azucar" model="tienda.producto">
+            <field name="codigo">DES-003</field>
+            <field name="name">Azúcar 1 kg</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">5800</field>
+            <field name="precio_venta">7500</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">10</field>
+        </record>
+        <record id="producto_aceite" model="tienda.producto">
+            <field name="codigo">DES-004</field>
+            <field name="name">Aceite de girasol 900 ml</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">13500</field>
+            <field name="precio_venta">17000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">6</field>
+        </record>
+        <record id="producto_yerba" model="tienda.producto">
+            <field name="codigo">DES-005</field>
+            <field name="name">Yerba mate 500 g</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">15000</field>
+            <field name="precio_venta">19000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">8</field>
+        </record>
+        <record id="producto_harina" model="tienda.producto">
+            <field name="codigo">DES-006</field>
+            <field name="name">Harina de trigo 1 kg</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">5000</field>
+            <field name="precio_venta">6500</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">8</field>
+        </record>
+        <record id="producto_sal" model="tienda.producto">
+            <field name="codigo">DES-007</field>
+            <field name="name">Sal fina 1 kg</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">2500</field>
+            <field name="precio_venta">3500</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">5</field>
+        </record>
+        <record id="producto_cafe" model="tienda.producto">
+            <field name="codigo">DES-008</field>
+            <field name="name">Café instantáneo 170 g</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">25000</field>
+            <field name="precio_venta">32000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">5</field>
+        </record>
+
+        <!-- Bebidas -->
+        <record id="producto_gaseosa" model="tienda.producto">
+            <field name="codigo">BEB-001</field>
+            <field name="name">Gaseosa cola 2 L</field>
+            <field name="categoria_id" ref="categoria_bebidas"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">10000</field>
+            <field name="precio_venta">13000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">12</field>
+        </record>
+        <record id="producto_agua" model="tienda.producto">
+            <field name="codigo">BEB-002</field>
+            <field name="name">Agua mineral 2 L</field>
+            <field name="categoria_id" ref="categoria_bebidas"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">4200</field>
+            <field name="precio_venta">6000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">12</field>
+        </record>
+        <record id="producto_jugo" model="tienda.producto">
+            <field name="codigo">BEB-003</field>
+            <field name="name">Jugo de naranja 1 L</field>
+            <field name="categoria_id" ref="categoria_bebidas"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">7500</field>
+            <field name="precio_venta">10000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">6</field>
+        </record>
+
+        <!-- Lácteos y huevos -->
+        <record id="producto_leche" model="tienda.producto">
+            <field name="codigo">LAC-001</field>
+            <field name="name">Leche entera 1 L</field>
+            <field name="categoria_id" ref="categoria_lacteos"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">5800</field>
+            <field name="precio_venta">7500</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">10</field>
+        </record>
+        <record id="producto_huevos" model="tienda.producto">
+            <field name="codigo">LAC-002</field>
+            <field name="name">Huevos (docena)</field>
+            <field name="categoria_id" ref="categoria_lacteos"/>
+            <field name="unidad">caja</field>
+            <field name="costo">11000</field>
+            <field name="precio_venta">14000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">5</field>
+        </record>
+
+        <!-- Limpieza -->
+        <record id="producto_jabon_polvo" model="tienda.producto">
+            <field name="codigo">LIM-001</field>
+            <field name="name">Jabón en polvo 800 g</field>
+            <field name="categoria_id" ref="categoria_limpieza"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">17000</field>
+            <field name="precio_venta">22000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">4</field>
+        </record>
+        <record id="producto_lavandina" model="tienda.producto">
+            <field name="codigo">LIM-002</field>
+            <field name="name">Lavandina 1 L</field>
+            <field name="categoria_id" ref="categoria_limpieza"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">4800</field>
+            <field name="precio_venta">6500</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">6</field>
+        </record>
+
+        <!-- Higiene personal -->
+        <record id="producto_papel" model="tienda.producto">
+            <field name="codigo">HIG-001</field>
+            <field name="name">Papel higiénico x4</field>
+            <field name="categoria_id" ref="categoria_higiene"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">9000</field>
+            <field name="precio_venta">12000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">6</field>
+        </record>
+        <record id="producto_jabon_tocador" model="tienda.producto">
+            <field name="codigo">HIG-002</field>
+            <field name="name">Jabón de tocador</field>
+            <field name="categoria_id" ref="categoria_higiene"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">3600</field>
+            <field name="precio_venta">5000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">10</field>
+        </record>
+
+        <!-- Stock inicial (café y jugo quedan por debajo del mínimo a propósito) -->
+        <record id="stock_inicial_arroz" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_arroz"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">40</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_fideos" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_fideos"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">50</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_azucar" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_azucar"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">35</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_aceite" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_aceite"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">24</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_yerba" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_yerba"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">30</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_harina" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_harina"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">25</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_sal" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_sal"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">20</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_cafe" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_cafe"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">4</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_gaseosa" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_gaseosa"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">36</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_agua" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_agua"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">48</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_jugo" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_jugo"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">3</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_leche" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_leche"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">30</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_huevos" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_huevos"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">15</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_jabon_polvo" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_jabon_polvo"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">12</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_lavandina" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_lavandina"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">18</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_papel" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_papel"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">20</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="stock_inicial_jabon_tocador" model="tienda.movimiento">
+            <field name="producto_id" ref="producto_jabon_tocador"/>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">30</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+
+    </data>
+</odoo>

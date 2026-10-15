@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_tienda_inventario_manual" model="ir.actions.act_url">
+        <field name="name">Manual de uso - Inventario</field>
+        <field name="url">/tienda_inventario/static/description/manual.html</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_tienda_inventario_root" name="Inventario" sequence="10"
+              web_icon="tienda_inventario,static/description/icon.png"/>
+
+    <menuitem id="menu_tienda_productos" name="Productos" sequence="10"
+              parent="menu_tienda_inventario_root" action="action_tienda_producto"/>
+    <menuitem id="menu_tienda_stock_bajo" name="Stock bajo" sequence="20"
+              parent="menu_tienda_inventario_root" action="action_tienda_producto_stock_bajo"/>
+    <menuitem id="menu_tienda_reponer" name="Reponer stock" sequence="30"
+              parent="menu_tienda_inventario_root" action="action_tienda_reponer_stock"/>
+    <menuitem id="menu_tienda_movimientos" name="Movimientos" sequence="40"
+              parent="menu_tienda_inventario_root" action="action_tienda_movimiento"/>
+
+    <menuitem id="menu_tienda_inventario_config" name="Configuración" sequence="90"
+              parent="menu_tienda_inventario_root"/>
+    <menuitem id="menu_tienda_categorias" name="Categorías" sequence="10"
+              parent="menu_tienda_inventario_config" action="action_tienda_categoria"/>
+
+    <menuitem id="menu_tienda_inventario_manual" name="Manual de uso" sequence="100"
+              parent="menu_tienda_inventario_root" action="action_tienda_inventario_manual"/>
+</odoo>

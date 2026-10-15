@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tienda_categoria_list" model="ir.ui.view">
+        <field name="name">tienda.categoria.list</field>
+        <field name="model">tienda.categoria</field>
+        <field name="arch" type="xml">
+            <list string="Categorías" editable="bottom">
+                <field name="name"/>
+                <field name="producto_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_tienda_categoria" model="ir.actions.act_window">
+        <field name="name">Categorías</field>
+        <field name="res_model">tienda.categoria</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

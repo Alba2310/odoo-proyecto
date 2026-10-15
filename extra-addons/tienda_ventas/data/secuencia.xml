@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- no_gap: la numeración no salta si una transacción se deshace. -->
+        <record id="secuencia_tienda_venta" model="ir.sequence">
+            <field name="name">Ventas de la tienda</field>
+            <field name="code">tienda.venta</field>
+            <field name="prefix">V</field>
+            <field name="padding">5</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="secuencia_tienda_caja" model="ir.sequence">
+            <field name="name">Cajas de la tienda</field>
+            <field name="code">tienda.caja</field>
+            <field name="prefix">CAJA-</field>
+            <field name="padding">5</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

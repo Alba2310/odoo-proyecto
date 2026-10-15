@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tienda_venta_user,tienda.venta usuario,model_tienda_venta,base.group_user,1,1,1,1
+access_tienda_venta_linea_user,tienda.venta.linea usuario,model_tienda_venta_linea,base.group_user,1,1,1,1
+access_tienda_caja_user,tienda.caja usuario,model_tienda_caja,base.group_user,1,1,1,1
+access_tienda_caja_cierre_wizard_user,tienda.caja.cierre.wizard usuario,model_tienda_caja_cierre_wizard,base.group_user,1,1,1,1

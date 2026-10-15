@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Papel de impresora térmica de 80 mm. El largo (page_height) se recalcula
+         en cada impresión según lo que se imprime (ver ir_actions_report.py). -->
+    <record id="paperformat_ticket_80mm" model="report.paperformat">
+        <field name="name">Ticket 80 mm</field>
+        <field name="format">custom</field>
+        <field name="page_width">80</field>
+        <field name="page_height">200</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">4</field>
+        <field name="margin_bottom">4</field>
+        <!-- Odoo ya agrega ~3 mm de relleno a cada lado de la página. -->
+        <field name="margin_left">1</field>
+        <field name="margin_right">1</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+        <field name="disable_shrinking" eval="True"/>
+    </record>
+
+    <record id="action_report_ticket_venta" model="ir.actions.report">
+        <field name="name">Ticket de venta</field>
+        <field name="model">tienda.venta</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tienda_ventas.ticket_venta</field>
+        <field name="report_file">tienda_ventas.ticket_venta</field>
+        <field name="print_report_name">'Ticket %s' % object.name</field>
+        <field name="paperformat_id" ref="paperformat_ticket_80mm"/>
+        <field name="binding_model_id" ref="model_tienda_venta"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Estilos compartidos por todos los tickets (venta y cierre de caja). -->
+    <template id="ticket_estilos">
+        <style>
+            .ticket { font-family: "DejaVu Sans Mono", monospace; font-size: 11px; line-height: 1.35; color: #000; }
+            .ticket .centro { text-align: center; }
+            .ticket .derecha { text-align: right; }
+            .ticket .negrita { font-weight: bold; }
+            .ticket .empresa { font-size: 14px; font-weight: bold; }
+            .ticket .corte { border-top: 1px dashed #000; margin: 6px 0; }
+            /* Anula el estilo de tablas de los reportes de Odoo (bordes y relleno). */
+            .ticket table { width: 100%; border-collapse: collapse; margin: 0; }
+            .ticket table, .ticket table tbody, .ticket table tr, .ticket table td {
+                border: 0 !important; background: none !important; }
+            .ticket table td { padding: 0 !important; vertical-align: top; }
+            .ticket .detalle td { padding-bottom: 3px !important; }
+            .ticket .total td { font-size: 14px; font-weight: bold; padding-top: 2px !important; }
+            .ticket .sello { border: 2px solid #000; font-size: 16px; font-weight: bold; text-align: center; padding: 2px; margin: 6px 0; }
+            .ticket .firma { border-top: 1px solid #000; margin: 40px 10px 0; text-align: center; }
+        </style>
+    </template>
+
+    <!-- Encabezado con los datos de la tienda. -->
+    <template id="ticket_encabezado">
+        <div class="centro">
+            <div class="empresa" t-out="empresa.name"/>
+            <div t-if="empresa.street" t-out="empresa.street"/>
+            <div t-if="empresa.city" t-out="empresa.city"/>
+            <div t-if="empresa.phone">Tel.: <t t-out="empresa.phone"/></div>
+            <div t-if="empresa.vat">RUC: <t t-out="empresa.vat"/></div>
+        </div>
+    </template>
+
+    <template id="ticket_venta">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="venta">
+                <t t-set="empresa" t-value="venta.env.company"/>
+                <t t-set="moneda" t-value="{'widget': 'monetary', 'display_currency': venta.currency_id}"/>
+                <t t-set="tasas" t-value="{'10': '10 %', '5': '5 %', 'exenta': 'Exenta'}"/>
+                <!-- Un "article" por venta: Odoo imprime cada ticket en su propia hoja. -->
+                <div class="article" t-att-data-oe-model="venta._name" t-att-data-oe-id="venta.id"
+                     t-att-data-oe-lang="venta.env.context.get('lang')">
+                    <t t-call="tienda_ventas.ticket_estilos"/>
+                    <div class="page ticket">
+                        <t t-call="tienda_ventas.ticket_encabezado"/>
+
+                        <div t-if="venta.estado == 'cancelada'" class="sello">VENTA ANULADA</div>
+                        <div t-if="venta.estado == 'borrador'" class="sello">BORRADOR</div>
+
+                        <div class="corte"/>
+                        <div class="centro negrita">TICKET DE VENTA</div>
+                        <table>
+                            <tr><td>N.º:</td><td class="derecha negrita" t-out="venta.name"/></tr>
+                            <tr><td>Fecha:</td><td class="derecha" t-out="venta.fecha" t-options="{'widget': 'datetime'}"/></tr>
+                            <tr>
+                                <td>Cliente:</td>
+                                <td class="derecha" t-out="venta.cliente_id.name or 'Consumidor final'"/>
+                            </tr>
+                            <tr t-if="venta.vendedor_id"><td>Atendió:</td><td class="derecha" t-out="venta.vendedor_id.name"/></tr>
+                        </table>
+
+                        <div class="corte"/>
+                        <table class="detalle">
+                            <t t-foreach="venta.linea_ids" t-as="linea">
+                                <tr>
+                                    <td t-out="linea.producto_id.name"/>
+                                    <td class="derecha" t-out="tasas.get(linea.iva, '')"/>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <t t-out="'%g' % linea.cantidad"/> x <t t-out="linea.precio_unitario" t-options="moneda"/>
+                                        <t t-if="linea.descuento"> (-<t t-out="'%g' % linea.descuento"/> %)</t>
+                                    </td>
+                                    <td class="derecha" t-out="linea.subtotal" t-options="moneda"/>
+                                </tr>
+                            </t>
+                        </table>
+
+                        <div class="corte"/>
+                        <table>
+                            <t t-if="venta.descuento_total">
+                                <tr><td>Subtotal</td><td class="derecha" t-out="venta.subtotal" t-options="moneda"/></tr>
+                                <tr><td>Descuento</td><td class="derecha">-<t t-out="venta.descuento_total" t-options="moneda"/></td></tr>
+                            </t>
+                            <tr class="total"><td>TOTAL</td><td class="derecha" t-out="venta.total" t-options="moneda"/></tr>
+                        </table>
+                        <div>Artículos: <t t-out="'%g' % sum(venta.linea_ids.mapped('cantidad'))"/></div>
+
+                        <div class="corte"/>
+                        <table>
+                            <tr><td>Forma de pago:</td><td class="derecha"><span t-field="venta.metodo_pago"/></td></tr>
+                            <t t-if="venta.metodo_pago == 'efectivo' and venta.monto_recibido">
+                                <tr><td>Recibido:</td><td class="derecha" t-out="venta.monto_recibido" t-options="moneda"/></tr>
+                                <tr><td>Vuelto:</td><td class="derecha" t-out="venta.vuelto" t-options="moneda"/></tr>
+                            </t>
+                        </table>
+
+                        <div class="corte"/>
+                        <div class="negrita">Liquidación del IVA</div>
+                        <table>
+                            <tr><td>IVA 5 %</td><td class="derecha" t-out="venta.iva_5" t-options="moneda"/></tr>
+                            <tr><td>IVA 10 %</td><td class="derecha" t-out="venta.iva_10" t-options="moneda"/></tr>
+                            <tr class="negrita"><td>Total IVA</td><td class="derecha" t-out="venta.iva_5 + venta.iva_10" t-options="moneda"/></tr>
+                        </table>
+
+                        <div class="corte"/>
+                        <div class="centro negrita">¡Gracias por su compra!</div>
+                        <div class="centro">Comprobante sin valor fiscal</div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

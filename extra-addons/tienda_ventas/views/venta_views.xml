@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ventas -->
+    <record id="view_tienda_venta_list" model="ir.ui.view">
+        <field name="name">tienda.venta.list</field>
+        <field name="model">tienda.venta</field>
+        <field name="arch" type="xml">
+            <list string="Ventas" decoration-muted="estado == 'cancelada'">
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="cliente_id"/>
+                <field name="vendedor_id" optional="show"/>
+                <field name="metodo_pago" optional="show"/>
+                <field name="caja_id" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="descuento_total" optional="hide" sum="Total"/>
+                <field name="total" sum="Total"/>
+                <field name="estado" widget="badge"
+                       decoration-info="estado == 'borrador'"
+                       decoration-success="estado == 'confirmada'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tienda_venta_form" model="ir.ui.view">
+        <field name="name">tienda.venta.form</field>
+        <field name="model">tienda.venta</field>
+        <field name="arch" type="xml">
+            <form string="Venta">
+                <header>
+                    <button name="action_confirmar" string="Confirmar venta" type="object"
+                            class="btn-primary" invisible="estado != 'borrador'"/>
+                    <button name="%(action_report_ticket_venta)d" string="Imprimir ticket" type="action"
+                            class="btn-primary" icon="fa-print" invisible="estado != 'confirmada'"/>
+                    <button name="action_cancelar" string="Cancelar venta" type="object"
+                            invisible="estado == 'cancelada' or not id"
+                            confirm="¿Cancelar esta venta? Si estaba confirmada, los productos vuelven al stock."/>
+                    <button name="action_borrador" string="Volver a borrador" type="object"
+                            invisible="estado != 'cancelada'"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador,confirmada"/>
+                </header>
+                <sheet>
+                    <field name="caja_abierta_id" invisible="1"/>
+                    <div class="alert alert-warning" role="alert" invisible="estado != 'borrador' or caja_abierta_id">
+                        <strong>No tiene una caja abierta.</strong> Para confirmar ventas, primero abra la caja
+                        en <b>Ventas › Caja</b>.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cliente_id" placeholder="Consumidor final"
+                                   readonly="estado != 'borrador'"/>
+                            <field name="vendedor_id" readonly="estado != 'borrador'"/>
+                            <field name="fecha" readonly="estado != 'borrador'"/>
+                            <field name="caja_id" invisible="not caja_id"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Pago">
+                            <field name="metodo_pago" widget="radio" readonly="estado != 'borrador'"/>
+                            <field name="monto_recibido" invisible="metodo_pago != 'efectivo'"
+                                   readonly="estado != 'borrador'"/>
+                            <field name="vuelto" class="fw-bold"
+                                   invisible="metodo_pago != 'efectivo' or not monto_recibido"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Productos" name="productos">
+                            <field name="linea_ids" readonly="estado != 'borrador'">
+                                <list editable="bottom">
+                                    <field name="producto_id" options="{'no_create': True}"/>
+                                    <field name="stock_disponible" column_invisible="parent.estado != 'borrador'"/>
+                                    <field name="cantidad"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="descuento"/>
+                                    <field name="iva" optional="show"/>
+                                    <field name="subtotal"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="subtotal"/>
+                                <field name="descuento_total"/>
+                                <field name="total" class="oe_subtotal_footer_separator"/>
+                                <field name="iva_5" string="IVA 5 % incluido"/>
+                                <field name="iva_10" string="IVA 10 % incluido"/>
+                            </group>
+                        </page>
+                        <page string="Movimientos de stock" name="movimientos" invisible="not movimiento_ids">
+                            <field name="movimiento_ids" readonly="1">
+                                <list decoration-success="cantidad &gt; 0" decoration-danger="cantidad &lt; 0">
+                                    <field name="fecha"/>
+                                    <field name="producto_id"/>
+                                    <field name="tipo"/>
+                                    <field name="cantidad"/>
+                                    <field name="saldo"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota" placeholder="Observaciones de la venta..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tienda_venta_search" model="ir.ui.view">
+        <field name="name">tienda.venta.search</field>
+        <field name="model">tienda.venta</field>
+        <field name="arch" type="xml">
+            <search string="Buscar ventas">
+                <field name="name"/>
+                <field name="cliente_id"/>
+                <field name="linea_ids" string="Producto" filter_domain="[('linea_ids.producto_id', 'ilike', self)]"/>
+                <filter name="borrador" string="Borrador" domain="[('estado', '=', 'borrador')]"/>
+                <filter name="confirmadas" string="Confirmadas" domain="[('estado', '=', 'confirmada')]"/>
+                <filter name="canceladas" string="Canceladas" domain="[('estado', '=', 'cancelada')]"/>
+                <separator/>
+                <filter name="efectivo" string="Efectivo" domain="[('metodo_pago', '=', 'efectivo')]"/>
+                <filter name="tarjeta" string="Tarjeta" domain="[('metodo_pago', '=', 'tarjeta')]"/>
+                <filter name="transferencia" string="Transferencia / QR" domain="[('metodo_pago', '=', 'transferencia')]"/>
+                <separator/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                    <filter name="group_metodo_pago" string="Forma de pago" context="{'group_by': 'metodo_pago'}"/>
+                    <filter name="group_caja" string="Caja" context="{'group_by': 'caja_id'}"/>
+                    <filter name="group_cliente" string="Cliente" context="{'group_by': 'cliente_id'}"/>
+                    <filter name="group_vendedor" string="Vendedor" context="{'group_by': 'vendedor_id'}"/>
+                    <filter name="group_dia" string="Día" context="{'group_by': 'fecha:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tienda_venta" model="ir.actions.act_window">
+        <field name="name">Ventas</field>
+        <field name="res_model">tienda.venta</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Registre su primera venta</p>
+            <p>Agregue los productos, confirme la venta y el stock se descuenta solo.</p>
+        </field>
+    </record>
+
+    <!-- Reporte: productos vendidos -->
+    <record id="view_tienda_venta_linea_list" model="ir.ui.view">
+        <field name="name">tienda.venta.linea.list</field>
+        <field name="model">tienda.venta.linea</field>
+        <field name="arch" type="xml">
+            <list string="Productos vendidos" create="0" edit="0" delete="0">
+                <field name="fecha"/>
+                <field name="venta_id"/>
+                <field name="producto_id"/>
+                <field name="cantidad" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="precio_unitario"/>
+                <field name="descuento" optional="show"/>
+                <field name="importe_descuento" optional="hide" sum="Total"/>
+                <field name="subtotal" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tienda_venta_linea_search" model="ir.ui.view">
+        <field name="name">tienda.venta.linea.search</field>
+        <field name="model">tienda.venta.linea</field>
+        <field name="arch" type="xml">
+            <search string="Buscar productos vendidos">
+                <field name="producto_id"/>
+                <field name="venta_id"/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_producto" string="Producto" context="{'group_by': 'producto_id'}"/>
+                    <filter name="group_dia" string="Día" context="{'group_by': 'fecha:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tienda_venta_linea" model="ir.actions.act_window">
+        <field name="name">Productos vendidos</field>
+        <field name="res_model">tienda.venta.linea</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('estado', '=', 'confirmada')]</field>
+        <field name="context">{'search_default_group_producto': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Todavía no hay ventas confirmadas</p>
+        </field>
+    </record>
+</odoo>

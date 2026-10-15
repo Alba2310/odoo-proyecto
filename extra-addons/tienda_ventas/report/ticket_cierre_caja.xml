@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_cierre_caja" model="ir.actions.report">
+        <field name="name">Resumen de caja</field>
+        <field name="model">tienda.caja</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tienda_ventas.ticket_cierre_caja</field>
+        <field name="report_file">tienda_ventas.ticket_cierre_caja</field>
+        <field name="print_report_name">'Cierre %s' % object.name</field>
+        <field name="paperformat_id" ref="paperformat_ticket_80mm"/>
+        <field name="binding_model_id" ref="model_tienda_caja"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="ticket_cierre_caja">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="caja">
+                <t t-set="empresa" t-value="caja.env.company"/>
+                <t t-set="moneda" t-value="{'widget': 'monetary', 'display_currency': caja.currency_id}"/>
+                <t t-set="fecha" t-value="{'widget': 'datetime'}"/>
+                <div class="article" t-att-data-oe-model="caja._name" t-att-data-oe-id="caja.id"
+                     t-att-data-oe-lang="caja.env.context.get('lang')">
+                    <t t-call="tienda_ventas.ticket_estilos"/>
+                    <div class="page ticket">
+                        <t t-call="tienda_ventas.ticket_encabezado"/>
+
+                        <div class="corte"/>
+                        <div class="centro negrita">CIERRE DE CAJA</div>
+                        <div t-if="caja.estado == 'abierta'" class="sello">CAJA ABIERTA<br/>resumen parcial</div>
+                        <table>
+                            <tr><td>N.º:</td><td class="derecha negrita" t-out="caja.name"/></tr>
+                            <tr><td>Cajero:</td><td class="derecha" t-out="caja.usuario_id.name"/></tr>
+                            <tr><td>Apertura:</td><td class="derecha" t-out="caja.fecha_apertura" t-options="fecha"/></tr>
+                            <tr t-if="caja.fecha_cierre"><td>Cierre:</td><td class="derecha" t-out="caja.fecha_cierre" t-options="fecha"/></tr>
+                        </table>
+
+                        <div class="corte"/>
+                        <div class="negrita">Ventas</div>
+                        <table>
+                            <tr><td>Ventas confirmadas</td><td class="derecha" t-out="caja.cantidad_ventas"/></tr>
+                            <tr><td>Efectivo</td><td class="derecha" t-out="caja.total_efectivo" t-options="moneda"/></tr>
+                            <tr><td>Tarjeta</td><td class="derecha" t-out="caja.total_tarjeta" t-options="moneda"/></tr>
+                            <tr><td>Transferencia / QR</td><td class="derecha" t-out="caja.total_transferencia" t-options="moneda"/></tr>
+                            <tr class="total"><td>TOTAL</td><td class="derecha" t-out="caja.total_ventas" t-options="moneda"/></tr>
+                        </table>
+
+                        <div class="corte"/>
+                        <div class="negrita">Liquidación del IVA</div>
+                        <table>
+                            <tr><td>IVA 5 %</td><td class="derecha" t-out="caja.iva_5" t-options="moneda"/></tr>
+                            <tr><td>IVA 10 %</td><td class="derecha" t-out="caja.iva_10" t-options="moneda"/></tr>
+                            <tr class="negrita"><td>Total IVA</td><td class="derecha" t-out="caja.iva_5 + caja.iva_10" t-options="moneda"/></tr>
+                        </table>
+
+                        <div class="corte"/>
+                        <div class="negrita">Efectivo en la caja</div>
+                        <table>
+                            <tr><td>Fondo inicial</td><td class="derecha" t-out="caja.monto_inicial" t-options="moneda"/></tr>
+                            <tr><td>+ Ventas en efectivo</td><td class="derecha" t-out="caja.total_efectivo" t-options="moneda"/></tr>
+                            <tr class="negrita"><td>= Esperado</td><td class="derecha" t-out="caja.efectivo_esperado" t-options="moneda"/></tr>
+                            <t t-if="caja.estado == 'cerrada'">
+                                <tr><td>Contado</td><td class="derecha" t-out="caja.efectivo_contado" t-options="moneda"/></tr>
+                                <tr class="total">
+                                    <td t-out="'SOBRANTE' if caja.diferencia &gt; 0 else 'FALTANTE' if caja.diferencia &lt; 0 else 'DIFERENCIA'"/>
+                                    <td class="derecha" t-out="caja.diferencia" t-options="moneda"/>
+                                </tr>
+                            </t>
+                        </table>
+
+                        <t t-if="caja.nota">
+                            <div class="corte"/>
+                            <div class="negrita">Notas</div>
+                            <div t-field="caja.nota"/>
+                        </t>
+
+                        <div class="firma">Firma del cajero</div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

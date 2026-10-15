@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tienda_producto_list" model="ir.ui.view">
+        <field name="name">tienda.producto.list</field>
+        <field name="model">tienda.producto</field>
+        <field name="arch" type="xml">
+            <list string="Productos" decoration-danger="stock_bajo">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="categoria_id"/>
+                <field name="unidad" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="costo" optional="hide"/>
+                <field name="precio_venta"/>
+                <field name="iva" optional="show"/>
+                <field name="stock"/>
+                <field name="stock_minimo" optional="show"/>
+                <field name="stock_bajo" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tienda_producto_form" model="ir.ui.view">
+        <field name="name">tienda.producto.form</field>
+        <field name="model">tienda.producto</field>
+        <field name="arch" type="xml">
+            <form string="Producto">
+                <header>
+                    <button name="action_reponer" string="Reponer stock" type="object" class="btn-primary"/>
+                    <button name="action_ajustar" string="Ajustar stock" type="object"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="alert alert-warning" role="alert" invisible="not stock_bajo or not id">
+                        <strong>Stock bajo:</strong> el stock llegó al mínimo configurado. Conviene reponer.
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Ej.: Arroz 1 kg"/></h1>
+                    </div>
+                    <group>
+                        <group string="Datos generales">
+                            <field name="codigo" placeholder="Ej.: DES-001"/>
+                            <field name="categoria_id"/>
+                            <field name="unidad"/>
+                            <field name="active" invisible="1"/>
+                            <field name="stock_bajo" invisible="1"/>
+                        </group>
+                        <group string="Precios">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="costo"/>
+                            <field name="precio_venta"/>
+                            <field name="iva" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group string="Stock">
+                            <field name="stock"/>
+                            <field name="stock_minimo"/>
+                            <field name="valor_stock"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Movimientos de stock" name="movimientos">
+                            <field name="movimiento_ids" readonly="1">
+                                <list decoration-success="cantidad &gt; 0" decoration-danger="cantidad &lt; 0">
+                                    <field name="fecha"/>
+                                    <field name="tipo"/>
+                                    <field name="referencia"/>
+                                    <field name="cantidad"/>
+                                    <field name="saldo"/>
+                                    <field name="usuario_id" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Descripción" name="descripcion">
+                            <field name="descripcion" placeholder="Notas internas sobre el producto..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tienda_producto_search" model="ir.ui.view">
+        <field name="name">tienda.producto.search</field>
+        <field name="model">tienda.producto</field>
+        <field name="arch" type="xml">
+            <search string="Buscar productos">
+                <field name="name" string="Producto"
+                       filter_domain="['|', ('name', 'ilike', self), ('codigo', 'ilike', self)]"/>
+                <field name="categoria_id"/>
+                <filter name="stock_bajo" string="Stock bajo" domain="[('stock_bajo', '=', True)]"/>
+                <filter name="sin_stock" string="Sin stock" domain="[('stock', '&lt;=', 0)]"/>
+                <separator/>
+                <filter name="archivados" string="Archivados" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_categoria" string="Categoría" context="{'group_by': 'categoria_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tienda_producto" model="ir.actions.act_window">
+        <field name="name">Productos</field>
+        <field name="res_model">tienda.producto</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cree su primer producto</p>
+            <p>Cargue el nombre, código y precio. Después use <b>Reponer stock</b> para ingresar la mercadería.</p>
+        </field>
+    </record>
+
+    <record id="action_tienda_producto_stock_bajo" model="ir.actions.act_window">
+        <field name="name">Productos con stock bajo</field>
+        <field name="res_model">tienda.producto</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_stock_bajo': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Ningún producto tiene stock bajo</p>
+            <p>Acá aparecen los productos cuyo stock llegó al mínimo configurado.</p>
+        </field>
+    </record>
+</odoo>

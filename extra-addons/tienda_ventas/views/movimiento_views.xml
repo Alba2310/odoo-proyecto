@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tienda_movimiento_list_venta" model="ir.ui.view">
+        <field name="name">tienda.movimiento.list.venta</field>
+        <field name="model">tienda.movimiento</field>
+        <field name="inherit_id" ref="tienda_inventario.view_tienda_movimiento_list"/>
+        <field name="arch" type="xml">
+            <field name="referencia" position="after">
+                <field name="venta_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_tienda_movimiento_form_venta" model="ir.ui.view">
+        <field name="name">tienda.movimiento.form.venta</field>
+        <field name="model">tienda.movimiento</field>
+        <field name="inherit_id" ref="tienda_inventario.view_tienda_movimiento_form"/>
+        <field name="arch" type="xml">
+            <field name="referencia" position="after">
+                <field name="venta_id" invisible="not venta_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_tienda_movimiento_search_venta" model="ir.ui.view">
+        <field name="name">tienda.movimiento.search.venta</field>
+        <field name="model">tienda.movimiento</field>
+        <field name="inherit_id" ref="tienda_inventario.view_tienda_movimiento_search"/>
+        <field name="arch" type="xml">
+            <filter name="ajustes" position="after">
+                <filter name="ventas" string="Ventas" domain="[('tipo', 'in', ('venta', 'anulacion'))]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

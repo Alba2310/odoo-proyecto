@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_tienda_ventas_manual" model="ir.actions.act_url">
+        <field name="name">Manual de uso - Ventas</field>
+        <field name="url">/tienda_ventas/static/description/manual.html</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_tienda_ventas_root" name="Ventas" sequence="11"
+              web_icon="tienda_ventas,static/description/icon.png"/>
+
+    <menuitem id="menu_tienda_caja" name="Caja" sequence="5"
+              parent="menu_tienda_ventas_root" action="action_tienda_caja"/>
+    <menuitem id="menu_tienda_ventas" name="Ventas" sequence="10"
+              parent="menu_tienda_ventas_root" action="action_tienda_venta"/>
+    <menuitem id="menu_tienda_productos_vendidos" name="Productos vendidos" sequence="20"
+              parent="menu_tienda_ventas_root" action="action_tienda_venta_linea"/>
+    <menuitem id="menu_tienda_ventas_stock" name="Consultar stock" sequence="30"
+              parent="menu_tienda_ventas_root" action="tienda_inventario.action_tienda_producto"/>
+    <menuitem id="menu_tienda_ventas_manual" name="Manual de uso" sequence="100"
+              parent="menu_tienda_ventas_root" action="action_tienda_ventas_manual"/>
+</odoo>
