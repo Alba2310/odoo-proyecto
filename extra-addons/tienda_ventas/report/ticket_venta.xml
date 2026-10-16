@@ -53,12 +53,20 @@
     </template>
 
     <!-- Encabezado con los datos de la tienda. -->
+    <!-- Encabezado con los datos de la tienda. Si se pasa "sucursal" y tiene dirección
+         o teléfono propios, se usan esos en lugar de los de la compañía. -->
     <template id="ticket_encabezado">
+        <t t-set="direccion_sucursal" t-value="sucursal and sucursal.direccion"/>
         <div class="centro">
             <div class="empresa" t-out="empresa.name"/>
-            <div t-if="empresa.street" t-out="empresa.street"/>
-            <div t-if="empresa.city" t-out="empresa.city"/>
-            <div t-if="empresa.phone">Tel.: <t t-out="empresa.phone"/></div>
+            <div t-if="sucursal" class="negrita">Sucursal <t t-out="sucursal.name"/></div>
+            <div t-if="direccion_sucursal" t-out="direccion_sucursal"/>
+            <t t-else="">
+                <div t-if="empresa.street" t-out="empresa.street"/>
+                <div t-if="empresa.city" t-out="empresa.city"/>
+            </t>
+            <t t-set="telefono" t-value="(sucursal and sucursal.telefono) or empresa.phone"/>
+            <div t-if="telefono">Tel.: <t t-out="telefono"/></div>
             <div t-if="empresa.vat">RUC: <t t-out="empresa.vat"/></div>
         </div>
     </template>
@@ -67,6 +75,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="venta">
                 <t t-set="empresa" t-value="venta.env.company"/>
+                <t t-set="sucursal" t-value="venta.sucursal_id"/>
                 <t t-set="moneda" t-value="{'widget': 'monetary', 'display_currency': venta.currency_id}"/>
                 <t t-set="tasas" t-value="{'10': '10 %', '5': '5 %', 'exenta': 'Exenta'}"/>
                 <!-- Un "article" por venta: Odoo imprime cada ticket en su propia hoja. -->

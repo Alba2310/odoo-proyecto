@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tienda_asistencia_list" model="ir.ui.view">
+        <field name="name">tienda.asistencia.list</field>
+        <field name="model">tienda.asistencia</field>
+        <field name="arch" type="xml">
+            <list string="Asistencia" editable="top" decoration-danger="estado == 'falta'"
+                  decoration-info="estado in ('reposo', 'permiso')" decoration-muted="pagado">
+                <field name="fecha" readonly="pagado"/>
+                <field name="empleado_id" readonly="pagado" options="{'no_create': True}"/>
+                <field name="sucursal_id" optional="hide"/>
+                <field name="estado" readonly="pagado"/>
+                <field name="entrada" readonly="pagado"/>
+                <field name="salida" readonly="pagado"/>
+                <field name="horas" widget="float_time" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="monto" sum="Total"/>
+                <field name="pagado"/>
+                <field name="automatica" optional="hide"/>
+                <field name="nota" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tienda_asistencia_search" model="ir.ui.view">
+        <field name="name">tienda.asistencia.search</field>
+        <field name="model">tienda.asistencia</field>
+        <field name="arch" type="xml">
+            <search string="Buscar asistencia">
+                <field name="empleado_id"/>
+                <field name="sucursal_id"/>
+                <filter name="presentes" string="Presentes" domain="[('estado', '=', 'presente')]"/>
+                <filter name="faltas" string="Faltas sin aviso" domain="[('estado', '=', 'falta')]"/>
+                <filter name="reposos" string="Reposos" domain="[('estado', '=', 'reposo')]"/>
+                <filter name="permisos" string="Permisos / feriados" domain="[('estado', '=', 'permiso')]"/>
+                <separator/>
+                <filter name="sin_salida" string="Sin marcar salida"
+                        domain="[('estado', '=', 'presente'), ('salida', '=', False)]"/>
+                <filter name="sin_pagar" string="Sin pagar" domain="[('pagado', '=', False)]"/>
+                <separator/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_empleado" string="Empleado" context="{'group_by': 'empleado_id'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                    <filter name="group_dia" string="Día" context="{'group_by': 'fecha:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tienda_asistencia" model="ir.actions.act_window">
+        <field name="name">Asistencia</field>
+        <field name="res_model">tienda.asistencia</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay asistencia registrada</p>
+            <p>Use los botones <b>Entrada</b> y <b>Salida</b> del panel. Acá puede corregir horarios o cargar un día a mano.</p>
+        </field>
+    </record>
+</odoo>

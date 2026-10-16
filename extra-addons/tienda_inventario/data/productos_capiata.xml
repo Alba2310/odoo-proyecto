@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Catálogo de ejemplo de la sucursal Capiatá: otros productos, marcas, unidades
+     y precios que Areguá. Precios aproximados en guaraníes, con IVA incluido. -->
+<odoo>
+    <data noupdate="1">
+
+        <record id="cap_yerba_pajarito" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-DES-001</field>
+            <field name="name">Yerba mate 1 kg</field>
+            <field name="marca">Pajarito</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">26000</field>
+            <field name="precio_venta">32000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">10</field>
+        </record>
+        <record id="cap_yerba_kurupi" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-DES-002</field>
+            <field name="name">Yerba mate 500 g</field>
+            <field name="marca">Kurupí</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">14500</field>
+            <field name="precio_venta">18500</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">8</field>
+        </record>
+        <record id="cap_arroz_suelto" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-DES-003</field>
+            <field name="name">Arroz suelto (por kilo)</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">kg</field>
+            <field name="costo">6000</field>
+            <field name="precio_venta">7800</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">30</field>
+        </record>
+        <record id="cap_azucar_suelta" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-DES-004</field>
+            <field name="name">Azúcar suelta (por kilo)</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">kg</field>
+            <field name="costo">5500</field>
+            <field name="precio_venta">7000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">30</field>
+        </record>
+        <record id="cap_aceite_soja" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-DES-005</field>
+            <field name="name">Aceite de soja 1,5 L</field>
+            <field name="categoria_id" ref="categoria_despensa"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">17000</field>
+            <field name="precio_venta">21000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">6</field>
+        </record>
+        <record id="cap_leche_lactolanda" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-LAC-001</field>
+            <field name="name">Leche entera 1 L</field>
+            <field name="marca">Lactolanda</field>
+            <field name="categoria_id" ref="categoria_lacteos"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">6200</field>
+            <field name="precio_venta">8000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">12</field>
+        </record>
+        <record id="cap_leche_trebol" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-LAC-002</field>
+            <field name="name">Leche entera 1 L</field>
+            <field name="marca">Trébol</field>
+            <field name="categoria_id" ref="categoria_lacteos"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">6000</field>
+            <field name="precio_venta">7800</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">12</field>
+        </record>
+        <record id="cap_huevos_maple" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-LAC-003</field>
+            <field name="name">Huevos (maple de 30)</field>
+            <field name="categoria_id" ref="categoria_lacteos"/>
+            <field name="unidad">caja</field>
+            <field name="costo">26000</field>
+            <field name="precio_venta">32000</field>
+            <field name="iva">5</field>
+            <field name="stock_minimo">4</field>
+        </record>
+        <record id="cap_gaseosa_pulp" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-BEB-001</field>
+            <field name="name">Gaseosa naranja 2 L</field>
+            <field name="marca">Pulp</field>
+            <field name="categoria_id" ref="categoria_bebidas"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">9000</field>
+            <field name="precio_venta">12000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">12</field>
+        </record>
+        <record id="cap_gaseosa_cola" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-BEB-002</field>
+            <field name="name">Gaseosa cola 1,5 L</field>
+            <field name="marca">Coca-Cola</field>
+            <field name="categoria_id" ref="categoria_bebidas"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">8500</field>
+            <field name="precio_venta">11000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">12</field>
+        </record>
+        <record id="cap_detergente" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-LIM-001</field>
+            <field name="name">Detergente 750 ml</field>
+            <field name="categoria_id" ref="categoria_limpieza"/>
+            <field name="unidad">unidad</field>
+            <field name="costo">7000</field>
+            <field name="precio_venta">9500</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">6</field>
+        </record>
+        <record id="cap_papel_x12" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_capiata"/>
+            <field name="codigo">C-HIG-001</field>
+            <field name="name">Papel higiénico x12</field>
+            <field name="categoria_id" ref="categoria_higiene"/>
+            <field name="unidad">paquete</field>
+            <field name="costo">23000</field>
+            <field name="precio_venta">30000</field>
+            <field name="iva">10</field>
+            <field name="stock_minimo">4</field>
+        </record>
+
+        <!-- Stock inicial: parte en la despensa y el resto guardado en el depósito.
+             Los huevos y el detergente arrancan con la despensa vacía a propósito. -->
+        <record id="cap_inicial_yerba_pajarito_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_yerba_pajarito"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">10</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_yerba_pajarito_deposito" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_yerba_pajarito"/>
+            <field name="ubicacion">deposito</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">30</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_yerba_kurupi_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_yerba_kurupi"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">12</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_yerba_kurupi_deposito" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_yerba_kurupi"/>
+            <field name="ubicacion">deposito</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">24</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_arroz_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_arroz_suelto"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">25</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_arroz_deposito" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_arroz_suelto"/>
+            <field name="ubicacion">deposito</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">100</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_azucar_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_azucar_suelta"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">20</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_azucar_deposito" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_azucar_suelta"/>
+            <field name="ubicacion">deposito</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">80</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_aceite_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_aceite_soja"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">12</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_lactolanda_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_leche_lactolanda"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">24</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_trebol_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_leche_trebol"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">18</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_huevos_deposito" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_huevos_maple"/>
+            <field name="ubicacion">deposito</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">10</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_pulp_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_gaseosa_pulp"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">18</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_pulp_deposito" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_gaseosa_pulp"/>
+            <field name="ubicacion">deposito</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">36</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_cola_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_gaseosa_cola"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">24</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_detergente_deposito" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_detergente"/>
+            <field name="ubicacion">deposito</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">15</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+        <record id="cap_inicial_papel_despensa" model="tienda.movimiento">
+            <field name="producto_id" ref="cap_papel_x12"/>
+            <field name="ubicacion">despensa</field>
+            <field name="tipo">inicial</field>
+            <field name="cantidad">8</field>
+            <field name="referencia">Carga inicial</field>
+        </record>
+
+    </data>
+</odoo>

@@ -5,8 +5,9 @@
     'description': """
 Ventas básicas para una tienda
 ==============================
+* Ventas y cajas por sucursal: cada venta usa los productos de su sucursal.
 * Registro de ventas con varios productos, precio y descuento (%) por línea.
-* Al confirmar la venta se descuenta el stock y queda el movimiento registrado.
+* Al confirmar la venta se descuenta el stock de la despensa y queda el movimiento registrado.
 * Control de stock insuficiente.
 * Cancelar una venta devuelve los productos al stock.
 * Forma de pago (efectivo, tarjeta, transferencia / QR) y cálculo del vuelto.
@@ -16,7 +17,7 @@ Ventas básicas para una tienda
 * Reporte de productos vendidos.
 * Manual de uso en el menú Ventas > Manual de uso.
 """,
-    'version': '18.0.1.2.0',
+    'version': '18.0.1.3.0',
     'category': 'Sales',
     'license': 'LGPL-3',
     'depends': ['tienda_inventario'],

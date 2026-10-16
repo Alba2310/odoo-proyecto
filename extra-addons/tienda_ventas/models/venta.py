@@ -22,6 +22,8 @@ class TiendaVenta(models.Model):
     _order = 'fecha desc, id desc'
 
     name = fields.Char('Número', readonly=True, copy=False, default='Nuevo')
+    sucursal_id = fields.Many2one('tienda.sucursal', string='Sucursal', required=True, index=True,
+                                  default=lambda self: self._default_sucursal())
     fecha = fields.Datetime('Fecha', default=fields.Datetime.now, required=True)
     cliente_id = fields.Many2one('res.partner', string='Cliente')
     vendedor_id = fields.Many2one('res.users', string='Vendedor', default=lambda self: self.env.user)
@@ -50,6 +52,11 @@ class TiendaVenta(models.Model):
     total = fields.Monetary('Total', compute='_compute_totales', store=True)
     iva_10 = fields.Monetary('IVA 10 %', compute='_compute_totales', store=True)
     iva_5 = fields.Monetary('IVA 5 %', compute='_compute_totales', store=True)
+
+    @api.model
+    def _default_sucursal(self):
+        # La de la caja abierta del usuario; si no tiene, la sucursal donde trabaja.
+        return self.env['tienda.caja']._caja_abierta().sucursal_id or self.env.user.tienda_sucursal_id
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -87,11 +94,20 @@ class TiendaVenta(models.Model):
                 raise UserError(f'La venta {venta.name} no está en borrador.')
             if not venta.linea_ids:
                 raise UserError('Agregue al menos un producto antes de confirmar la venta.')
+            if venta.sucursal_id != caja.sucursal_id:
+                raise UserError(f'Su caja abierta ({caja.name}) es de {caja.sucursal_id.name} y la venta '
+                                f'es de {venta.sucursal_id.name}. Cambie la sucursal de la venta.')
+            otros = venta.linea_ids.producto_id.filtered(lambda p: p.sucursal_id != venta.sucursal_id)
+            if otros:
+                raise UserError(f'Estos productos no son de {venta.sucursal_id.name}: '
+                                + ', '.join(otros.mapped('display_name')))
             if venta.metodo_pago == 'efectivo' and venta.monto_recibido and venta.monto_recibido < venta.total:
                 raise UserError('El efectivo recibido es menor que el total de la venta.')
             venta._verificar_stock()
+            # Se vende de la despensa de la sucursal.
             self.env['tienda.movimiento'].create([{
                 'producto_id': linea.producto_id.id,
+                'ubicacion': 'despensa',
                 'tipo': 'venta',
                 'cantidad': -linea.cantidad,
                 'referencia': venta.name,
@@ -105,11 +121,13 @@ class TiendaVenta(models.Model):
         pedido = defaultdict(float)
         for linea in self.linea_ids:
             pedido[linea.producto_id] += linea.cantidad
-        faltantes = [
-            f'• {producto.name}: se quieren vender {cantidad:g} y hay {producto.stock:g}'
-            for producto, cantidad in pedido.items()
-            if cantidad > producto.stock
-        ]
+        faltantes = []
+        for producto, cantidad in pedido.items():
+            if cantidad > producto.stock_despensa:
+                faltante = f'• {producto.display_name}: se quieren vender {cantidad:g} y en la despensa hay {producto.stock_despensa:g}'
+                if producto.stock_deposito:
+                    faltante += f' (en el depósito hay {producto.stock_deposito:g}: páselo a la despensa)'
+                faltantes.append(faltante)
         if faltantes:
             raise UserError('No hay stock suficiente para confirmar la venta:\n' + '\n'.join(faltantes))
 
@@ -129,6 +147,7 @@ class TiendaVenta(models.Model):
                     neto[movimiento.producto_id] += movimiento.cantidad
                 self.env['tienda.movimiento'].create([{
                     'producto_id': producto.id,
+                    'ubicacion': 'despensa',
                     'tipo': 'anulacion',
                     'cantidad': -cantidad,
                     'referencia': f'Anulación {venta.name}',
@@ -149,7 +168,7 @@ class TiendaVenta(models.Model):
         """Largo aproximado del ticket impreso, para no gastar rollo en blanco.
         Cada producto ocupa dos renglones (~9 mm); los nombres largos, uno más."""
         self.ensure_one()
-        alto = 115 + (10 if self.estado != 'confirmada' else 0)
+        alto = 120 + (10 if self.estado != 'confirmada' else 0)
         if self.metodo_pago == 'efectivo' and self.monto_recibido:
             alto += 9
         for linea in self.linea_ids:
@@ -169,7 +188,7 @@ class TiendaVentaLinea(models.Model):
     venta_id = fields.Many2one('tienda.venta', string='Venta', required=True,
                                ondelete='cascade', index=True)
     producto_id = fields.Many2one('tienda.producto', string='Producto', required=True, ondelete='restrict')
-    stock_disponible = fields.Float(related='producto_id.stock', string='Stock disponible')
+    stock_disponible = fields.Float(related='producto_id.stock_despensa', string='En despensa')
     cantidad = fields.Float('Cantidad', default=1, required=True)
     currency_id = fields.Many2one(related='venta_id.currency_id')
     precio_unitario = fields.Monetary('Precio unitario', compute='_compute_precio_unitario',
@@ -182,6 +201,7 @@ class TiendaVentaLinea(models.Model):
     importe_iva = fields.Monetary('IVA incluido', compute='_compute_importes', store=True)
 
     # Para el reporte de productos vendidos.
+    sucursal_id = fields.Many2one(related='venta_id.sucursal_id', store=True, string='Sucursal')
     fecha = fields.Datetime(related='venta_id.fecha', store=True, string='Fecha')
     estado = fields.Selection(related='venta_id.estado', store=True, string='Estado')
 

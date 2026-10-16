@@ -15,11 +15,15 @@
               parent="menu_tienda_inventario_root" action="action_tienda_producto_stock_bajo"/>
     <menuitem id="menu_tienda_reponer" name="Reponer stock" sequence="30"
               parent="menu_tienda_inventario_root" action="action_tienda_reponer_stock"/>
+    <menuitem id="menu_tienda_transferir" name="Pasar a la despensa" sequence="35"
+              parent="menu_tienda_inventario_root" action="action_tienda_transferir_stock"/>
     <menuitem id="menu_tienda_movimientos" name="Movimientos" sequence="40"
               parent="menu_tienda_inventario_root" action="action_tienda_movimiento"/>
 
     <menuitem id="menu_tienda_inventario_config" name="Configuración" sequence="90"
               parent="menu_tienda_inventario_root"/>
+    <menuitem id="menu_tienda_sucursales" name="Sucursales" sequence="5"
+              parent="menu_tienda_inventario_config" action="action_tienda_sucursal"/>
     <menuitem id="menu_tienda_categorias" name="Categorías" sequence="10"
               parent="menu_tienda_inventario_config" action="action_tienda_categoria"/>
 

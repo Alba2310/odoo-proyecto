@@ -65,7 +65,8 @@
 <h2 id="para-que">1. Para qué sirve</h2>
 <p>El módulo de Ventas registra lo que se vende en la tienda y controla la plata de la caja:</p>
 <ul>
-  <li>Cada venta tiene un número (V00001, V00002…), fecha, cliente, vendedor y uno o más productos.</li>
+  <li>Cada venta tiene un número (V00001, V00002…), sucursal, fecha, cliente, vendedor y uno o más productos.</li>
+  <li>Cada sucursal (Areguá y Capiatá) vende sus propios productos, y cada venta se descuenta de la <b>despensa</b> de su sucursal.</li>
   <li>El precio de cada producto se completa solo, en <b>guaraníes y con IVA incluido</b>. Se puede aplicar un <b>descuento en %</b> por producto.</li>
   <li>Se anota la <b>forma de pago</b> (efectivo, tarjeta o transferencia / QR) y, si paga en efectivo, el sistema calcula el <b>vuelto</b>.</li>
   <li>Al <b>confirmar</b> la venta, el sistema <b>descuenta del stock</b> las unidades vendidas y lo deja registrado en el Inventario.</li>
@@ -95,6 +96,7 @@
 <p>Sin una caja abierta <b>no se pueden confirmar ventas</b>. Cada usuario tiene su propia caja y solo puede tener una abierta a la vez.</p>
 <ol>
   <li>Entre a <span class="menu">Caja</span> y haga clic en <span class="boton">Nuevo</span>.</li>
+  <li>Elija la <b>Sucursal</b> donde va a vender (Areguá o Capiatá). Si su usuario tiene una sucursal asignada, ya aparece elegida.</li>
   <li>En <b>Fondo inicial</b>, escriba el efectivo que hay en la caja para dar vuelto (por ejemplo, 100.000 ₲). Si no hay, deje 0.</li>
   <li>Guarde (ícono de la nube). La caja queda <b>Abierta</b>, con un número como <i>CAJA-00001</i>.</li>
 </ol>
@@ -102,9 +104,9 @@
 
 <h2 id="registrar">5. Registrar una venta</h2>
 <ol>
-  <li>Entre a <span class="menu">Ventas</span> y haga clic en <span class="boton">Nuevo</span>.</li>
+  <li>Entre a <span class="menu">Ventas</span> y haga clic en <span class="boton">Nuevo</span>. La <b>Sucursal</b> se completa con la de su caja abierta.</li>
   <li><b>Cliente</b> (opcional): elija o escriba el nombre del cliente. Si lo deja vacío, se considera <i>consumidor final</i>.</li>
-  <li>En la pestaña <b>Productos</b>, haga clic en <b>Agregar una línea</b> y elija el <b>Producto</b> (puede escribir parte del nombre). Se completan el <b>Precio unitario</b> y el <b>IVA</b>, y se muestra el <b>Stock disponible</b>.</li>
+  <li>En la pestaña <b>Productos</b>, haga clic en <b>Agregar una línea</b> y elija el <b>Producto</b> (puede escribir parte del nombre o la marca). Solo aparecen los productos de la sucursal de la venta. Se completan el <b>Precio unitario</b> y el <b>IVA</b>, y se muestra cuánto hay <b>En despensa</b>.</li>
   <li>Escriba la <b>Cantidad</b> y, si corresponde, el <b>Desc. (%)</b>. Repita por cada producto.</li>
   <li>En <b>Pago</b>, elija la <b>Forma de pago</b>: Efectivo, Tarjeta o Transferencia / QR.</li>
   <li>Si paga en efectivo, escriba en <b>Efectivo recibido</b> con cuánto pagó el cliente. Aparece el <b>Vuelto</b> que hay que darle.</li>
@@ -137,7 +139,7 @@
 
 <h2 id="confirmar">8. Qué pasa al confirmar</h2>
 <ol>
-  <li>El sistema revisa que haya una caja abierta, que alcance el stock de todos los productos y que el efectivo recibido cubra el total.</li>
+  <li>El sistema revisa que haya una caja abierta <b>de la misma sucursal</b> que la venta, que alcance el stock de la <b>despensa</b> para todos los productos y que el efectivo recibido cubra el total.</li>
   <li>Por cada producto vendido crea un <b>movimiento de stock de tipo "Venta"</b>, con cantidad negativa y el número de venta como referencia. El stock <b>baja</b> en ese momento.</li>
   <li>La venta queda registrada en <b>su caja</b> y pasa a estado <b>Confirmada</b>. Ya no se puede modificar.</li>
 </ol>
@@ -155,7 +157,8 @@
 
 <h2 id="sin-stock">10. Si no hay stock suficiente</h2>
 <p>Si algún producto no alcanza, aparece un mensaje como este y la venta queda en borrador:</p>
-<div class="nota">No hay stock suficiente para confirmar la venta:<br>• Jugo de naranja 1 L: se quieren vender 5 y hay 3</div>
+<div class="nota">No hay stock suficiente para confirmar la venta:<br>• Jugo de naranja 1 L: se quieren vender 5 y en la despensa hay 3 (en el depósito hay 12: páselo a la despensa)</div>
+<p>Las ventas se descuentan de la <b>despensa</b>. Si el mensaje dice que hay en el depósito, use <span class="menu">Inventario › Pasar a la despensa</span> y vuelva a confirmar.</p>
 <p>Puede bajar la cantidad, quitar ese producto de la venta, o ir a <span class="menu">Inventario › Reponer stock</span> si la mercadería llegó pero no se cargó. Después vuelva a confirmar.</p>
 
 <h2 id="cancelar">11. Cancelar o corregir una venta</h2>
@@ -208,6 +211,8 @@
 <p>Puede ser porque no tiene una caja abierta, porque no alcanza el stock o porque el efectivo recibido es menor que el total. El mensaje indica cuál es el caso.</p>
 <h3>Me olvidé de cerrar la caja ayer. ¿Qué hago?</h3>
 <p>Ciérrela ahora contando el efectivo. Después abra una caja nueva para las ventas de hoy.</p>
+<h3>Tengo la caja abierta en Areguá. ¿Puedo cargar una venta de Capiatá?</h3>
+<p>No con esa caja: cada venta se registra en una caja de su misma sucursal. Cierre la caja de Areguá y abra una de Capiatá, o pídale a alguien de Capiatá que la cargue.</p>
 <h3>¿Puedo vender el mismo producto en dos líneas?</h3>
 <p>Sí. Al confirmar se suma lo pedido en todas las líneas y se verifica contra el stock disponible.</p>
 <h3>Cambié el precio de un producto, ¿se modifican las ventas anteriores?</h3>

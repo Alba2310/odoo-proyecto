@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de uso - Personal</title>
+<style>
+  :root { --acento: #3B5BA9; --texto: #1f2933; --suave: #52606d; --borde: #d9e2ec; --fondo-nota: #eef2fa; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texto); background: #fff; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+  header { border-bottom: 3px solid var(--acento); padding-bottom: 16px; margin-bottom: 24px; display: flex; gap: 16px; align-items: center; }
+  header img { width: 56px; height: 56px; }
+  h1 { margin: 0; font-size: 1.9rem; }
+  header p { margin: 2px 0 0; color: var(--suave); }
+  h2 { margin-top: 40px; color: var(--acento); border-bottom: 1px solid var(--borde); padding-bottom: 4px; }
+  h3 { margin-top: 24px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: .95rem; }
+  th, td { border: 1px solid var(--borde); padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #f5f7fa; }
+  .nota { background: var(--fondo-nota); border-left: 4px solid var(--acento); padding: 10px 14px; margin: 16px 0; }
+  .menu { font-weight: 600; background: #f5f7fa; border: 1px solid var(--borde); border-radius: 4px; padding: 0 6px; white-space: nowrap; }
+  .boton { font-weight: 600; color: #fff; background: var(--acento); border-radius: 4px; padding: 1px 8px; white-space: nowrap; }
+  .verde { color: #1e7d32; font-weight: 600; } .rojo { color: #b3261e; font-weight: 600; } .azul { color: #1565c0; font-weight: 600; }
+  .pasos { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .pasos div { flex: 1 1 180px; border: 1px solid var(--borde); border-top: 4px solid var(--acento); border-radius: 4px; padding: 10px 14px; }
+  .pasos b { display: block; font-size: 1.05rem; }
+  nav ol { columns: 2; }
+  .imprimir { margin-left: auto; border: 1px solid var(--acento); color: var(--acento); background: #fff; border-radius: 4px; padding: 6px 14px; cursor: pointer; font: inherit; }
+  @media (max-width: 600px) { nav ol { columns: 1; } table { font-size: .85rem; } }
+  @media print { .imprimir { display: none; } main { padding: 0; } h2 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <img src="icon.png" alt="">
+  <div>
+    <h1>Manual de uso: Personal</h1>
+    <p>Módulo <b>Tienda - Personal</b> para Odoo 18. Solo lo ven los usuarios administradores.</p>
+  </div>
+  <button class="imprimir" onclick="window.print()">Imprimir</button>
+</header>
+
+<nav>
+  <ol>
+    <li><a href="#para-que">Para qué sirve</a></li>
+    <li><a href="#reglas">Las reglas de pago</a></li>
+    <li><a href="#menus">Menús</a></li>
+    <li><a href="#empleado">Cargar un empleado</a></li>
+    <li><a href="#panel">El panel</a></li>
+    <li><a href="#entrada">Marcar entrada y salida</a></li>
+    <li><a href="#faltas">Faltas automáticas</a></li>
+    <li><a href="#reposo">Reposos</a></li>
+    <li><a href="#corregir">Corregir la asistencia</a></li>
+    <li><a href="#bonos">Bonos</a></li>
+    <li><a href="#sanciones">Sanciones</a></li>
+    <li><a href="#pagar">Pagar a un empleado</a></li>
+    <li><a href="#faq">Preguntas frecuentes</a></li>
+  </ol>
+</nav>
+
+<h2 id="para-que">1. Para qué sirve</h2>
+<p>El módulo de Personal lleva el control de los empleados de cada sucursal:</p>
+<ul>
+  <li>Registra a qué hora entra y sale cada empleado, y calcula las horas trabajadas.</li>
+  <li>Marca solo las <b>faltas</b> de quien no vino un día que le tocaba trabajar, y los <b>reposos</b> de quien tiene uno cargado.</li>
+  <li>Lleva los <b>bonos</b> y las <b>sanciones</b>, y avisa a quién no le corresponde el bono.</li>
+  <li>Calcula <b>cuánto le debe a cada empleado</b> y emite el <b>recibo de pago</b> para firmar.</li>
+  <li>Muestra todo en un <b>panel</b>, con una tarjeta por empleado.</li>
+</ul>
+
+<h2 id="reglas">2. Las reglas de pago</h2>
+<table>
+  <tr><th>Situación</th><th>Se paga</th><th>¿Pierde el bono del mes?</th></tr>
+  <tr><td><span class="verde">Presente</span> (marcó entrada y salida)</td><td>Las horas trabajadas × su pago por hora</td><td>No</td></tr>
+  <tr><td><span class="rojo">Falta sin aviso</span></td><td>No cobra ese día</td><td><b>Sí</b></td></tr>
+  <tr><td><span class="azul">Reposo</span></td><td>No cobra ese día</td><td>No</td></tr>
+  <tr><td><span class="azul">Permiso / feriado</span></td><td>No cobra ese día</td><td>No</td></tr>
+</table>
+<div class="nota"><b>Ejemplo:</b> María cobra 12.000 ₲ por hora. El lunes entró a las 7:00 y salió a las 15:30: son 8:30 h, y cobra <b>102.000 ₲</b> por ese día.<br>
+<b>Bono:</b> si en el mes tiene <b>al menos una falta sin aviso</b>, el panel marca <span class="rojo">Sin bono este mes</span>. Los reposos y permisos no cuentan.</div>
+
+<h2 id="menus">3. Menús</h2>
+<p>Desde la pantalla principal de Odoo, haga clic en el ícono <span class="menu">Personal</span>.</p>
+<table>
+  <tr><th>Menú</th><th>Para qué se usa</th></tr>
+  <tr><td><span class="menu">Panel</span></td><td>Ver a todos los empleados de un vistazo, marcar entrada y salida, y pagar.</td></tr>
+  <tr><td><span class="menu">Asistencia</span></td><td>Ver y corregir los días de cada empleado (horarios, faltas, permisos).</td></tr>
+  <tr><td><span class="menu">Reposos</span></td><td>Cargar los reposos con su certificado.</td></tr>
+  <tr><td><span class="menu">Bonos y sanciones</span></td><td>Asignar bonos y anotar sanciones.</td></tr>
+  <tr><td><span class="menu">Pagos</span></td><td>Historial de todos los pagos y sus recibos.</td></tr>
+  <tr><td><span class="menu">Empleados</span></td><td>Cargar y editar los datos de los empleados.</td></tr>
+  <tr><td><span class="menu">Revisar faltas ahora</span></td><td>Hace el control de faltas en el momento (normalmente lo hace el sistema solo, cada hora).</td></tr>
+  <tr><td><span class="menu">Manual de uso</span></td><td>Abre este manual.</td></tr>
+</table>
+
+<h2 id="empleado">4. Cargar un empleado</h2>
+<ol>
+  <li>Entre a <span class="menu">Empleados</span> y haga clic en <span class="boton">Nuevo</span>.</li>
+  <li>Complete los datos (ver tabla) y guarde.</li>
+</ol>
+<table>
+  <tr><th>Campo</th><th>Qué poner</th></tr>
+  <tr><td>Nombre y apellido</td><td>Obligatorio.</td></tr>
+  <tr><td>Cédula, teléfono, dirección</td><td>Datos de contacto. La cédula sale en el recibo.</td></tr>
+  <tr><td>Sucursal</td><td>Dónde trabaja (por ejemplo, Areguá).</td></tr>
+  <tr><td>Puesto</td><td>Cajero, repositor, encargado, etc.</td></tr>
+  <tr><td>Fecha de ingreso</td><td>Cuándo empezó a trabajar.</td></tr>
+  <tr><td>Controlar asistencia desde</td><td>Desde qué día el sistema marca faltas. Por defecto es el día en que lo carga, así no aparecen faltas viejas.</td></tr>
+  <tr><td>Pago por hora</td><td>Cuánto cobra por cada hora trabajada, en guaraníes.</td></tr>
+  <tr><td>Días que trabaja</td><td>Marque los días que le toca venir. Por defecto, de lunes a sábado. Los días sin marcar no cuentan como falta.</td></tr>
+</table>
+<div class="nota">Si un empleado deja de trabajar, no lo borre: <b>archívelo</b> (⚙ Acciones › Archivar). Su historial de asistencia y pagos se conserva.</div>
+
+<h2 id="panel">5. El panel</h2>
+<p>En <span class="menu">Panel</span> hay una tarjeta por empleado con:</p>
+<ul>
+  <li><b>Cómo está hoy:</b> <span class="verde">Trabajando</span> o <span class="verde">Ya salió</span>; <span class="rojo">Sin marcar</span> (le toca venir y todavía no marcó) o <span class="rojo">Falta</span>; <span class="azul">Reposo</span> o <span class="azul">Permiso</span>; o <i>Día libre</i>.</li>
+  <li><b>Le debo:</b> lo que tiene pendiente de cobro (horas trabajadas sin pagar + bonos − sanciones).</li>
+  <li><b>Faltas sin aviso este mes</b>, y si <span class="verde">Le corresponde bono</span> o está <span class="rojo">Sin bono este mes</span>.</li>
+  <li>Un aviso si tiene días <b>sin marcar la salida</b>.</li>
+  <li>Los botones <span class="boton">Entrada</span>, <span class="boton">Salida</span> y <span class="boton">Pagar</span>.</li>
+</ul>
+<p>Con el buscador puede filtrar por <i>Les debo</i>, <i>Sin bono este mes</i>, <i>Con bono este mes</i> o por sucursal. Para ver lo mismo como tabla, con el total que le debe a todos, cambie a la vista de lista (ícono de lista, arriba a la derecha).</p>
+
+<h2 id="entrada">6. Marcar entrada y salida</h2>
+<ol>
+  <li>Cuando el empleado llega, en el <span class="menu">Panel</span> haga clic en <span class="boton">Entrada</span> en su tarjeta. Se guarda la hora exacta.</li>
+  <li>Cuando se va, haga clic en <span class="boton">Salida</span>.</li>
+</ol>
+<p>Las horas del día se calculan solas. También puede marcar desde la ficha del empleado (botones <b>Marcar entrada</b> y <b>Marcar salida</b>).</p>
+<div class="nota">Si alguien se olvida de marcar la salida, ese día <b>no se puede pagar</b> hasta corregirlo (ver punto 9). La tarjeta lo avisa.</div>
+
+<h2 id="faltas">7. Faltas automáticas</h2>
+<p>Cada hora, el sistema revisa los días <b>hasta ayer</b>. Si un empleado no tiene entrada en un día que le tocaba trabajar:</p>
+<ul>
+  <li>Si tiene un <b>reposo</b> cargado para ese día, lo marca como <span class="azul">Reposo</span>.</li>
+  <li>Si no, lo marca como <span class="rojo">Falta sin aviso</span>: no cobra el día y pierde el bono del mes.</li>
+</ul>
+<p>El día de hoy no se marca como falta hasta que termina, porque el empleado todavía puede llegar. Mientras tanto el panel lo muestra como <span class="rojo">Sin marcar</span>.</p>
+<p>Si quiere hacer el control en el momento, use <span class="menu">Revisar faltas ahora</span>.</p>
+
+<h2 id="reposo">8. Reposos</h2>
+<ol>
+  <li>Entre a <span class="menu">Reposos</span> y haga clic en <span class="boton">Nuevo</span>, o use la pestaña <b>Reposos</b> de la ficha del empleado.</li>
+  <li>Elija el empleado, las fechas <b>desde</b> y <b>hasta</b>, y el <b>motivo</b> (por ejemplo, <i>reposo médico</i>).</li>
+  <li>En <b>Certificado</b>, suba la foto o el PDF del certificado.</li>
+  <li>Guarde.</li>
+</ol>
+<p>Los días del reposo quedan como <span class="azul">Reposo</span>: no se pagan, pero no son faltas y no le quitan el bono. Si carga el reposo <b>después</b> de que el sistema marcó la falta, la falta se convierte sola en reposo. Si borra el reposo, esos días vuelven a ser falta.</p>
+
+<h2 id="corregir">9. Corregir la asistencia</h2>
+<p>En <span class="menu">Asistencia</span> (o en la pestaña <b>Asistencia</b> del empleado) puede:</p>
+<ul>
+  <li><b>Corregir horarios:</b> haga clic en la fila y cambie la entrada o la salida (por ejemplo, si se olvidó de marcar la salida).</li>
+  <li><b>Justificar una falta:</b> cambie el estado de <i>Falta sin aviso</i> a <i>Permiso / feriado</i>. Así no pierde el bono.</li>
+  <li><b>Cargar un día a mano:</b> use <b>Nuevo</b>, elija el empleado y la fecha, y cargue la entrada y la salida.</li>
+</ul>
+<p>Filtros útiles: <i>Faltas sin aviso</i>, <i>Sin marcar salida</i>, <i>Sin pagar</i>, y por fecha.</p>
+<div class="nota">Los días ya <b>pagados</b> aparecen en gris y no se pueden modificar. Si hay que corregir uno, primero anule el pago (punto 12).</div>
+
+<h2 id="bonos">10. Bonos</h2>
+<ol>
+  <li>Entre a <span class="menu">Bonos y sanciones › Bonos</span> y haga clic en <span class="boton">Nuevo</span>.</li>
+  <li>Elija el empleado, escriba el <b>motivo</b> (por ejemplo, <i>buen desempeño</i>) y el <b>monto</b>.</li>
+  <li>Guarde. El bono se suma en el próximo pago del empleado.</li>
+</ol>
+<p>Usted decide a quién darle bono. Si elige a alguien que <b>faltó sin aviso este mes</b>, aparece un aviso en rojo; puede guardarlo igual si así lo decide. En la lista de bonos, los de esas personas se ven en rojo.</p>
+
+<h2 id="sanciones">11. Sanciones</h2>
+<p>La falta sin aviso ya tiene su sanción: no cobra el día y pierde el bono. No hace falta cargar nada más.</p>
+<p>Para otras sanciones (por ejemplo, un llamado de atención o un descuento por un faltante), entre a <span class="menu">Bonos y sanciones › Sanciones</span>, haga clic en <span class="boton">Nuevo</span> y cargue el empleado, el motivo y el <b>monto a descontar</b>. Puede ser 0 si es solo un registro.</p>
+
+<h2 id="pagar">12. Pagar a un empleado</h2>
+<ol>
+  <li>En el <span class="menu">Panel</span>, haga clic en <span class="boton">Pagar</span> en la tarjeta del empleado.</li>
+  <li>Se abre el pago con todo lo pendiente hasta hoy: los <b>días trabajados</b> (con sus horas), los <b>bonos</b> y las <b>sanciones</b>. Revise el <b>Total a pagar</b>.</li>
+  <li>Pague al empleado y haga clic en <span class="boton">Confirmar pago e imprimir recibo</span>.</li>
+  <li>Se descarga el <b>recibo</b>. Imprímalo y hágalo firmar.</li>
+</ol>
+<p>Cada día, bono o sanción entra en un solo pago: lo que ya se pagó no vuelve a aparecer. Sirve igual si paga por día, por semana o por mes: el pago junta todo lo que haya pendiente.</p>
+<ul>
+  <li>Si dejó un pago sin confirmar y después hubo más días trabajados, use <b>Agregar lo nuevo pendiente</b>.</li>
+  <li>Para reimprimir un recibo: <span class="menu">Pagos</span>, abra el pago y haga clic en <b>Imprimir recibo</b>.</li>
+  <li>Si se confirmó un pago por error, use <b>Anular pago</b>: sus días, bonos y sanciones vuelven a quedar pendientes.</li>
+</ul>
+<div class="nota">Los días <b>sin marcar la salida</b> no entran en el pago. Corríjalos primero (punto 9) y después use <b>Agregar lo nuevo pendiente</b>.</div>
+
+<h2 id="faq">13. Preguntas frecuentes</h2>
+<h3>Un empleado llegó tarde y el sistema ya lo había marcado como falta. ¿Qué hago?</h3>
+<p>El sistema solo marca faltas de días anteriores. Si igual pasa (por ejemplo, porque cargó a mano una falta de hoy), haga clic en <b>Entrada</b>: la falta se reemplaza por la entrada con la hora actual.</p>
+<h3>Hoy es feriado y no viene nadie. ¿Cómo evito las faltas?</h3>
+<p>Mañana, en <span class="menu">Asistencia</span>, filtre por <i>Faltas sin aviso</i> y la fecha del feriado, y cambie el estado a <i>Permiso / feriado</i>.</p>
+<h3>¿Cambiar el pago por hora cambia lo que ya trabajó?</h3>
+<p>No. Cada día guarda el pago por hora que tenía ese día. El nuevo valor se usa desde los días siguientes.</p>
+<h3>¿Por qué un cajero no ve el menú Personal?</h3>
+<p>Porque tiene datos de sueldos: solo lo ven los usuarios <b>administradores</b>.</p>
+<h3>¿Puedo ver lo que pagué en el mes?</h3>
+<p>Sí: en <span class="menu">Pagos</span>, filtre por fecha o agrupe por <i>Mes</i> o por <i>Empleado</i>. Al pie de la columna <b>Total</b> se ve la suma.</p>
+</main>
+</body>
+</html>

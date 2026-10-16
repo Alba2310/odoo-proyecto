@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Panel: una tarjeta por empleado con lo que se le debe y si le corresponde bono. -->
+    <record id="view_tienda_empleado_kanban" model="ir.ui.view">
+        <field name="name">tienda.empleado.kanban</field>
+        <field name="model">tienda.empleado</field>
+        <field name="arch" type="xml">
+            <kanban string="Panel del personal" create="0">
+                <field name="currency_id"/>
+                <field name="estado_hoy"/>
+                <field name="entrada_hoy"/>
+                <field name="corresponde_bono"/>
+                <field name="faltas_mes"/>
+                <field name="dias_sin_salida"/>
+                <field name="a_pagar"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <t t-set="hoy" t-value="record.estado_hoy.raw_value"/>
+                            <span t-if="hoy == 'trabajando' or hoy == 'salio'" class="badge text-bg-success"><field name="estado_hoy"/></span>
+                            <span t-elif="hoy == 'sin_marcar' or hoy == 'falta'" class="badge text-bg-danger"><field name="estado_hoy"/></span>
+                            <span t-elif="hoy == 'reposo' or hoy == 'permiso'" class="badge text-bg-info"><field name="estado_hoy"/></span>
+                            <span t-else="" class="badge text-bg-secondary"><field name="estado_hoy"/></span>
+                        </div>
+                        <div class="text-muted">
+                            <field name="puesto"/> · <field name="sucursal_id"/>
+                        </div>
+                        <div t-if="record.entrada_hoy.raw_value" class="small">
+                            Entrada de hoy: <field name="entrada_hoy" widget="datetime" options="{'show_time': true}"/>
+                        </div>
+
+                        <div class="mt-2 fs-6">
+                            Le debo: <field name="a_pagar" widget="monetary" class="fw-bold"/>
+                            <span class="text-muted small">(<field name="horas_pendientes" widget="float_time"/> h sin pagar)</span>
+                        </div>
+                        <div>Faltas sin aviso este mes: <field name="faltas_mes" class="fw-bold"/></div>
+                        <div class="mt-1">
+                            <span t-if="record.corresponde_bono.raw_value" class="badge text-bg-success">Le corresponde bono</span>
+                            <span t-else="" class="badge text-bg-danger">Sin bono este mes</span>
+                        </div>
+                        <div t-if="record.dias_sin_salida.raw_value" class="text-warning small mt-1">
+                            <i class="fa fa-exclamation-triangle" title="Atención"/> <field name="dias_sin_salida"/> día(s) sin marcar la salida
+                        </div>
+
+                        <footer class="mt-2 pt-2 border-top d-flex gap-1">
+                            <button t-if="hoy != 'trabajando' and hoy != 'salio'" name="action_marcar_entrada"
+                                    type="object" class="btn btn-sm btn-primary">Entrada</button>
+                            <button t-if="hoy == 'trabajando'" name="action_marcar_salida"
+                                    type="object" class="btn btn-sm btn-primary">Salida</button>
+                            <button t-if="record.a_pagar.raw_value &gt; 0" name="action_pagar"
+                                    type="object" class="btn btn-sm btn-success ms-auto">Pagar</button>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_tienda_empleado_list" model="ir.ui.view">
+        <field name="name">tienda.empleado.list</field>
+        <field name="model">tienda.empleado</field>
+        <field name="arch" type="xml">
+            <list string="Empleados">
+                <field name="name"/>
+                <field name="sucursal_id"/>
+                <field name="puesto" optional="show"/>
+                <field name="ci" optional="hide"/>
+                <field name="telefono" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="pago_hora" optional="show"/>
+                <field name="estado_hoy"/>
+                <field name="horas_pendientes" widget="float_time" optional="show"/>
+                <field name="a_pagar" sum="Total"/>
+                <field name="faltas_mes"/>
+                <field name="corresponde_bono"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tienda_empleado_form" model="ir.ui.view">
+        <field name="name">tienda.empleado.form</field>
+        <field name="model">tienda.empleado</field>
+        <field name="arch" type="xml">
+            <form string="Empleado">
+                <header>
+                    <button name="action_marcar_entrada" string="Marcar entrada" type="object" class="btn-primary"
+                            invisible="not id or estado_hoy in ('trabajando', 'salio')"/>
+                    <button name="action_marcar_salida" string="Marcar salida" type="object" class="btn-primary"
+                            invisible="estado_hoy != 'trabajando'"/>
+                    <button name="action_pagar" string="Pagar" type="object"
+                            invisible="not id or a_pagar &lt;= 0"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <div class="alert alert-danger" role="alert" invisible="not id or corresponde_bono">
+                        <strong>No le corresponde bono este mes:</strong> tiene <field name="faltas_mes" class="d-inline"/>
+                        falta(s) sin aviso.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not dias_sin_salida">
+                        Tiene <field name="dias_sin_salida" class="d-inline"/> día(s) sin marcar la salida: corríjalos en la
+                        pestaña <b>Asistencia</b> para poder pagarlos.
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Ej.: María González"/></h1>
+                    </div>
+                    <group>
+                        <group string="Datos personales">
+                            <field name="ci"/>
+                            <field name="telefono"/>
+                            <field name="direccion"/>
+                        </group>
+                        <group string="Trabajo">
+                            <field name="sucursal_id" options="{'no_create': True}"/>
+                            <field name="puesto"/>
+                            <field name="fecha_ingreso"/>
+                            <field name="control_desde"/>
+                            <field name="pago_hora"/>
+                        </group>
+                    </group>
+                    <group string="Días que trabaja">
+                        <group>
+                            <field name="trabaja_lun"/>
+                            <field name="trabaja_mar"/>
+                            <field name="trabaja_mie"/>
+                            <field name="trabaja_jue"/>
+                        </group>
+                        <group>
+                            <field name="trabaja_vie"/>
+                            <field name="trabaja_sab"/>
+                            <field name="trabaja_dom"/>
+                        </group>
+                    </group>
+                    <group string="Hoy" invisible="not id">
+                        <group>
+                            <field name="estado_hoy"/>
+                            <field name="entrada_hoy" invisible="not entrada_hoy"/>
+                            <field name="corresponde_bono"/>
+                        </group>
+                        <group>
+                            <field name="horas_pendientes" widget="float_time"/>
+                            <field name="a_pagar" class="fw-bold"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Asistencia" name="asistencia">
+                            <field name="asistencia_ids">
+                                <list editable="top" decoration-danger="estado == 'falta'"
+                                      decoration-info="estado in ('reposo', 'permiso')" decoration-muted="pagado">
+                                    <field name="fecha" readonly="pagado"/>
+                                    <field name="estado" readonly="pagado"/>
+                                    <field name="entrada" readonly="pagado"/>
+                                    <field name="salida" readonly="pagado"/>
+                                    <field name="horas" widget="float_time"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="monto"/>
+                                    <field name="pagado"/>
+                                    <field name="nota"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Reposos" name="reposos">
+                            <field name="reposo_ids">
+                                <list editable="top">
+                                    <field name="desde"/>
+                                    <field name="hasta"/>
+                                    <field name="dias"/>
+                                    <field name="motivo"/>
+                                    <field name="certificado_nombre" column_invisible="1"/>
+                                    <field name="certificado" filename="certificado_nombre"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Bonos y sanciones" name="ajustes">
+                            <field name="ajuste_ids">
+                                <list editable="top" decoration-success="tipo == 'bono'" decoration-danger="tipo == 'sancion'"
+                                      decoration-muted="pagado">
+                                    <field name="fecha" readonly="pagado"/>
+                                    <field name="tipo" readonly="pagado"/>
+                                    <field name="motivo" readonly="pagado"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="monto" readonly="pagado"/>
+                                    <field name="pagado"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Pagos" name="pagos">
+                            <field name="pago_ids" readonly="1">
+                                <list decoration-muted="estado == 'anulado'">
+                                    <field name="name"/>
+                                    <field name="fecha"/>
+                                    <field name="desde"/>
+                                    <field name="hasta"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="total"/>
+                                    <field name="estado" widget="badge" decoration-success="estado == 'pagado'"
+                                           decoration-warning="estado == 'borrador'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tienda_empleado_search" model="ir.ui.view">
+        <field name="name">tienda.empleado.search</field>
+        <field name="model">tienda.empleado</field>
+        <field name="arch" type="xml">
+            <search string="Buscar empleados">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('ci', 'ilike', self)]"/>
+                <field name="sucursal_id"/>
+                <filter name="les_debo" string="Les debo" domain="[('a_pagar', '&gt;', 0)]"/>
+                <filter name="sin_bono" string="Sin bono este mes" domain="[('corresponde_bono', '=', False)]"/>
+                <filter name="con_bono" string="Con bono este mes" domain="[('corresponde_bono', '=', True)]"/>
+                <separator/>
+                <filter name="archivados" string="Archivados" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_sucursal" string="Sucursal" context="{'group_by': 'sucursal_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tienda_panel" model="ir.actions.act_window">
+        <field name="name">Panel del personal</field>
+        <field name="res_model">tienda.empleado</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_tienda_empleado_kanban"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay empleados</p>
+            <p>Cárguelos en <b>Personal › Empleados</b>.</p>
+        </field>
+    </record>
+
+    <record id="action_tienda_empleado" model="ir.actions.act_window">
+        <field name="name">Empleados</field>
+        <field name="res_model">tienda.empleado</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="view_id" ref="view_tienda_empleado_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue su primer empleado</p>
+            <p>Nombre, cédula, sucursal, pago por hora y los días que trabaja.</p>
+        </field>
+    </record>
+</odoo>

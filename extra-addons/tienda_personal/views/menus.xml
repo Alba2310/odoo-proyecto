@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_tienda_personal_manual" model="ir.actions.act_url">
+        <field name="name">Manual de uso - Personal</field>
+        <field name="url">/tienda_personal/static/description/manual.html</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Solo para administradores: hay datos de sueldos. -->
+    <menuitem id="menu_tienda_personal_root" name="Personal" sequence="12"
+              web_icon="tienda_personal,static/description/icon.png" groups="base.group_system"/>
+
+    <menuitem id="menu_tienda_panel" name="Panel" sequence="10"
+              parent="menu_tienda_personal_root" action="action_tienda_panel"/>
+    <menuitem id="menu_tienda_asistencia" name="Asistencia" sequence="20"
+              parent="menu_tienda_personal_root" action="action_tienda_asistencia"/>
+    <menuitem id="menu_tienda_reposos" name="Reposos" sequence="30"
+              parent="menu_tienda_personal_root" action="action_tienda_reposo"/>
+
+    <menuitem id="menu_tienda_bonos_sanciones" name="Bonos y sanciones" sequence="40"
+              parent="menu_tienda_personal_root"/>
+    <menuitem id="menu_tienda_bonos" name="Bonos" sequence="10"
+              parent="menu_tienda_bonos_sanciones" action="action_tienda_bono"/>
+    <menuitem id="menu_tienda_sanciones" name="Sanciones" sequence="20"
+              parent="menu_tienda_bonos_sanciones" action="action_tienda_sancion"/>
+
+    <menuitem id="menu_tienda_pagos" name="Pagos" sequence="50"
+              parent="menu_tienda_personal_root" action="action_tienda_pago"/>
+    <menuitem id="menu_tienda_empleados" name="Empleados" sequence="60"
+              parent="menu_tienda_personal_root" action="action_tienda_empleado"/>
+    <menuitem id="menu_tienda_revisar_faltas" name="Revisar faltas ahora" sequence="70"
+              parent="menu_tienda_personal_root" action="action_marcar_faltas"/>
+    <menuitem id="menu_tienda_personal_manual" name="Manual de uso" sequence="100"
+              parent="menu_tienda_personal_root" action="action_tienda_personal_manual"/>
+</odoo>

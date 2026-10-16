@@ -15,6 +15,8 @@ class TiendaCaja(models.Model):
     name = fields.Char('Número', readonly=True, copy=False, default='Nueva')
     usuario_id = fields.Many2one('res.users', string='Cajero', required=True, readonly=True, index=True,
                                  default=lambda self: self.env.user)
+    sucursal_id = fields.Many2one('tienda.sucursal', string='Sucursal', required=True, index=True,
+                                  default=lambda self: self.env.user.tienda_sucursal_id)
     estado = fields.Selection([
         ('abierta', 'Abierta'),
         ('cerrada', 'Cerrada'),
@@ -111,7 +113,7 @@ class TiendaCaja(models.Model):
     def _alto_ticket_mm(self):
         """Largo del resumen impreso: siempre tiene los mismos renglones, más las notas."""
         self.ensure_one()
-        alto = 140 + (12 if self.estado == 'abierta' else 0)
+        alto = 145 + (12 if self.estado == 'abierta' else 0)
         if self.nota:
             alto += 10 + sum(4.5 * (1 + len(renglon) // 40) for renglon in self.nota.splitlines())
         return alto

@@ -5,16 +5,20 @@
         <field name="model">tienda.producto</field>
         <field name="arch" type="xml">
             <list string="Productos" decoration-danger="stock_bajo">
+                <field name="sucursal_id" optional="show"/>
                 <field name="codigo"/>
                 <field name="name"/>
-                <field name="categoria_id"/>
+                <field name="marca" optional="show"/>
+                <field name="categoria_id" optional="hide"/>
                 <field name="unidad" optional="show"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="costo" optional="hide"/>
                 <field name="precio_venta"/>
                 <field name="iva" optional="show"/>
-                <field name="stock"/>
-                <field name="stock_minimo" optional="show"/>
+                <field name="stock_despensa"/>
+                <field name="stock_deposito"/>
+                <field name="stock" optional="show"/>
+                <field name="stock_minimo" optional="hide"/>
                 <field name="stock_bajo" column_invisible="1"/>
             </list>
         </field>
@@ -27,12 +31,17 @@
             <form string="Producto">
                 <header>
                     <button name="action_reponer" string="Reponer stock" type="object" class="btn-primary"/>
+                    <button name="action_transferir" string="Pasar a la despensa" type="object"/>
                     <button name="action_ajustar" string="Ajustar stock" type="object"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
                     <div class="alert alert-warning" role="alert" invisible="not stock_bajo or not id">
-                        <strong>Stock bajo:</strong> el stock llegó al mínimo configurado. Conviene reponer.
+                        <strong>Stock bajo:</strong> el stock total llegó al mínimo configurado. Conviene comprar.
+                    </div>
+                    <div class="alert alert-info" role="alert" invisible="stock_despensa &gt; 0 or stock_deposito &lt;= 0">
+                        <strong>La despensa está vacía</strong> pero hay mercadería en el depósito:
+                        use <b>Pasar a la despensa</b>.
                     </div>
                     <div class="oe_title">
                         <label for="name"/>
@@ -40,7 +49,9 @@
                     </div>
                     <group>
                         <group string="Datos generales">
+                            <field name="sucursal_id" options="{'no_create': True}"/>
                             <field name="codigo" placeholder="Ej.: DES-001"/>
+                            <field name="marca"/>
                             <field name="categoria_id"/>
                             <field name="unidad"/>
                             <field name="active" invisible="1"/>
@@ -53,7 +64,9 @@
                             <field name="iva" widget="radio" options="{'horizontal': true}"/>
                         </group>
                         <group string="Stock">
-                            <field name="stock"/>
+                            <field name="stock_despensa"/>
+                            <field name="stock_deposito"/>
+                            <field name="stock" class="fw-bold"/>
                             <field name="stock_minimo"/>
                             <field name="valor_stock"/>
                         </group>
@@ -63,6 +76,7 @@
                             <field name="movimiento_ids" readonly="1">
                                 <list decoration-success="cantidad &gt; 0" decoration-danger="cantidad &lt; 0">
                                     <field name="fecha"/>
+                                    <field name="ubicacion"/>
                                     <field name="tipo"/>
                                     <field name="referencia"/>
                                     <field name="cantidad"/>
@@ -86,13 +100,17 @@
         <field name="arch" type="xml">
             <search string="Buscar productos">
                 <field name="name" string="Producto"
-                       filter_domain="['|', ('name', 'ilike', self), ('codigo', 'ilike', self)]"/>
+                       filter_domain="['|', '|', ('name', 'ilike', self), ('codigo', 'ilike', self), ('marca', 'ilike', self)]"/>
+                <field name="sucursal_id"/>
                 <field name="categoria_id"/>
                 <filter name="stock_bajo" string="Stock bajo" domain="[('stock_bajo', '=', True)]"/>
                 <filter name="sin_stock" string="Sin stock" domain="[('stock', '&lt;=', 0)]"/>
+                <filter name="despensa_vacia" string="Para pasar a la despensa"
+                        domain="[('stock_despensa', '&lt;=', 0), ('stock_deposito', '&gt;', 0)]"/>
                 <separator/>
                 <filter name="archivados" string="Archivados" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Agrupar por">
+                    <filter name="group_sucursal" string="Sucursal" context="{'group_by': 'sucursal_id'}"/>
                     <filter name="group_categoria" string="Categoría" context="{'group_by': 'categoria_id'}"/>
                 </group>
             </search>
@@ -103,9 +121,10 @@
         <field name="name">Productos</field>
         <field name="res_model">tienda.producto</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_sucursal': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Cree su primer producto</p>
-            <p>Cargue el nombre, código y precio. Después use <b>Reponer stock</b> para ingresar la mercadería.</p>
+            <p>Cargue la sucursal, el nombre, el código y el precio. Después use <b>Reponer stock</b> para ingresar la mercadería.</p>
         </field>
     </record>
 
@@ -113,10 +132,10 @@
         <field name="name">Productos con stock bajo</field>
         <field name="res_model">tienda.producto</field>
         <field name="view_mode">list,form</field>
-        <field name="context">{'search_default_stock_bajo': 1}</field>
+        <field name="context">{'search_default_stock_bajo': 1, 'search_default_group_sucursal': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Ningún producto tiene stock bajo</p>
-            <p>Acá aparecen los productos cuyo stock llegó al mínimo configurado.</p>
+            <p>Acá aparecen los productos cuyo stock total llegó al mínimo configurado.</p>
         </field>
     </record>
 </odoo>

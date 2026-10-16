@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_recibo_pago" model="ir.actions.report">
+        <field name="name">Recibo de pago</field>
+        <field name="model">tienda.pago</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tienda_personal.recibo_pago</field>
+        <field name="report_file">tienda_personal.recibo_pago</field>
+        <field name="print_report_name">'Recibo %s - %s' % (object.name, object.empleado_id.name)</field>
+        <field name="paperformat_id" ref="tienda_ventas.paperformat_ticket_80mm"/>
+        <field name="binding_model_id" ref="model_tienda_pago"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="recibo_pago">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="pago">
+                <t t-set="empresa" t-value="pago.env.company"/>
+                <t t-set="sucursal" t-value="pago.sucursal_id"/>
+                <t t-set="moneda" t-value="{'widget': 'monetary', 'display_currency': pago.currency_id}"/>
+                <t t-set="dia" t-value="{'widget': 'date', 'format': 'dd/MM'}"/>
+                <t t-set="hora" t-value="{'widget': 'datetime', 'time_only': True, 'hide_seconds': True}"/>
+                <div class="article" t-att-data-oe-model="pago._name" t-att-data-oe-id="pago.id"
+                     t-att-data-oe-lang="pago.env.context.get('lang')">
+                    <t t-call="tienda_ventas.ticket_estilos"/>
+                    <div class="page ticket">
+                        <t t-call="tienda_ventas.ticket_encabezado"/>
+
+                        <div class="corte"/>
+                        <div class="centro negrita">RECIBO DE PAGO</div>
+                        <div t-if="pago.estado == 'borrador'" class="sello">BORRADOR</div>
+                        <div t-if="pago.estado == 'anulado'" class="sello">PAGO ANULADO</div>
+                        <table>
+                            <tr><td>N.º:</td><td class="derecha negrita" t-out="pago.name"/></tr>
+                            <tr><td>Empleado:</td><td class="derecha" t-out="pago.empleado_id.name"/></tr>
+                            <tr t-if="pago.empleado_id.ci"><td>Cédula:</td><td class="derecha" t-out="pago.empleado_id.ci"/></tr>
+                            <tr><td>Fecha de pago:</td><td class="derecha" t-out="pago.fecha" t-options="{'widget': 'date'}"/></tr>
+                            <tr t-if="pago.desde">
+                                <td>Período:</td>
+                                <td class="derecha"><t t-out="pago.desde" t-options="dia"/> al <t t-out="pago.hasta" t-options="dia"/></td>
+                            </tr>
+                        </table>
+
+                        <t t-if="pago.asistencia_ids">
+                            <div class="corte"/>
+                            <div class="negrita">Días trabajados</div>
+                            <table>
+                                <tr t-foreach="pago.asistencia_ids.sorted('fecha')" t-as="asistencia">
+                                    <td>
+                                        <t t-out="asistencia.fecha" t-options="dia"/>
+                                        <t t-out="asistencia.entrada" t-options="hora"/>-<t t-out="asistencia.salida" t-options="hora"/>
+                                    </td>
+                                    <td class="derecha"><t t-out="asistencia.horas" t-options="{'widget': 'float_time'}"/> h</td>
+                                    <td class="derecha" t-out="asistencia.monto" t-options="moneda"/>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td><t t-out="pago.horas" t-options="{'widget': 'float_time'}"/> h trabajadas</td>
+                                    <td class="derecha" t-out="pago.monto_horas" t-options="moneda"/>
+                                </tr>
+                            </table>
+                        </t>
+
+                        <t t-if="pago.ajuste_ids">
+                            <div class="corte"/>
+                            <div class="negrita">Bonos y sanciones</div>
+                            <table>
+                                <tr t-foreach="pago.ajuste_ids.sorted('fecha')" t-as="ajuste">
+                                    <td><t t-out="'+' if ajuste.tipo == 'bono' else '-'"/> <t t-out="ajuste.motivo"/></td>
+                                    <td class="derecha" t-out="ajuste.monto" t-options="moneda"/>
+                                </tr>
+                            </table>
+                        </t>
+
+                        <div class="corte"/>
+                        <table>
+                            <tr t-if="pago.total_bonos"><td>Bonos</td><td class="derecha" t-out="pago.total_bonos" t-options="moneda"/></tr>
+                            <tr t-if="pago.total_sanciones"><td>Sanciones</td><td class="derecha">-<t t-out="pago.total_sanciones" t-options="moneda"/></td></tr>
+                            <tr class="total"><td>TOTAL</td><td class="derecha" t-out="pago.total" t-options="moneda"/></tr>
+                        </table>
+
+                        <div class="corte"/>
+                        <div class="centro">Recibí conforme el importe indicado.</div>
+                        <div class="firma">Firma del empleado</div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -16,6 +16,11 @@ class TiendaProducto(models.Model):
 
     name = fields.Char('Nombre', required=True)
     codigo = fields.Char('Código', required=True, copy=False)
+    # Cada sucursal tiene su propio catálogo: el mismo artículo puede tener otra marca,
+    # unidad o precio en cada una.
+    sucursal_id = fields.Many2one('tienda.sucursal', string='Sucursal', required=True, index=True,
+                                  default=lambda self: self.env.user.tienda_sucursal_id)
+    marca = fields.Char('Marca')
     categoria_id = fields.Many2one('tienda.categoria', string='Categoría')
     unidad = fields.Selection([
         ('unidad', 'Unidad'),
@@ -36,21 +41,27 @@ class TiendaProducto(models.Model):
                            help='10 % para la mayoría de los productos; 5 % para los de la canasta básica.')
 
     movimiento_ids = fields.One2many('tienda.movimiento', 'producto_id', string='Movimientos')
-    stock = fields.Float('Stock actual', compute='_compute_stock', store=True)
+    stock_despensa = fields.Float('En despensa', compute='_compute_stock', store=True,
+                                  help='Lo que hay para vender en la despensa.')
+    stock_deposito = fields.Float('En depósito', compute='_compute_stock', store=True)
+    stock = fields.Float('Stock total', compute='_compute_stock', store=True)
     stock_minimo = fields.Float('Stock mínimo', default=5,
-                                help='Cuando el stock llega a este número, el producto se marca como "stock bajo".')
+                                help='Cuando el stock total llega a este número, el producto se marca como "stock bajo".')
     stock_bajo = fields.Boolean('Stock bajo', compute='_compute_stock', store=True)
     valor_stock = fields.Monetary('Valor del stock (al costo)', compute='_compute_valor_stock')
 
     _sql_constraints = [
-        ('codigo_uniq', 'unique(codigo)', 'Ya existe un producto con ese código.'),
+        ('codigo_uniq', 'unique(codigo, sucursal_id)', 'Ya existe un producto con ese código en la sucursal.'),
         ('precio_no_negativo', 'CHECK(precio_venta >= 0)', 'El precio de venta no puede ser negativo.'),
     ]
 
-    @api.depends('movimiento_ids.cantidad', 'stock_minimo')
+    @api.depends('movimiento_ids.cantidad', 'movimiento_ids.ubicacion', 'stock_minimo')
     def _compute_stock(self):
         for producto in self:
-            producto.stock = sum(producto.movimiento_ids.mapped('cantidad'))
+            movimientos = producto.movimiento_ids
+            producto.stock_despensa = sum(movimientos.filtered(lambda m: m.ubicacion == 'despensa').mapped('cantidad'))
+            producto.stock_deposito = sum(movimientos.filtered(lambda m: m.ubicacion == 'deposito').mapped('cantidad'))
+            producto.stock = producto.stock_despensa + producto.stock_deposito
             producto.stock_bajo = producto.stock <= producto.stock_minimo
 
     @api.depends('stock', 'costo')
@@ -58,17 +69,29 @@ class TiendaProducto(models.Model):
         for producto in self:
             producto.valor_stock = producto.stock * producto.costo
 
+    @api.depends('name', 'marca')
+    def _compute_display_name(self):
+        for producto in self:
+            producto.display_name = f'{producto.name} ({producto.marca})' if producto.marca else producto.name
+
+    def _stock_en(self, ubicacion):
+        self.ensure_one()
+        return self.stock_despensa if ubicacion == 'despensa' else self.stock_deposito
+
     def action_reponer(self):
-        return self._abrir_asistente_stock('reponer')
+        return self._abrir_asistente_stock('reponer', 'Reponer stock')
 
     def action_ajustar(self):
-        return self._abrir_asistente_stock('ajustar')
+        return self._abrir_asistente_stock('ajustar', 'Ajustar stock')
 
-    def _abrir_asistente_stock(self, modo):
+    def action_transferir(self):
+        return self._abrir_asistente_stock('transferir', 'Pasar mercadería')
+
+    def _abrir_asistente_stock(self, modo, titulo):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Reponer stock' if modo == 'reponer' else 'Ajustar stock',
+            'name': titulo,
             'res_model': 'tienda.movimiento.wizard',
             'view_mode': 'form',
             'target': 'new',

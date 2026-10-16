@@ -23,6 +23,7 @@
 
         <!-- Despensa -->
         <record id="producto_arroz" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-001</field>
             <field name="name">Arroz 1 kg</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -33,6 +34,7 @@
             <field name="stock_minimo">10</field>
         </record>
         <record id="producto_fideos" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-002</field>
             <field name="name">Fideos tallarín 500 g</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -43,6 +45,7 @@
             <field name="stock_minimo">10</field>
         </record>
         <record id="producto_azucar" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-003</field>
             <field name="name">Azúcar 1 kg</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -53,6 +56,7 @@
             <field name="stock_minimo">10</field>
         </record>
         <record id="producto_aceite" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-004</field>
             <field name="name">Aceite de girasol 900 ml</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -63,6 +67,7 @@
             <field name="stock_minimo">6</field>
         </record>
         <record id="producto_yerba" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-005</field>
             <field name="name">Yerba mate 500 g</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -73,6 +78,7 @@
             <field name="stock_minimo">8</field>
         </record>
         <record id="producto_harina" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-006</field>
             <field name="name">Harina de trigo 1 kg</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -83,6 +89,7 @@
             <field name="stock_minimo">8</field>
         </record>
         <record id="producto_sal" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-007</field>
             <field name="name">Sal fina 1 kg</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -93,6 +100,7 @@
             <field name="stock_minimo">5</field>
         </record>
         <record id="producto_cafe" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">DES-008</field>
             <field name="name">Café instantáneo 170 g</field>
             <field name="categoria_id" ref="categoria_despensa"/>
@@ -105,6 +113,7 @@
 
         <!-- Bebidas -->
         <record id="producto_gaseosa" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">BEB-001</field>
             <field name="name">Gaseosa cola 2 L</field>
             <field name="categoria_id" ref="categoria_bebidas"/>
@@ -115,6 +124,7 @@
             <field name="stock_minimo">12</field>
         </record>
         <record id="producto_agua" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">BEB-002</field>
             <field name="name">Agua mineral 2 L</field>
             <field name="categoria_id" ref="categoria_bebidas"/>
@@ -125,6 +135,7 @@
             <field name="stock_minimo">12</field>
         </record>
         <record id="producto_jugo" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">BEB-003</field>
             <field name="name">Jugo de naranja 1 L</field>
             <field name="categoria_id" ref="categoria_bebidas"/>
@@ -137,6 +148,7 @@
 
         <!-- Lácteos y huevos -->
         <record id="producto_leche" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">LAC-001</field>
             <field name="name">Leche entera 1 L</field>
             <field name="categoria_id" ref="categoria_lacteos"/>
@@ -147,6 +159,7 @@
             <field name="stock_minimo">10</field>
         </record>
         <record id="producto_huevos" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">LAC-002</field>
             <field name="name">Huevos (docena)</field>
             <field name="categoria_id" ref="categoria_lacteos"/>
@@ -159,6 +172,7 @@
 
         <!-- Limpieza -->
         <record id="producto_jabon_polvo" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">LIM-001</field>
             <field name="name">Jabón en polvo 800 g</field>
             <field name="categoria_id" ref="categoria_limpieza"/>
@@ -169,6 +183,7 @@
             <field name="stock_minimo">4</field>
         </record>
         <record id="producto_lavandina" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">LIM-002</field>
             <field name="name">Lavandina 1 L</field>
             <field name="categoria_id" ref="categoria_limpieza"/>
@@ -181,6 +196,7 @@
 
         <!-- Higiene personal -->
         <record id="producto_papel" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">HIG-001</field>
             <field name="name">Papel higiénico x4</field>
             <field name="categoria_id" ref="categoria_higiene"/>
@@ -191,6 +207,7 @@
             <field name="stock_minimo">6</field>
         </record>
         <record id="producto_jabon_tocador" model="tienda.producto">
+            <field name="sucursal_id" ref="sucursal_aregua"/>
             <field name="codigo">HIG-002</field>
             <field name="name">Jabón de tocador</field>
             <field name="categoria_id" ref="categoria_higiene"/>

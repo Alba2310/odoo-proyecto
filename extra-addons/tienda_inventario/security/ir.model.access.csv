@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tienda_sucursal_user,tienda.sucursal usuario,model_tienda_sucursal,base.group_user,1,0,0,0
+access_tienda_sucursal_admin,tienda.sucursal administrador,model_tienda_sucursal,base.group_system,1,1,1,1
 access_tienda_categoria_user,tienda.categoria usuario,model_tienda_categoria,base.group_user,1,1,1,1
 access_tienda_producto_user,tienda.producto usuario,model_tienda_producto,base.group_user,1,1,1,1
 access_tienda_movimiento_user,tienda.movimiento usuario,model_tienda_movimiento,base.group_user,1,0,1,0

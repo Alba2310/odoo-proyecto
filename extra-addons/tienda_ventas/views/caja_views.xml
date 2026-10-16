@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <list string="Cajas" decoration-info="estado == 'abierta'" decoration-danger="diferencia &lt; 0">
                 <field name="name"/>
+                <field name="sucursal_id"/>
                 <field name="usuario_id"/>
                 <field name="fecha_apertura"/>
                 <field name="fecha_cierre"/>
@@ -40,6 +41,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="sucursal_id" options="{'no_create': True, 'no_open': True}"
+                                   readonly="id"/>
                             <field name="usuario_id"/>
                             <field name="fecha_apertura"/>
                             <field name="fecha_cierre" invisible="not fecha_cierre"/>
@@ -103,7 +106,9 @@
                 <filter name="con_diferencia" string="Con diferencia" domain="[('diferencia', '!=', 0)]"/>
                 <separator/>
                 <filter name="fecha_apertura" string="Fecha" date="fecha_apertura"/>
+                <field name="sucursal_id"/>
                 <group expand="0" string="Agrupar por">
+                    <filter name="group_sucursal" string="Sucursal" context="{'group_by': 'sucursal_id'}"/>
                     <filter name="group_usuario" string="Cajero" context="{'group_by': 'usuario_id'}"/>
                     <filter name="group_dia" string="Día" context="{'group_by': 'fecha_apertura:day'}"/>
                 </group>
@@ -117,7 +122,7 @@
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Abra la caja para empezar a vender</p>
-            <p>Haga clic en <b>Nuevo</b>, cargue el fondo inicial (el efectivo para dar vuelto) y guarde.</p>
+            <p>Haga clic en <b>Nuevo</b>, elija la sucursal, cargue el fondo inicial (el efectivo para dar vuelto) y guarde.</p>
         </field>
     </record>
 

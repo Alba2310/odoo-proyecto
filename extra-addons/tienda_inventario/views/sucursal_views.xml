@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tienda_sucursal_list" model="ir.ui.view">
+        <field name="name">tienda.sucursal.list</field>
+        <field name="model">tienda.sucursal</field>
+        <field name="arch" type="xml">
+            <list string="Sucursales" editable="bottom">
+                <field name="name"/>
+                <field name="direccion"/>
+                <field name="telefono"/>
+                <field name="producto_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_tienda_sucursal" model="ir.actions.act_window">
+        <field name="name">Sucursales</field>
+        <field name="res_model">tienda.sucursal</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- Sucursal de cada usuario, en la ficha del usuario (Ajustes › Usuarios). -->
+    <record id="view_users_form_sucursal" model="ir.ui.view">
+        <field name="name">res.users.form.tienda.sucursal</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Tienda" name="tienda">
+                    <group>
+                        <field name="tienda_sucursal_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

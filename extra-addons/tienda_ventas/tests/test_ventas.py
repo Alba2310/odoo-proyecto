@@ -10,7 +10,9 @@ class TestVentas(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        Producto = cls.env['tienda.producto']
+        cls.aregua = cls.env.ref('tienda_inventario.sucursal_aregua')
+        cls.capiata = cls.env.ref('tienda_inventario.sucursal_capiata')
+        Producto = cls.env['tienda.producto'].with_context(default_sucursal_id=cls.aregua.id)
         cls.gaseosa = Producto.create({
             'name': 'Gaseosa de prueba', 'codigo': 'TEST-VTA-001', 'precio_venta': 11000, 'iva': '10',
         })
@@ -20,15 +22,17 @@ class TestVentas(TransactionCase):
         cls.arroz = Producto.create({
             'name': 'Arroz de prueba', 'codigo': 'TEST-VTA-003', 'precio_venta': 21000, 'iva': '5',
         })
+        # Todo en la despensa, que es de donde se vende.
         cls.env['tienda.movimiento'].create([
             {'producto_id': cls.gaseosa.id, 'tipo': 'inicial', 'cantidad': 10},
             {'producto_id': cls.agua.id, 'tipo': 'inicial', 'cantidad': 5},
             {'producto_id': cls.arroz.id, 'tipo': 'inicial', 'cantidad': 10},
         ])
-        cls.caja = cls.env['tienda.caja'].create({'monto_inicial': 50000})
+        cls.caja = cls.env['tienda.caja'].create({'monto_inicial': 50000, 'sucursal_id': cls.aregua.id})
 
     def _venta(self, *lineas, **valores):
         return self.env['tienda.venta'].create({
+            'sucursal_id': self.aregua.id,
             'linea_ids': [Command.create(dict(producto_id=producto.id, cantidad=cantidad, **extra))
                           for producto, cantidad, extra in lineas],
             **valores,
@@ -89,6 +93,37 @@ class TestVentas(TransactionCase):
         venta.action_cancelar()
         self.assertEqual(self.gaseosa.stock, 10)
 
+    # Sucursales
+
+    def test_la_venta_toma_la_sucursal_de_la_caja(self):
+        self.assertEqual(self.env['tienda.venta'].create({}).sucursal_id, self.aregua)
+
+    def test_solo_se_vende_lo_que_hay_en_la_despensa(self):
+        guardado = self.env['tienda.producto'].create({
+            'name': 'Solo en depósito', 'codigo': 'TEST-VTA-004', 'sucursal_id': self.aregua.id,
+            'precio_venta': 1000})
+        self.env['tienda.movimiento'].create({'producto_id': guardado.id, 'ubicacion': 'deposito',
+                                              'tipo': 'inicial', 'cantidad': 20})
+        venta = self._venta((guardado, 1, {}))
+        with self.assertRaisesRegex(UserError, 'páselo a la despensa'):
+            venta.action_confirmar()
+
+        venta = self._venta((self.gaseosa, 2, {}))
+        venta.action_confirmar()
+        self.assertEqual(venta.movimiento_ids.ubicacion, 'despensa')
+        self.assertEqual((self.gaseosa.stock_despensa, self.gaseosa.stock_deposito), (8, 0))
+
+    def test_producto_de_otra_sucursal(self):
+        yerba_capiata = self.env.ref('tienda_inventario.cap_yerba_pajarito')
+        venta = self._venta((yerba_capiata, 1, {}))
+        with self.assertRaises(UserError):
+            venta.action_confirmar()
+
+    def test_caja_de_otra_sucursal(self):
+        venta = self._venta((self.gaseosa, 1, {}), sucursal_id=self.capiata.id)
+        with self.assertRaises(UserError):
+            venta.action_confirmar()
+
     def test_cancelar_borrador_no_mueve_stock(self):
         venta = self._venta((self.gaseosa, 4, {}))
         venta.action_cancelar()
@@ -135,7 +170,7 @@ class TestVentas(TransactionCase):
 
     def test_una_caja_abierta_por_usuario(self):
         with self.assertRaises(ValidationError):
-            self.env['tienda.caja'].create({'monto_inicial': 0})
+            self.env['tienda.caja'].create({'monto_inicial': 0, 'sucursal_id': self.capiata.id})
 
     def test_cierre_de_caja(self):
         self._venta((self.gaseosa, 1, {}), metodo_pago='efectivo').action_confirmar()

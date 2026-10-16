@@ -16,6 +16,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="caja">
                 <t t-set="empresa" t-value="caja.env.company"/>
+                <t t-set="sucursal" t-value="caja.sucursal_id"/>
                 <t t-set="moneda" t-value="{'widget': 'monetary', 'display_currency': caja.currency_id}"/>
                 <t t-set="fecha" t-value="{'widget': 'datetime'}"/>
                 <div class="article" t-att-data-oe-model="caja._name" t-att-data-oe-id="caja.id"

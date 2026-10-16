@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tienda_empleado_admin,tienda.empleado administrador,model_tienda_empleado,base.group_system,1,1,1,1
+access_tienda_asistencia_admin,tienda.asistencia administrador,model_tienda_asistencia,base.group_system,1,1,1,1
+access_tienda_reposo_admin,tienda.reposo administrador,model_tienda_reposo,base.group_system,1,1,1,1
+access_tienda_ajuste_admin,tienda.ajuste administrador,model_tienda_ajuste,base.group_system,1,1,1,1
+access_tienda_pago_admin,tienda.pago administrador,model_tienda_pago,base.group_system,1,1,1,1

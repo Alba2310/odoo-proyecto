@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sucursal_aregua" model="tienda.sucursal">
+            <field name="name">Areguá</field>
+        </record>
+        <record id="sucursal_capiata" model="tienda.sucursal">
+            <field name="name">Capiatá</field>
+        </record>
+    </data>
+</odoo>

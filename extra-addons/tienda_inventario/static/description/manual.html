@@ -42,10 +42,12 @@
 <nav>
   <ol>
     <li><a href="#para-que">Para qué sirve</a></li>
+    <li><a href="#sucursales">Sucursales, despensa y depósito</a></li>
     <li><a href="#menus">Menús</a></li>
     <li><a href="#productos">Ver los productos</a></li>
     <li><a href="#crear">Crear un producto</a></li>
     <li><a href="#reponer">Reponer stock</a></li>
+    <li><a href="#pasar">Pasar del depósito a la despensa</a></li>
     <li><a href="#ajustar">Ajustar stock (conteo físico)</a></li>
     <li><a href="#movimientos">Movimientos de stock</a></li>
     <li><a href="#categorias">Categorías</a></li>
@@ -58,46 +60,63 @@
 <h2 id="para-que">1. Para qué sirve</h2>
 <p>El módulo de Inventario lleva el control de la mercadería de la tienda:</p>
 <ul>
-  <li>Guarda la lista de productos con su código, categoría, costo y precio de venta.</li>
-  <li>Calcula el <b>stock actual</b> de cada producto.</li>
-  <li>Permite <b>reponer</b> mercadería cuando llega un pedido y <b>ajustar</b> el stock después de un conteo.</li>
+  <li>Guarda la lista de productos de <b>cada sucursal</b> con su código, marca, categoría, costo y precio de venta.</li>
+  <li>Calcula el stock de cada producto, separado en lo que hay en la <b>despensa</b> y en el <b>depósito</b>.</li>
+  <li>Permite <b>reponer</b> mercadería cuando llega un pedido, <b>pasarla del depósito a la despensa</b> y <b>ajustar</b> el stock después de un conteo.</li>
   <li>Avisa cuando un producto tiene <b>stock bajo</b>.</li>
   <li>Registra cada entrada y salida en el historial de <b>movimientos</b>. Las ventas que se confirman en el módulo de Ventas también quedan registradas acá.</li>
 </ul>
 
-<h2 id="menus">2. Menús</h2>
+<h2 id="sucursales">2. Sucursales, despensa y depósito</h2>
+<p>La tienda tiene dos sucursales: <b>Areguá</b> y <b>Capiatá</b>. Cada una tiene:</p>
+<ul>
+  <li>Su <b>despensa</b>: la mercadería que está a la venta. Las ventas se descuentan de acá.</li>
+  <li>Su <b>depósito</b>: la mercadería guardada. Lo que llega del proveedor entra acá, y de acá se pasa a la despensa cuando hace falta.</li>
+  <li>Su propio <b>catálogo de productos</b>. El mismo artículo puede tener otra marca, unidad o precio en cada sucursal. Por ejemplo, en Areguá el arroz se vende en paquete de 1 kg y en Capiatá, suelto por kilo.</li>
+</ul>
+<table>
+  <tr><th>Recorrido de la mercadería</th></tr>
+  <tr><td>Proveedor → <b>Reponer stock</b> → Depósito → <b>Pasar a la despensa</b> → Despensa → <b>Venta</b> → Cliente</td></tr>
+</table>
+<p>Los datos de cada sucursal (dirección y teléfono, que salen en el ticket) se cargan en <span class="menu">Configuración › Sucursales</span>. Para que un usuario trabaje siempre en una sucursal, el administrador la elige en <span class="menu">Ajustes › Usuarios</span>, en la pestaña <b>Tienda</b> de ese usuario.</p>
+
+<h2 id="menus">3. Menús</h2>
 <p>Desde la pantalla principal de Odoo, haga clic en el ícono <span class="menu">Inventario</span>. Arriba verá estos menús:</p>
 <table>
   <tr><th>Menú</th><th>Para qué se usa</th></tr>
-  <tr><td><span class="menu">Productos</span></td><td>Ver, buscar, crear y editar productos.</td></tr>
+  <tr><td><span class="menu">Productos</span></td><td>Ver, buscar, crear y editar productos, agrupados por sucursal.</td></tr>
   <tr><td><span class="menu">Stock bajo</span></td><td>Lista directa de los productos que llegaron al stock mínimo. Úsela para armar el pedido al proveedor.</td></tr>
   <tr><td><span class="menu">Reponer stock</span></td><td>Ingresar mercadería que llegó.</td></tr>
+  <tr><td><span class="menu">Pasar a la despensa</span></td><td>Llevar mercadería del depósito a la despensa (o devolverla).</td></tr>
   <tr><td><span class="menu">Movimientos</span></td><td>Historial de todas las entradas y salidas.</td></tr>
+  <tr><td><span class="menu">Configuración › Sucursales</span></td><td>Nombre, dirección y teléfono de cada sucursal.</td></tr>
   <tr><td><span class="menu">Configuración › Categorías</span></td><td>Crear o renombrar categorías de productos.</td></tr>
   <tr><td><span class="menu">Manual de uso</span></td><td>Abre este manual.</td></tr>
 </table>
 
-<h2 id="productos">3. Ver los productos</h2>
-<p>En <span class="menu">Productos</span> aparece la lista con código, nombre, categoría, precio y stock.</p>
+<h2 id="productos">4. Ver los productos</h2>
+<p>En <span class="menu">Productos</span> aparece la lista agrupada por sucursal, con código, nombre, marca, precio y el stock <b>En despensa</b>, <b>En depósito</b> y <b>total</b>. Haga clic en el nombre de una sucursal para abrir o cerrar su grupo.</p>
 <ul>
-  <li><b>Filas en rojo:</b> el producto tiene stock bajo (el stock es igual o menor al stock mínimo).</li>
-  <li><b>Buscar:</b> escriba en el buscador parte del nombre o del código (por ejemplo <code>arroz</code> o <code>DES-001</code>) y presione Enter.</li>
-  <li><b>Filtros:</b> en el buscador, abra el menú de filtros y elija <i>Stock bajo</i>, <i>Sin stock</i> o <i>Archivados</i>.</li>
-  <li><b>Agrupar:</b> elija <i>Agrupar por › Categoría</i> para ver los productos por categoría.</li>
+  <li><b>Filas en rojo:</b> el producto tiene stock bajo (el stock total es igual o menor al stock mínimo).</li>
+  <li><b>Buscar:</b> escriba en el buscador parte del nombre, del código o de la marca (por ejemplo <code>arroz</code>, <code>DES-001</code> o <code>Pajarito</code>) y presione Enter. También puede buscar por sucursal.</li>
+  <li><b>Filtros:</b> <i>Stock bajo</i>, <i>Sin stock</i>, <i>Para pasar a la despensa</i> (despensa vacía pero con mercadería en el depósito) o <i>Archivados</i>.</li>
+  <li><b>Agrupar:</b> por <i>Sucursal</i> o por <i>Categoría</i>.</li>
   <li>Haga clic en un producto para abrir su ficha.</li>
 </ul>
 
-<h2 id="crear">4. Crear un producto</h2>
+<h2 id="crear">5. Crear un producto</h2>
 <ol>
   <li>Entre a <span class="menu">Productos</span> y haga clic en <span class="boton">Nuevo</span>.</li>
   <li>Complete los datos (ver tabla).</li>
   <li>Guarde con el ícono de la nube (o <kbd>Ctrl</kbd>+<kbd>S</kbd>).</li>
-  <li>Para cargar las unidades que tiene, haga clic en <span class="boton">Reponer stock</span> (ver punto 5).</li>
+  <li>Para cargar las unidades que tiene, haga clic en <span class="boton">Reponer stock</span> (ver <a href="#reponer">Reponer stock</a>).</li>
 </ol>
 <table>
   <tr><th>Campo</th><th>Qué poner</th><th>¿Obligatorio?</th></tr>
   <tr><td>Nombre</td><td>Nombre del producto, con presentación. Ej.: <i>Arroz 1 kg</i>.</td><td>Sí</td></tr>
-  <tr><td>Código</td><td>Código interno único. Ej.: <i>DES-009</i>. No puede repetirse.</td><td>Sí</td></tr>
+  <tr><td>Sucursal</td><td>Areguá o Capiatá. El producto solo se vende en esa sucursal.</td><td>Sí</td></tr>
+  <tr><td>Código</td><td>Código interno. Ej.: <i>DES-009</i>. No puede repetirse dentro de la misma sucursal.</td><td>Sí</td></tr>
+  <tr><td>Marca</td><td>Ej.: <i>Pajarito</i>. Se muestra junto al nombre al buscar el producto en una venta.</td><td>No</td></tr>
   <tr><td>Categoría</td><td>Grupo al que pertenece (Despensa, Bebidas, etc.).</td><td>No</td></tr>
   <tr><td>Unidad de medida</td><td>Unidad, paquete, caja, kilogramo o litro.</td><td>Sí</td></tr>
   <tr><td>Costo</td><td>Lo que le cuesta a la tienda. Se usa para calcular el valor del stock.</td><td>No</td></tr>
@@ -107,38 +126,52 @@
 </table>
 <div class="nota">Un producto nuevo empieza con <b>stock 0</b>. El stock no se escribe a mano: se carga con <b>Reponer stock</b> o <b>Ajustar stock</b>, para que siempre quede registrado de dónde vino cada unidad.</div>
 
-<h2 id="reponer">5. Reponer stock (cuando llega mercadería)</h2>
+<h2 id="reponer">6. Reponer stock (cuando llega mercadería)</h2>
 <h3>Desde la ficha del producto</h3>
 <ol>
   <li>Abra el producto.</li>
   <li>Haga clic en <span class="boton">Reponer stock</span> (arriba a la izquierda).</li>
-  <li>En <b>Cantidad que ingresa</b>, escriba cuántas unidades llegaron.</li>
+  <li>En <b>Ubicación</b>, elija dónde entra la mercadería: <b>Depósito</b> (lo normal) o <b>Despensa</b> (si la pone directo a la venta).</li>
+  <li>En <b>Cantidad</b>, escriba cuántas unidades llegaron.</li>
   <li>Opcional: en <b>Referencia</b>, anote el número de factura del proveedor.</li>
   <li>Haga clic en <span class="boton">Confirmar</span>.</li>
 </ol>
 <h3>Desde el menú</h3>
-<p>En <span class="menu">Reponer stock</span> se abre la misma ventana: primero elija el producto y después siga los pasos 3 a 5.</p>
+<p>En <span class="menu">Reponer stock</span> se abre la misma ventana: primero elija el producto y después siga los pasos 3 a 6.</p>
 <p>El stock aumenta en ese momento y queda un movimiento de tipo <b>Reposición</b> en el historial.</p>
 
-<h2 id="ajustar">6. Ajustar stock (conteo físico)</h2>
+<h2 id="pasar">7. Pasar del depósito a la despensa</h2>
+<p>Cuando se vacía la estantería, lleve mercadería del depósito a la despensa para poder venderla.</p>
+<ol>
+  <li>Abra el producto y haga clic en <span class="boton">Pasar a la despensa</span>, o use el menú <span class="menu">Pasar a la despensa</span> y elija el producto.</li>
+  <li>Revise que <b>Ubicación</b> diga <b>Depósito</b> (de dónde sale). Abajo se ve <b>Hacia: Despensa</b>.</li>
+  <li>Escriba la <b>Cantidad</b> y haga clic en <span class="boton">Confirmar</span>.</li>
+</ol>
+<p>El stock total no cambia: baja en el depósito y sube en la despensa. Si elige <b>Despensa</b> como ubicación, la mercadería vuelve al depósito.</p>
+<div class="nota">Si el producto tiene la despensa vacía y mercadería en el depósito, su ficha lo avisa en azul. Para verlos todos juntos, use el filtro <i>Para pasar a la despensa</i> en <span class="menu">Productos</span>.</div>
+
+<h2 id="ajustar">8. Ajustar stock (conteo físico)</h2>
 <p>Use esta opción cuando cuente la mercadería y la cantidad real no coincida con la del sistema, por ejemplo por roturas, vencimientos o errores de carga.</p>
 <ol>
   <li>Abra el producto y haga clic en <span class="boton">Ajustar stock</span>.</li>
-  <li>En <b>Stock contado</b>, escriba la cantidad que hay realmente en la estantería y el depósito.</li>
+  <li>En <b>Ubicación</b>, elija dónde contó: <b>Despensa</b> o <b>Depósito</b>. Cada lugar se ajusta por separado.</li>
+  <li>En <b>Stock contado</b>, escriba la cantidad que hay realmente en ese lugar.</li>
   <li>Opcional: en <b>Referencia</b>, anote el motivo (ej.: <i>2 botellas rotas</i>).</li>
   <li>Haga clic en <span class="boton">Confirmar</span>.</li>
 </ol>
 <div class="nota"><b>Ejemplo:</b> el sistema dice 20 y usted cuenta 17. Escriba 17 en "Stock contado". El sistema crea un movimiento de <b>Ajuste de inventario</b> de <b>−3</b> y el stock queda en 17.</div>
 
-<h2 id="movimientos">7. Movimientos de stock</h2>
+<h2 id="movimientos">9. Movimientos de stock</h2>
 <p>Cada vez que el stock cambia se guarda un movimiento. Los ve en <span class="menu">Movimientos</span> (todos los productos) o en la pestaña <b>Movimientos de stock</b> de cada producto.</p>
 <table>
   <tr><th>Columna</th><th>Significado</th></tr>
   <tr><td>Fecha</td><td>Cuándo ocurrió.</td></tr>
+  <tr><td>Sucursal</td><td>De qué sucursal es el producto.</td></tr>
+  <tr><td>Ubicación</td><td>Despensa o depósito.</td></tr>
   <tr><td>Tipo</td><td>Qué lo originó (ver tabla de tipos).</td></tr>
   <tr><td>Referencia</td><td>Número de factura, número de venta o motivo.</td></tr>
   <tr><td>Cantidad</td><td>Positiva (verde) si entró mercadería; negativa (rojo) si salió.</td></tr>
-  <tr><td>Stock resultante</td><td>Cuánto stock quedó justo después de ese movimiento.</td></tr>
+  <tr><td>Stock resultante</td><td>Cuánto stock quedó en esa ubicación justo después del movimiento.</td></tr>
   <tr><td>Usuario</td><td>Quién lo registró.</td></tr>
 </table>
 <table>
@@ -146,16 +179,17 @@
   <tr><td>Stock inicial</td><td>Carga inicial de los productos precargados.</td></tr>
   <tr><td>Reposición</td><td>Al usar <i>Reponer stock</i>.</td></tr>
   <tr><td>Ajuste de inventario</td><td>Al usar <i>Ajustar stock</i>.</td></tr>
-  <tr><td>Venta</td><td>Al confirmar una venta en el módulo de Ventas. La cantidad es negativa: es el descuento del stock.</td></tr>
+  <tr><td>Paso entre depósito y despensa</td><td>Al usar <i>Pasar a la despensa</i>. Siempre son dos movimientos: uno que sale de un lugar y otro que entra en el otro.</td></tr>
+  <tr><td>Venta</td><td>Al confirmar una venta en el módulo de Ventas. Sale de la despensa; la cantidad es negativa: es el descuento del stock.</td></tr>
   <tr><td>Anulación de venta</td><td>Al cancelar una venta confirmada: los productos vuelven al stock.</td></tr>
 </table>
 <div class="nota">Los movimientos <b>no se pueden editar ni borrar</b>, así el historial es confiable. Si hubo un error, corríjalo con un <b>Ajuste de stock</b>.</div>
-<p>En el buscador hay filtros para ver solo <i>Entradas</i>, <i>Salidas</i>, <i>Reposiciones</i>, <i>Ajustes</i> o <i>Ventas</i>, y opciones para agrupar por producto, tipo o día.</p>
+<p>En el buscador hay filtros para ver solo <i>Entradas</i>, <i>Salidas</i>, <i>Despensa</i>, <i>Depósito</i>, <i>Reposiciones</i>, <i>Pasos depósito ↔ despensa</i>, <i>Ajustes</i> o <i>Ventas</i>, y opciones para agrupar por sucursal, ubicación, producto, tipo o día.</p>
 
-<h2 id="categorias">8. Categorías</h2>
+<h2 id="categorias">10. Categorías</h2>
 <p>En <span class="menu">Configuración › Categorías</span> puede crear categorías nuevas (botón <span class="boton">Nuevo</span>), cambiar su nombre haciendo clic sobre él o eliminar las que no use. La columna <i>Cant. de productos</i> indica cuántos productos tiene cada una.</p>
 
-<h2 id="archivar">9. Archivar un producto</h2>
+<h2 id="archivar">11. Archivar un producto</h2>
 <p>Si un producto ya no se vende, es mejor <b>archivarlo</b> que borrarlo: deja de aparecer en las listas y en las ventas, pero su historial se conserva.</p>
 <ol>
   <li>Abra el producto.</li>
@@ -164,8 +198,9 @@
 <p>Para recuperarlo: en <span class="menu">Productos</span>, active el filtro <i>Archivados</i>, ábralo y elija <b>⚙ Acciones › Desarchivar</b>.</p>
 <div class="nota">Un producto que ya figura en alguna venta no se puede eliminar; solo archivar.</div>
 
-<h2 id="precargados">10. Productos precargados</h2>
+<h2 id="precargados">12. Productos precargados</h2>
 <p>Al instalar el módulo se cargan estos productos de ejemplo. Puede modificarlos, archivarlos o agregar los suyos. Los precios están en <b>guaraníes</b>, con IVA incluido, y son <b>aproximados</b>: revíselos y ajústelos a los de su tienda.</p>
+<h3>Areguá (todo en la despensa)</h3>
 <table>
   <tr><th>Código</th><th>Producto</th><th>Categoría</th><th>Costo</th><th>Precio</th><th>IVA</th><th>Stock inicial</th><th>Mínimo</th></tr>
   <tr><td>DES-001</td><td>Arroz 1 kg</td><td>Despensa</td><td class="num">6.500</td><td class="num">8.500</td><td>5 %</td><td class="num">40</td><td class="num">10</td></tr>
@@ -188,7 +223,29 @@
 </table>
 <p>El <b>café</b> y el <b>jugo de naranja</b> empiezan por debajo del mínimo a propósito, para que vea cómo funciona el aviso de stock bajo.</p>
 
-<h2 id="faq">11. Preguntas frecuentes</h2>
+<h3>Capiatá (otras marcas, unidades y precios)</h3>
+<table>
+  <tr><th>Código</th><th>Producto</th><th>Marca</th><th>Unidad</th><th>Precio</th><th>IVA</th><th>Despensa</th><th>Depósito</th></tr>
+  <tr><td>C-DES-001</td><td>Yerba mate 1 kg</td><td>Pajarito</td><td>Paquete</td><td class="num">32.000</td><td>5 %</td><td class="num">10</td><td class="num">30</td></tr>
+  <tr><td>C-DES-002</td><td>Yerba mate 500 g</td><td>Kurupí</td><td>Paquete</td><td class="num">18.500</td><td>5 %</td><td class="num">12</td><td class="num">24</td></tr>
+  <tr><td>C-DES-003</td><td>Arroz suelto (por kilo)</td><td>—</td><td>Kilogramo</td><td class="num">7.800</td><td>5 %</td><td class="num">25</td><td class="num">100</td></tr>
+  <tr><td>C-DES-004</td><td>Azúcar suelta (por kilo)</td><td>—</td><td>Kilogramo</td><td class="num">7.000</td><td>5 %</td><td class="num">20</td><td class="num">80</td></tr>
+  <tr><td>C-DES-005</td><td>Aceite de soja 1,5 L</td><td>—</td><td>Unidad</td><td class="num">21.000</td><td>5 %</td><td class="num">12</td><td class="num">0</td></tr>
+  <tr><td>C-LAC-001</td><td>Leche entera 1 L</td><td>Lactolanda</td><td>Unidad</td><td class="num">8.000</td><td>5 %</td><td class="num">24</td><td class="num">0</td></tr>
+  <tr><td>C-LAC-002</td><td>Leche entera 1 L</td><td>Trébol</td><td>Unidad</td><td class="num">7.800</td><td>5 %</td><td class="num">18</td><td class="num">0</td></tr>
+  <tr><td>C-LAC-003</td><td>Huevos (maple de 30)</td><td>—</td><td>Caja</td><td class="num">32.000</td><td>5 %</td><td class="num">0</td><td class="num">10</td></tr>
+  <tr><td>C-BEB-001</td><td>Gaseosa naranja 2 L</td><td>Pulp</td><td>Unidad</td><td class="num">12.000</td><td>10 %</td><td class="num">18</td><td class="num">36</td></tr>
+  <tr><td>C-BEB-002</td><td>Gaseosa cola 1,5 L</td><td>Coca-Cola</td><td>Unidad</td><td class="num">11.000</td><td>10 %</td><td class="num">24</td><td class="num">0</td></tr>
+  <tr><td>C-LIM-001</td><td>Detergente 750 ml</td><td>—</td><td>Unidad</td><td class="num">9.500</td><td>10 %</td><td class="num">0</td><td class="num">15</td></tr>
+  <tr><td>C-HIG-001</td><td>Papel higiénico x12</td><td>—</td><td>Paquete</td><td class="num">30.000</td><td>10 %</td><td class="num">8</td><td class="num">0</td></tr>
+</table>
+<p>Los <b>huevos</b> y el <b>detergente</b> empiezan con la despensa vacía a propósito, para que pruebe <b>Pasar a la despensa</b>.</p>
+
+<h2 id="faq">13. Preguntas frecuentes</h2>
+<h3>El producto tiene stock, pero la venta dice que no alcanza. ¿Por qué?</h3>
+<p>Las ventas se descuentan de la <b>despensa</b>. Si la mercadería está en el depósito, primero use <b>Pasar a la despensa</b>. El mensaje de la venta indica cuánto hay en el depósito.</p>
+<h3>¿Por qué no aparece un producto de Capiatá en una venta de Areguá?</h3>
+<p>Porque cada sucursal vende solo sus productos. Si también lo vende en Areguá, créelo en esa sucursal (puede usar el mismo código).</p>
 <h3>¿Por qué no puedo escribir el stock directamente?</h3>
 <p>Porque el stock se calcula sumando los movimientos. Así siempre se sabe por qué cambió. Use <b>Reponer stock</b> para sumar y <b>Ajustar stock</b> para corregir.</p>
 <h3>Me equivoqué al reponer (puse 100 en vez de 10). ¿Cómo lo corrijo?</h3>

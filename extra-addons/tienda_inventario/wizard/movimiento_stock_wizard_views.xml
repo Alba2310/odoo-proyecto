@@ -6,10 +6,28 @@
         <field name="arch" type="xml">
             <form string="Movimiento de stock">
                 <group>
-                    <field name="producto_id" options="{'no_create': True}"/>
-                    <field name="modo" widget="radio"/>
-                    <field name="stock_actual"/>
-                    <field name="cantidad" invisible="modo != 'reponer'" required="modo == 'reponer'"/>
+                    <group>
+                        <field name="producto_id" options="{'no_create': True}"/>
+                        <field name="modo" widget="radio"/>
+                    </group>
+                    <group string="Stock actual">
+                        <field name="stock_despensa"/>
+                        <field name="stock_deposito"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="ubicacion" widget="radio" options="{'horizontal': true}"/>
+                    <div colspan="2" class="text-muted" invisible="modo != 'reponer'">
+                        Dónde entra la mercadería que llegó.
+                    </div>
+                    <div colspan="2" class="text-muted" invisible="modo != 'transferir'">
+                        De dónde sale la mercadería.
+                    </div>
+                    <div colspan="2" class="text-muted" invisible="modo != 'ajustar'">
+                        Dónde se hizo el conteo.
+                    </div>
+                    <field name="destino" invisible="modo != 'transferir'"/>
+                    <field name="cantidad" invisible="modo == 'ajustar'" required="modo != 'ajustar'"/>
                     <field name="stock_contado" invisible="modo != 'ajustar'"/>
                     <field name="referencia" placeholder="Ej.: Factura proveedor 001-001-0001234"/>
                 </group>
@@ -27,5 +45,13 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'default_modo': 'reponer'}</field>
+    </record>
+
+    <record id="action_tienda_transferir_stock" model="ir.actions.act_window">
+        <field name="name">Pasar del depósito a la despensa</field>
+        <field name="res_model">tienda.movimiento.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_modo': 'transferir'}</field>
     </record>
 </odoo>

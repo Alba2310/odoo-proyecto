@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <list string="Ventas" decoration-muted="estado == 'cancelada'">
                 <field name="name"/>
+                <field name="sucursal_id" optional="show"/>
                 <field name="fecha"/>
                 <field name="cliente_id"/>
                 <field name="vendedor_id" optional="show"/>
@@ -50,6 +51,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="sucursal_id" options="{'no_create': True, 'no_open': True}"
+                                   readonly="estado != 'borrador' or linea_ids"/>
                             <field name="cliente_id" placeholder="Consumidor final"
                                    readonly="estado != 'borrador'"/>
                             <field name="vendedor_id" readonly="estado != 'borrador'"/>
@@ -69,7 +72,8 @@
                         <page string="Productos" name="productos">
                             <field name="linea_ids" readonly="estado != 'borrador'">
                                 <list editable="bottom">
-                                    <field name="producto_id" options="{'no_create': True}"/>
+                                    <field name="producto_id" options="{'no_create': True}"
+                                           domain="[('sucursal_id', '=', parent.sucursal_id)]"/>
                                     <field name="stock_disponible" column_invisible="parent.estado != 'borrador'"/>
                                     <field name="cantidad"/>
                                     <field name="currency_id" column_invisible="1"/>
@@ -125,6 +129,7 @@
                 <separator/>
                 <filter name="fecha" string="Fecha" date="fecha"/>
                 <group expand="0" string="Agrupar por">
+                    <filter name="group_sucursal" string="Sucursal" context="{'group_by': 'sucursal_id'}"/>
                     <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
                     <filter name="group_metodo_pago" string="Forma de pago" context="{'group_by': 'metodo_pago'}"/>
                     <filter name="group_caja" string="Caja" context="{'group_by': 'caja_id'}"/>
@@ -153,6 +158,7 @@
         <field name="arch" type="xml">
             <list string="Productos vendidos" create="0" edit="0" delete="0">
                 <field name="fecha"/>
+                <field name="sucursal_id" optional="show"/>
                 <field name="venta_id"/>
                 <field name="producto_id"/>
                 <field name="cantidad" sum="Total"/>
@@ -172,8 +178,10 @@
             <search string="Buscar productos vendidos">
                 <field name="producto_id"/>
                 <field name="venta_id"/>
+                <field name="sucursal_id"/>
                 <filter name="fecha" string="Fecha" date="fecha"/>
                 <group expand="0" string="Agrupar por">
+                    <filter name="group_sucursal" string="Sucursal" context="{'group_by': 'sucursal_id'}"/>
                     <filter name="group_producto" string="Producto" context="{'group_by': 'producto_id'}"/>
                     <filter name="group_dia" string="Día" context="{'group_by': 'fecha:day'}"/>
                 </group>
@@ -186,7 +194,7 @@
         <field name="res_model">tienda.venta.linea</field>
         <field name="view_mode">list</field>
         <field name="domain">[('estado', '=', 'confirmada')]</field>
-        <field name="context">{'search_default_group_producto': 1}</field>
+        <field name="context">{'search_default_group_sucursal': 1, 'search_default_group_producto': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">Todavía no hay ventas confirmadas</p>
         </field>
