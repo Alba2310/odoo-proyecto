@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" font-family="'Segoe UI', system-ui, sans-serif">
+  <title>Repuestos por categoría</title>
+  <rect width="1200" height="675" fill="#ffffff"/>
+
+  <text x="40" y="70" font-size="32" font-weight="600" fill="#0b0b0b">Repuestos por categoría</text>
+  <text x="40" y="106" font-size="19" fill="#52514e">30 repuestos e insumos de autos, todos con imagen, precio, costo y stock</text>
+
+  <!-- línea base -->
+  <line x1="380" y1="160" x2="380" y2="604" stroke="#c3c2b7" stroke-width="1"/>
+
+  <g fill="#2a78d6">
+    <path d="M380 180 H1041 A4 4 0 0 1 1045 184 V200 A4 4 0 0 1 1041 204 H380 Z"/>
+    <path d="M380 244 H851 A4 4 0 0 1 855 248 V264 A4 4 0 0 1 851 268 H380 Z"/>
+    <path d="M380 308 H851 A4 4 0 0 1 855 312 V328 A4 4 0 0 1 851 332 H380 Z"/>
+    <path d="M380 372 H851 A4 4 0 0 1 855 376 V392 A4 4 0 0 1 851 396 H380 Z"/>
+    <path d="M380 436 H756 A4 4 0 0 1 760 440 V456 A4 4 0 0 1 756 460 H380 Z"/>
+    <path d="M380 500 H661 A4 4 0 0 1 665 504 V520 A4 4 0 0 1 661 524 H380 Z"/>
+    <path d="M380 564 H471 A4 4 0 0 1 475 568 V584 A4 4 0 0 1 471 588 H380 Z"/>
+  </g>
+
+  <!-- categorías -->
+  <g text-anchor="end">
+    <text x="356" y="189" font-size="20" font-weight="600" fill="#0b0b0b">Suspensión y dirección</text>
+    <text x="356" y="209" font-size="15" fill="#898781">rulemanes, amortiguadores, rótulas</text>
+    <text x="356" y="253" font-size="20" font-weight="600" fill="#0b0b0b">Lubricantes y fluidos</text>
+    <text x="356" y="273" font-size="15" fill="#898781">aceites, líquido de frenos, refrigerante</text>
+    <text x="356" y="317" font-size="20" font-weight="600" fill="#0b0b0b">Frenos</text>
+    <text x="356" y="337" font-size="15" fill="#898781">pastillas, discos, campanas, zapatas</text>
+    <text x="356" y="381" font-size="20" font-weight="600" fill="#0b0b0b">Motor y transmisión</text>
+    <text x="356" y="401" font-size="15" fill="#898781">correas, bujías, embrague, bomba de agua</text>
+    <text x="356" y="445" font-size="20" font-weight="600" fill="#0b0b0b">Filtros</text>
+    <text x="356" y="465" font-size="15" fill="#898781">aceite, aire, combustible, habitáculo</text>
+    <text x="356" y="509" font-size="20" font-weight="600" fill="#0b0b0b">Eléctrico</text>
+    <text x="356" y="529" font-size="15" fill="#898781">batería, lámparas, escobillas</text>
+    <text x="356" y="573" font-size="20" font-weight="600" fill="#0b0b0b">Otros</text>
+    <text x="356" y="593" font-size="15" fill="#898781">parabrisas</text>
+  </g>
+
+  <!-- valores en la punta de cada barra -->
+  <g font-size="21" font-weight="600" fill="#0b0b0b">
+    <text x="1059" y="199">7</text>
+    <text x="869" y="263">5</text>
+    <text x="869" y="327">5</text>
+    <text x="869" y="391">5</text>
+    <text x="774" y="455">4</text>
+    <text x="679" y="519">3</text>
+    <text x="489" y="583">1</text>
+  </g>
+</svg>

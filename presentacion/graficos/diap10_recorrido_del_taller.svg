@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" font-family="'Segoe UI', system-ui, sans-serif">
+  <title>Recorrido de una orden en el taller</title>
+  <defs>
+    <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#898781"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="560" fill="#ffffff"/>
+
+  <text x="40" y="70" font-size="32" font-weight="600" fill="#0b0b0b">Recorrido de una orden en el taller</text>
+  <text x="40" y="106" font-size="19" fill="#52514e">Cada etapa es una columna del tablero: para avanzar, se arrastra la tarjeta a la siguiente</text>
+
+  <!-- etapas -->
+  <g stroke-width="1.5">
+    <rect x="40" y="160" width="160" height="104" rx="12" fill="#f4f4f1" stroke="#c3c2b7"/>
+    <rect x="232" y="160" width="160" height="104" rx="12" fill="#f4f4f1" stroke="#c3c2b7"/>
+    <rect x="424" y="160" width="160" height="104" rx="12" fill="#f4f4f1" stroke="#c3c2b7"/>
+    <rect x="616" y="160" width="160" height="104" rx="12" fill="#f4f4f1" stroke="#c3c2b7"/>
+    <rect x="808" y="160" width="160" height="104" rx="12" fill="#fdeee6" stroke="#eb6834"/>
+    <rect x="1000" y="160" width="160" height="104" rx="12" fill="#e6f0fc" stroke="#2a78d6"/>
+  </g>
+
+  <!-- números de etapa -->
+  <g fill="#52514e">
+    <circle cx="64" cy="184" r="13"/>
+    <circle cx="256" cy="184" r="13"/>
+    <circle cx="448" cy="184" r="13"/>
+    <circle cx="640" cy="184" r="13"/>
+    <circle cx="832" cy="184" r="13"/>
+    <circle cx="1024" cy="184" r="13"/>
+  </g>
+  <g fill="#ffffff" font-size="15" font-weight="700" text-anchor="middle">
+    <text x="64" y="189">1</text>
+    <text x="256" y="189">2</text>
+    <text x="448" y="189">3</text>
+    <text x="640" y="189">4</text>
+    <text x="832" y="189">5</text>
+    <text x="1024" y="189">6</text>
+  </g>
+
+  <g fill="#0b0b0b" font-size="19" font-weight="600" text-anchor="middle">
+    <text x="120" y="240">Recibido</text>
+    <text x="312" y="240">En diagnóstico</text>
+    <text x="504" y="230">Esperando</text>
+    <text x="504" y="253">repuestos</text>
+    <text x="696" y="240">En reparación</text>
+    <text x="888" y="230">Listo para</text>
+    <text x="888" y="253">entrega</text>
+    <text x="1080" y="240">Finalizado</text>
+  </g>
+
+  <!-- flechas entre etapas -->
+  <g stroke="#898781" stroke-width="2" marker-end="url(#flecha)">
+    <line x1="204" y1="212" x2="228" y2="212"/>
+    <line x1="396" y1="212" x2="420" y2="212"/>
+    <line x1="588" y1="212" x2="612" y2="212"/>
+    <line x1="780" y1="212" x2="804" y2="212"/>
+    <line x1="972" y1="212" x2="996" y2="212"/>
+  </g>
+
+  <!-- qué pasa en cada momento clave -->
+  <rect x="40" y="320" width="360" height="200" rx="12" fill="#ffffff" stroke="#e1e0d9" stroke-width="1.5"/>
+  <rect x="40" y="320" width="6" height="200" rx="3" fill="#898781"/>
+  <text x="68" y="358" font-size="19" font-weight="600" fill="#0b0b0b">Antes de cerrar, se controla</text>
+  <g font-size="16" fill="#52514e">
+    <text x="68" y="394">• Que haya un mecánico asignado</text>
+    <text x="68" y="422">• Que el checklist esté completo</text>
+    <text x="68" y="450">• Que alcancen los repuestos</text>
+    <text x="82" y="474">en el depósito</text>
+  </g>
+
+  <rect x="424" y="320" width="360" height="200" rx="12" fill="#ffffff" stroke="#e1e0d9" stroke-width="1.5"/>
+  <rect x="424" y="320" width="6" height="200" rx="3" fill="#eb6834"/>
+  <text x="452" y="358" font-size="19" font-weight="600" fill="#0b0b0b">Al pasar a "Listo para entrega"</text>
+  <g font-size="16" fill="#52514e">
+    <text x="452" y="394">• Le llega un correo automático</text>
+    <text x="466" y="418">al cliente</text>
+    <text x="452" y="446">• El asesor recibe una tarea</text>
+    <text x="466" y="470">para coordinar la entrega</text>
+  </g>
+
+  <rect x="808" y="320" width="352" height="200" rx="12" fill="#ffffff" stroke="#e1e0d9" stroke-width="1.5"/>
+  <rect x="808" y="320" width="6" height="200" rx="3" fill="#2a78d6"/>
+  <text x="836" y="358" font-size="19" font-weight="600" fill="#0b0b0b">Al pasar a "Finalizado"</text>
+  <g font-size="16" fill="#52514e">
+    <text x="836" y="394">• Descuenta los repuestos del stock</text>
+    <text x="836" y="422">• Actualiza el kilometraje del auto</text>
+    <text x="836" y="450">• El auto vuelve a su estado anterior</text>
+    <text x="836" y="478">• Genera la factura</text>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" font-family="'Segoe UI', system-ui, sans-serif">
+  <title>Composición del total de una orden</title>
+  <rect width="1200" height="675" fill="#ffffff"/>
+
+  <text x="40" y="70" font-size="32" font-weight="600" fill="#0b0b0b">¿Cómo se compone el total de una orden?</text>
+  <text x="40" y="106" font-size="19" fill="#52514e">Ejemplo: service de 40.000 km de una Toyota Hilux 2023</text>
+
+  <!-- leyenda -->
+  <rect x="40" y="134" width="16" height="16" rx="3" fill="#2a78d6"/>
+  <text x="64" y="148" font-size="18" fill="#0b0b0b">Repuestos · Gs. 745.000 (75 %)</text>
+  <rect x="390" y="134" width="16" height="16" rx="3" fill="#eb6834"/>
+  <text x="414" y="148" font-size="18" fill="#0b0b0b">Mano de obra · Gs. 250.000 (25 %)</text>
+
+  <!-- línea base -->
+  <line x1="400" y1="196" x2="400" y2="534" stroke="#c3c2b7" stroke-width="1"/>
+
+  <path fill="#2a78d6" d="M400 218 H996 A4 4 0 0 1 1000 222 V238 A4 4 0 0 1 996 242 H400 Z"/>
+  <path fill="#2a78d6" d="M400 308 H796 A4 4 0 0 1 800 312 V328 A4 4 0 0 1 796 332 H400 Z"/>
+  <path fill="#eb6834" d="M400 398 H753 A4 4 0 0 1 757 402 V418 A4 4 0 0 1 753 422 H400 Z"/>
+  <path fill="#2a78d6" d="M400 488 H460 A4 4 0 0 1 464 492 V508 A4 4 0 0 1 460 512 H400 Z"/>
+
+  <g text-anchor="end">
+    <text x="376" y="227" font-size="20" font-weight="600" fill="#0b0b0b">Aceite de motor 5W-30</text>
+    <text x="376" y="248" font-size="15" fill="#898781">7 litros</text>
+    <text x="376" y="317" font-size="20" font-weight="600" fill="#0b0b0b">Pastillas de freno delanteras</text>
+    <text x="376" y="338" font-size="15" fill="#898781">1 juego</text>
+    <text x="376" y="407" font-size="20" font-weight="600" fill="#0b0b0b">Mano de obra</text>
+    <text x="376" y="428" font-size="15" fill="#898781">2 h 30 min de trabajo</text>
+    <text x="376" y="497" font-size="20" font-weight="600" fill="#0b0b0b">Filtro de aceite</text>
+    <text x="376" y="518" font-size="15" fill="#898781">1 unidad</text>
+  </g>
+
+  <g font-size="20" font-weight="600" fill="#0b0b0b">
+    <text x="1014" y="237">Gs. 420.000</text>
+    <text x="814" y="327">Gs. 280.000</text>
+    <text x="771" y="417">Gs. 250.000</text>
+    <text x="478" y="507">Gs. 45.000</text>
+  </g>
+
+  <!-- total -->
+  <line x1="40" y1="572" x2="1160" y2="572" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="376" y="622" text-anchor="end" font-size="22" font-weight="600" fill="#52514e">Total de la orden</text>
+  <text x="400" y="626" font-size="38" font-weight="600" fill="#0b0b0b">Gs. 995.000</text>
+</svg>
