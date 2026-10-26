@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- no_gap: la numeración no salta si una transacción se deshace. -->
+        <record id="sequence_autoflow_workshop_order" model="ir.sequence">
+            <field name="name">Órdenes de servicio</field>
+            <field name="code">autoflow.workshop.order</field>
+            <field name="prefix">OS/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="sequence_autoflow_test_drive" model="ir.sequence">
+            <field name="name">Pruebas de manejo</field>
+            <field name="code">autoflow.test.drive</field>
+            <field name="prefix">PM/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

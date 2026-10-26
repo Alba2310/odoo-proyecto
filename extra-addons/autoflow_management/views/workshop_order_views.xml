@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kanban: cada columna es una etapa; arrastrar la tarjeta cambia la etapa de la orden. -->
+    <record id="view_autoflow_workshop_order_kanban" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.kanban</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="0" group_create="0" group_delete="0"
+                    group_edit="0" archivable="0" sample="1">
+                <field name="currency_id"/>
+                <field name="parts_available"/>
+                <field name="inspection_pending_count"/>
+                <progressbar field="service_type"
+                             colors='{"preventive": "success", "corrective": "warning", "warranty": "info"}'/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-start">
+                            <field name="vehicle_image" widget="image" class="me-2"
+                                   options="{'img_class': 'object-fit-cover rounded', 'size': [48, 48]}"/>
+                            <div class="flex-grow-1 text-truncate">
+                                <field name="name" class="fw-bold"/>
+                                <field name="vehicle_id" class="d-block text-truncate"/>
+                                <field name="partner_id" class="d-block text-muted small text-truncate"/>
+                            </div>
+                            <field name="priority" widget="priority"/>
+                        </div>
+                        <div class="mt-1">
+                            <field name="service_type" widget="badge"
+                                   decoration-success="service_type == 'preventive'"
+                                   decoration-warning="service_type == 'corrective'"
+                                   decoration-info="service_type == 'warranty'"/>
+                            <span t-if="!record.parts_available.raw_value" class="badge text-bg-danger ms-1">
+                                <i class="fa fa-exclamation-triangle" title="Faltan repuestos"/> Faltan repuestos
+                            </span>
+                        </div>
+                        <footer class="pt-1">
+                            <field name="mechanic_id" widget="many2one_avatar_employee"/>
+                            <field name="activity_ids" widget="kanban_activity" class="ms-1"/>
+                            <field name="amount_total" widget="monetary" class="ms-auto fw-bold"
+                                   invisible="not amount_total"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_autoflow_workshop_order_list" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.list</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="arch" type="xml">
+            <list string="Órdenes de servicio" decoration-muted="state == 'cancel'">
+                <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                <field name="name"/>
+                <field name="date_received"/>
+                <field name="partner_id"/>
+                <field name="vehicle_id"/>
+                <field name="service_type" optional="show"/>
+                <field name="mechanic_id" widget="many2one_avatar_employee" optional="show"/>
+                <field name="date_promised" optional="hide"/>
+                <field name="date_done" optional="hide"/>
+                <field name="labor_hours" optional="hide" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="amount_total" sum="Total"/>
+                <field name="invoice_id" optional="hide" groups="account.group_account_invoice"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('received', 'diagnosis')"
+                       decoration-warning="state in ('waiting_parts', 'repair')"
+                       decoration-success="state in ('ready', 'done')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_autoflow_workshop_order_form" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.form</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="arch" type="xml">
+            <form string="Orden de servicio">
+                <header>
+                    <button name="action_diagnosis" string="Iniciar diagnóstico" type="object" class="btn-primary"
+                            invisible="state != 'received' or not id"/>
+                    <button name="action_repair" string="Iniciar reparación" type="object" class="btn-primary"
+                            invisible="state not in ('diagnosis', 'waiting_parts')"/>
+                    <button name="action_waiting_parts" string="Esperar repuestos" type="object"
+                            invisible="state not in ('diagnosis', 'repair')"/>
+                    <button name="action_ready" string="Listo para entrega" type="object" class="btn-primary"
+                            invisible="state != 'repair'"/>
+                    <button name="action_done" string="Entregar y finalizar" type="object" class="btn-primary"
+                            invisible="state != 'ready'"
+                            confirm="Se descontarán los repuestos del stock y se generará la factura en borrador. ¿Continuar?"/>
+                    <button name="%(action_report_workshop_order)d" string="Imprimir" type="action"
+                            icon="fa-print" invisible="not id"/>
+                    <button name="action_cancel" string="Cancelar" type="object"
+                            invisible="state in ('done', 'cancel') or not id"
+                            confirm="¿Cancelar la orden? El vehículo sale del taller."/>
+                    <button name="action_reopen" string="Reabrir" type="object" invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"
+                           statusbar_visible="received,diagnosis,waiting_parts,repair,ready,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not invoice_id" groups="account.group_account_invoice">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Factura</span>
+                                <field name="payment_state" class="o_stat_value" readonly="1"/>
+                            </div>
+                        </button>
+                        <button name="action_view_stock_moves" type="object" class="oe_stat_button" icon="fa-cubes"
+                                invisible="not stock_move_ids">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Movimientos</span>
+                                <span class="o_stat_text">de stock</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="parts_available" invisible="1"/>
+                    <field name="stock_move_ids" invisible="1"/>
+                    <field name="invoice_id" invisible="1" groups="account.group_account_invoice"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="parts_available or state in ('done', 'cancel')">
+                        <strong>Faltan repuestos en el depósito.</strong> Revise la columna "En depósito"
+                        en la pestaña de repuestos; la orden no se puede finalizar hasta reponerlos.
+                    </div>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="priority" widget="priority" class="me-2"/>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Cliente y vehículo">
+                            <field name="partner_id" readonly="state in ('done', 'cancel')"/>
+                            <field name="vehicle_id" readonly="id" options="{'no_create': True}"/>
+                            <field name="vehicle_vin"/>
+                            <field name="odometer" readonly="state in ('done', 'cancel')"/>
+                        </group>
+                        <group string="Servicio">
+                            <field name="service_type" readonly="state in ('done', 'cancel')"/>
+                            <field name="mechanic_id" widget="many2one_avatar_employee"
+                                   readonly="state in ('done', 'cancel')"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="date_received"/>
+                            <field name="date_promised"/>
+                            <field name="date_done" invisible="not date_done"/>
+                            <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recepción" name="reception">
+                            <group>
+                                <group>
+                                    <field name="fuel_level" widget="fuel_slider"/>
+                                    <field name="customer_complaint" placeholder="Lo que cuenta el cliente: ruidos, fallas, pedidos..."/>
+                                </group>
+                                <group>
+                                    <field name="damage_ids" widget="many2many_checkboxes"/>
+                                </group>
+                            </group>
+                            <group string="Diagnóstico">
+                                <field name="diagnosis" nolabel="1" colspan="2"
+                                       placeholder="Lo que encontró el mecánico y el trabajo a realizar..."/>
+                            </group>
+                        </page>
+                        <page string="Trabajo y repuestos" name="work">
+                            <separator string="Mano de obra"/>
+                            <field name="labor_line_ids" readonly="state in ('done', 'cancel')">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    <field name="hours" widget="float_time" sum="Total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal" sum="Total"/>
+                                </list>
+                            </field>
+                            <separator string="Repuestos"/>
+                            <field name="part_line_ids" readonly="state in ('done', 'cancel')">
+                                <list editable="bottom"
+                                      decoration-danger="is_storable and not move_id and qty_available &lt; quantity">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"
+                                           context="{'default_type': 'consu', 'default_is_storable': True, 'default_categ_id': %(product_category_workshop)d}"/>
+                                    <field name="is_storable" column_invisible="1"/>
+                                    <field name="qty_available" column_invisible="parent.state in ('done', 'cancel')"
+                                           invisible="not is_storable"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal" sum="Total"/>
+                                    <field name="move_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="labor_hours" widget="float_time"/>
+                                <field name="amount_labor"/>
+                                <field name="amount_parts"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Checklist de entrega" name="inspection">
+                            <field name="inspection_pending_count" invisible="1"/>
+                            <button name="action_inspection_mark_ok" type="object" icon="fa-check"
+                                    string="Marcar pendientes como OK" class="btn-secondary mb-2"
+                                    invisible="not inspection_pending_count or state in ('done', 'cancel')"/>
+                            <field name="inspection_line_ids" readonly="state in ('done', 'cancel')">
+                                <list editable="bottom" create="1"
+                                      decoration-success="state == 'ok'"
+                                      decoration-warning="state == 'change'"
+                                      decoration-danger="state == 'damaged'">
+                                    <field name="sequence" column_invisible="1"/>
+                                    <field name="item_id" options="{'no_create': True}"/>
+                                    <field name="category" optional="show"/>
+                                    <field name="state" widget="selection_badge"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Acta de entrega" name="delivery">
+                            <group>
+                                <group>
+                                    <field name="signed_by" placeholder="Nombre de quien retira el vehículo"/>
+                                    <field name="signed_on" invisible="not signed_on"/>
+                                </group>
+                                <group>
+                                    <field name="customer_signature" widget="signature"
+                                           options="{'full_name': 'signed_by'}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_autoflow_workshop_order_search" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.search</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="arch" type="xml">
+            <search string="Buscar órdenes de servicio">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="vehicle_id" filter_domain="['|', ('vehicle_id', 'ilike', self), ('vehicle_vin', 'ilike', self)]"/>
+                <field name="vehicle_model_id"/>
+                <field name="mechanic_id"/>
+                <filter name="open" string="Abiertas" domain="[('state', 'not in', ('done', 'cancel'))]"/>
+                <filter name="ready" string="Listas para entrega" domain="[('state', '=', 'ready')]"/>
+                <filter name="done" string="Finalizadas" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter name="preventive" string="Preventivo" domain="[('service_type', '=', 'preventive')]"/>
+                <filter name="corrective" string="Correctivo (fallas)" domain="[('service_type', '=', 'corrective')]"/>
+                <filter name="warranty" string="Garantía" domain="[('service_type', '=', 'warranty')]"/>
+                <separator/>
+                <filter name="urgent" string="Urgentes" domain="[('priority', '=', '1')]"/>
+                <filter name="my_orders" string="Mis órdenes" domain="['|', ('user_id', '=', uid), ('mechanic_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="filter_date_received" string="Fecha de ingreso" date="date_received"/>
+                <filter name="filter_date_done" string="Fecha de cierre" date="date_done" default_period="month"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_state" string="Etapa" context="{'group_by': 'state'}"/>
+                    <filter name="group_service_type" string="Tipo de servicio" context="{'group_by': 'service_type'}"/>
+                    <filter name="group_mechanic" string="Mecánico" context="{'group_by': 'mechanic_id'}"/>
+                    <filter name="group_brand" string="Marca" context="{'group_by': 'vehicle_brand_id'}"/>
+                    <filter name="group_model" string="Modelo" context="{'group_by': 'vehicle_model_id'}"/>
+                    <filter name="group_partner" string="Cliente" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_month" string="Mes de ingreso" context="{'group_by': 'date_received:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_autoflow_workshop_order" model="ir.actions.act_window">
+        <field name="name">Órdenes de servicio</field>
+        <field name="res_model">autoflow.workshop.order</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Reciba el primer vehículo en el taller</p>
+            <p>Use <b>Recepción de vehículo</b> para anotar combustible y daños; la orden pasa por
+                diagnóstico, repuestos y reparación hasta quedar lista para entregar.</p>
+        </field>
+    </record>
+</odoo>

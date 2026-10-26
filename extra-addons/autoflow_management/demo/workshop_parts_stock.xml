@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Stock inicial de los repuestos del catálogo en el depósito principal -->
+    <record id="quant_engine_oil_diesel" model="stock.quant">
+        <field name="product_id" ref="product_engine_oil_diesel"/>
+        <field name="inventory_quantity">60</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_gearbox_oil" model="stock.quant">
+        <field name="product_id" ref="product_gearbox_oil"/>
+        <field name="inventory_quantity">30</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_brake_fluid" model="stock.quant">
+        <field name="product_id" ref="product_brake_fluid"/>
+        <field name="inventory_quantity">25</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_coolant" model="stock.quant">
+        <field name="product_id" ref="product_coolant"/>
+        <field name="inventory_quantity">20</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_air_filter" model="stock.quant">
+        <field name="product_id" ref="product_air_filter"/>
+        <field name="inventory_quantity">15</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_fuel_filter" model="stock.quant">
+        <field name="product_id" ref="product_fuel_filter"/>
+        <field name="inventory_quantity">12</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_cabin_filter" model="stock.quant">
+        <field name="product_id" ref="product_cabin_filter"/>
+        <field name="inventory_quantity">15</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_brake_pads_rear" model="stock.quant">
+        <field name="product_id" ref="product_brake_pads_rear"/>
+        <field name="inventory_quantity">6</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_brake_disc" model="stock.quant">
+        <field name="product_id" ref="product_brake_disc"/>
+        <field name="inventory_quantity">8</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_brake_drum" model="stock.quant">
+        <field name="product_id" ref="product_brake_drum"/>
+        <field name="inventory_quantity">4</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_brake_shoes" model="stock.quant">
+        <field name="product_id" ref="product_brake_shoes"/>
+        <field name="inventory_quantity">5</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_wheel_bearing_front" model="stock.quant">
+        <field name="product_id" ref="product_wheel_bearing_front"/>
+        <field name="inventory_quantity">10</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_wheel_bearing_rear" model="stock.quant">
+        <field name="product_id" ref="product_wheel_bearing_rear"/>
+        <field name="inventory_quantity">10</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_shock_front" model="stock.quant">
+        <field name="product_id" ref="product_shock_front"/>
+        <field name="inventory_quantity">4</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_shock_rear" model="stock.quant">
+        <field name="product_id" ref="product_shock_rear"/>
+        <field name="inventory_quantity">4</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_tie_rod_end" model="stock.quant">
+        <field name="product_id" ref="product_tie_rod_end"/>
+        <field name="inventory_quantity">8</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_ball_joint" model="stock.quant">
+        <field name="product_id" ref="product_ball_joint"/>
+        <field name="inventory_quantity">8</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_stabilizer_link" model="stock.quant">
+        <field name="product_id" ref="product_stabilizer_link"/>
+        <field name="inventory_quantity">10</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_timing_belt" model="stock.quant">
+        <field name="product_id" ref="product_timing_belt"/>
+        <field name="inventory_quantity">5</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_accessory_belt" model="stock.quant">
+        <field name="product_id" ref="product_accessory_belt"/>
+        <field name="inventory_quantity">8</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_spark_plug" model="stock.quant">
+        <field name="product_id" ref="product_spark_plug"/>
+        <field name="inventory_quantity">40</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_clutch_kit" model="stock.quant">
+        <field name="product_id" ref="product_clutch_kit"/>
+        <field name="inventory_quantity">2</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_water_pump" model="stock.quant">
+        <field name="product_id" ref="product_water_pump"/>
+        <field name="inventory_quantity">3</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_battery" model="stock.quant">
+        <field name="product_id" ref="product_battery"/>
+        <field name="inventory_quantity">6</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_headlight_bulb" model="stock.quant">
+        <field name="product_id" ref="product_headlight_bulb"/>
+        <field name="inventory_quantity">30</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_wiper_blade" model="stock.quant">
+        <field name="product_id" ref="product_wiper_blade"/>
+        <field name="inventory_quantity">20</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <function model="stock.quant" name="action_apply_inventory">
+        <function eval="[[('id', 'in', (ref('quant_engine_oil_diesel'),
+                                       ref('quant_gearbox_oil'),
+                                       ref('quant_brake_fluid'),
+                                       ref('quant_coolant'),
+                                       ref('quant_air_filter'),
+                                       ref('quant_fuel_filter'),
+                                       ref('quant_cabin_filter'),
+                                       ref('quant_brake_pads_rear'),
+                                       ref('quant_brake_disc'),
+                                       ref('quant_brake_drum'),
+                                       ref('quant_brake_shoes'),
+                                       ref('quant_wheel_bearing_front'),
+                                       ref('quant_wheel_bearing_rear'),
+                                       ref('quant_shock_front'),
+                                       ref('quant_shock_rear'),
+                                       ref('quant_tie_rod_end'),
+                                       ref('quant_ball_joint'),
+                                       ref('quant_stabilizer_link'),
+                                       ref('quant_timing_belt'),
+                                       ref('quant_accessory_belt'),
+                                       ref('quant_spark_plug'),
+                                       ref('quant_clutch_kit'),
+                                       ref('quant_water_pump'),
+                                       ref('quant_battery'),
+                                       ref('quant_headlight_bulb'),
+                                       ref('quant_wiper_blade')))]]"
+                  model="stock.quant" name="search"/>
+    </function>
+</odoo>

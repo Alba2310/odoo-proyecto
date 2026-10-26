@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Checklist de entrega -->
+        <record id="inspection_item_brakes" model="autoflow.inspection.item">
+            <field name="name">Frenos</field>
+            <field name="category">safety</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="inspection_item_tires" model="autoflow.inspection.item">
+            <field name="name">Neumáticos y presión</field>
+            <field name="category">safety</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="inspection_item_lights" model="autoflow.inspection.item">
+            <field name="name">Luces</field>
+            <field name="category">electrical</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="inspection_item_battery" model="autoflow.inspection.item">
+            <field name="name">Batería</field>
+            <field name="category">electrical</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="inspection_item_fluids" model="autoflow.inspection.item">
+            <field name="name">Fluidos (aceite, refrigerante, frenos)</field>
+            <field name="category">mechanical</field>
+            <field name="sequence">50</field>
+        </record>
+        <record id="inspection_item_wipers" model="autoflow.inspection.item">
+            <field name="name">Limpiaparabrisas</field>
+            <field name="category">safety</field>
+            <field name="sequence">60</field>
+        </record>
+        <record id="inspection_item_paint" model="autoflow.inspection.item">
+            <field name="name">Pintura y carrocería</field>
+            <field name="category">body</field>
+            <field name="sequence">70</field>
+        </record>
+
+        <!-- Daños visibles que se marcan al recibir el vehículo -->
+        <record id="damage_scratches" model="autoflow.damage.type">
+            <field name="name">Rayones</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="damage_dents" model="autoflow.damage.type">
+            <field name="name">Abolladuras</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="damage_windshield" model="autoflow.damage.type">
+            <field name="name">Parabrisas astillado</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="damage_lights" model="autoflow.damage.type">
+            <field name="name">Faros o luces rotas</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="damage_mirrors" model="autoflow.damage.type">
+            <field name="name">Espejos dañados</field>
+            <field name="sequence">50</field>
+        </record>
+        <record id="damage_rims" model="autoflow.damage.type">
+            <field name="name">Llantas raspadas</field>
+            <field name="sequence">60</field>
+        </record>
+        <record id="damage_upholstery" model="autoflow.damage.type">
+            <field name="name">Tapizado dañado</field>
+            <field name="sequence">70</field>
+        </record>
+    </data>
+</odoo>

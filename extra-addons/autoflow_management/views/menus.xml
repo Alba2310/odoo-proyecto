@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_autoflow_root" name="AutoFlow" sequence="40"
+              web_icon="autoflow_management,static/description/icon.png"
+              groups="group_autoflow_user"/>
+
+    <menuitem id="menu_autoflow_workshop" name="Taller" parent="menu_autoflow_root" sequence="10"/>
+    <menuitem id="menu_autoflow_reception" name="Recepción de vehículo" parent="menu_autoflow_workshop"
+              action="action_autoflow_vehicle_reception_wizard" sequence="10"/>
+    <menuitem id="menu_autoflow_workshop_order" name="Órdenes de servicio" parent="menu_autoflow_workshop"
+              action="action_autoflow_workshop_order" sequence="20"/>
+    <menuitem id="menu_autoflow_workshop_parts" name="Repuestos" parent="menu_autoflow_workshop"
+              action="action_autoflow_workshop_parts" sequence="30"/>
+
+    <menuitem id="menu_autoflow_test_drive" name="Pruebas de manejo" parent="menu_autoflow_root"
+              action="action_autoflow_test_drive" sequence="20"/>
+
+    <menuitem id="menu_autoflow_vehicle" name="Vehículos" parent="menu_autoflow_root"
+              action="action_autoflow_vehicle" sequence="30"/>
+
+    <menuitem id="menu_autoflow_analysis" name="Análisis" parent="menu_autoflow_root" sequence="40"
+              groups="group_autoflow_manager"/>
+    <menuitem id="menu_autoflow_failures_by_model" parent="menu_autoflow_analysis"
+              action="action_autoflow_failures_by_model" sequence="10"/>
+    <menuitem id="menu_autoflow_mechanic_ranking" parent="menu_autoflow_analysis"
+              action="action_autoflow_mechanic_ranking" sequence="20"/>
+
+    <menuitem id="menu_autoflow_config" name="Configuración" parent="menu_autoflow_root" sequence="90"
+              groups="group_autoflow_manager"/>
+    <menuitem id="menu_autoflow_brand" parent="menu_autoflow_config" action="action_autoflow_vehicle_brand"
+              sequence="10"/>
+    <menuitem id="menu_autoflow_model" parent="menu_autoflow_config" action="action_autoflow_vehicle_model"
+              sequence="20"/>
+    <menuitem id="menu_autoflow_inspection_item" parent="menu_autoflow_config"
+              action="action_autoflow_inspection_item" sequence="30"/>
+    <menuitem id="menu_autoflow_damage_type" parent="menu_autoflow_config" action="action_autoflow_damage_type"
+              sequence="40"/>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_form_autoflow" model="ir.ui.view">
+        <field name="name">crm.lead.form.autoflow</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_test_drives" type="object" class="oe_stat_button" icon="fa-road"
+                        invisible="type == 'lead'" groups="autoflow_management.group_autoflow_user">
+                    <field name="test_drive_count" widget="statinfo" string="Pruebas de manejo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

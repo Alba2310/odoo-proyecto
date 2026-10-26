@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_autoflow" model="ir.module.category">
+        <field name="name">AutoFlow</field>
+        <field name="description">Concesionario y taller</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- Usuario: asesores, recepcionistas y mecánicos. Necesitan ver oportunidades, cotizar y usar repuestos. -->
+    <record id="group_autoflow_user" model="res.groups">
+        <field name="name">Usuario</field>
+        <field name="category_id" ref="module_category_autoflow"/>
+        <field name="implied_ids" eval="[Command.link(ref('sales_team.group_sale_salesman')),
+                                         Command.link(ref('stock.group_stock_user'))]"/>
+    </record>
+
+    <!-- Responsable: además ve costos y análisis y configura marcas, modelos y checklist. -->
+    <record id="group_autoflow_manager" model="res.groups">
+        <field name="name">Responsable</field>
+        <field name="category_id" ref="module_category_autoflow"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_autoflow_user'))]"/>
+        <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="rule_autoflow_vehicle_company" model="ir.rule">
+            <field name="name">Vehículos: multicompañía</field>
+            <field name="model_id" ref="model_autoflow_vehicle"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_autoflow_test_drive_company" model="ir.rule">
+            <field name="name">Pruebas de manejo: multicompañía</field>
+            <field name="model_id" ref="model_autoflow_test_drive"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_autoflow_workshop_order_company" model="ir.rule">
+            <field name="name">Órdenes de servicio: multicompañía</field>
+            <field name="model_id" ref="model_autoflow_workshop_order"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

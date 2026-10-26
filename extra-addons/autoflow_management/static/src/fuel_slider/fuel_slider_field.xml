@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="autoflow_management.FuelSliderField">
+        <div class="o_fuel_slider d-flex align-items-center gap-2 w-100">
+            <i class="fa fa-tint text-muted" title="Combustible"/>
+            <span class="small text-muted text-nowrap" title="Vacío">V</span>
+            <input type="range" class="form-range flex-grow-1" min="0" max="100" step="5"
+                   t-att-value="value" t-att-disabled="props.readonly"
+                   t-on-input="onInput" t-on-change="onChange"/>
+            <span class="small text-muted text-nowrap" title="Lleno">LL</span>
+            <span t-attf-class="badge {{ badgeClass }} o_fuel_slider_badge text-nowrap">
+                <t t-esc="value"/> % · <t t-esc="label"/>
+            </span>
+        </div>
+    </t>
+</templates>

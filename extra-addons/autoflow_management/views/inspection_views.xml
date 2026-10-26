@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_autoflow_inspection_item_list" model="ir.ui.view">
+        <field name="name">autoflow.inspection.item.list</field>
+        <field name="model">autoflow.inspection.item</field>
+        <field name="arch" type="xml">
+            <list string="Puntos de inspección" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_autoflow_inspection_item" model="ir.actions.act_window">
+        <field name="name">Checklist de entrega</field>
+        <field name="res_model">autoflow.inspection.item</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Agregue los puntos a revisar antes de entregar un vehículo</p>
+            <p>Cada orden de servicio nueva arranca con estos puntos en su checklist.</p>
+        </field>
+    </record>
+
+    <record id="view_autoflow_damage_type_list" model="ir.ui.view">
+        <field name="name">autoflow.damage.type.list</field>
+        <field name="model">autoflow.damage.type</field>
+        <field name="arch" type="xml">
+            <list string="Daños visibles" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_autoflow_damage_type" model="ir.actions.act_window">
+        <field name="name">Daños visibles</field>
+        <field name="res_model">autoflow.damage.type</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

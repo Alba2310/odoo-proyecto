@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vistas generales de análisis de las órdenes de servicio -->
+    <record id="view_autoflow_workshop_order_pivot" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.pivot</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Análisis del taller" sample="1">
+                <field name="vehicle_brand_id" type="row"/>
+                <field name="service_type" type="col"/>
+                <field name="amount_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_autoflow_workshop_order_graph" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.graph</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="arch" type="xml">
+            <graph string="Órdenes de servicio" type="bar" sample="1">
+                <field name="date_received" interval="month"/>
+                <field name="service_type"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Modelos que más entran al taller por fallas (servicios correctivos) -->
+    <record id="view_autoflow_failures_by_model_graph" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.graph.failures</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph string="Fallas por modelo" type="bar" order="desc" sample="1">
+                <field name="vehicle_model_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_autoflow_failures_by_model_pivot" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.pivot.failures</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <pivot string="Fallas por modelo" sample="1">
+                <field name="vehicle_model_id" type="row"/>
+                <field name="date_received" interval="month" type="col"/>
+                <field name="amount_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_autoflow_failures_by_model" model="ir.actions.act_window">
+        <field name="name">Fallas por modelo</field>
+        <field name="res_model">autoflow.workshop.order</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="view_ids" eval="[Command.clear(),
+            Command.create({'view_mode': 'graph', 'view_id': ref('view_autoflow_failures_by_model_graph')}),
+            Command.create({'view_mode': 'pivot', 'view_id': ref('view_autoflow_failures_by_model_pivot')})]"/>
+        <field name="domain">[('state', '!=', 'cancel')]</field>
+        <field name="context">{'search_default_corrective': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Todavía no hay órdenes correctivas</p>
+            <p>Acá verá qué modelos de vehículos entran más al taller por fallas.</p>
+        </field>
+    </record>
+
+    <!-- Órdenes cerradas por mecánico en el mes -->
+    <record id="view_autoflow_mechanic_ranking_graph" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.graph.mechanics</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph string="Órdenes cerradas por mecánico" type="bar" order="desc" sample="1">
+                <field name="mechanic_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_autoflow_mechanic_ranking_pivot" model="ir.ui.view">
+        <field name="name">autoflow.workshop.order.pivot.mechanics</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <pivot string="Órdenes cerradas por mecánico" sample="1">
+                <field name="mechanic_id" type="row"/>
+                <field name="service_type" type="col"/>
+                <field name="labor_hours" type="measure"/>
+                <field name="amount_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_autoflow_mechanic_ranking" model="ir.actions.act_window">
+        <field name="name">Órdenes cerradas por mecánico</field>
+        <field name="res_model">autoflow.workshop.order</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="view_ids" eval="[Command.clear(),
+            Command.create({'view_mode': 'graph', 'view_id': ref('view_autoflow_mechanic_ranking_graph')}),
+            Command.create({'view_mode': 'pivot', 'view_id': ref('view_autoflow_mechanic_ranking_pivot')})]"/>
+        <field name="context">{'search_default_done': 1, 'search_default_filter_date_done': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Todavía no hay órdenes finalizadas este mes</p>
+            <p>Acá verá cuántas órdenes cerró cada mecánico.</p>
+        </field>
+    </record>
+</odoo>

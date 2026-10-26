@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_autoflow_vehicle_reception_wizard_form" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.reception.wizard.form</field>
+        <field name="model">autoflow.vehicle.reception.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Recepción de vehículo">
+                <group>
+                    <group>
+                        <field name="vehicle_id" options="{'no_create': True}"/>
+                        <field name="partner_id"/>
+                        <field name="odometer"/>
+                    </group>
+                    <group>
+                        <field name="service_type" widget="radio"/>
+                        <field name="mechanic_id" widget="many2one_avatar_employee"/>
+                        <field name="date_promised"/>
+                    </group>
+                </group>
+                <group string="Nivel de combustible">
+                    <field name="fuel_level" widget="fuel_slider" nolabel="1" colspan="2"/>
+                </group>
+                <group string="Daños visibles">
+                    <field name="damage_ids" widget="many2many_checkboxes" nolabel="1" colspan="2"/>
+                </group>
+                <group string="Motivo de ingreso">
+                    <field name="customer_complaint" nolabel="1" colspan="2"
+                           placeholder="Lo que cuenta el cliente: ruidos, fallas, pedidos..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Pasar al taller" type="object" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancelar" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_autoflow_vehicle_reception_wizard" model="ir.actions.act_window">
+        <field name="name">Recepción de vehículo</field>
+        <field name="res_model">autoflow.vehicle.reception.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_autoflow" model="ir.ui.view">
+        <field name="name">sale.order.form.autoflow</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='partner_details']" position="inside">
+                <field name="vehicle_id" readonly="state in ('sale', 'cancel')"
+                       groups="autoflow_management.group_autoflow_user"/>
+                <field name="test_drive_id" invisible="not test_drive_id"
+                       groups="autoflow_management.group_autoflow_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

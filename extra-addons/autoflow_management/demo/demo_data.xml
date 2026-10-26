@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Marcas y modelos -->
+    <record id="brand_toyota" model="autoflow.vehicle.brand"><field name="name">Toyota</field></record>
+    <record id="brand_hyundai" model="autoflow.vehicle.brand"><field name="name">Hyundai</field></record>
+    <record id="brand_kia" model="autoflow.vehicle.brand"><field name="name">Kia</field></record>
+    <record id="brand_chevrolet" model="autoflow.vehicle.brand"><field name="name">Chevrolet</field></record>
+
+    <record id="model_hilux" model="autoflow.vehicle.model">
+        <field name="name">Hilux</field>
+        <field name="brand_id" ref="brand_toyota"/>
+    </record>
+    <record id="model_corolla" model="autoflow.vehicle.model">
+        <field name="name">Corolla</field>
+        <field name="brand_id" ref="brand_toyota"/>
+    </record>
+    <record id="model_tucson" model="autoflow.vehicle.model">
+        <field name="name">Tucson</field>
+        <field name="brand_id" ref="brand_hyundai"/>
+    </record>
+    <record id="model_sportage" model="autoflow.vehicle.model">
+        <field name="name">Sportage</field>
+        <field name="brand_id" ref="brand_kia"/>
+    </record>
+    <record id="model_onix" model="autoflow.vehicle.model">
+        <field name="name">Onix</field>
+        <field name="brand_id" ref="brand_chevrolet"/>
+    </record>
+
+    <!-- Clientes y mecánicos -->
+    <record id="partner_ana" model="res.partner">
+        <field name="name">Ana Martínez</field>
+        <field name="email">ana.martinez@example.com</field>
+        <field name="phone">+595 981 111 222</field>
+    </record>
+    <record id="partner_luis" model="res.partner">
+        <field name="name">Luis Ortiz</field>
+        <field name="email">luis.ortiz@example.com</field>
+        <field name="phone">+595 982 333 444</field>
+    </record>
+
+    <record id="employee_mechanic_carlos" model="hr.employee">
+        <field name="name">Carlos Benítez</field>
+        <field name="job_title">Mecánico</field>
+    </record>
+    <record id="employee_mechanic_rodrigo" model="hr.employee">
+        <field name="name">Rodrigo Giménez</field>
+        <field name="job_title">Mecánico</field>
+    </record>
+
+    <!-- Vehículos -->
+    <record id="vehicle_hilux" model="autoflow.vehicle">
+        <field name="model_id" ref="model_hilux"/>
+        <field name="year">2023</field>
+        <field name="vin">MR0FB8CD3P0123456</field>
+        <field name="license_plate">AAKX123</field>
+        <field name="color">Blanco</field>
+        <field name="odometer">38500</field>
+        <field name="state">sold</field>
+        <field name="partner_id" ref="partner_ana"/>
+        <field name="acquisition_cost">210000000</field>
+        <field name="sale_price">245000000</field>
+    </record>
+    <record id="vehicle_corolla" model="autoflow.vehicle">
+        <field name="model_id" ref="model_corolla"/>
+        <field name="year">2026</field>
+        <field name="vin">JTDBR32E720045678</field>
+        <field name="color">Gris plata</field>
+        <field name="odometer">12</field>
+        <field name="acquisition_cost">150000000</field>
+        <field name="sale_price">178000000</field>
+    </record>
+    <record id="vehicle_tucson" model="autoflow.vehicle">
+        <field name="model_id" ref="model_tucson"/>
+        <field name="year">2026</field>
+        <field name="vin">KMHJ381ABNU234567</field>
+        <field name="color">Azul</field>
+        <field name="odometer">25</field>
+        <field name="acquisition_cost">190000000</field>
+        <field name="sale_price">226000000</field>
+    </record>
+    <record id="vehicle_sportage" model="autoflow.vehicle">
+        <field name="model_id" ref="model_sportage"/>
+        <field name="year">2025</field>
+        <field name="vin">KNAPX81GBP7345678</field>
+        <field name="color">Rojo</field>
+        <field name="odometer">8</field>
+        <field name="state">reserved</field>
+        <field name="acquisition_cost">185000000</field>
+        <field name="sale_price">219000000</field>
+    </record>
+    <record id="vehicle_onix" model="autoflow.vehicle">
+        <field name="model_id" ref="model_onix"/>
+        <field name="year">2022</field>
+        <field name="vin">9BGEB48A0PG456789</field>
+        <field name="license_plate">ABCD456</field>
+        <field name="color">Negro</field>
+        <field name="odometer">61200</field>
+        <field name="state">sold</field>
+        <field name="partner_id" ref="partner_luis"/>
+    </record>
+
+    <!-- Stock de los repuestos que usa la orden de ejemplo (el catálogo está en data/workshop_parts_data.xml;
+         el stock del resto de los repuestos, en demo/workshop_parts_stock.xml) -->
+    <record id="quant_oil_filter" model="stock.quant">
+        <field name="product_id" ref="product_oil_filter"/>
+        <field name="inventory_quantity">20</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_brake_pads" model="stock.quant">
+        <field name="product_id" ref="product_brake_pads"/>
+        <field name="inventory_quantity">6</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_engine_oil" model="stock.quant">
+        <field name="product_id" ref="product_engine_oil"/>
+        <field name="inventory_quantity">80</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <function model="stock.quant" name="action_apply_inventory">
+        <function eval="[[('id', 'in', (ref('quant_oil_filter'), ref('quant_brake_pads'), ref('quant_engine_oil')))]]"
+                  model="stock.quant" name="search"/>
+    </function>
+
+    <!-- Una orden en reparación y una prueba de manejo agendada para mañana -->
+    <record id="workshop_order_hilux" model="autoflow.workshop.order">
+        <field name="partner_id" ref="partner_ana"/>
+        <field name="vehicle_id" ref="vehicle_hilux"/>
+        <field name="service_type">preventive</field>
+        <field name="mechanic_id" ref="employee_mechanic_carlos"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="state">repair</field>
+        <field name="odometer">40020</field>
+        <field name="fuel_level">60</field>
+        <field name="damage_ids" eval="[Command.set([ref('damage_scratches')])]"/>
+        <field name="customer_complaint">Service de los 40.000 km. Ruido al frenar.</field>
+        <field name="diagnosis">Cambio de aceite y filtro. Pastillas delanteras gastadas.</field>
+        <field name="labor_line_ids" eval="[
+            Command.create({'name': 'Service de 40.000 km', 'hours': 1.5, 'employee_id': ref('employee_mechanic_carlos')}),
+            Command.create({'name': 'Cambio de pastillas de freno', 'hours': 1.0, 'employee_id': ref('employee_mechanic_carlos')}),
+        ]"/>
+        <field name="part_line_ids" eval="[
+            Command.create({'product_id': ref('product_oil_filter'), 'quantity': 1}),
+            Command.create({'product_id': ref('product_engine_oil'), 'quantity': 7}),
+            Command.create({'product_id': ref('product_brake_pads'), 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <record id="test_drive_corolla" model="autoflow.test.drive">
+        <field name="partner_id" ref="partner_luis"/>
+        <field name="vehicle_id" ref="vehicle_corolla"/>
+        <field name="employee_id" ref="employee_mechanic_rodrigo"/>
+        <!-- Mañana de 10:00 a 10:45 en Paraguay (13:00 UTC; Odoo guarda las fechas en UTC). -->
+        <field name="date_start" eval="(DateTime.today() + relativedelta(days=1, hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(days=1, hour=13, minute=45, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="fuel_start">90</field>
+        <field name="odometer_start">12</field>
+        <field name="driver_license">1.234.567</field>
+    </record>
+</odoo>

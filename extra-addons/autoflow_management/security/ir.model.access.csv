@@ -1,0 +1,23 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_autoflow_vehicle_brand_user,autoflow.vehicle.brand user,model_autoflow_vehicle_brand,group_autoflow_user,1,0,0,0
+access_autoflow_vehicle_brand_salesman,autoflow.vehicle.brand salesman,model_autoflow_vehicle_brand,sales_team.group_sale_salesman,1,0,0,0
+access_autoflow_vehicle_brand_manager,autoflow.vehicle.brand manager,model_autoflow_vehicle_brand,group_autoflow_manager,1,1,1,1
+access_autoflow_vehicle_model_user,autoflow.vehicle.model user,model_autoflow_vehicle_model,group_autoflow_user,1,0,0,0
+access_autoflow_vehicle_model_salesman,autoflow.vehicle.model salesman,model_autoflow_vehicle_model,sales_team.group_sale_salesman,1,0,0,0
+access_autoflow_vehicle_model_manager,autoflow.vehicle.model manager,model_autoflow_vehicle_model,group_autoflow_manager,1,1,1,1
+access_autoflow_vehicle_user,autoflow.vehicle user,model_autoflow_vehicle,group_autoflow_user,1,1,1,0
+access_autoflow_vehicle_salesman,autoflow.vehicle salesman,model_autoflow_vehicle,sales_team.group_sale_salesman,1,0,0,0
+access_autoflow_vehicle_manager,autoflow.vehicle manager,model_autoflow_vehicle,group_autoflow_manager,1,1,1,1
+access_autoflow_vehicle_photo_user,autoflow.vehicle.photo user,model_autoflow_vehicle_photo,group_autoflow_user,1,1,1,1
+access_autoflow_test_drive_user,autoflow.test.drive user,model_autoflow_test_drive,group_autoflow_user,1,1,1,0
+access_autoflow_test_drive_manager,autoflow.test.drive manager,model_autoflow_test_drive,group_autoflow_manager,1,1,1,1
+access_autoflow_workshop_order_user,autoflow.workshop.order user,model_autoflow_workshop_order,group_autoflow_user,1,1,1,0
+access_autoflow_workshop_order_manager,autoflow.workshop.order manager,model_autoflow_workshop_order,group_autoflow_manager,1,1,1,1
+access_autoflow_workshop_part_line_user,autoflow.workshop.part.line user,model_autoflow_workshop_part_line,group_autoflow_user,1,1,1,1
+access_autoflow_workshop_labor_line_user,autoflow.workshop.labor.line user,model_autoflow_workshop_labor_line,group_autoflow_user,1,1,1,1
+access_autoflow_inspection_line_user,autoflow.inspection.line user,model_autoflow_inspection_line,group_autoflow_user,1,1,1,1
+access_autoflow_inspection_item_user,autoflow.inspection.item user,model_autoflow_inspection_item,group_autoflow_user,1,0,0,0
+access_autoflow_inspection_item_manager,autoflow.inspection.item manager,model_autoflow_inspection_item,group_autoflow_manager,1,1,1,1
+access_autoflow_damage_type_user,autoflow.damage.type user,model_autoflow_damage_type,group_autoflow_user,1,0,0,0
+access_autoflow_damage_type_manager,autoflow.damage.type manager,model_autoflow_damage_type,group_autoflow_manager,1,1,1,1
+access_autoflow_vehicle_reception_wizard_user,autoflow.vehicle.reception.wizard user,model_autoflow_vehicle_reception_wizard,group_autoflow_user,1,1,1,1

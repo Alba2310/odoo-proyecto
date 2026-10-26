@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Repuestos e insumos del taller: los productos de la categoría "Repuestos de taller" y sus subcategorías. -->
+    <record id="action_autoflow_workshop_parts" model="ir.actions.act_window">
+        <field name="name">Repuestos</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="stock.product_template_search_form_view_stock"/>
+        <field name="domain" eval="[('categ_id', 'child_of', ref('product_category_workshop'))]"/>
+        <field name="context" eval="{'default_categ_id': ref('product_category_workshop'),
+                                     'default_type': 'consu', 'default_is_storable': True}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue los repuestos e insumos del taller</p>
+            <p>Aceites, filtros, frenos, rulemanes... Los que se usan en las órdenes de servicio
+                se descuentan solos del depósito.</p>
+        </field>
+    </record>
+</odoo>

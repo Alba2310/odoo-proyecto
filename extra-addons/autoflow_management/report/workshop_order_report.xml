@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_workshop_order" model="ir.actions.report">
+        <field name="name">Orden de servicio y acta de entrega</field>
+        <field name="model">autoflow.workshop.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">autoflow_management.report_workshop_order</field>
+        <field name="report_file">autoflow_management.report_workshop_order</field>
+        <field name="print_report_name">'Orden de servicio - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_autoflow_workshop_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_workshop_order_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+            <t t-set="address">
+                <div t-field="o.partner_id"
+                     t-options='{"widget": "contact", "fields": ["address", "name", "phone", "email"], "no_marker": True}'/>
+            </t>
+            <div class="page">
+                <h2 class="mt-4">
+                    Orden de servicio <span t-field="o.name"/>
+                    <small class="text-muted">· <span t-field="o.state"/></small>
+                </h2>
+
+                <!-- Datos del vehículo y del servicio -->
+                <div class="row mt-3 mb-3" id="informations">
+                    <div class="col-4">
+                        <strong>Vehículo</strong>
+                        <div t-field="o.vehicle_id"/>
+                        <div>Chasis: <span t-field="o.vehicle_vin"/></div>
+                        <div t-if="o.vehicle_id.color">Color: <span t-field="o.vehicle_id.color"/></div>
+                    </div>
+                    <div class="col-4">
+                        <strong>Ingreso</strong>
+                        <div t-field="o.date_received"/>
+                        <div>Kilometraje: <span t-field="o.odometer"/> km</div>
+                        <div>Combustible: <span t-field="o.fuel_level"/> %</div>
+                    </div>
+                    <div class="col-4">
+                        <strong>Servicio</strong>
+                        <div t-field="o.service_type"/>
+                        <div t-if="o.mechanic_id">Mecánico: <span t-field="o.mechanic_id"/></div>
+                        <div t-if="o.user_id">Asesor: <span t-field="o.user_id"/></div>
+                        <div t-if="o.date_done">Cierre: <span t-field="o.date_done"/></div>
+                    </div>
+                </div>
+
+                <div t-if="o.damage_ids" class="mb-2">
+                    <strong>Daños visibles al ingreso:</strong>
+                    <span t-esc="', '.join(o.damage_ids.mapped('name'))"/>
+                </div>
+                <div t-if="o.customer_complaint" class="mb-2">
+                    <strong>Motivo de ingreso:</strong>
+                    <span t-field="o.customer_complaint"/>
+                </div>
+                <div t-if="o.diagnosis" class="mb-3">
+                    <strong>Diagnóstico:</strong>
+                    <span t-field="o.diagnosis"/>
+                </div>
+
+                <!-- Mano de obra -->
+                <t t-if="o.labor_line_ids">
+                    <h5 class="mt-3">Mano de obra</h5>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th class="text-start">Trabajo realizado</th>
+                                <th class="text-start">Mecánico</th>
+                                <th class="text-end">Horas</th>
+                                <th class="text-end">Precio por hora</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.labor_line_ids" t-as="line">
+                                <td><span t-field="line.name"/></td>
+                                <td><span t-field="line.employee_id"/></td>
+                                <td class="text-end"><span t-field="line.hours" t-options='{"widget": "float_time"}'/></td>
+                                <td class="text-end"><span t-field="line.price_unit"/></td>
+                                <td class="text-end"><span t-field="line.price_subtotal"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+
+                <!-- Repuestos -->
+                <t t-if="o.part_line_ids">
+                    <h5 class="mt-3">Repuestos</h5>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th class="text-start">Repuesto</th>
+                                <th class="text-end">Cantidad</th>
+                                <th class="text-end">Precio unitario</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.part_line_ids" t-as="line">
+                                <td><span t-field="line.product_id"/></td>
+                                <td class="text-end">
+                                    <span t-field="line.quantity"/> <span t-field="line.product_uom_id"/>
+                                </td>
+                                <td class="text-end"><span t-field="line.price_unit"/></td>
+                                <td class="text-end"><span t-field="line.price_subtotal"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+
+                <!-- Costos desglosados -->
+                <div class="row justify-content-end" id="total">
+                    <div class="col-5">
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Mano de obra (<span t-field="o.labor_hours" t-options='{"widget": "float_time"}'/> h)</td>
+                                <td class="text-end"><span t-field="o.amount_labor"/></td>
+                            </tr>
+                            <tr>
+                                <td>Repuestos</td>
+                                <td class="text-end"><span t-field="o.amount_parts"/></td>
+                            </tr>
+                            <tr class="border-black fw-bold">
+                                <td>Total</td>
+                                <td class="text-end"><span t-field="o.amount_total"/></td>
+                            </tr>
+                        </table>
+                        <p t-if="o.service_type == 'warranty'" class="small text-muted">
+                            Servicio en garantía: sin cargo para el cliente.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Checklist de entrega -->
+                <t t-if="o.inspection_line_ids">
+                    <h5 class="mt-3">Inspección de entrega</h5>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-start">Punto revisado</th>
+                                <th class="text-start">Estado</th>
+                                <th class="text-start">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.inspection_line_ids" t-as="line">
+                                <td><span t-field="line.item_id"/></td>
+                                <td t-attf-class="#{'text-success' if line.state == 'ok' else 'text-danger' if line.state == 'damaged' else 'text-warning' if line.state == 'change' else ''}">
+                                    <span t-field="line.state"/>
+                                </td>
+                                <td><span t-field="line.notes"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+
+                <!-- Acta de entrega con la firma del cliente -->
+                <div class="mt-4" style="page-break-inside: avoid;">
+                    <h5>Acta de entrega</h5>
+                    <p class="small">
+                        El cliente declara recibir el vehículo <strong t-field="o.vehicle_id"/> en las condiciones
+                        descritas en esta orden, con los trabajos realizados y los repuestos detallados.
+                    </p>
+                    <div class="row mt-4">
+                        <div class="col-6 offset-6 text-center">
+                            <img t-if="o.customer_signature" t-att-src="image_data_uri(o.customer_signature)"
+                                 style="max-height: 3.5cm; max-width: 8cm;"/>
+                            <div t-else="" style="height: 3cm;"/>
+                            <div class="border-top border-dark pt-1">
+                                Firma del cliente
+                                <div t-if="o.signed_by"><span t-field="o.signed_by"/></div>
+                                <div t-if="o.signed_on" class="small text-muted"><span t-field="o.signed_on"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_workshop_order">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="autoflow_management.report_workshop_order_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

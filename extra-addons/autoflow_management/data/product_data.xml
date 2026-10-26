@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Se usa para facturar las horas del taller. El precio es la tarifa por hora sugerida. -->
+        <record id="product_workshop_labor" model="product.product">
+            <field name="name">Mano de obra de taller</field>
+            <field name="default_code">MO-TALLER</field>
+            <field name="type">service</field>
+            <field name="list_price">100000</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+        </record>
+    </data>
+</odoo>

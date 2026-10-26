@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Categorías: todos los repuestos e insumos del taller cuelgan de "Repuestos de taller". -->
+        <record id="product_category_workshop" model="product.category">
+            <field name="name">Repuestos de taller</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+        <record id="product_category_lubricants" model="product.category">
+            <field name="name">Lubricantes y fluidos</field>
+            <field name="parent_id" ref="product_category_workshop"/>
+        </record>
+        <record id="product_category_filters" model="product.category">
+            <field name="name">Filtros</field>
+            <field name="parent_id" ref="product_category_workshop"/>
+        </record>
+        <record id="product_category_brakes" model="product.category">
+            <field name="name">Frenos</field>
+            <field name="parent_id" ref="product_category_workshop"/>
+        </record>
+        <record id="product_category_suspension" model="product.category">
+            <field name="name">Suspensión y dirección</field>
+            <field name="parent_id" ref="product_category_workshop"/>
+        </record>
+        <record id="product_category_engine" model="product.category">
+            <field name="name">Motor y transmisión</field>
+            <field name="parent_id" ref="product_category_workshop"/>
+        </record>
+        <record id="product_category_electrical" model="product.category">
+            <field name="name">Eléctrico</field>
+            <field name="parent_id" ref="product_category_workshop"/>
+        </record>
+
+        <!-- Lubricantes y fluidos (precios de venta y costo en guaraníes) -->
+        <record id="product_engine_oil" model="product.product">
+            <field name="name">Aceite de motor 5W-30 sintético (litro)</field>
+            <field name="default_code">REP-ACEITE-01</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-aceite-01.png"/>
+            <field name="categ_id" ref="product_category_lubricants"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">60000</field>
+            <field name="standard_price">38000</field>
+        </record>
+        <record id="product_engine_oil_diesel" model="product.product">
+            <field name="name">Aceite de motor 15W-40 mineral diésel (litro)</field>
+            <field name="default_code">REP-ACEITE-02</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-aceite-02.png"/>
+            <field name="categ_id" ref="product_category_lubricants"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">45000</field>
+            <field name="standard_price">28000</field>
+        </record>
+        <record id="product_gearbox_oil" model="product.product">
+            <field name="name">Aceite de caja automática ATF (litro)</field>
+            <field name="default_code">REP-ACEITE-03</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-aceite-03.png"/>
+            <field name="categ_id" ref="product_category_lubricants"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">55000</field>
+            <field name="standard_price">34000</field>
+        </record>
+        <record id="product_brake_fluid" model="product.product">
+            <field name="name">Líquido de frenos DOT 4 (500 ml)</field>
+            <field name="default_code">REP-FLUIDO-01</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-fluido-01.png"/>
+            <field name="categ_id" ref="product_category_lubricants"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">35000</field>
+            <field name="standard_price">21000</field>
+        </record>
+        <record id="product_coolant" model="product.product">
+            <field name="name">Refrigerante de motor (bidón 4 litros)</field>
+            <field name="default_code">REP-FLUIDO-02</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-fluido-02.png"/>
+            <field name="categ_id" ref="product_category_lubricants"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">70000</field>
+            <field name="standard_price">45000</field>
+        </record>
+
+        <!-- Filtros -->
+        <record id="product_oil_filter" model="product.product">
+            <field name="name">Filtro de aceite</field>
+            <field name="default_code">REP-FILTRO-01</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-filtro-01.png"/>
+            <field name="categ_id" ref="product_category_filters"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">45000</field>
+            <field name="standard_price">28000</field>
+        </record>
+        <record id="product_air_filter" model="product.product">
+            <field name="name">Filtro de aire de motor</field>
+            <field name="default_code">REP-FILTRO-02</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-filtro-02.png"/>
+            <field name="categ_id" ref="product_category_filters"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">85000</field>
+            <field name="standard_price">52000</field>
+        </record>
+        <record id="product_fuel_filter" model="product.product">
+            <field name="name">Filtro de combustible</field>
+            <field name="default_code">REP-FILTRO-03</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-filtro-03.png"/>
+            <field name="categ_id" ref="product_category_filters"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">95000</field>
+            <field name="standard_price">60000</field>
+        </record>
+        <record id="product_cabin_filter" model="product.product">
+            <field name="name">Filtro de habitáculo (aire acondicionado)</field>
+            <field name="default_code">REP-FILTRO-04</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-filtro-04.png"/>
+            <field name="categ_id" ref="product_category_filters"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">75000</field>
+            <field name="standard_price">45000</field>
+        </record>
+
+        <!-- Frenos -->
+        <record id="product_brake_pads" model="product.product">
+            <field name="name">Pastillas de freno delanteras (juego)</field>
+            <field name="default_code">REP-FRENO-01</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-freno-01.png"/>
+            <field name="categ_id" ref="product_category_brakes"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">280000</field>
+            <field name="standard_price">190000</field>
+        </record>
+        <record id="product_brake_pads_rear" model="product.product">
+            <field name="name">Pastillas de freno traseras (juego)</field>
+            <field name="default_code">REP-FRENO-02</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-freno-02.png"/>
+            <field name="categ_id" ref="product_category_brakes"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">240000</field>
+            <field name="standard_price">160000</field>
+        </record>
+        <record id="product_brake_disc" model="product.product">
+            <field name="name">Disco de freno delantero</field>
+            <field name="default_code">REP-FRENO-03</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-freno-03.png"/>
+            <field name="categ_id" ref="product_category_brakes"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">420000</field>
+            <field name="standard_price">290000</field>
+        </record>
+        <record id="product_brake_drum" model="product.product">
+            <field name="name">Campana de freno trasera</field>
+            <field name="default_code">REP-FRENO-04</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-freno-04.png"/>
+            <field name="categ_id" ref="product_category_brakes"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">380000</field>
+            <field name="standard_price">250000</field>
+        </record>
+        <record id="product_brake_shoes" model="product.product">
+            <field name="name">Zapatas de freno traseras (juego)</field>
+            <field name="default_code">REP-FRENO-05</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-freno-05.png"/>
+            <field name="categ_id" ref="product_category_brakes"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">220000</field>
+            <field name="standard_price">145000</field>
+        </record>
+
+        <!-- Suspensión y dirección -->
+        <record id="product_wheel_bearing_front" model="product.product">
+            <field name="name">Rulemán de rueda delantera</field>
+            <field name="default_code">REP-SUSP-01</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-susp-01.png"/>
+            <field name="categ_id" ref="product_category_suspension"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">180000</field>
+            <field name="standard_price">115000</field>
+        </record>
+        <record id="product_wheel_bearing_rear" model="product.product">
+            <field name="name">Rulemán de rueda trasera</field>
+            <field name="default_code">REP-SUSP-02</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-susp-02.png"/>
+            <field name="categ_id" ref="product_category_suspension"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">160000</field>
+            <field name="standard_price">100000</field>
+        </record>
+        <record id="product_shock_front" model="product.product">
+            <field name="name">Amortiguador delantero</field>
+            <field name="default_code">REP-SUSP-03</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-susp-03.png"/>
+            <field name="categ_id" ref="product_category_suspension"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">650000</field>
+            <field name="standard_price">450000</field>
+        </record>
+        <record id="product_shock_rear" model="product.product">
+            <field name="name">Amortiguador trasero</field>
+            <field name="default_code">REP-SUSP-04</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-susp-04.png"/>
+            <field name="categ_id" ref="product_category_suspension"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">550000</field>
+            <field name="standard_price">380000</field>
+        </record>
+        <record id="product_tie_rod_end" model="product.product">
+            <field name="name">Terminal de dirección</field>
+            <field name="default_code">REP-SUSP-05</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-susp-05.png"/>
+            <field name="categ_id" ref="product_category_suspension"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">150000</field>
+            <field name="standard_price">95000</field>
+        </record>
+        <record id="product_ball_joint" model="product.product">
+            <field name="name">Rótula de suspensión</field>
+            <field name="default_code">REP-SUSP-06</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-susp-06.png"/>
+            <field name="categ_id" ref="product_category_suspension"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">170000</field>
+            <field name="standard_price">110000</field>
+        </record>
+        <record id="product_stabilizer_link" model="product.product">
+            <field name="name">Bieleta de barra estabilizadora</field>
+            <field name="default_code">REP-SUSP-07</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-susp-07.png"/>
+            <field name="categ_id" ref="product_category_suspension"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">120000</field>
+            <field name="standard_price">75000</field>
+        </record>
+
+        <!-- Motor y transmisión -->
+        <record id="product_timing_belt" model="product.product">
+            <field name="name">Correa de distribución</field>
+            <field name="default_code">REP-MOTOR-01</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-motor-01.png"/>
+            <field name="categ_id" ref="product_category_engine"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">350000</field>
+            <field name="standard_price">230000</field>
+        </record>
+        <record id="product_accessory_belt" model="product.product">
+            <field name="name">Correa de accesorios (poly-V)</field>
+            <field name="default_code">REP-MOTOR-02</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-motor-02.png"/>
+            <field name="categ_id" ref="product_category_engine"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">140000</field>
+            <field name="standard_price">85000</field>
+        </record>
+        <record id="product_spark_plug" model="product.product">
+            <field name="name">Bujía de encendido</field>
+            <field name="default_code">REP-MOTOR-03</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-motor-03.png"/>
+            <field name="categ_id" ref="product_category_engine"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">45000</field>
+            <field name="standard_price">27000</field>
+        </record>
+        <record id="product_clutch_kit" model="product.product">
+            <field name="name">Kit de embrague</field>
+            <field name="default_code">REP-MOTOR-04</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-motor-04.png"/>
+            <field name="categ_id" ref="product_category_engine"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">1500000</field>
+            <field name="standard_price">1050000</field>
+        </record>
+        <record id="product_water_pump" model="product.product">
+            <field name="name">Bomba de agua</field>
+            <field name="default_code">REP-MOTOR-05</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-motor-05.png"/>
+            <field name="categ_id" ref="product_category_engine"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">480000</field>
+            <field name="standard_price">320000</field>
+        </record>
+
+        <!-- Eléctrico -->
+        <record id="product_battery" model="product.product">
+            <field name="name">Batería 12 V 75 Ah</field>
+            <field name="default_code">REP-ELEC-01</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-elec-01.png"/>
+            <field name="categ_id" ref="product_category_electrical"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">950000</field>
+            <field name="standard_price">680000</field>
+        </record>
+        <record id="product_headlight_bulb" model="product.product">
+            <field name="name">Lámpara H4 de faro</field>
+            <field name="default_code">REP-ELEC-02</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-elec-02.png"/>
+            <field name="categ_id" ref="product_category_electrical"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">40000</field>
+            <field name="standard_price">22000</field>
+        </record>
+        <record id="product_wiper_blade" model="product.product">
+            <field name="name">Escobilla limpiaparabrisas</field>
+            <field name="default_code">REP-ELEC-03</field>
+            <field name="image_1920" type="base64" file="autoflow_management/static/img/parts/rep-elec-03.png"/>
+            <field name="categ_id" ref="product_category_electrical"/>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">60000</field>
+            <field name="standard_price">35000</field>
+        </record>
+    </data>
+</odoo>

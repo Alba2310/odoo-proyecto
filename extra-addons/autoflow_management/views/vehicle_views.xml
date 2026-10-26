@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Marcas y modelos -->
+    <record id="view_autoflow_vehicle_brand_list" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.brand.list</field>
+        <field name="model">autoflow.vehicle.brand</field>
+        <field name="arch" type="xml">
+            <list string="Marcas" editable="bottom">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_autoflow_vehicle_brand" model="ir.actions.act_window">
+        <field name="name">Marcas</field>
+        <field name="res_model">autoflow.vehicle.brand</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="view_autoflow_vehicle_model_list" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.model.list</field>
+        <field name="model">autoflow.vehicle.model</field>
+        <field name="arch" type="xml">
+            <list string="Modelos" editable="bottom">
+                <field name="brand_id"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_autoflow_vehicle_model_search" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.model.search</field>
+        <field name="model">autoflow.vehicle.model</field>
+        <field name="arch" type="xml">
+            <search string="Buscar modelos">
+                <field name="name"/>
+                <field name="brand_id"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_brand" string="Marca" context="{'group_by': 'brand_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_autoflow_vehicle_model" model="ir.actions.act_window">
+        <field name="name">Modelos</field>
+        <field name="res_model">autoflow.vehicle.model</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_group_brand': 1}</field>
+    </record>
+
+    <!-- Vehículos -->
+    <record id="view_autoflow_vehicle_kanban" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.kanban</field>
+        <field name="model">autoflow.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="state"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="d-flex align-items-center me-2">
+                            <field name="image_128" widget="image" options="{'img_class': 'object-fit-cover'}"/>
+                        </aside>
+                        <main>
+                            <field class="fw-bolder fs-5" name="name"/>
+                            <div class="text-muted small">VIN <field name="vin"/></div>
+                            <div class="small"><i class="fa fa-tachometer me-1" title="Kilometraje"/><field name="odometer"/> km</div>
+                            <footer class="pt-1">
+                                <field name="state" widget="badge"
+                                       decoration-success="state == 'available'"
+                                       decoration-warning="state == 'maintenance'"
+                                       decoration-info="state == 'reserved'"
+                                       decoration-muted="state == 'sold'"/>
+                                <field name="sale_price" widget="monetary" class="ms-auto fw-bold"
+                                       invisible="state == 'sold' or not sale_price"/>
+                                <field name="currency_id" invisible="1"/>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_autoflow_vehicle_list" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.list</field>
+        <field name="model">autoflow.vehicle</field>
+        <field name="arch" type="xml">
+            <list string="Vehículos" decoration-muted="state == 'sold'">
+                <field name="brand_id"/>
+                <field name="model_id"/>
+                <field name="year" options="{'enable_formatting': false}"/>
+                <field name="license_plate" optional="show"/>
+                <field name="vin" optional="show"/>
+                <field name="color" optional="hide"/>
+                <field name="odometer"/>
+                <field name="partner_id" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="acquisition_cost" optional="hide" sum="Total"/>
+                <field name="sale_price" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'available'"
+                       decoration-warning="state == 'maintenance'"
+                       decoration-info="state == 'reserved'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_autoflow_vehicle_form" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.form</field>
+        <field name="model">autoflow.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehículo">
+                <header>
+                    <button name="action_open_reception_wizard" string="Recibir en taller" type="object"
+                            class="btn-primary" icon="fa-wrench" invisible="state == 'maintenance' or not id"/>
+                    <button name="action_reserve" string="Reservar" type="object" invisible="state != 'available'"/>
+                    <button name="action_release" string="Liberar reserva" type="object" invisible="state != 'reserved'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="available,reserved,sold"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_test_drives" type="object" class="oe_stat_button" icon="fa-road">
+                            <field name="test_drive_count" widget="statinfo" string="Pruebas de manejo"/>
+                        </button>
+                        <button name="action_view_workshop_orders" type="object" class="oe_stat_button" icon="fa-wrench">
+                            <field name="workshop_order_count" widget="statinfo" string="Órdenes de taller"/>
+                        </button>
+                        <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-dollar"
+                                groups="sales_team.group_sale_salesman">
+                            <field name="sale_order_count" widget="statinfo" string="Cotizaciones"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="model_id"/>
+                        <h1><field name="model_id" placeholder="Ej.: Toyota Hilux" options="{'no_quick_create': True}"/></h1>
+                        <h3 class="text-muted"><field name="name" readonly="1" invisible="not id"/></h3>
+                    </div>
+                    <group>
+                        <group string="Identificación">
+                            <field name="brand_id"/>
+                            <field name="year" options="{'enable_formatting': false}"/>
+                            <field name="vin" placeholder="17 caracteres"/>
+                            <field name="license_plate"/>
+                            <field name="color"/>
+                            <field name="odometer"/>
+                        </group>
+                        <group string="Comercial">
+                            <field name="partner_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="acquisition_cost" groups="autoflow_management.group_autoflow_manager"/>
+                            <field name="sale_price"/>
+                            <field name="product_id" groups="sales_team.group_sale_salesman"/>
+                            <field name="workshop_amount_total"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Galería de fotos" name="photos">
+                            <field name="photo_ids" mode="kanban" context="{'default_name': 'Foto'}">
+                                <kanban>
+                                    <templates>
+                                        <t t-name="card">
+                                            <field name="image_1920" widget="image" options="{'size': [0, 160]}"
+                                                   class="text-center"/>
+                                            <field name="name" class="text-center small"/>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Foto">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="image_1920" widget="image"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notes">
+                            <field name="notes" placeholder="Equipamiento, historial, observaciones..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_autoflow_vehicle_search" model="ir.ui.view">
+        <field name="name">autoflow.vehicle.search</field>
+        <field name="model">autoflow.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="Buscar vehículos">
+                <field name="name" string="Vehículo" filter_domain="['|', '|', ('name', 'ilike', self), ('vin', 'ilike', self), ('license_plate', 'ilike', self)]"/>
+                <field name="brand_id"/>
+                <field name="model_id"/>
+                <field name="partner_id"/>
+                <filter name="available" string="Disponibles" domain="[('state', '=', 'available')]"/>
+                <filter name="maintenance" string="En mantenimiento" domain="[('state', '=', 'maintenance')]"/>
+                <filter name="reserved" string="Reservados" domain="[('state', '=', 'reserved')]"/>
+                <filter name="sold" string="Vendidos" domain="[('state', '=', 'sold')]"/>
+                <separator/>
+                <filter name="inactive" string="Archivados" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_brand" string="Marca" context="{'group_by': 'brand_id'}"/>
+                    <filter name="group_model" string="Modelo" context="{'group_by': 'model_id'}"/>
+                    <filter name="group_year" string="Año" context="{'group_by': 'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_autoflow_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehículos</field>
+        <field name="res_model">autoflow.vehicle</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Registre su primer vehículo</p>
+            <p>Cargue marca, modelo, año y chasis. Desde el vehículo puede agendar pruebas de manejo,
+                recibirlo en el taller o venderlo.</p>
+        </field>
+    </record>
+</odoo>

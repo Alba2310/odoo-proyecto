@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_autoflow_test_drive_calendar" model="ir.ui.view">
+        <field name="name">autoflow.test.drive.calendar</field>
+        <field name="model">autoflow.test.drive</field>
+        <field name="arch" type="xml">
+            <calendar string="Pruebas de manejo" date_start="date_start" date_stop="date_end"
+                      color="vehicle_id" mode="week" quick_create="0" event_open_popup="1">
+                <field name="partner_id"/>
+                <field name="vehicle_id" filters="1"/>
+                <field name="employee_id" filters="1"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_autoflow_test_drive_list" model="ir.ui.view">
+        <field name="name">autoflow.test.drive.list</field>
+        <field name="model">autoflow.test.drive</field>
+        <field name="arch" type="xml">
+            <list string="Pruebas de manejo" decoration-muted="state == 'cancel'">
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end" optional="hide"/>
+                <field name="partner_id"/>
+                <field name="vehicle_id"/>
+                <field name="employee_id" optional="show"/>
+                <field name="lead_id" optional="hide"/>
+                <field name="distance" optional="show" sum="Total"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'scheduled'"
+                       decoration-warning="state == 'in_progress'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_autoflow_test_drive_form" model="ir.ui.view">
+        <field name="name">autoflow.test.drive.form</field>
+        <field name="model">autoflow.test.drive</field>
+        <field name="arch" type="xml">
+            <form string="Prueba de manejo">
+                <header>
+                    <button name="action_start" string="Iniciar prueba" type="object" class="btn-primary"
+                            invisible="state != 'scheduled' or not id"/>
+                    <button name="action_done" string="Finalizar prueba" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_create_quotation" string="Crear cotización" type="object"
+                            invisible="state != 'done'" groups="sales_team.group_sale_salesman"/>
+                    <button name="action_cancel" string="Cancelar" type="object"
+                            invisible="state in ('done', 'cancel') or not id"/>
+                    <button name="action_reschedule" string="Volver a agendar" type="object"
+                            invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="scheduled,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-dollar"
+                                invisible="not sale_order_count" groups="sales_team.group_sale_salesman">
+                            <field name="sale_order_count" widget="statinfo" string="Cotizaciones"/>
+                        </button>
+                    </div>
+                    <field name="vehicle_state" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state not in ('scheduled', 'in_progress') or vehicle_state not in ('maintenance', 'sold')">
+                        El vehículo ya no está disponible: está en el taller o se vendió. Reagende con otro vehículo.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Cliente">
+                            <field name="lead_id" readonly="state in ('done', 'cancel')"
+                                   domain="[('type', '=', 'opportunity')]"/>
+                            <field name="partner_id" readonly="state in ('done', 'cancel')"/>
+                            <field name="driver_license"/>
+                        </group>
+                        <group string="Agenda">
+                            <field name="vehicle_id" readonly="state != 'scheduled'"
+                                   options="{'no_create': True}"/>
+                            <field name="date_start" readonly="state != 'scheduled'"/>
+                            <field name="date_end" readonly="state in ('done', 'cancel')"/>
+                            <field name="employee_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Combustible y kilometraje">
+                        <group>
+                            <field name="fuel_start" widget="fuel_slider" readonly="state in ('done', 'cancel')"/>
+                            <field name="odometer_start" readonly="state in ('done', 'cancel')"/>
+                        </group>
+                        <group invisible="state == 'scheduled'">
+                            <field name="fuel_end" widget="fuel_slider" readonly="state in ('done', 'cancel')"/>
+                            <field name="odometer_end" readonly="state in ('done', 'cancel')"
+                                   required="state == 'in_progress'"/>
+                            <field name="distance"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Comentarios del cliente" name="notes">
+                            <field name="notes" placeholder="¿Qué le pareció el vehículo? ¿Qué le preocupa?"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_autoflow_test_drive_search" model="ir.ui.view">
+        <field name="name">autoflow.test.drive.search</field>
+        <field name="model">autoflow.test.drive</field>
+        <field name="arch" type="xml">
+            <search string="Buscar pruebas de manejo">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="vehicle_id"/>
+                <field name="employee_id"/>
+                <field name="lead_id"/>
+                <filter name="scheduled" string="Agendadas" domain="[('state', '=', 'scheduled')]"/>
+                <filter name="in_progress" string="En curso" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="done" string="Finalizadas" domain="[('state', '=', 'done')]"/>
+                <filter name="not_cancelled" string="Sin canceladas" domain="[('state', '!=', 'cancel')]"/>
+                <separator/>
+                <filter name="my_test_drives" string="Mis pruebas" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter name="date_start" string="Fecha" date="date_start"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_vehicle" string="Vehículo" context="{'group_by': 'vehicle_id'}"/>
+                    <filter name="group_employee" string="Responsable" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_day" string="Día" context="{'group_by': 'date_start:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_autoflow_test_drive" model="ir.actions.act_window">
+        <field name="name">Pruebas de manejo</field>
+        <field name="res_model">autoflow.test.drive</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="context">{'search_default_not_cancelled': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Agende la primera prueba de manejo</p>
+            <p>Elija el cliente, el vehículo y el horario. El sistema no deja agendar dos pruebas
+                del mismo vehículo a la misma hora ni usar vehículos en el taller o vendidos.</p>
+        </field>
+    </record>
+</odoo>
