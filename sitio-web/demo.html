@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo interactiva · AutoFlow</title>
+  <meta name="description" content="Probá AutoFlow sin instalar nada: recibí un vehículo, movelo por las etapas del taller y mirá cómo avisa al cliente, descuenta el stock y genera la factura.">
+  <meta name="theme-color" content="#0B1A3D">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="css/demo.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="js/main.js" defer></script>
+  <script src="js/demo.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__barra">
+      <a class="marca" href="index.html" aria-label="AutoFlow, inicio"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="funciones.html">Funciones</a>
+        <a href="demo.html" aria-current="page">Demo en vivo</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="btn btn--naranja btn--chico" href="contacto.html">Solicitar demo</a>
+      </nav>
+      <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="cabeza-pagina">
+      <div class="contenedor">
+        <span class="pastilla" data-revelar><b>DEMO</b> Sin instalar nada</span>
+        <h1 data-revelar data-retraso="80">Probá AutoFlow ahora mismo</h1>
+        <p data-revelar data-retraso="160">Una simulación del taller: recibí un auto, movelo por las etapas y mirá todo lo que AutoFlow hace solo. Los datos son de ejemplo y se reinician al recargar.</p>
+        <ol class="guia" data-revelar data-retraso="240">
+          <li><span>1</span> Recibí un vehículo</li>
+          <li><span>2</span> Avanzá la orden</li>
+          <li><span>3</span> Finalizá con checklist y firma</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="seccion demo">
+      <div class="contenedor demo__arriba">
+        <!-- Recepción -->
+        <form class="panel-demo" id="recepcion" novalidate data-recepcion>
+          <div class="panel-demo__cabeza">
+            <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-combustible"></use></svg></span>
+            <div>
+              <h2>Recepción de vehículo</h2>
+              <p>Así se recibe un auto en el taller.</p>
+            </div>
+          </div>
+
+          <div class="recepcion__grilla">
+            <div class="campo">
+              <label for="r-vehiculo">Vehículo</label>
+              <select id="r-vehiculo" name="vehiculo" required></select>
+              <p class="campo__error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="r-cliente">Cliente</label>
+              <input id="r-cliente" name="cliente" type="text" readonly tabindex="-1" placeholder="Se completa solo">
+            </div>
+            <div class="campo">
+              <label for="r-km">Kilometraje</label>
+              <input id="r-km" name="km" type="number" inputmode="numeric" min="0" step="1">
+              <p class="campo__error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="r-mecanico">Mecánico</label>
+              <select id="r-mecanico" name="mecanico">
+                <option value="">Sin asignar</option>
+                <option value="Carlos Benítez">Carlos Benítez</option>
+                <option value="Hugo Martínez">Hugo Martínez</option>
+                <option value="Rodrigo Giménez">Rodrigo Giménez</option>
+              </select>
+            </div>
+
+            <fieldset class="campo ancho">
+              <legend>Tipo de servicio</legend>
+              <div class="segmentos">
+                <input type="radio" id="r-prev" name="tipo" value="Preventivo" checked><label for="r-prev">Preventivo</label>
+                <input type="radio" id="r-corr" name="tipo" value="Correctivo"><label for="r-corr">Correctivo</label>
+                <input type="radio" id="r-gar" name="tipo" value="Garantía"><label for="r-gar">Garantía</label>
+              </div>
+            </fieldset>
+
+            <div class="campo ancho">
+              <label for="r-combustible">Nivel de combustible</label>
+              <div class="combustible">
+                <span class="combustible__marca">V</span>
+                <input id="r-combustible" name="combustible" type="range" min="0" max="100" step="5" value="35">
+                <span class="combustible__marca">LL</span>
+                <output class="combustible__valor" for="r-combustible" data-combustible>35 % · 1/4</output>
+              </div>
+            </div>
+
+            <fieldset class="campo ancho">
+              <legend>Daños visibles</legend>
+              <div class="danos">
+                <label class="casilla"><input type="checkbox" name="danos" value="Rayones"> Rayones</label>
+                <label class="casilla"><input type="checkbox" name="danos" value="Abolladuras"> Abolladuras</label>
+                <label class="casilla"><input type="checkbox" name="danos" value="Parabrisas astillado"> Parabrisas astillado</label>
+                <label class="casilla"><input type="checkbox" name="danos" value="Faros o luces rotas"> Faros o luces rotas</label>
+                <label class="casilla"><input type="checkbox" name="danos" value="Espejos dañados"> Espejos dañados</label>
+                <label class="casilla"><input type="checkbox" name="danos" value="Llantas raspadas"> Llantas raspadas</label>
+                <label class="casilla"><input type="checkbox" name="danos" value="Tapizado dañado"> Tapizado dañado</label>
+              </div>
+            </fieldset>
+
+            <div class="campo ancho">
+              <label for="r-motivo">Motivo de ingreso</label>
+              <input id="r-motivo" name="motivo" type="text" maxlength="120" placeholder="Ej.: Ruido metálico al frenar">
+              <p class="campo__error" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="panel-demo__pie">
+            <button class="btn btn--primario" type="submit"><svg class="ico" aria-hidden="true"><use href="#i-llave"></use></svg> Pasar al taller</button>
+            <button class="btn btn--contorno" type="button" data-ejemplo>Completar con un ejemplo</button>
+          </div>
+        </form>
+
+        <!-- Registro -->
+        <aside class="panel-demo registro" aria-labelledby="registro-titulo">
+          <div class="panel-demo__cabeza">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-rayo"></use></svg></span>
+            <div>
+              <h2 id="registro-titulo">Lo que hizo AutoFlow</h2>
+              <p>Cada acción automática aparece acá.</p>
+            </div>
+          </div>
+          <ol class="registro__lista" data-registro aria-live="polite"></ol>
+          <div class="registro__resumen">
+            <div><b data-resumen="abiertas">5</b><span>órdenes abiertas</span></div>
+            <div><b data-resumen="facturado">Gs. 0</b><span>facturado en la demo</span></div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Tablero -->
+      <div class="demo__tablero" id="tablero">
+        <div class="contenedor tablero__cabeza">
+          <div>
+            <h2>Órdenes de servicio</h2>
+            <p class="tablero__ayuda"><span class="solo-touch">Usá el botón de cada tarjeta para avanzarla. Deslizá para ver todas las etapas.</span><span class="solo-mouse">Arrastrá las tarjetas entre columnas o usá el botón “Avanzar”.</span></p>
+          </div>
+          <button class="btn btn--contorno btn--chico" type="button" data-reiniciar><svg class="ico" aria-hidden="true"><use href="#i-reiniciar"></use></svg> Reiniciar demo</button>
+        </div>
+        <div class="tablero" data-tablero></div>
+      </div>
+
+      <div class="contenedor">
+        <div class="banda-cta" style="margin-top:clamp(48px,7vw,80px)">
+          <svg class="banda-cta__auto ico" aria-hidden="true"><use href="#i-auto"></use></svg>
+          <div>
+            <h2>¿Te imaginás tu taller así?</h2>
+            <p>Esto es solo una muestra. En una llamada te mostramos el sistema real con los datos de tu empresa.</p>
+          </div>
+          <div class="grupo-botones">
+            <a class="btn btn--naranja btn--grande" href="contacto.html?origen=demo">Quiero el sistema completo</a>
+            <a class="btn btn--fantasma btn--grande" href="precios.html">Ver precios</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Ventana: checklist y firma -->
+  <dialog class="modal" data-modal-cierre aria-labelledby="cierre-titulo">
+    <form method="dialog" class="modal__caja" data-form-cierre novalidate>
+      <div class="modal__cabeza">
+        <div>
+          <h2 id="cierre-titulo">Entregar y finalizar</h2>
+          <p data-cierre-sub>OS/2026/0014 · Chevrolet Onix 2022</p>
+        </div>
+        <button class="modal__cerrar" type="button" value="cancelar" data-cerrar aria-label="Cerrar"><svg class="ico" aria-hidden="true"><use href="#i-x"></use></svg></button>
+      </div>
+
+      <div class="modal__cuerpo">
+        <div class="alerta-error" data-cierre-error hidden role="alert"></div>
+
+        <div class="campo" data-cierre-mecanico hidden>
+          <label for="c-mecanico">Mecánico responsable</label>
+          <select id="c-mecanico" name="mecanico">
+            <option value="">Sin asignar</option>
+            <option value="Carlos Benítez">Carlos Benítez</option>
+            <option value="Hugo Martínez">Hugo Martínez</option>
+            <option value="Rodrigo Giménez">Rodrigo Giménez</option>
+          </select>
+        </div>
+
+        <div class="checklist__cabeza">
+          <h3>Checklist de entrega</h3>
+          <button class="btn btn--contorno btn--chico" type="button" data-todo-ok><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Marcar todo OK</button>
+        </div>
+        <div class="checklist" data-checklist></div>
+
+        <div class="firma">
+          <div class="checklist__cabeza">
+            <h3>Firma del cliente <span class="opcional">(opcional)</span></h3>
+            <button class="btn btn--contorno btn--chico" type="button" data-borrar-firma>Borrar</button>
+          </div>
+          <canvas class="firma__lienzo" width="600" height="180" data-firma aria-label="Espacio para firmar con el dedo o el mouse"></canvas>
+          <p class="firma__ayuda">Firmá con el dedo o con el mouse.</p>
+        </div>
+      </div>
+
+      <div class="modal__pie">
+        <button class="btn btn--contorno" type="button" data-cerrar>Cancelar</button>
+        <button class="btn btn--primario" type="button" data-finalizar><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Finalizar orden</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Ventana: correo enviado -->
+  <dialog class="modal modal--chico" data-modal-correo aria-labelledby="correo-titulo">
+    <div class="modal__caja">
+      <div class="modal__cabeza">
+        <div>
+          <h2 id="correo-titulo">Correo enviado al cliente</h2>
+          <p data-correo-para></p>
+        </div>
+        <button class="modal__cerrar" type="button" data-cerrar aria-label="Cerrar"><svg class="ico" aria-hidden="true"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="modal__cuerpo">
+        <div class="correo" data-correo-cuerpo></div>
+      </div>
+      <div class="modal__pie">
+        <button class="btn btn--primario" type="button" data-cerrar>Entendido</button>
+      </div>
+    </div>
+  </dialog>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grilla">
+        <div>
+          <a class="marca" href="index.html"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+          <p>Sistema para concesionarias y talleres construido sobre Odoo 18. Vehículos, pruebas de manejo, taller, repuestos y facturación en un solo lugar.</p>
+        </div>
+        <div>
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="funciones.html">Funciones</a></li>
+            <li><a href="demo.html">Demo interactiva</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li><a href="precios.html#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Funciones</h4>
+          <ul>
+            <li><a href="funciones.html#vehiculos">Vehículos</a></li>
+            <li><a href="funciones.html#pruebas">Pruebas de manejo</a></li>
+            <li><a href="funciones.html#taller">Taller</a></li>
+            <li><a href="funciones.html#analisis">Análisis</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="contacto.html" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a></li>
+            <li><a href="contacto.html" data-contacto="email"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> <span data-texto="email">Correo</span></a></li>
+            <li><a href="contacto.html" data-contacto="telefono"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg> <span data-texto="telefono">Teléfono</span></a></li>
+            <li><a href="contacto.html"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg> <span data-texto="direccion">Paraguay</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pie__base">
+        <span>© <span data-anio>2026</span> AutoFlow. Todos los derechos reservados.</span>
+        <span>Odoo es una marca de Odoo S.A. AutoFlow es un módulo independiente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="flotantes">
+    <button class="boton-redondo boton-redondo--arriba" type="button" aria-label="Volver arriba"><svg class="ico" aria-hidden="true"><use href="#i-arriba"></use></svg></button>
+    <a class="boton-redondo boton-redondo--wa" href="contacto.html" data-contacto="whatsapp" aria-label="Escribinos por WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></a>
+  </div>
+</body>
+</html>

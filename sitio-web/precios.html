@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Precios · AutoFlow</title>
+  <meta name="description" content="Planes de AutoFlow en guaraníes con IVA incluido. Todas las funciones en todos los planes, con instalación y capacitación.">
+  <meta name="theme-color" content="#0B1A3D">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__barra">
+      <a class="marca" href="index.html" aria-label="AutoFlow, inicio"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="funciones.html">Funciones</a>
+        <a href="demo.html">Demo en vivo</a>
+        <a href="precios.html" aria-current="page">Precios</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="btn btn--naranja btn--chico" href="contacto.html">Solicitar demo</a>
+      </nav>
+      <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="cabeza-pagina" style="padding-bottom:clamp(96px,11vw,140px)">
+      <div class="contenedor">
+        <span class="pastilla" data-revelar><b>PRECIOS</b> En guaraníes, IVA incluido</span>
+        <h1 data-revelar data-retraso="80">Todas las funciones, en todos los planes</h1>
+        <p data-revelar data-retraso="160">Elegí según la cantidad de usuarios y el acompañamiento que necesitás. Instalación y capacitación incluidas.</p>
+        <div class="periodo" data-periodo role="group" aria-label="Forma de pago" data-revelar data-retraso="240">
+          <button type="button" data-valor="mensual" aria-pressed="true">Mensual</button>
+          <button type="button" data-valor="anual" aria-pressed="false">Anual <span class="periodo__ahorro">2 meses gratis</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" style="padding-top:0">
+      <div class="contenedor">
+        <div class="planes">
+          <article class="plan" data-precio-mensual="450000" data-revelar>
+            <h3>Inicial</h3>
+            <p class="plan__desc">Para talleres que quieren dejar el cuaderno y ordenarse.</p>
+            <div class="plan__precio"><span class="plan__moneda">Gs.</span><span class="plan__monto">450.000</span><span class="plan__periodo">/ mes</span></div>
+            <p class="plan__nota">Sin permanencia: cancelás cuando quieras</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Hasta 3 usuarios</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> 1 sucursal</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Todas las funciones de AutoFlow</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Alojamiento en la nube y copias de seguridad</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Instalación y configuración inicial</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Capacitación online de 2 horas</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Soporte por correo</li>
+            </ul>
+            <a class="btn btn--contorno btn--bloque" href="contacto.html?plan=inicial">Elegir Inicial</a>
+          </article>
+
+          <article class="plan plan--destacado" data-precio-mensual="890000" data-revelar data-retraso="100">
+            <span class="plan__cinta">RECOMENDADO</span>
+            <h3>Profesional</h3>
+            <p class="plan__desc">Para concesionarias con taller propio y equipo de ventas.</p>
+            <div class="plan__precio"><span class="plan__moneda">Gs.</span><span class="plan__monto">890.000</span><span class="plan__periodo">/ mes</span></div>
+            <p class="plan__nota">Sin permanencia: cancelás cuando quieras</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Hasta 10 usuarios</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Hasta 2 sucursales</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Todas las funciones de AutoFlow</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Alojamiento en la nube y copias de seguridad</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Carga inicial de vehículos, clientes y repuestos</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Capacitación de 4 horas para todo el equipo</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Soporte por WhatsApp</li>
+            </ul>
+            <a class="btn btn--naranja btn--bloque" href="contacto.html?plan=profesional">Elegir Profesional</a>
+          </article>
+
+          <article class="plan" data-revelar data-retraso="200">
+            <h3>Empresa</h3>
+            <p class="plan__desc">Para grupos con varias sucursales o necesidades especiales.</p>
+            <div class="plan__precio"><span class="plan__monto">A medida</span></div>
+            <p class="plan__nota">Cotización según tu operación</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Usuarios ilimitados</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Sucursales y depósitos ilimitados</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Todas las funciones de AutoFlow</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Servidor dedicado o en tu empresa</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Migración de tus datos actuales</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Ajustes del módulo a tu forma de trabajar</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Soporte prioritario</li>
+            </ul>
+            <a class="btn btn--contorno btn--bloque" href="contacto.html?plan=empresa">Pedir cotización</a>
+          </article>
+        </div>
+
+        <div class="extras">
+          <div class="extra" data-revelar>
+            <span class="tarjeta__icono c-azul"><svg class="ico" aria-hidden="true"><use href="#i-usuarios"></use></svg></span>
+            <div><h3>Usuario adicional</h3><p>Gs. 60.000 por mes cada uno, en cualquier plan.</p></div>
+          </div>
+          <div class="extra" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-naranja"><svg class="ico" aria-hidden="true"><use href="#i-soporte"></use></svg></span>
+            <div><h3>Capacitación extra</h3><p>Gs. 150.000 por hora, presencial u online.</p></div>
+          </div>
+          <div class="extra" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-ajustes"></use></svg></span>
+            <div><h3>Desarrollos a medida</h3><p>Reportes, campos o pasos nuevos: presupuesto sin cargo.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion seccion--alt">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Comparar planes</span>
+          <h2>¿Qué incluye cada plan?</h2>
+        </div>
+        <div class="tabla-envoltorio" data-revelar>
+          <table class="tabla">
+            <thead>
+              <tr><th scope="col">Incluye</th><th scope="col" class="centro">Inicial</th><th scope="col" class="centro">Profesional</th><th scope="col" class="centro">Empresa</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Usuarios</th><td class="centro">3</td><td class="centro">10</td><td class="centro">Ilimitados</td></tr>
+              <tr><th scope="row">Sucursales</th><td class="centro">1</td><td class="centro">2</td><td class="centro">Ilimitadas</td></tr>
+              <tr><th scope="row">Vehículos, pruebas de manejo y ventas</th><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Taller, repuestos, checklist y acta con firma</th><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Aviso al cliente, factura y análisis</th><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Instalación y configuración</th><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Carga inicial de datos</th><td class="centro no"><svg class="ico" aria-label="No incluido"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Capacitación</th><td class="centro">2 h online</td><td class="centro">4 h</td><td class="centro">A medida</td></tr>
+              <tr><th scope="row">Soporte</th><td class="centro">Correo</td><td class="centro">WhatsApp</td><td class="centro">Prioritario</td></tr>
+              <tr><th scope="row">Migración y ajustes a medida</th><td class="centro no"><svg class="ico" aria-label="No incluido"><use href="#i-x"></use></svg></td><td class="centro no"><svg class="ico" aria-label="No incluido"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Incluido"><use href="#i-check"></use></svg></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="preguntas">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Preguntas frecuentes</span>
+          <h2>Lo que nos suelen preguntar</h2>
+        </div>
+        <div class="faq" data-revelar>
+          <details open>
+            <summary>¿Necesito tener Odoo para usar AutoFlow? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>No hace falta que lo tengas. AutoFlow funciona sobre Odoo 18 Community, que es de código abierto, y en los planes Inicial y Profesional te lo dejamos instalado en la nube. Si ya usás Odoo 18 (Community o Enterprise), lo instalamos sobre tu base actual.</p></div>
+          </details>
+          <details>
+            <summary>¿Funciona en el celular y en la tablet? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>Sí. Se usa desde el navegador en computadora, tablet o celular. Por ejemplo, podés recibir el auto y tomar la firma del cliente directamente desde una tablet.</p></div>
+          </details>
+          <details>
+            <summary>¿Puedo probarlo antes de contratar? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>Claro. Podés usar la <a href="demo.html">demo interactiva</a> ahora mismo y pedirnos una presentación gratuita donde te mostramos el sistema completo con ejemplos de tu negocio.</p></div>
+          </details>
+          <details>
+            <summary>¿Los precios incluyen IVA? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>Sí. Todos los precios están en guaraníes con IVA incluido y te emitimos la factura correspondiente.</p></div>
+          </details>
+          <details>
+            <summary>¿Cuánto tarda la puesta en marcha? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>La instalación base se hace en pocos días. El tiempo total depende de cuántos vehículos, clientes y repuestos haya que cargar y de la capacitación que elija tu equipo.</p></div>
+          </details>
+          <details>
+            <summary>¿Se puede adaptar a mi taller? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>Sí. Marcas, modelos, puntos del checklist y tipos de daño se configuran desde el propio sistema. Si necesitás algo más específico, lo desarrollamos a medida.</p></div>
+          </details>
+          <details>
+            <summary>¿Puedo cambiar de plan o cancelar? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>Podés subir o bajar de plan cuando quieras. En el pago mensual no hay permanencia mínima.</p></div>
+          </details>
+          <details>
+            <summary>¿Qué pasa con mis datos si dejo de usarlo? <svg class="ico" aria-hidden="true"><use href="#i-mas"></use></svg></summary>
+            <div class="faq__respuesta"><p>Los datos son tuyos. Si cancelás, te entregamos una copia completa de tu base de datos.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion seccion--compacta" style="padding-top:0">
+      <div class="contenedor">
+        <div class="banda-cta" data-revelar>
+          <svg class="banda-cta__auto ico" aria-hidden="true"><use href="#i-dinero"></use></svg>
+          <div>
+            <h2>¿Tenés dudas sobre qué plan elegir?</h2>
+            <p>Contanos cómo trabaja tu negocio y te recomendamos el plan justo.</p>
+          </div>
+          <div class="grupo-botones">
+            <a class="btn btn--naranja btn--grande" href="contacto.html">Hablar con ventas</a>
+            <a class="btn btn--fantasma btn--grande" href="#" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grilla">
+        <div>
+          <a class="marca" href="index.html"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+          <p>Sistema para concesionarias y talleres construido sobre Odoo 18. Vehículos, pruebas de manejo, taller, repuestos y facturación en un solo lugar.</p>
+        </div>
+        <div>
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="funciones.html">Funciones</a></li>
+            <li><a href="demo.html">Demo interactiva</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li><a href="precios.html#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Funciones</h4>
+          <ul>
+            <li><a href="funciones.html#vehiculos">Vehículos</a></li>
+            <li><a href="funciones.html#pruebas">Pruebas de manejo</a></li>
+            <li><a href="funciones.html#taller">Taller</a></li>
+            <li><a href="funciones.html#analisis">Análisis</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="contacto.html" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a></li>
+            <li><a href="contacto.html" data-contacto="email"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> <span data-texto="email">Correo</span></a></li>
+            <li><a href="contacto.html" data-contacto="telefono"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg> <span data-texto="telefono">Teléfono</span></a></li>
+            <li><a href="contacto.html"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg> <span data-texto="direccion">Paraguay</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pie__base">
+        <span>© <span data-anio>2026</span> AutoFlow. Todos los derechos reservados.</span>
+        <span>Odoo es una marca de Odoo S.A. AutoFlow es un módulo independiente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="flotantes">
+    <button class="boton-redondo boton-redondo--arriba" type="button" aria-label="Volver arriba"><svg class="ico" aria-hidden="true"><use href="#i-arriba"></use></svg></button>
+    <a class="boton-redondo boton-redondo--wa" href="contacto.html" data-contacto="whatsapp" aria-label="Escribinos por WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></a>
+  </div>
+</body>
+</html>

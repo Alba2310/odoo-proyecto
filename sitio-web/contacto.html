@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto · AutoFlow</title>
+  <meta name="description" content="Pedí una demostración gratuita de AutoFlow para tu concesionaria o taller. Te respondemos por WhatsApp o correo.">
+  <meta name="theme-color" content="#0B1A3D">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__barra">
+      <a class="marca" href="index.html" aria-label="AutoFlow, inicio"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="funciones.html">Funciones</a>
+        <a href="demo.html">Demo en vivo</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html" aria-current="page">Contacto</a>
+        <a class="btn btn--naranja btn--chico" href="contacto.html">Solicitar demo</a>
+      </nav>
+      <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="cabeza-pagina" style="padding-bottom:clamp(96px,11vw,140px)">
+      <div class="contenedor">
+        <span class="pastilla" data-revelar><b>DEMO GRATIS</b> Sin compromiso</span>
+        <h1 data-revelar data-retraso="80">Hablemos de tu concesionaria o taller</h1>
+        <p data-revelar data-retraso="160">Completá el formulario y coordinamos una presentación de 30 minutos con ejemplos de tu negocio.</p>
+      </div>
+    </section>
+
+    <section class="seccion" style="padding-top:0">
+      <div class="contenedor contacto">
+        <div class="formulario" data-revelar>
+          <form data-form-contacto novalidate>
+            <h2>Solicitar una demostración</h2>
+            <p style="color:var(--suave)">Los campos sin la palabra “opcional” son obligatorios.</p>
+
+            <div class="formulario__grilla">
+              <div class="campo">
+                <label for="f-nombre">Nombre y apellido</label>
+                <input id="f-nombre" name="nombre" type="text" autocomplete="name" placeholder="Ej.: María González">
+                <p class="campo__error" role="alert"></p>
+              </div>
+              <div class="campo">
+                <label for="f-empresa">Empresa</label>
+                <input id="f-empresa" name="empresa" type="text" autocomplete="organization" placeholder="Ej.: Automotores del Sur">
+                <p class="campo__error" role="alert"></p>
+              </div>
+              <div class="campo">
+                <label for="f-telefono">Teléfono o WhatsApp</label>
+                <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="Ej.: 0981 123 456">
+                <p class="campo__error" role="alert"></p>
+              </div>
+              <div class="campo">
+                <label for="f-email">Correo electrónico</label>
+                <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="nombre@empresa.com.py">
+                <p class="campo__error" role="alert"></p>
+              </div>
+
+              <fieldset class="campo ancho">
+                <legend>¿Qué tipo de negocio tenés?</legend>
+                <div class="opciones-tipo">
+                  <input type="radio" id="tipo-concesionaria" name="tipo" value="concesionaria"><label for="tipo-concesionaria"><svg class="ico" aria-hidden="true"><use href="#i-tienda"></use></svg> Concesionaria</label>
+                  <input type="radio" id="tipo-taller" name="tipo" value="taller"><label for="tipo-taller"><svg class="ico" aria-hidden="true"><use href="#i-llave"></use></svg> Taller mecánico</label>
+                  <input type="radio" id="tipo-ambos" name="tipo" value="ambos"><label for="tipo-ambos"><svg class="ico" aria-hidden="true"><use href="#i-auto"></use></svg> Concesionaria con taller</label>
+                </div>
+                <p class="campo__error" role="alert"></p>
+              </fieldset>
+
+              <div class="campo">
+                <label for="f-usuarios">¿Cuántas personas lo usarían?</label>
+                <select id="f-usuarios" name="usuarios">
+                  <option>1 a 3</option>
+                  <option selected>4 a 10</option>
+                  <option>Más de 10</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="f-plan">Plan de interés <span class="opcional">(opcional)</span></label>
+                <select id="f-plan" name="plan">
+                  <option value="">Todavía no sé</option>
+                  <option value="inicial">Inicial</option>
+                  <option value="profesional">Profesional</option>
+                  <option value="empresa">Empresa</option>
+                </select>
+              </div>
+
+              <div class="campo ancho">
+                <label for="f-mensaje">¿Qué te gustaría resolver? <span class="opcional">(opcional)</span></label>
+                <textarea id="f-mensaje" name="mensaje" maxlength="800" placeholder="Ej.: Hoy llevamos las órdenes del taller en planillas y queremos avisar a los clientes cuando su auto está listo."></textarea>
+              </div>
+
+              <div class="campo ancho">
+                <label class="casilla" for="f-acepto"><input id="f-acepto" name="acepto" type="checkbox"> <span>Acepto que me contacten por WhatsApp, teléfono o correo para coordinar la demostración.</span></label>
+                <p class="campo__error" role="alert"></p>
+              </div>
+            </div>
+
+            <!-- Campo trampa para robots: las personas no lo ven y queda vacío -->
+            <div class="trampa" aria-hidden="true">
+              <label for="f-sitio">No completar</label>
+              <input id="f-sitio" name="sitio_web" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="formulario__pie">
+              <small>Tus datos solo se usan para responder esta consulta.</small>
+              <button class="btn btn--naranja btn--grande" type="submit">Enviar solicitud <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button>
+            </div>
+          </form>
+
+          <div class="exito" data-exito hidden>
+            <div class="exito__icono"><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg></div>
+            <h2 tabindex="-1">
+              <span data-modo="crm">¡Gracias, <span data-nombre></span>! Recibimos tu solicitud</span>
+              <span data-modo="manual">¡Listo, <span data-nombre></span>! Último paso</span>
+            </h2>
+            <p data-modo="crm">Ya quedó registrada y te vamos a contactar muy pronto. Si querés una respuesta más rápida, escribinos también por WhatsApp.</p>
+            <p data-modo="manual">Elegí por dónde enviarnos tu solicitud. El mensaje ya está escrito, solo tenés que tocar “Enviar”.</p>
+            <div class="resumen"></div>
+            <div class="grupo-botones">
+              <a class="btn btn--wa" href="#" data-enviar="whatsapp" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> Enviar por WhatsApp</a>
+              <a class="btn btn--contorno" href="#" data-enviar="email" data-modo="manual"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> Enviar por correo</a>
+            </div>
+            <p style="margin-top:20px"><button class="btn btn--contorno btn--chico" type="button" data-otra>Escribir otra consulta</button></p>
+          </div>
+        </div>
+
+        <aside class="datos-contacto" aria-label="Otras formas de contacto">
+          <a class="dato" href="contacto.html" data-contacto="whatsapp" data-revelar>
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span>
+            <span><small>WhatsApp</small><b data-texto="telefono">Escribinos</b></span>
+          </a>
+          <a class="dato" href="contacto.html" data-contacto="email" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-azul"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg></span>
+            <span><small>Correo</small><b data-texto="email">Correo</b></span>
+          </a>
+          <a class="dato" href="contacto.html" data-contacto="telefono" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-naranja"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg></span>
+            <span><small>Llamanos</small><b data-texto="telefono">Teléfono</b></span>
+          </a>
+          <div class="dato" data-revelar data-retraso="240">
+            <span class="tarjeta__icono c-violeta"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg></span>
+            <span><small>Estamos en</small><b data-texto="direccion">Paraguay</b></span>
+          </div>
+          <div class="horario" data-revelar data-retraso="320">
+            <h3>Horario de atención</h3>
+            <ul>
+              <li><span>Lunes a viernes</span><b>08:00 – 18:00</b></li>
+              <li><span>Sábados</span><b>08:00 – 12:00</b></li>
+            </ul>
+          </div>
+          <a class="tarjeta" href="demo.html" data-revelar data-retraso="400">
+            <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-play"></use></svg></span>
+            <h3>¿Querés verlo ya?</h3>
+            <p>Probá la demo interactiva del taller mientras te respondemos.</p>
+            <span class="enlace-flecha">Abrir la demo <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grilla">
+        <div>
+          <a class="marca" href="index.html"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+          <p>Sistema para concesionarias y talleres construido sobre Odoo 18. Vehículos, pruebas de manejo, taller, repuestos y facturación en un solo lugar.</p>
+        </div>
+        <div>
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="funciones.html">Funciones</a></li>
+            <li><a href="demo.html">Demo interactiva</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li><a href="precios.html#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Funciones</h4>
+          <ul>
+            <li><a href="funciones.html#vehiculos">Vehículos</a></li>
+            <li><a href="funciones.html#pruebas">Pruebas de manejo</a></li>
+            <li><a href="funciones.html#taller">Taller</a></li>
+            <li><a href="funciones.html#analisis">Análisis</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="contacto.html" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a></li>
+            <li><a href="contacto.html" data-contacto="email"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> <span data-texto="email">Correo</span></a></li>
+            <li><a href="contacto.html" data-contacto="telefono"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg> <span data-texto="telefono">Teléfono</span></a></li>
+            <li><a href="contacto.html"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg> <span data-texto="direccion">Paraguay</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pie__base">
+        <span>© <span data-anio>2026</span> AutoFlow. Todos los derechos reservados.</span>
+        <span>Odoo es una marca de Odoo S.A. AutoFlow es un módulo independiente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="flotantes">
+    <button class="boton-redondo boton-redondo--arriba" type="button" aria-label="Volver arriba"><svg class="ico" aria-hidden="true"><use href="#i-arriba"></use></svg></button>
+    <a class="boton-redondo boton-redondo--wa" href="contacto.html" data-contacto="whatsapp" aria-label="Escribinos por WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></a>
+  </div>
+</body>
+</html>

@@ -1,17 +1,50 @@
-
 services:
   web:
-    image: odoo:16.0
+    image: odoo:18.0
     depends_on:
       - db
     ports:
       - "8069:8069"
     volumes:
       - odoo-web-data:/var/lib/odoo
+      - ./extra-addons:/mnt/extra-addons
+      - ./odoo-source:/mnt/odoo-source
+      - ./odoo.conf:/etc/odoo/odoo.conf
     environment:
       - HOST=db
       - USER=odoo
       - PASSWORD=odoo
+    user: "root"  # <--- Añadimos esta línea para que corra como root y evite cualquier bloqueo de permisos
+
+  # Segundo Odoo que atiende solo la base autoflow_ventas (CRM de las ventas de AutoFlow).
+  # El formulario del sitio web manda las solicitudes acá: con una sola base, Odoo sabe dónde guardarlas.
+  ventas:
+    image: odoo:18.0
+    depends_on:
+      - db
+    ports:
+      - "8070:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./extra-addons:/mnt/extra-addons
+      - ./odoo-source:/mnt/odoo-source
+      - ./odoo.conf:/etc/odoo/odoo.conf
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    user: "root"
+    command: ["odoo", "--db-filter=^autoflow_ventas$$"]
+
+  # Sitio web de venta de AutoFlow (carpeta sitio-web) en http://localhost:5500
+  sitio:
+    image: nginx:alpine
+    ports:
+      - "5500:80"
+    volumes:
+      - ./sitio-web:/usr/share/nginx/html:ro
+      - ./nginx/sitio.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
 
   db:
     image: postgres:15

@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AutoFlow · Sistema para concesionarias y talleres en Odoo 18</title>
+  <meta name="description" content="AutoFlow une la venta de vehículos, las pruebas de manejo y el taller en Odoo 18: recepción, órdenes de servicio en tablero, repuestos, aviso al cliente, acta con firma y factura.">
+  <meta name="theme-color" content="#0B1A3D">
+  <meta property="og:title" content="AutoFlow · Tu concesionaria y tu taller en un solo sistema">
+  <meta property="og:description" content="Vehículos, pruebas de manejo, taller, repuestos y facturación dentro de Odoo 18.">
+  <meta property="og:image" content="img/capturas/tablero_taller.jpg">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__barra">
+      <a class="marca" href="index.html" aria-label="AutoFlow, inicio"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="index.html" aria-current="page">Inicio</a>
+        <a href="funciones.html">Funciones</a>
+        <a href="demo.html">Demo en vivo</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="btn btn--naranja btn--chico" href="contacto.html">Solicitar demo</a>
+      </nav>
+      <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- Héroe -->
+    <section class="heroe">
+      <div class="contenedor heroe__grilla">
+        <div class="heroe__texto">
+          <span class="pastilla" data-revelar><b>NUEVO</b> Módulo para Odoo 18</span>
+          <h1 data-revelar data-retraso="80">Tu concesionaria y tu taller, <span class="resaltado">en un solo sistema</span>.</h1>
+          <p class="lead" data-revelar data-retraso="160">AutoFlow une la venta de vehículos, las pruebas de manejo y las órdenes de taller dentro de Odoo&nbsp;18. Desde que el cliente entra por la puerta hasta que se lleva el auto con su factura, todo queda registrado y sin papeles.</p>
+          <div class="grupo-botones" data-revelar data-retraso="240">
+            <a class="btn btn--naranja btn--grande" href="contacto.html">Solicitar demo gratis <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+            <a class="btn btn--fantasma btn--grande" href="demo.html"><svg class="ico" aria-hidden="true"><use href="#i-play"></use></svg> Probar la demo interactiva</a>
+          </div>
+          <ul class="heroe__garantias" data-revelar data-retraso="320">
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Instalación y capacitación incluidas</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Precios en guaraníes con IVA</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> 100 % en español</li>
+          </ul>
+        </div>
+
+        <div class="heroe__visual" data-revelar data-retraso="200">
+          <div class="navegador">
+            <div class="navegador__barra">
+              <span class="navegador__puntos"><i></i><i></i><i></i></span>
+              <span class="navegador__url">tuempresa.com.py/odoo/autoflow/taller</span>
+            </div>
+            <img src="img/capturas/tablero_taller.jpg" alt="Tablero de órdenes de servicio de AutoFlow con las columnas Recibido, En diagnóstico, Esperando repuestos, En reparación, Listo para entrega y Finalizado" width="1600" height="750" fetchpriority="high">
+          </div>
+          <div class="flotante flotante--1">
+            <span class="flotante__ico c-verde"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg></span>
+            <span><b>Aviso enviado al cliente</b><small>Chevrolet Onix listo para retirar</small></span>
+          </div>
+          <div class="flotante flotante--2">
+            <span class="flotante__ico c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-combustible"></use></svg></span>
+            <span><b>Combustible 35 %</b><small>registrado en la recepción</small></span>
+          </div>
+          <div class="flotante flotante--3">
+            <span class="flotante__ico c-azul"><svg class="ico" aria-hidden="true"><use href="#i-factura"></use></svg></span>
+            <span><b>Factura creada</b><small>OS/2026/0014 · 385.000 ₲</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Integraciones -->
+    <section class="integraciones" aria-label="Aplicaciones de Odoo con las que trabaja">
+      <div class="contenedor integraciones__fila">
+        <span class="integraciones__titulo">Trabaja con las apps de Odoo 18 que ya conocés:</span>
+        <ul class="integraciones__lista">
+          <li><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg> Ventas</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-usuarios"></use></svg> CRM</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-caja"></use></svg> Inventario</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-factura"></use></svg> Facturación</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-llave"></use></svg> Empleados</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Problema / solución -->
+    <section class="seccion">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta etiqueta--naranja">¿Te suena?</span>
+          <h2>¿Tu negocio todavía funciona con cuadernos, planillas y mensajes sueltos?</h2>
+          <p>Cuando la información está repartida, se pierden ventas, repuestos y tiempo. AutoFlow pone todo en el mismo lugar.</p>
+        </div>
+
+        <div class="comparacion">
+          <div class="comparacion__col comparacion__col--antes" data-revelar>
+            <h3>Sin AutoFlow</h3>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Las pruebas de manejo se anotan en un cuaderno y se superponen.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> El cliente llama tres veces para saber si su auto ya está listo.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Los repuestos salen del depósito y nadie los descuenta.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> La orden, el presupuesto y la factura se hacen por separado.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> No sabés qué modelos fallan más ni cuánto rinde cada mecánico.</li>
+            </ul>
+          </div>
+          <div class="comparacion__flecha" aria-hidden="true"><span><svg class="ico"><use href="#i-flecha"></use></svg></span></div>
+          <div class="comparacion__col comparacion__col--despues" data-revelar data-retraso="150">
+            <h3>Con AutoFlow</h3>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Calendario de pruebas que no permite choques de horario.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> El cliente recibe un correo automático cuando su auto está listo.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Cada repuesto usado se descuenta solo del stock.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Al finalizar la orden, la factura se genera sola.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Reportes de fallas por modelo y de órdenes por mecánico.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Funciones -->
+    <section class="seccion seccion--alt" id="funciones">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Todo en un lugar</span>
+          <h2>Una herramienta para cada etapa del negocio</h2>
+          <p>Del salón de ventas al taller, cada área trabaja en la misma base de datos y ve lo que necesita.</p>
+        </div>
+
+        <div class="grilla grilla--4">
+          <a class="tarjeta" href="funciones.html#vehiculos" data-revelar>
+            <span class="tarjeta__icono c-azul"><svg class="ico" aria-hidden="true"><use href="#i-auto"></use></svg></span>
+            <h3>Vehículos</h3>
+            <p>Ficha con marca, modelo, año, chasis (VIN), chapa, kilometraje, costos y galería de fotos.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#pruebas" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-naranja"><svg class="ico" aria-hidden="true"><use href="#i-volante"></use></svg></span>
+            <h3>Pruebas de manejo</h3>
+            <p>Agenda en calendario conectada al cliente y al CRM, con combustible y kilometraje.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#ventas" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg></span>
+            <h3>Venta del vehículo</h3>
+            <p>Cotización desde la prueba de manejo; al confirmarla, el auto queda vendido solo.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#recepcion" data-revelar data-retraso="240">
+            <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-combustible"></use></svg></span>
+            <h3>Recepción en segundos</h3>
+            <p>Combustible con barra deslizante, daños visibles con casillas y motivo de ingreso.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#taller" data-revelar>
+            <span class="tarjeta__icono c-violeta"><svg class="ico" aria-hidden="true"><use href="#i-llave"></use></svg></span>
+            <h3>Taller en tablero</h3>
+            <p>Órdenes de servicio que avanzan por etapas arrastrando tarjetas, con mano de obra y totales.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#repuestos" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-azul"><svg class="ico" aria-hidden="true"><use href="#i-caja"></use></svg></span>
+            <h3>Repuestos y stock</h3>
+            <p>Catálogo de repuestos precargado y conectado al inventario: lo que se usa, se descuenta.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#entrega" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-firma"></use></svg></span>
+            <h3>Entrega con acta firmada</h3>
+            <p>Checklist de inspección, aviso al cliente, acta PDF con firma y factura en borrador.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#analisis" data-revelar data-retraso="240">
+            <span class="tarjeta__icono c-rojo"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg></span>
+            <h3>Análisis</h3>
+            <p>Qué modelos tienen más fallas y cuántas órdenes cierra cada mecánico por mes.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="seccion" id="como-funciona">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Cómo funciona</span>
+          <h2>El recorrido de una orden, paso a paso</h2>
+          <p>Tocá cada etapa para ver qué hace AutoFlow por vos, sin que nadie tenga que acordarse.</p>
+        </div>
+
+        <div data-pestanas data-progreso data-revelar>
+          <div class="pasos" role="tablist" aria-label="Etapas de una orden de servicio">
+            <button class="paso" type="button" role="tab" id="paso-1" aria-controls="panel-paso-1" aria-selected="true"><span class="paso__num">1</span>Recibido</button>
+            <button class="paso" type="button" role="tab" id="paso-2" aria-controls="panel-paso-2" aria-selected="false" tabindex="-1"><span class="paso__num">2</span>En diagnóstico</button>
+            <button class="paso" type="button" role="tab" id="paso-3" aria-controls="panel-paso-3" aria-selected="false" tabindex="-1"><span class="paso__num">3</span>Esperando repuestos</button>
+            <button class="paso" type="button" role="tab" id="paso-4" aria-controls="panel-paso-4" aria-selected="false" tabindex="-1"><span class="paso__num">4</span>En reparación</button>
+            <button class="paso" type="button" role="tab" id="paso-5" aria-controls="panel-paso-5" aria-selected="false" tabindex="-1"><span class="paso__num">5</span>Listo para entrega</button>
+            <button class="paso" type="button" role="tab" id="paso-6" aria-controls="panel-paso-6" aria-selected="false" tabindex="-1"><span class="paso__num">6</span>Finalizado</button>
+          </div>
+
+          <div class="paso__panel" role="tabpanel" id="panel-paso-1" aria-labelledby="paso-1">
+            <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-combustible"></use></svg></span>
+            <div>
+              <h3>El auto entra al taller</h3>
+              <p>El asistente de recepción registra el kilometraje, el nivel de combustible, los daños visibles y el motivo de ingreso. La orden se numera sola.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Al elegir el vehículo se completan el cliente y el kilometraje.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Daños marcados con casillas: rayones, abolladuras, parabrisas, faros…</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Número de orden automático (OS/2026/0001).</li>
+              </ul>
+              <div class="paso__nav"><span></span><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente etapa <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-2" aria-labelledby="paso-2" hidden>
+            <span class="tarjeta__icono c-azul"><svg class="ico" aria-hidden="true"><use href="#i-lupa"></use></svg></span>
+            <div>
+              <h3>El mecánico revisa</h3>
+              <p>Se asigna el mecánico responsable, se elige el tipo de servicio y se anota el diagnóstico. Todo el historial del auto está a un clic.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Mecánicos tomados de Empleados de Odoo.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Servicio preventivo, correctivo o en garantía.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Un vehículo no puede tener dos órdenes abiertas a la vez.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente etapa <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-3" aria-labelledby="paso-3" hidden>
+            <span class="tarjeta__icono c-violeta"><svg class="ico" aria-hidden="true"><use href="#i-caja"></use></svg></span>
+            <div>
+              <h3>Se cargan los repuestos</h3>
+              <p>Elegís los repuestos del catálogo y AutoFlow toma el precio del producto. Si en el depósito no alcanza, la tarjeta lo avisa en rojo.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Precio y subtotal calculados solos.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Alerta “Faltan repuestos” visible en el tablero.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Usa los depósitos que ya tenés en Inventario.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente etapa <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-4" aria-labelledby="paso-4" hidden>
+            <span class="tarjeta__icono c-naranja"><svg class="ico" aria-hidden="true"><use href="#i-llave"></use></svg></span>
+            <div>
+              <h3>Manos a la obra</h3>
+              <p>Se registran las horas de mano de obra de cada mecánico. El total de la orden (mano de obra + repuestos) se actualiza al instante.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Total calculado automáticamente.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Órdenes urgentes marcadas con estrella.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Todo el equipo ve el avance en el tablero.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente etapa <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-5" aria-labelledby="paso-5" hidden>
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg></span>
+            <div>
+              <h3>El cliente se entera solo</h3>
+              <p>Al mover la tarjeta a “Listo para entrega”, AutoFlow le manda un correo al cliente con el total y le crea una tarea al asesor para coordinar el retiro.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Correo automático con el detalle de la orden.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Tarea para el asesor de servicio.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Checklist de 7 puntos antes de entregar.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente etapa <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-6" aria-labelledby="paso-6" hidden>
+            <span class="tarjeta__icono c-azul"><svg class="ico" aria-hidden="true"><use href="#i-factura"></use></svg></span>
+            <div>
+              <h3>Entrega, stock y factura</h3>
+              <p>Antes de cerrar, el sistema controla que haya mecánico, checklist completo y stock suficiente. Al finalizar hace todo lo demás:</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Descuenta los repuestos del inventario.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Actualiza el kilometraje del vehículo.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Genera la factura en borrador (las garantías no se cobran).</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Imprime el acta de entrega con la firma del cliente.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><a class="btn btn--primario btn--chico" href="demo.html">Probalo en la demo <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galería -->
+    <section class="seccion seccion--oscura" id="pantallas">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Así se ve</span>
+          <h2>Pantallas reales del sistema</h2>
+          <p>Capturas de AutoFlow funcionando en Odoo 18 con datos de ejemplo de una concesionaria paraguaya. Tocá una imagen para agrandarla.</p>
+        </div>
+
+        <div data-pestanas data-revelar>
+          <div class="pestanas" role="tablist" aria-label="Pantallas del sistema">
+            <button class="pestana" type="button" role="tab" id="tab-taller" aria-controls="gal-taller" aria-selected="true"><svg class="ico" aria-hidden="true"><use href="#i-llave"></use></svg> Taller</button>
+            <button class="pestana" type="button" role="tab" id="tab-vehiculo" aria-controls="gal-vehiculo" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-auto"></use></svg> Vehículos</button>
+            <button class="pestana" type="button" role="tab" id="tab-pruebas" aria-controls="gal-pruebas" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg> Pruebas</button>
+            <button class="pestana" type="button" role="tab" id="tab-recepcion" aria-controls="gal-recepcion" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-combustible"></use></svg> Recepción</button>
+            <button class="pestana" type="button" role="tab" id="tab-acta" aria-controls="gal-acta" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-firma"></use></svg> Acta PDF</button>
+            <button class="pestana" type="button" role="tab" id="tab-analisis" aria-controls="gal-analisis" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg> Análisis</button>
+          </div>
+
+          <div class="panel-galeria" role="tabpanel" id="gal-taller" aria-labelledby="tab-taller">
+            <button class="captura" type="button" data-visor="img/capturas/tablero_taller.jpg" data-titulo="Tablero de órdenes de servicio" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/tablero_taller.jpg" alt="Tablero kanban de órdenes de servicio" width="1600" height="750" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Tablero de órdenes de servicio</h3>
+              <p>Cada columna es una etapa. Arrastrás la tarjeta a la siguiente y AutoFlow se encarga del resto.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Etiquetas de preventivo, correctivo o garantía.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Alerta cuando faltan repuestos.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Total de cada orden a la vista.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-vehiculo" aria-labelledby="tab-vehiculo" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/ficha_vehiculo.jpg" data-titulo="Ficha del vehículo" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/ficha_vehiculo.jpg" alt="Ficha de un Toyota Hilux 2023 con datos de identificación y comerciales" width="1600" height="900" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Ficha del vehículo</h3>
+              <p>Todo lo que hay que saber de cada unidad: identificación, costos, precio de venta y cuánto se gastó en taller.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Estados Disponible, Reservado y Vendido.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Acceso directo a pruebas, órdenes y cotizaciones.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Botón “Recibir en taller” en la misma ficha.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-pruebas" aria-labelledby="tab-pruebas" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/calendario_pruebas.jpg" data-titulo="Calendario de pruebas de manejo" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/calendario_pruebas.jpg" alt="Calendario semanal de pruebas de manejo" width="1600" height="900" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Calendario de pruebas de manejo</h3>
+              <p>La agenda de la semana, por vehículo y por responsable. Cada prueba queda unida al cliente y a su oportunidad en el CRM.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> No permite dos pruebas del mismo auto a la misma hora.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Bloquea autos vendidos o en mantenimiento.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> De la prueba sale la cotización con un clic.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-recepcion" aria-labelledby="tab-recepcion" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/recepcion.jpg" data-titulo="Recepción del vehículo" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/recepcion.jpg" alt="Asistente de recepción con nivel de combustible y daños visibles" width="1600" height="1111" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Recepción en segundos</h3>
+              <p>Un solo formulario para recibir el auto: tipo de servicio, mecánico, combustible, daños y motivo de ingreso.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Barra de combustible que cambia de color.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Daños visibles con casillas.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> “Pasar al taller” crea la orden al instante.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-acta" aria-labelledby="tab-acta" hidden>
+            <button class="captura recorte" type="button" data-visor="img/capturas/acta_pdf.jpg" data-titulo="Orden de servicio y acta de entrega (PDF)" data-grupo="galeria" data-alta>
+              <span class="navegador"><img src="img/capturas/acta_pdf.jpg" alt="PDF de la orden de servicio con mano de obra, repuestos, inspección y firma del cliente" width="1600" height="2878" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ver completo</span>
+            </button>
+            <div>
+              <h3>Orden de servicio y acta de entrega</h3>
+              <p>Un PDF prolijo con tu logo, el trabajo realizado, los repuestos, la inspección y la firma del cliente.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Firma capturada en la pantalla.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Detalle de mano de obra y repuestos.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Respaldo ante cualquier reclamo.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-analisis" aria-labelledby="tab-analisis" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/fallas_por_modelo.jpg" data-titulo="Análisis: fallas por modelo" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/fallas_por_modelo.jpg" alt="Gráfico de barras con las fallas por modelo de vehículo" width="1600" height="900" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Decisiones con datos</h3>
+              <p>Descubrí qué modelos entran más veces por fallas y cuántas órdenes cierra cada mecánico por mes.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Gráficos de barras, líneas y torta.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Tablas dinámicas para cruzar datos.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Filtros por fecha, modelo o mecánico.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cifras -->
+    <section class="seccion">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Beneficios</span>
+          <h2>Menos papeleo, más autos entregados</h2>
+          <p>AutoFlow controla lo que antes dependía de la memoria de cada persona.</p>
+        </div>
+        <div class="cifras">
+          <div class="cifra" data-revelar><span class="cifra__valor" data-contar="6">6</span><span class="cifra__texto">etapas de taller</span><small>visibles en un solo tablero</small></div>
+          <div class="cifra" data-revelar data-retraso="80"><span class="cifra__valor" data-contar="7">7</span><span class="cifra__texto">puntos de control</span><small>en el checklist de entrega</small></div>
+          <div class="cifra" data-revelar data-retraso="160"><span class="cifra__valor" data-contar="1">1</span><span class="cifra__texto">clic para facturar</span><small>la factura se arma sola</small></div>
+          <div class="cifra" data-revelar data-retraso="240"><span class="cifra__valor">0</span><span class="cifra__texto">planillas sueltas</span><small>todo queda en Odoo</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculadora -->
+    <section class="seccion seccion--alt" id="calculadora">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta etiqueta--naranja">Calculadora</span>
+          <h2>¿Cuánto tiempo te devuelve AutoFlow?</h2>
+          <p>Mové las barras con los números de tu taller: anotar la orden, llamar al cliente, armar el presupuesto y la factura.</p>
+        </div>
+
+        <form class="calculadora" data-calculadora data-revelar onsubmit="return false">
+          <div class="calculadora__entradas">
+            <div class="control">
+              <label for="calc-ordenes">Órdenes de servicio por mes <output data-salida="ordenes">120</output></label>
+              <input id="calc-ordenes" name="ordenes" type="range" min="10" max="600" step="10" value="120">
+            </div>
+            <div class="control">
+              <label for="calc-minutos">Minutos de papeleo por orden hoy <output data-salida="minutos">35 min</output></label>
+              <input id="calc-minutos" name="minutos" type="range" min="5" max="90" step="5" value="35">
+            </div>
+            <div class="control">
+              <label for="calc-af">Minutos por orden con AutoFlow <output data-salida="minutosAF">8 min</output></label>
+              <input id="calc-af" name="minutosAF" type="range" min="1" max="30" step="1" value="8">
+            </div>
+            <div class="control">
+              <label for="calc-costo">Costo de una hora de tu personal <output data-salida="costoHora">Gs. 30.000</output></label>
+              <input id="calc-costo" name="costoHora" type="range" min="15000" max="150000" step="5000" value="30000">
+            </div>
+          </div>
+          <div class="calculadora__resultado" aria-live="polite">
+            <h3>Tu ahorro estimado</h3>
+            <div class="resultado__grande"><span data-salida="horas">54</span> <small>horas al mes</small></div>
+            <div style="margin-top:18px">
+              <div class="resultado__fila"><span>Jornadas de 8 h liberadas</span><b data-salida="dias">6,8</b></div>
+              <div class="resultado__fila"><span>Ahorro por mes</span><b data-salida="mes">Gs. 1.620.000</b></div>
+              <div class="resultado__fila"><span>Ahorro por año</span><b data-salida="anio">Gs. 19.440.000</b></div>
+            </div>
+            <p class="calculadora__nota">Estimación orientativa calculada con los valores que elegiste.</p>
+            <a class="btn btn--naranja" href="contacto.html" style="margin-top:8px;align-self:flex-start">Quiero este ahorro <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Para quién -->
+    <section class="seccion">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Para quién es</span>
+          <h2>Hecho para el negocio automotor</h2>
+        </div>
+        <div class="grilla grilla--3">
+          <div class="tarjeta publico" data-revelar>
+            <span class="tarjeta__icono c-azul"><svg class="ico" aria-hidden="true"><use href="#i-tienda"></use></svg></span>
+            <h3>Concesionarias</h3>
+            <p>Stock de vehículos con estados, pruebas de manejo agendadas y cotizaciones que marcan el auto como vendido.</p>
+          </div>
+          <div class="tarjeta publico" data-revelar data-retraso="100">
+            <span class="tarjeta__icono c-naranja"><svg class="ico" aria-hidden="true"><use href="#i-llave"></use></svg></span>
+            <h3>Talleres mecánicos</h3>
+            <p>Recepción, tablero de órdenes, repuestos con stock, checklist de entrega y facturación en el mismo sistema.</p>
+          </div>
+          <div class="tarjeta publico" data-revelar data-retraso="200">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-auto"></use></svg></span>
+            <h3>Concesionaria con taller</h3>
+            <p>Lo mejor de los dos mundos: el auto que vendés vuelve al service y su historia completa queda en una sola ficha.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Llamada final -->
+    <section class="seccion seccion--compacta">
+      <div class="contenedor">
+        <div class="banda-cta" data-revelar>
+          <svg class="banda-cta__auto ico" aria-hidden="true"><use href="#i-auto"></use></svg>
+          <div>
+            <h2>Mirá AutoFlow con los datos de tu empresa</h2>
+            <p>Te mostramos el sistema en una llamada de 30 minutos, sin compromiso.</p>
+          </div>
+          <div class="grupo-botones">
+            <a class="btn btn--naranja btn--grande" href="contacto.html">Solicitar demo gratis</a>
+            <a class="btn btn--fantasma btn--grande" href="precios.html">Ver precios</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grilla">
+        <div>
+          <a class="marca" href="index.html"><img src="img/logo.svg" alt="" width="38" height="38"><span>AutoFlow</span></a>
+          <p>Sistema para concesionarias y talleres construido sobre Odoo 18. Vehículos, pruebas de manejo, taller, repuestos y facturación en un solo lugar.</p>
+        </div>
+        <div>
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="funciones.html">Funciones</a></li>
+            <li><a href="demo.html">Demo interactiva</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li><a href="precios.html#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Funciones</h4>
+          <ul>
+            <li><a href="funciones.html#vehiculos">Vehículos</a></li>
+            <li><a href="funciones.html#pruebas">Pruebas de manejo</a></li>
+            <li><a href="funciones.html#taller">Taller</a></li>
+            <li><a href="funciones.html#analisis">Análisis</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="contacto.html" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a></li>
+            <li><a href="contacto.html" data-contacto="email"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> <span data-texto="email">Correo</span></a></li>
+            <li><a href="contacto.html" data-contacto="telefono"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg> <span data-texto="telefono">Teléfono</span></a></li>
+            <li><a href="contacto.html"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg> <span data-texto="direccion">Paraguay</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pie__base">
+        <span>© <span data-anio>2026</span> AutoFlow. Todos los derechos reservados.</span>
+        <span>Odoo es una marca de Odoo S.A. AutoFlow es un módulo independiente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="flotantes">
+    <button class="boton-redondo boton-redondo--arriba" type="button" aria-label="Volver arriba"><svg class="ico" aria-hidden="true"><use href="#i-arriba"></use></svg></button>
+    <a class="boton-redondo boton-redondo--wa" href="contacto.html" data-contacto="whatsapp" aria-label="Escribinos por WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></a>
+  </div>
+</body>
+</html>
