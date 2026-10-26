@@ -1,3 +1,9 @@
 # Archivos que Python genera solo
 __pycache__/
 *.pyc
+
+# Código fuente de Odoo 18 (1,3 GB): se descarga aparte, ver README.md
+odoo-source/
+
+# Configuración local de Claude Code
+.claude/
