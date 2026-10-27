@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bella_venta_list" model="ir.ui.view">
+        <field name="name">bella.venta.list</field>
+        <field name="model">bella.venta</field>
+        <field name="arch" type="xml">
+            <list string="Ventas de productos" decoration-muted="estado == 'cancelada'">
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="cliente_id"/>
+                <field name="vendedor_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="metodo_pago" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total" sum="Total"/>
+                <field name="estado" widget="badge" decoration-info="estado == 'borrador'"
+                       decoration-success="estado == 'cobrada'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_venta_form" model="ir.ui.view">
+        <field name="name">bella.venta.form</field>
+        <field name="model">bella.venta</field>
+        <field name="arch" type="xml">
+            <form string="Venta de productos">
+                <header>
+                    <button name="action_cobrar" string="Cobrar" type="object" class="btn-primary"
+                            invisible="estado != 'borrador' or not id"/>
+                    <button name="action_cancelar" string="Cancelar" type="object"
+                            invisible="estado != 'borrador' or not id"/>
+                    <button name="action_borrador" string="Volver a borrador" type="object"
+                            invisible="estado != 'cancelada'"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador,cobrada"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_factura" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not factura_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Factura</span>
+                            </div>
+                        </button>
+                        <button name="action_ver_movimientos" type="object" class="oe_stat_button" icon="fa-cubes"
+                                invisible="not movimiento_count">
+                            <field name="movimiento_count" widget="statinfo" string="Mov. de stock"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Cobrada" bg_color="text-bg-success" invisible="estado != 'cobrada'"/>
+                    <widget name="web_ribbon" title="Cancelada" bg_color="text-bg-danger" invisible="estado != 'cancelada'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cliente_id" readonly="estado != 'borrador'" context="{'default_customer_rank': 1}"/>
+                            <field name="vendedor_id" widget="many2one_avatar_user" readonly="estado != 'borrador'"/>
+                        </group>
+                        <group>
+                            <field name="fecha" readonly="estado != 'borrador'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Productos" name="productos">
+                            <field name="linea_ids" readonly="estado != 'borrador'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="producto_id" options="{'no_create': True}"/>
+                                    <field name="stock_disponible" decoration-danger="stock_disponible &lt; cantidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota"/>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group string="Cobro" invisible="not factura_id">
+                            <field name="metodo_pago"/>
+                            <field name="factura_id"/>
+                            <field name="estado_pago"/>
+                        </group>
+                        <group class="oe_subtotal_footer">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="total" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bella_venta_search" model="ir.ui.view">
+        <field name="name">bella.venta.search</field>
+        <field name="model">bella.venta</field>
+        <field name="arch" type="xml">
+            <search string="Buscar ventas">
+                <field name="name"/>
+                <field name="cliente_id"/>
+                <field name="linea_ids" string="Producto" filter_domain="[('linea_ids.producto_id', 'ilike', self)]"/>
+                <filter name="borrador" string="Por cobrar" domain="[('estado', '=', 'borrador')]"/>
+                <filter name="cobradas" string="Cobradas" domain="[('estado', '=', 'cobrada')]"/>
+                <separator/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_vendedor" string="Vendedor" context="{'group_by': 'vendedor_id'}"/>
+                    <filter name="group_metodo" string="Forma de pago" context="{'group_by': 'metodo_pago'}"/>
+                    <filter name="group_dia" string="Día" context="{'group_by': 'fecha:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_venta" model="ir.actions.act_window">
+        <field name="name">Ventas de productos</field>
+        <field name="res_model">bella.venta</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Registre la primera venta de mostrador</p>
+            <p>Para clientes que pasan a comprar un producto sin cita. Los productos que se venden durante
+                una cita se cargan en la misma cita.</p>
+        </field>
+    </record>
+</odoo>

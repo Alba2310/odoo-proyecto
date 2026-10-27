@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_bella_root" name="Studio Bella" sequence="45"
+              web_icon="studio_bella,static/description/icon.png"
+              groups="group_bella_recepcion"/>
+
+    <menuitem id="menu_bella_agenda" name="Agenda" parent="menu_bella_root"
+              action="action_bella_cita" sequence="10"/>
+    <menuitem id="menu_bella_hoy" name="Citas de hoy" parent="menu_bella_root"
+              action="action_bella_cita_hoy" sequence="20"/>
+    <menuitem id="menu_bella_recordatorios" name="Recordatorios" parent="menu_bella_root"
+              action="action_bella_recordatorios" sequence="25"/>
+    <menuitem id="menu_bella_venta" name="Ventas de productos" parent="menu_bella_root"
+              action="action_bella_venta" sequence="30"/>
+
+    <!-- Compras: se usan las pantallas de Compras e Inventario de Odoo -->
+    <menuitem id="menu_bella_compras" name="Compras" parent="menu_bella_root" sequence="35"/>
+    <menuitem id="menu_bella_recepciones" name="Recepción de mercadería" parent="menu_bella_compras"
+              action="stock.action_picking_tree_incoming" sequence="10"/>
+    <menuitem id="menu_bella_pedidos" name="Pedidos a proveedores" parent="menu_bella_compras"
+              action="purchase.purchase_rfq" sequence="20" groups="group_bella_admin"/>
+    <menuitem id="menu_bella_reponer" name="Reponer stock" parent="menu_bella_compras"
+              action="stock.action_replenishment" sequence="30" groups="group_bella_admin"/>
+    <menuitem id="menu_bella_proveedores" name="Proveedores" parent="menu_bella_compras"
+              action="account.res_partner_action_supplier" sequence="40" groups="group_bella_admin"/>
+    <menuitem id="menu_bella_clientes" name="Clientes" parent="menu_bella_root"
+              action="action_bella_clientes" sequence="40"/>
+
+    <menuitem id="menu_bella_reportes" name="Reportes" parent="menu_bella_root" sequence="80"
+              groups="group_bella_admin"/>
+    <menuitem id="menu_bella_servicios_realizados" parent="menu_bella_reportes"
+              action="action_bella_servicios_realizados" sequence="10"/>
+    <menuitem id="menu_bella_productos_vendidos" parent="menu_bella_reportes"
+              action="action_bella_productos_vendidos" sequence="20"/>
+
+    <menuitem id="menu_bella_config" name="Configuración" parent="menu_bella_root" sequence="90"
+              groups="group_bella_admin"/>
+    <menuitem id="menu_bella_servicios" parent="menu_bella_config" action="action_bella_servicios" sequence="10"/>
+    <menuitem id="menu_bella_productos" parent="menu_bella_config" action="action_bella_productos" sequence="20"/>
+    <menuitem id="menu_bella_estilistas" parent="menu_bella_config" action="action_bella_estilistas" sequence="30"/>
+    <menuitem id="menu_bella_horarios" parent="menu_bella_config" action="action_bella_horarios" sequence="40"
+              groups="base.group_system"/>
+
+    <menuitem id="menu_bella_ayuda" name="Ayuda" parent="menu_bella_root" sequence="95"/>
+    <menuitem id="menu_bella_manual" parent="menu_bella_ayuda" action="action_bella_manual" sequence="10"/>
+</odoo>

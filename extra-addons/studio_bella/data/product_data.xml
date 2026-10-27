@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Los servicios y productos de la peluquería cuelgan de estas dos categorías:
+             las citas solo ofrecen servicios de la primera y las ventas, productos de la segunda. -->
+        <record id="categoria_servicios" model="product.category">
+            <field name="name">Servicios de peluquería</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+        <record id="categoria_productos" model="product.category">
+            <field name="name">Productos de peluquería</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <!-- Cliente por defecto de las ventas de mostrador cuando no se pide factura a nombre de alguien. -->
+        <record id="cliente_consumidor_final" model="res.partner">
+            <field name="name">Consumidor final</field>
+            <field name="customer_rank">1</field>
+        </record>
+    </data>
+</odoo>

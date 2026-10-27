@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Servicios realizados: cuánto facturó cada estilista y qué servicios se piden más -->
+    <record id="view_bella_cita_servicio_pivot" model="ir.ui.view">
+        <field name="name">bella.cita.servicio.pivot</field>
+        <field name="model">bella.cita.servicio</field>
+        <field name="arch" type="xml">
+            <pivot string="Servicios realizados" sample="1">
+                <field name="categoria_id" type="row"/>
+                <field name="estilista_id" type="col"/>
+                <field name="precio" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_bella_cita_servicio_graph" model="ir.ui.view">
+        <field name="name">bella.cita.servicio.graph</field>
+        <field name="model">bella.cita.servicio</field>
+        <field name="arch" type="xml">
+            <graph string="Servicios realizados" type="bar" sample="1">
+                <field name="servicio_id"/>
+                <field name="precio" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_bella_cita_servicio_list" model="ir.ui.view">
+        <field name="name">bella.cita.servicio.list</field>
+        <field name="model">bella.cita.servicio</field>
+        <field name="arch" type="xml">
+            <list string="Servicios realizados" create="false" edit="false">
+                <field name="fecha"/>
+                <field name="cita_id"/>
+                <field name="cliente_id"/>
+                <field name="servicio_id"/>
+                <field name="categoria_id" optional="hide"/>
+                <field name="estilista_id" widget="many2one_avatar_employee"/>
+                <field name="duracion" sum="Total"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="precio" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_cita_servicio_search" model="ir.ui.view">
+        <field name="name">bella.cita.servicio.search</field>
+        <field name="model">bella.cita.servicio</field>
+        <field name="arch" type="xml">
+            <search string="Buscar servicios realizados">
+                <field name="servicio_id"/>
+                <field name="estilista_id"/>
+                <field name="cliente_id"/>
+                <field name="categoria_id"/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_estilista" string="Estilista" context="{'group_by': 'estilista_id'}"/>
+                    <filter name="group_servicio" string="Servicio" context="{'group_by': 'servicio_id'}"/>
+                    <filter name="group_categoria" string="Categoría" context="{'group_by': 'categoria_id'}"/>
+                    <filter name="group_mes" string="Mes" context="{'group_by': 'fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_servicios_realizados" model="ir.actions.act_window">
+        <field name="name">Servicios realizados</field>
+        <field name="res_model">bella.cita.servicio</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="domain">[('estado', '=', 'cobrada')]</field>
+        <field name="context">{'search_default_fecha': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Todavía no hay citas cobradas</p>
+            <p>Acá se ve cuánto facturó cada estilista y qué servicios se piden más.</p>
+        </field>
+    </record>
+
+    <!-- Productos vendidos: sale del análisis de facturas de Odoo (incluye las citas y el mostrador) -->
+    <record id="action_bella_productos_vendidos" model="ir.actions.act_window">
+        <field name="name">Productos vendidos</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="domain" eval="[('product_categ_id', 'child_of', ref('categoria_productos')),
+                                    ('move_type', 'in', ('out_invoice', 'out_refund')),
+                                    ('state', '=', 'posted')]"/>
+        <field name="context">{'graph_mode': 'bar', 'graph_groupbys': ['product_id'], 'graph_measure': 'quantity',
+                               'pivot_row_groupby': ['product_id'], 'pivot_measures': ['quantity', 'price_total']}</field>
+    </record>
+</odoo>

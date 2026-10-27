@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_bella" model="ir.ui.view">
+        <field name="name">res.partner.form.studio_bella</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_bella_ver_citas" type="object" class="oe_stat_button" icon="fa-scissors"
+                        groups="studio_bella.group_bella_recepcion">
+                    <field name="bella_cita_count" widget="statinfo" string="Citas"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="action_bella_clientes" model="ir.actions.act_window">
+        <field name="name">Clientes</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_customer': 1, 'default_customer_rank': 1, 'default_is_company': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue el primer cliente</p>
+            <p>Con el correo cargado, el cliente recibe el recordatorio de su cita el día anterior.</p>
+        </field>
+    </record>
+</odoo>

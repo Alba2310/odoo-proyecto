@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_bella" model="ir.module.category">
+        <field name="name">Studio Bella</field>
+        <field name="description">Peluquería</field>
+        <field name="sequence">45</field>
+    </record>
+
+    <!-- Recepción: agenda citas, vende y cobra. Por eso emite facturas, registra pagos y mueve stock. -->
+    <record id="group_bella_recepcion" model="res.groups">
+        <field name="name">Recepción</field>
+        <field name="category_id" ref="module_category_bella"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_partner_manager')),
+                                         Command.link(ref('account.group_account_invoice')),
+                                         Command.link(ref('stock.group_stock_user'))]"/>
+    </record>
+
+    <!-- Administración: además configura servicios, productos y estilistas, compra a proveedores y ve los reportes. -->
+    <record id="group_bella_admin" model="res.groups">
+        <field name="name">Administración</field>
+        <field name="category_id" ref="module_category_bella"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_bella_recepcion')),
+                                         Command.link(ref('stock.group_stock_manager')),
+                                         Command.link(ref('purchase.group_purchase_manager')),
+                                         Command.link(ref('hr.group_hr_user'))]"/>
+        <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="rule_bella_cita_company" model="ir.rule">
+            <field name="name">Citas: multicompañía</field>
+            <field name="model_id" ref="model_bella_cita"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_bella_venta_company" model="ir.rule">
+            <field name="name">Ventas de productos: multicompañía</field>
+            <field name="model_id" ref="model_bella_venta"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

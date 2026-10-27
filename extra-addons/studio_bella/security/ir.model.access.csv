@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bella_cita_recepcion,bella.cita recepcion,model_bella_cita,group_bella_recepcion,1,1,1,0
+access_bella_cita_admin,bella.cita admin,model_bella_cita,group_bella_admin,1,1,1,1
+access_bella_cita_servicio_recepcion,bella.cita.servicio recepcion,model_bella_cita_servicio,group_bella_recepcion,1,1,1,1
+access_bella_cita_producto_recepcion,bella.cita.producto recepcion,model_bella_cita_producto,group_bella_recepcion,1,1,1,1
+access_bella_venta_recepcion,bella.venta recepcion,model_bella_venta,group_bella_recepcion,1,1,1,0
+access_bella_venta_admin,bella.venta admin,model_bella_venta,group_bella_admin,1,1,1,1
+access_bella_venta_linea_recepcion,bella.venta.linea recepcion,model_bella_venta_linea,group_bella_recepcion,1,1,1,1
+access_bella_servicio_insumo_user,bella.servicio.insumo user,model_bella_servicio_insumo,base.group_user,1,0,0,0
+access_bella_servicio_insumo_admin,bella.servicio.insumo admin,model_bella_servicio_insumo,group_bella_admin,1,1,1,1
+access_bella_cobro_wizard_recepcion,bella.cobro.wizard recepcion,model_bella_cobro_wizard,group_bella_recepcion,1,1,1,1

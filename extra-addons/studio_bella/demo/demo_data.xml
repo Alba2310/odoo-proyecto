@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============ Catálogo ============ -->
+    <record id="categoria_cortes" model="product.category">
+        <field name="name">Cortes</field>
+        <field name="parent_id" ref="categoria_servicios"/>
+    </record>
+    <record id="categoria_coloracion" model="product.category">
+        <field name="name">Coloración</field>
+        <field name="parent_id" ref="categoria_servicios"/>
+    </record>
+    <record id="categoria_tratamientos" model="product.category">
+        <field name="name">Tratamientos</field>
+        <field name="parent_id" ref="categoria_servicios"/>
+    </record>
+    <record id="categoria_peinados" model="product.category">
+        <field name="name">Peinados</field>
+        <field name="parent_id" ref="categoria_servicios"/>
+    </record>
+    <record id="categoria_barberia" model="product.category">
+        <field name="name">Barbería</field>
+        <field name="parent_id" ref="categoria_servicios"/>
+    </record>
+    <record id="categoria_manos_pies" model="product.category">
+        <field name="name">Manos y pies</field>
+        <field name="parent_id" ref="categoria_servicios"/>
+    </record>
+    <record id="categoria_reventa" model="product.category">
+        <field name="name">Reventa</field>
+        <field name="parent_id" ref="categoria_productos"/>
+    </record>
+    <record id="categoria_uso_profesional" model="product.category">
+        <field name="name">Uso profesional</field>
+        <field name="parent_id" ref="categoria_productos"/>
+    </record>
+
+    <!-- Insumos de uso profesional: no se venden, se gastan en los servicios.
+         Se cuentan por envase: 0,06 de una botella de 1 L son 60 ml. -->
+    <record id="insumo_tinte" model="product.product">
+        <field name="name">Tinte profesional en crema (tubo 60 g)</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="categ_id" ref="categoria_uso_profesional"/>
+        <field name="standard_price">28000</field>
+        <field name="list_price">0</field>
+    </record>
+    <record id="insumo_oxidante" model="product.product">
+        <field name="name">Oxidante en crema 20 vol (botella 1 L)</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="categ_id" ref="categoria_uso_profesional"/>
+        <field name="standard_price">45000</field>
+        <field name="list_price">0</field>
+    </record>
+    <record id="insumo_decolorante" model="product.product">
+        <field name="name">Decolorante en polvo (pote 500 g)</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="categ_id" ref="categoria_uso_profesional"/>
+        <field name="standard_price">120000</field>
+        <field name="list_price">0</field>
+    </record>
+    <record id="insumo_keratina" model="product.product">
+        <field name="name">Keratina para alisado (botella 1 L)</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="categ_id" ref="categoria_uso_profesional"/>
+        <field name="standard_price">380000</field>
+        <field name="list_price">0</field>
+    </record>
+    <record id="insumo_mascarilla" model="product.product">
+        <field name="name">Mascarilla profesional (pote 1 kg)</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="categ_id" ref="categoria_uso_profesional"/>
+        <field name="standard_price">150000</field>
+        <field name="list_price">0</field>
+    </record>
+    <record id="insumo_esmalte_semi" model="product.product">
+        <field name="name">Esmalte semipermanente (frasco 15 ml)</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="categ_id" ref="categoria_uso_profesional"/>
+        <field name="standard_price">45000</field>
+        <field name="list_price">0</field>
+    </record>
+
+    <!-- Productos de reventa (precio con IVA incluido) -->
+    <record id="producto_shampoo" model="product.product">
+        <field name="name">Shampoo reparador 300 ml</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="categ_id" ref="categoria_reventa"/>
+        <field name="standard_price">48000</field>
+        <field name="list_price">85000</field>
+    </record>
+    <record id="producto_acondicionador" model="product.product">
+        <field name="name">Acondicionador reparador 300 ml</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="categ_id" ref="categoria_reventa"/>
+        <field name="standard_price">48000</field>
+        <field name="list_price">85000</field>
+    </record>
+    <record id="producto_mascarilla" model="product.product">
+        <field name="name">Mascarilla hidratante 250 g</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="categ_id" ref="categoria_reventa"/>
+        <field name="standard_price">65000</field>
+        <field name="list_price">120000</field>
+    </record>
+    <record id="producto_aceite_argan" model="product.product">
+        <field name="name">Aceite de argán 50 ml</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="categ_id" ref="categoria_reventa"/>
+        <field name="standard_price">52000</field>
+        <field name="list_price">95000</field>
+    </record>
+    <record id="producto_protector_termico" model="product.product">
+        <field name="name">Protector térmico 200 ml</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="categ_id" ref="categoria_reventa"/>
+        <field name="standard_price">40000</field>
+        <field name="list_price">75000</field>
+    </record>
+    <record id="producto_cera" model="product.product">
+        <field name="name">Cera modeladora mate 100 g</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="categ_id" ref="categoria_reventa"/>
+        <field name="standard_price">32000</field>
+        <field name="list_price">60000</field>
+    </record>
+    <record id="producto_esmalte" model="product.product">
+        <field name="name">Esmalte de uñas</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="categ_id" ref="categoria_reventa"/>
+        <field name="standard_price">12000</field>
+        <field name="list_price">25000</field>
+    </record>
+
+    <!-- Servicios (precio con IVA incluido, duración en minutos y los insumos que gastan) -->
+    <record id="servicio_corte_dama" model="product.product">
+        <field name="name">Corte de dama</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_cortes"/>
+        <field name="list_price">80000</field>
+        <field name="bella_duracion">60</field>
+    </record>
+    <record id="servicio_corte_caballero" model="product.product">
+        <field name="name">Corte de caballero</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_cortes"/>
+        <field name="list_price">50000</field>
+        <field name="bella_duracion">30</field>
+    </record>
+    <record id="servicio_corte_nino" model="product.product">
+        <field name="name">Corte infantil</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_cortes"/>
+        <field name="list_price">40000</field>
+        <field name="bella_duracion">30</field>
+    </record>
+    <record id="servicio_barba" model="product.product">
+        <field name="name">Arreglo de barba</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_barberia"/>
+        <field name="list_price">35000</field>
+        <field name="bella_duracion">30</field>
+    </record>
+    <record id="servicio_brushing" model="product.product">
+        <field name="name">Brushing</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_peinados"/>
+        <field name="list_price">60000</field>
+        <field name="bella_duracion">45</field>
+    </record>
+    <record id="servicio_peinado_fiesta" model="product.product">
+        <field name="name">Peinado de fiesta</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_peinados"/>
+        <field name="list_price">150000</field>
+        <field name="bella_duracion">60</field>
+    </record>
+    <record id="servicio_tintura_raiz" model="product.product">
+        <field name="name">Tintura de raíz</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_coloracion"/>
+        <field name="list_price">180000</field>
+        <field name="bella_duracion">90</field>
+        <field name="bella_insumo_ids" eval="[Command.create({'producto_id': ref('insumo_tinte'), 'cantidad': 1}),
+                                              Command.create({'producto_id': ref('insumo_oxidante'), 'cantidad': 0.06})]"/>
+    </record>
+    <record id="servicio_tintura_completa" model="product.product">
+        <field name="name">Tintura completa</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_coloracion"/>
+        <field name="list_price">250000</field>
+        <field name="bella_duracion">120</field>
+        <field name="bella_insumo_ids" eval="[Command.create({'producto_id': ref('insumo_tinte'), 'cantidad': 2}),
+                                              Command.create({'producto_id': ref('insumo_oxidante'), 'cantidad': 0.12})]"/>
+    </record>
+    <record id="servicio_balayage" model="product.product">
+        <field name="name">Mechas balayage</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_coloracion"/>
+        <field name="list_price">450000</field>
+        <field name="bella_duracion">180</field>
+        <field name="bella_insumo_ids" eval="[Command.create({'producto_id': ref('insumo_decolorante'), 'cantidad': 0.1}),
+                                              Command.create({'producto_id': ref('insumo_oxidante'), 'cantidad': 0.15}),
+                                              Command.create({'producto_id': ref('insumo_tinte'), 'cantidad': 1})]"/>
+    </record>
+    <record id="servicio_keratina" model="product.product">
+        <field name="name">Alisado con keratina</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_tratamientos"/>
+        <field name="list_price">350000</field>
+        <field name="bella_duracion">150</field>
+        <field name="bella_insumo_ids" eval="[Command.create({'producto_id': ref('insumo_keratina'), 'cantidad': 0.1})]"/>
+    </record>
+    <record id="servicio_hidratacion" model="product.product">
+        <field name="name">Hidratación profunda</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_tratamientos"/>
+        <field name="list_price">90000</field>
+        <field name="bella_duracion">45</field>
+        <field name="bella_insumo_ids" eval="[Command.create({'producto_id': ref('insumo_mascarilla'), 'cantidad': 0.05})]"/>
+    </record>
+    <record id="servicio_manicura" model="product.product">
+        <field name="name">Manicura</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_manos_pies"/>
+        <field name="list_price">50000</field>
+        <field name="bella_duracion">45</field>
+    </record>
+    <record id="servicio_pedicura" model="product.product">
+        <field name="name">Pedicura</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_manos_pies"/>
+        <field name="list_price">70000</field>
+        <field name="bella_duracion">60</field>
+    </record>
+    <record id="servicio_semipermanente" model="product.product">
+        <field name="name">Esmaltado semipermanente</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="categoria_manos_pies"/>
+        <field name="list_price">90000</field>
+        <field name="bella_duracion">60</field>
+        <field name="bella_insumo_ids" eval="[Command.create({'producto_id': ref('insumo_esmalte_semi'), 'cantidad': 0.1})]"/>
+    </record>
+
+    <!-- Stock inicial en el depósito principal -->
+    <record id="quant_tinte" model="stock.quant">
+        <field name="product_id" ref="insumo_tinte"/>
+        <field name="inventory_quantity">20</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_oxidante" model="stock.quant">
+        <field name="product_id" ref="insumo_oxidante"/>
+        <field name="inventory_quantity">6</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_decolorante" model="stock.quant">
+        <field name="product_id" ref="insumo_decolorante"/>
+        <field name="inventory_quantity">3</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_keratina" model="stock.quant">
+        <field name="product_id" ref="insumo_keratina"/>
+        <field name="inventory_quantity">2</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_mascarilla_profesional" model="stock.quant">
+        <field name="product_id" ref="insumo_mascarilla"/>
+        <field name="inventory_quantity">2</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_esmalte_semi" model="stock.quant">
+        <field name="product_id" ref="insumo_esmalte_semi"/>
+        <field name="inventory_quantity">8</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_shampoo" model="stock.quant">
+        <field name="product_id" ref="producto_shampoo"/>
+        <field name="inventory_quantity">12</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_acondicionador" model="stock.quant">
+        <field name="product_id" ref="producto_acondicionador"/>
+        <field name="inventory_quantity">10</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_mascarilla" model="stock.quant">
+        <field name="product_id" ref="producto_mascarilla"/>
+        <field name="inventory_quantity">8</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_aceite_argan" model="stock.quant">
+        <field name="product_id" ref="producto_aceite_argan"/>
+        <field name="inventory_quantity">6</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_protector_termico" model="stock.quant">
+        <field name="product_id" ref="producto_protector_termico"/>
+        <field name="inventory_quantity">3</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_cera" model="stock.quant">
+        <field name="product_id" ref="producto_cera"/>
+        <field name="inventory_quantity">15</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="quant_esmalte" model="stock.quant">
+        <field name="product_id" ref="producto_esmalte"/>
+        <field name="inventory_quantity">24</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <function model="stock.quant" name="action_apply_inventory">
+        <function eval="[[('id', 'in', (ref('quant_tinte'),
+                                       ref('quant_oxidante'),
+                                       ref('quant_decolorante'),
+                                       ref('quant_keratina'),
+                                       ref('quant_mascarilla_profesional'),
+                                       ref('quant_esmalte_semi'),
+                                       ref('quant_shampoo'),
+                                       ref('quant_acondicionador'),
+                                       ref('quant_mascarilla'),
+                                       ref('quant_aceite_argan'),
+                                       ref('quant_protector_termico'),
+                                       ref('quant_cera'),
+                                       ref('quant_esmalte')))]]"
+                  model="stock.quant" name="search"/>
+    </function>
+
+    <!-- ============ Estilistas ============ -->
+    <record id="estilista_lorena" model="hr.employee">
+        <field name="name">Lorena Benítez</field>
+        <field name="job_title">Colorista</field>
+        <field name="bella_estilista" eval="True"/>
+        <field name="resource_calendar_id" ref="horario_studio_bella"/>
+        <field name="tz">America/Asuncion</field>
+        <field name="bella_servicio_ids" eval="[Command.set([ref('servicio_corte_dama'), ref('servicio_brushing'),
+                                                            ref('servicio_tintura_raiz'), ref('servicio_tintura_completa'),
+                                                            ref('servicio_balayage'), ref('servicio_keratina'),
+                                                            ref('servicio_hidratacion'), ref('servicio_peinado_fiesta')])]"/>
+    </record>
+    <record id="estilista_camila" model="hr.employee">
+        <field name="name">Camila Ortiz</field>
+        <field name="job_title">Estilista</field>
+        <field name="bella_estilista" eval="True"/>
+        <field name="resource_calendar_id" ref="horario_studio_bella"/>
+        <field name="tz">America/Asuncion</field>
+        <field name="bella_servicio_ids" eval="[Command.set([ref('servicio_corte_dama'), ref('servicio_corte_nino'),
+                                                            ref('servicio_brushing'), ref('servicio_peinado_fiesta'),
+                                                            ref('servicio_keratina'), ref('servicio_hidratacion')])]"/>
+    </record>
+    <record id="estilista_diego" model="hr.employee">
+        <field name="name">Diego Ramírez</field>
+        <field name="job_title">Barbero</field>
+        <field name="bella_estilista" eval="True"/>
+        <field name="resource_calendar_id" ref="horario_studio_bella"/>
+        <field name="tz">America/Asuncion</field>
+        <field name="bella_servicio_ids" eval="[Command.set([ref('servicio_corte_caballero'), ref('servicio_corte_nino'),
+                                                            ref('servicio_barba')])]"/>
+    </record>
+    <record id="estilista_fatima" model="hr.employee">
+        <field name="name">Fátima Giménez</field>
+        <field name="job_title">Manicura</field>
+        <field name="bella_estilista" eval="True"/>
+        <field name="resource_calendar_id" ref="horario_studio_bella"/>
+        <field name="tz">America/Asuncion</field>
+        <field name="bella_servicio_ids" eval="[Command.set([ref('servicio_manicura'), ref('servicio_pedicura'),
+                                                            ref('servicio_semipermanente')])]"/>
+    </record>
+
+    <!-- Feriados: la agenda no deja dar turnos esos días (hora UTC: 03:00 es la medianoche de Asunción) -->
+    <record id="feriado_caacupe" model="resource.calendar.leaves">
+        <field name="name">Virgen de Caacupé</field>
+        <field name="calendar_id" ref="horario_studio_bella"/>
+        <field name="date_from">2026-12-08 03:00:00</field>
+        <field name="date_to">2026-12-09 02:59:59</field>
+    </record>
+    <record id="feriado_navidad" model="resource.calendar.leaves">
+        <field name="name">Navidad</field>
+        <field name="calendar_id" ref="horario_studio_bella"/>
+        <field name="date_from">2026-12-25 03:00:00</field>
+        <field name="date_to">2026-12-26 02:59:59</field>
+    </record>
+
+    <!-- ============ Clientes ============ -->
+    <record id="cliente_maria_jose" model="res.partner">
+        <field name="name">María José Fernández</field>
+        <field name="phone">0981 234 567</field>
+        <field name="email">mariajose.fernandez@example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_ana_lucia" model="res.partner">
+        <field name="name">Ana Lucía Martínez</field>
+        <field name="phone">0971 445 210</field>
+        <field name="email">analucia.martinez@example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_sofia" model="res.partner">
+        <field name="name">Sofía Villalba</field>
+        <field name="phone">0982 113 908</field>
+        <field name="email">sofia.villalba@example.com</field>
+        <field name="city">Lambaré</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_lucia" model="res.partner">
+        <field name="name">Lucía Acosta</field>
+        <field name="phone">0994 560 731</field>
+        <field name="email">lucia.acosta@example.com</field>
+        <field name="city">Fernando de la Mora</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_carmen" model="res.partner">
+        <field name="name">Carmen Duarte</field>
+        <field name="phone">0961 802 455</field>
+        <field name="email">carmen.duarte@example.com</field>
+        <field name="city">San Lorenzo</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_valeria" model="res.partner">
+        <field name="name">Valeria Rojas</field>
+        <field name="phone">0985 377 120</field>
+        <field name="email">valeria.rojas@example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_gabriela" model="res.partner">
+        <field name="name">Gabriela Insfrán</field>
+        <field name="phone">0976 219 004</field>
+        <field name="email">gabriela.insfran@example.com</field>
+        <field name="city">Luque</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_patricia" model="res.partner">
+        <field name="name">Patricia Cáceres</field>
+        <field name="phone">0983 640 882</field>
+        <field name="email">patricia.caceres@example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_jorge" model="res.partner">
+        <field name="name">Jorge Ayala</field>
+        <field name="phone">0991 305 667</field>
+        <field name="email">jorge.ayala@example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_rodrigo" model="res.partner">
+        <field name="name">Rodrigo Báez</field>
+        <field name="phone">0972 458 119</field>
+        <field name="email">rodrigo.baez@example.com</field>
+        <field name="city">Mariano Roque Alonso</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_martin" model="res.partner">
+        <field name="name">Martín Ojeda</field>
+        <field name="phone">0984 771 236</field>
+        <field name="email">martin.ojeda@example.com</field>
+        <field name="city">San Lorenzo</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_rosa" model="res.partner">
+        <field name="name">Rosa Galeano</field>
+        <field name="phone">0961 590 348</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <!-- ============ Citas ============
+         Las fechas son relativas al día en que se cargan los datos, siempre de lunes a sábado.
+         Horas en UTC: Paraguay es UTC-3, así que las 9:00 de Asunción son las 12:00 UTC.
+         · Semana pasada:  hoy + relativedelta(days=-13, weekday=0) es el lunes pasado.
+         · Hoy:            si hoy es domingo, se usa el lunes.
+         · Mañana:         el día hábil siguiente a "hoy".
+         · Semana próxima: hoy + relativedelta(days=1, weekday=0) es el lunes que viene. -->
+
+    <!-- Semana pasada -->
+    <record id="cita_01" model="bella.cita">
+        <field name="cliente_id" ref="cliente_maria_jose"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=12, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_tintura_raiz')}),
+                                          Command.create({'servicio_id': ref('servicio_brushing')})]"/>
+        <field name="nota">Fórmula: 6.0 + 6.1 en partes iguales, oxidante 20 vol, 35 minutos de pose.</field>
+    </record>
+    <record id="cita_02" model="bella.cita">
+        <field name="cliente_id" ref="cliente_jorge"/>
+        <field name="estilista_id" ref="estilista_diego"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_caballero')}),
+                                          Command.create({'servicio_id': ref('servicio_barba')})]"/>
+        <field name="producto_ids" eval="[Command.create({'producto_id': ref('producto_cera'), 'cantidad': 1})]"/>
+    </record>
+    <record id="cita_03" model="bella.cita">
+        <field name="cliente_id" ref="cliente_sofia"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=18, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_dama')}),
+                                          Command.create({'servicio_id': ref('servicio_brushing')})]"/>
+        <field name="producto_ids" eval="[Command.create({'producto_id': ref('producto_shampoo'), 'cantidad': 1}),
+                                          Command.create({'producto_id': ref('producto_acondicionador'), 'cantidad': 1})]"/>
+    </record>
+    <record id="cita_04" model="bella.cita">
+        <field name="cliente_id" ref="cliente_gabriela"/>
+        <field name="estilista_id" ref="estilista_fatima"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=19, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_semipermanente')})]"/>
+    </record>
+    <record id="cita_05" model="bella.cita">
+        <field name="cliente_id" ref="cliente_valeria"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=17, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_balayage')})]"/>
+        <field name="producto_ids" eval="[Command.create({'producto_id': ref('producto_aceite_argan'), 'cantidad': 1})]"/>
+    </record>
+    <record id="cita_06" model="bella.cita">
+        <field name="cliente_id" ref="cliente_rodrigo"/>
+        <field name="estilista_id" ref="estilista_diego"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=21, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_caballero')})]"/>
+        <field name="estado">no_asistio</field>
+    </record>
+    <record id="cita_07" model="bella.cita">
+        <field name="cliente_id" ref="cliente_ana_lucia"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_keratina')})]"/>
+        <field name="producto_ids" eval="[Command.create({'producto_id': ref('producto_mascarilla'), 'cantidad': 1})]"/>
+    </record>
+    <record id="cita_08" model="bella.cita">
+        <field name="cliente_id" ref="cliente_patricia"/>
+        <field name="estilista_id" ref="estilista_fatima"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=14, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_manicura')}),
+                                          Command.create({'servicio_id': ref('servicio_pedicura')})]"/>
+    </record>
+    <record id="cita_09" model="bella.cita">
+        <field name="cliente_id" ref="cliente_carmen"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=5, hour=12, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_peinado_fiesta')})]"/>
+        <field name="nota">Casamiento a las 20:00. Recogido bajo con ondas.</field>
+    </record>
+    <record id="cita_10" model="bella.cita">
+        <field name="cliente_id" ref="cliente_martin"/>
+        <field name="estilista_id" ref="estilista_diego"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=5, hour=12, minute=30, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_caballero')}),
+                                          Command.create({'servicio_id': ref('servicio_corte_nino')})]"/>
+        <field name="nota">Viene con su hijo Mateo (7 años).</field>
+    </record>
+    <record id="cita_11" model="bella.cita">
+        <field name="cliente_id" ref="cliente_lucia"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=5, hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_hidratacion')})]"/>
+        <field name="estado">cancelada</field>
+    </record>
+
+    <!-- Hoy -->
+    <record id="cita_hoy_1" model="bella.cita">
+        <field name="cliente_id" ref="cliente_rosa"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=(1 if DateTime.today().weekday() == 6 else 0), hour=12, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_tintura_completa')})]"/>
+        <field name="estado">en_atencion</field>
+    </record>
+    <record id="cita_hoy_2" model="bella.cita">
+        <field name="cliente_id" ref="cliente_jorge"/>
+        <field name="estilista_id" ref="estilista_diego"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=(1 if DateTime.today().weekday() == 6 else 0), hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_barba')})]"/>
+        <field name="estado">confirmada</field>
+    </record>
+    <record id="cita_hoy_3" model="bella.cita">
+        <field name="cliente_id" ref="cliente_lucia"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=(1 if DateTime.today().weekday() == 6 else 0), hour=14, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_dama')}),
+                                          Command.create({'servicio_id': ref('servicio_brushing')})]"/>
+        <field name="estado">confirmada</field>
+    </record>
+    <record id="cita_hoy_4" model="bella.cita">
+        <field name="cliente_id" ref="cliente_maria_jose"/>
+        <field name="estilista_id" ref="estilista_fatima"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=(1 if DateTime.today().weekday() == 6 else 0), hour=18, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_manicura')})]"/>
+    </record>
+    <record id="cita_hoy_5" model="bella.cita">
+        <field name="cliente_id" ref="cliente_valeria"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=(1 if DateTime.today().weekday() == 6 else 0), hour=19, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_hidratacion')})]"/>
+    </record>
+
+    <!-- Mañana: a estos clientes les llega el recordatorio por correo -->
+    <record id="cita_manana_1" model="bella.cita">
+        <field name="cliente_id" ref="cliente_gabriela"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days={5: 2, 6: 2}.get(DateTime.today().weekday(), 1), hour=12, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_dama')})]"/>
+        <field name="estado">confirmada</field>
+    </record>
+    <record id="cita_manana_2" model="bella.cita">
+        <field name="cliente_id" ref="cliente_sofia"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days={5: 2, 6: 2}.get(DateTime.today().weekday(), 1), hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_tintura_raiz')})]"/>
+    </record>
+    <record id="cita_manana_3" model="bella.cita">
+        <field name="cliente_id" ref="cliente_rodrigo"/>
+        <field name="estilista_id" ref="estilista_diego"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days={5: 2, 6: 2}.get(DateTime.today().weekday(), 1), hour=20, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_caballero')})]"/>
+    </record>
+
+    <!-- Semana próxima (de miércoles a sábado, para no cruzarse con "hoy" y "mañana") -->
+    <record id="cita_prox_1" model="bella.cita">
+        <field name="cliente_id" ref="cliente_patricia"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=1, weekday=0) + relativedelta(days=2, hour=12, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_balayage')})]"/>
+    </record>
+    <record id="cita_prox_2" model="bella.cita">
+        <field name="cliente_id" ref="cliente_carmen"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=1, weekday=0) + relativedelta(days=2, hour=21, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_brushing')})]"/>
+    </record>
+    <record id="cita_prox_3" model="bella.cita">
+        <field name="cliente_id" ref="cliente_ana_lucia"/>
+        <field name="estilista_id" ref="estilista_fatima"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=1, weekday=0) + relativedelta(days=3, hour=17, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_semipermanente')}),
+                                          Command.create({'servicio_id': ref('servicio_pedicura')})]"/>
+    </record>
+    <record id="cita_prox_4" model="bella.cita">
+        <field name="cliente_id" ref="cliente_martin"/>
+        <field name="estilista_id" ref="estilista_diego"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=1, weekday=0) + relativedelta(days=3, hour=14, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_caballero')})]"/>
+    </record>
+    <record id="cita_prox_5" model="bella.cita">
+        <field name="cliente_id" ref="cliente_rosa"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(days=1, weekday=0) + relativedelta(days=5, hour=12, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_peinado_fiesta')})]"/>
+        <field name="nota">Cumpleaños de 15 de su nieta.</field>
+    </record>
+
+    <!-- ============ Ventas de mostrador ============ -->
+    <record id="venta_01" model="bella.venta">
+        <field name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=15, minute=20, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="linea_ids" eval="[Command.create({'producto_id': ref('producto_shampoo'), 'cantidad': 1}),
+                                       Command.create({'producto_id': ref('producto_protector_termico'), 'cantidad': 1})]"/>
+    </record>
+    <record id="venta_02" model="bella.venta">
+        <field name="cliente_id" ref="cliente_valeria"/>
+        <field name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=5, hour=20, minute=10, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="linea_ids" eval="[Command.create({'producto_id': ref('producto_mascarilla'), 'cantidad': 1})]"/>
+    </record>
+    <record id="venta_03" model="bella.venta">
+        <field name="cliente_id" ref="cliente_maria_jose"/>
+        <field name="linea_ids" eval="[Command.create({'producto_id': ref('producto_aceite_argan'), 'cantidad': 1}),
+                                       Command.create({'producto_id': ref('producto_esmalte'), 'cantidad': 2})]"/>
+    </record>
+
+    <!-- ============ Cobros de la semana pasada (factura, pago y stock), en orden de fecha ============ -->
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_01')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_02')]"/>
+        <value>tarjeta</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_03')]"/>
+        <value>transferencia</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=1)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_05')]"/>
+        <value>tarjeta</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_04')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.venta" name="_bella_cobrar">
+        <value eval="[ref('venta_01')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=3)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_07')]"/>
+        <value>tarjeta</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=4)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_08')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=4)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_09')]"/>
+        <value>transferencia</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_10')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.venta" name="_bella_cobrar">
+        <value eval="[ref('venta_02')]"/>
+        <value>tarjeta</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+    </function>
+</odoo>

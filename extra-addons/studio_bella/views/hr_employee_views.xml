@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_bella" model="ir.ui.view">
+        <field name="name">hr.employee.form.studio_bella</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Studio Bella" name="studio_bella">
+                    <group>
+                        <group>
+                            <field name="bella_estilista"/>
+                            <field name="bella_servicio_ids" widget="many2many_tags" options="{'no_create': True}"
+                                   invisible="not bella_estilista"/>
+                        </group>
+                    </group>
+                    <p class="text-muted" invisible="not bella_estilista">
+                        Las citas solo se pueden dar dentro de su horario de trabajo
+                        (pestaña "Información de trabajo").
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_bella_estilistas" model="ir.actions.act_window">
+        <field name="name">Estilistas</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('bella_estilista', '=', True)]</field>
+        <field name="context" eval="{'default_bella_estilista': True, 'default_resource_calendar_id': ref('horario_studio_bella')}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue a los estilistas</p>
+            <p>Cada estilista tiene su horario de trabajo y la lista de servicios que hace.</p>
+        </field>
+    </record>
+
+    <!-- Feriados y días de cierre: la agenda no deja dar turnos en esos días. -->
+    <record id="view_resource_calendar_form_bella" model="ir.ui.view">
+        <field name="name">resource.calendar.form.studio_bella</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+        <field name="arch" type="xml">
+            <page name="working_hours" position="after">
+                <page string="Feriados y cierres" name="bella_feriados">
+                    <field name="global_leave_ids">
+                        <list editable="bottom">
+                            <field name="name" string="Motivo"/>
+                            <field name="date_from" string="Desde"/>
+                            <field name="date_to" string="Hasta"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="action_bella_horarios" model="ir.actions.act_window">
+        <field name="name">Horarios de atención</field>
+        <field name="res_model">resource.calendar</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

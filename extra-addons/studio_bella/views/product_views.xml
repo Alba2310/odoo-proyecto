@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Duración e insumos en la ficha del servicio -->
+    <record id="view_product_template_form_bella" model="ir.ui.view">
+        <field name="name">product.template.form.studio_bella</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Studio Bella" name="studio_bella" invisible="type != 'service' and not is_storable">
+                    <group invisible="type != 'service'">
+                        <group>
+                            <field name="bella_duracion"/>
+                        </group>
+                    </group>
+                    <separator string="Insumos que usa cada vez" invisible="type != 'service'"/>
+                    <field name="bella_insumo_ids" invisible="type != 'service'">
+                        <list editable="bottom">
+                            <field name="producto_id" options="{'no_create': True}"/>
+                            <field name="cantidad"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
+                        </list>
+                    </field>
+                    <group invisible="not is_storable">
+                        <group string="Reposición">
+                            <field name="bella_stock_minimo"/>
+                            <field name="bella_stock_maximo"/>
+                            <field name="bella_por_reponer" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="not bella_por_reponer">
+                        El stock está por debajo del mínimo: hay que reponer.
+                    </div>
+                    <p class="text-muted" invisible="not is_storable">
+                        Cuando el stock baja del mínimo, aparece una actividad "Reponer stock" y el producto
+                        se puede pedir al proveedor desde Studio Bella › Compras › Reponer stock.
+                        Los proveedores y sus precios se cargan en la pestaña Compras.
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bella_servicio_list" model="ir.ui.view">
+        <field name="name">product.template.list.bella.servicio</field>
+        <field name="model">product.template</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <list string="Servicios">
+                <field name="name"/>
+                <field name="categ_id"/>
+                <field name="bella_duracion"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="list_price" string="Precio" widget="monetary"/>
+                <field name="taxes_id" widget="many2many_tags" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_producto_list" model="ir.ui.view">
+        <field name="name">product.template.list.bella.producto</field>
+        <field name="model">product.template</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <list string="Productos" decoration-danger="bella_por_reponer or (is_storable and qty_available &lt;= 0)">
+                <field name="name"/>
+                <field name="categ_id"/>
+                <field name="sale_ok" string="Se vende"/>
+                <field name="is_storable" column_invisible="True"/>
+                <field name="bella_por_reponer" column_invisible="True"/>
+                <field name="qty_available" string="En stock"/>
+                <field name="bella_stock_minimo" string="Mínimo" optional="show"/>
+                <field name="uom_id" groups="uom.group_uom" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="cost_currency_id" column_invisible="True"/>
+                <field name="standard_price" string="Costo" optional="show" widget="monetary"
+                       options="{'currency_field': 'cost_currency_id'}"/>
+                <field name="list_price" string="Precio de venta" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_product_template_search_bella" model="ir.ui.view">
+        <field name="name">product.template.search.studio_bella</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="bella_por_reponer" string="Por reponer" domain="[('bella_por_reponer', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_bella_servicios" model="ir.actions.act_window">
+        <field name="name">Servicios</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain" eval="[('categ_id', 'child_of', ref('categoria_servicios'))]"/>
+        <field name="context" eval="{'default_type': 'service', 'default_categ_id': ref('categoria_servicios')}"/>
+        <field name="view_ids" eval="[Command.clear(),
+                                      Command.create({'view_mode': 'list', 'view_id': ref('view_bella_servicio_list')}),
+                                      Command.create({'view_mode': 'kanban'}),
+                                      Command.create({'view_mode': 'form'})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue los servicios de la peluquería</p>
+            <p>Precio con IVA incluido, duración (con eso se calcula el fin de la cita) y los insumos
+                que se gastan cada vez, que se descuentan del stock al cobrar.</p>
+        </field>
+    </record>
+
+    <record id="action_bella_productos" model="ir.actions.act_window">
+        <field name="name">Productos</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain" eval="[('categ_id', 'child_of', ref('categoria_productos'))]"/>
+        <field name="context" eval="{'default_type': 'consu', 'default_is_storable': True, 'default_categ_id': ref('categoria_productos')}"/>
+        <field name="view_ids" eval="[Command.clear(),
+                                      Command.create({'view_mode': 'kanban'}),
+                                      Command.create({'view_mode': 'list', 'view_id': ref('view_bella_producto_list')}),
+                                      Command.create({'view_mode': 'form'})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue los productos de la peluquería</p>
+            <p>Los de reventa (shampoo, acondicionador, ceras...) se venden en las citas y en el mostrador.
+                Los de uso profesional (tintes, oxidantes...) se desmarcan de "Se puede vender" y se usan como insumos.</p>
+        </field>
+    </record>
+</odoo>

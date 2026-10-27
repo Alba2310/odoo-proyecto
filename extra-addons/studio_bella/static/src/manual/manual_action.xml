@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="studio_bella.ManualStudioBella">
+        <div class="o_action d-flex flex-column h-100">
+            <div class="d-flex align-items-center justify-content-between gap-2 px-3 py-2 border-bottom bg-view">
+                <span class="fs-4">Manual de usuario</span>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-secondary" t-att-href="url" target="_blank">
+                        <i class="fa fa-external-link me-1"/>Abrir en otra pestaña
+                    </a>
+                    <button class="btn btn-primary" t-on-click="imprimir">
+                        <i class="fa fa-print me-1"/>Imprimir
+                    </button>
+                </div>
+            </div>
+            <iframe t-ref="marco" t-att-src="url" class="flex-grow-1 w-100 border-0"
+                    title="Manual de usuario de Studio Bella"/>
+        </div>
+    </t>
+</templates>

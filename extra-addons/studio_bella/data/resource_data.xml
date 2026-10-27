@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Horario de atención. Se asigna a cada estilista; la agenda no deja dar turnos fuera de él. -->
+        <record id="horario_studio_bella" model="resource.calendar">
+            <field name="name">Studio Bella: lunes a sábado de 8:00 a 19:00</field>
+            <field name="tz">America/Asuncion</field>
+            <field name="hours_per_day">11</field>
+            <field name="attendance_ids" eval="[Command.clear(),
+                Command.create({'name': 'Lunes mañana', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Lunes tarde', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 19, 'day_period': 'afternoon'}),
+                Command.create({'name': 'Martes mañana', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Martes tarde', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 19, 'day_period': 'afternoon'}),
+                Command.create({'name': 'Miércoles mañana', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Miércoles tarde', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 19, 'day_period': 'afternoon'}),
+                Command.create({'name': 'Jueves mañana', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Jueves tarde', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 19, 'day_period': 'afternoon'}),
+                Command.create({'name': 'Viernes mañana', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Viernes tarde', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 19, 'day_period': 'afternoon'}),
+                Command.create({'name': 'Sábado mañana', 'dayofweek': '5', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Sábado tarde', 'dayofweek': '5', 'hour_from': 12, 'hour_to': 19, 'day_period': 'afternoon'}),
+            ]"/>
+        </record>
+    </data>
+</odoo>

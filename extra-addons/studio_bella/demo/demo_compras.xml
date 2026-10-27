@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============ Proveedores ============ -->
+    <record id="proveedor_capilar" model="res.partner">
+        <field name="name">Distribuidora Capilar S.A.</field>
+        <field name="is_company" eval="True"/>
+        <field name="phone">021 450 300</field>
+        <field name="email">ventas@capilar.example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="supplier_rank">1</field>
+    </record>
+    <record id="proveedor_belleza_total" model="res.partner">
+        <field name="name">Belleza Total Importaciones S.R.L.</field>
+        <field name="is_company" eval="True"/>
+        <field name="phone">021 580 912</field>
+        <field name="email">pedidos@bellezatotal.example.com</field>
+        <field name="city">San Lorenzo</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="supplier_rank">1</field>
+    </record>
+
+    <!-- ============ Proveedor, precio de compra y stock mínimo de cada producto ============
+         Los productos cargados antes de instalar Compras no tienen la ruta "Comprar": se les agrega
+         para que se puedan pedir desde Reponer stock. -->
+    <record id="insumo_tinte" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_capilar'), 'price': 28000, 'delay': 3})]"/>
+        <field name="bella_stock_minimo">10</field>
+        <field name="bella_stock_maximo">30</field>
+    </record>
+    <record id="insumo_oxidante" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_capilar'), 'price': 45000, 'delay': 3})]"/>
+        <field name="bella_stock_minimo">3</field>
+        <field name="bella_stock_maximo">8</field>
+    </record>
+    <record id="insumo_decolorante" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_capilar'), 'price': 120000, 'delay': 3})]"/>
+        <field name="bella_stock_minimo">3</field>
+        <field name="bella_stock_maximo">6</field>
+    </record>
+    <record id="insumo_keratina" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_capilar'), 'price': 380000, 'delay': 5})]"/>
+        <field name="bella_stock_minimo">2</field>
+        <field name="bella_stock_maximo">4</field>
+    </record>
+    <record id="insumo_mascarilla" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_capilar'), 'price': 150000, 'delay': 3})]"/>
+        <field name="bella_stock_minimo">1</field>
+        <field name="bella_stock_maximo">3</field>
+    </record>
+    <record id="insumo_esmalte_semi" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 45000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">5</field>
+        <field name="bella_stock_maximo">12</field>
+    </record>
+    <record id="producto_shampoo" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 48000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">6</field>
+        <field name="bella_stock_maximo">15</field>
+    </record>
+    <record id="producto_acondicionador" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 48000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">6</field>
+        <field name="bella_stock_maximo">15</field>
+    </record>
+    <record id="producto_mascarilla" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 65000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">4</field>
+        <field name="bella_stock_maximo">10</field>
+    </record>
+    <record id="producto_aceite_argan" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 52000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">3</field>
+        <field name="bella_stock_maximo">8</field>
+    </record>
+    <record id="producto_protector_termico" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 40000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">3</field>
+        <field name="bella_stock_maximo">10</field>
+    </record>
+    <record id="producto_cera" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 32000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">5</field>
+        <field name="bella_stock_maximo">15</field>
+    </record>
+    <record id="producto_esmalte" model="product.product">
+        <field name="route_ids" eval="[Command.link(ref('purchase_stock.route_warehouse0_buy'))]"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('proveedor_belleza_total'), 'price': 12000, 'delay': 2})]"/>
+        <field name="bella_stock_minimo">10</field>
+        <field name="bella_stock_maximo">30</field>
+    </record>
+
+    <!-- ============ Pedidos a proveedores ============ -->
+    <!-- Pedido de la semana pasada, ya recibido y con la factura del proveedor en borrador -->
+    <record id="compra_01" model="purchase.order">
+        <field name="partner_id" ref="proveedor_belleza_total"/>
+        <field name="partner_ref">FAC 001-001-0004521</field>
+        <field name="date_order" eval="(DateTime.today() + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=14, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="order_line" eval="[Command.create({'product_id': ref('producto_shampoo'), 'product_qty': 6, 'price_unit': 48000}),
+                                        Command.create({'product_id': ref('producto_acondicionador'), 'product_qty': 6, 'price_unit': 48000}),
+                                        Command.create({'product_id': ref('producto_esmalte'), 'product_qty': 12, 'price_unit': 12000})]"/>
+    </record>
+    <function model="purchase.order" name="button_confirm">
+        <value eval="[ref('compra_01')]"/>
+    </function>
+    <function model="stock.picking" name="button_validate" context="{'skip_sms': True}">
+        <function model="stock.picking" name="search" eval="[[('purchase_id', '=', ref('compra_01'))]]"/>
+    </function>
+    <function model="purchase.order" name="action_create_invoice">
+        <value eval="[ref('compra_01')]"/>
+    </function>
+
+    <!-- Pedido en borrador para reponer los insumos que están por terminarse -->
+    <record id="compra_02" model="purchase.order">
+        <field name="partner_id" ref="proveedor_capilar"/>
+        <field name="order_line" eval="[Command.create({'product_id': ref('insumo_keratina'), 'product_qty': 2, 'price_unit': 380000}),
+                                        Command.create({'product_id': ref('insumo_tinte'), 'product_qty': 12, 'price_unit': 28000})]"/>
+    </record>
+
+    <!-- Pedido confirmado que todavía no llegó: su recepción espera que se valide -->
+    <record id="compra_03" model="purchase.order">
+        <field name="partner_id" ref="proveedor_belleza_total"/>
+        <field name="order_line" eval="[Command.create({'product_id': ref('producto_protector_termico'), 'product_qty': 8, 'price_unit': 40000}),
+                                        Command.create({'product_id': ref('producto_aceite_argan'), 'product_qty': 3, 'price_unit': 52000})]"/>
+    </record>
+    <function model="purchase.order" name="button_confirm">
+        <value eval="[ref('compra_03')]"/>
+    </function>
+
+    <!-- Avisos de reposición de los productos que ya están por debajo del mínimo -->
+    <function model="product.template" name="_bella_avisar_reposicion"/>
+</odoo>

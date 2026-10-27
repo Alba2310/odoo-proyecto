@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_recordatorio_cita" model="mail.template">
+            <field name="name">Studio Bella: recordatorio de cita</field>
+            <field name="model_id" ref="model_bella_cita"/>
+            <field name="subject">Recordatorio de tu turno en {{ object.company_id.name }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.cliente_id.id }}</field>
+            <field name="lang">{{ object.cliente_id.lang }}</field>
+            <field name="description">Se envía al cliente el día antes de su cita (tarea programada diaria)</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Hola <t t-out="object.cliente_id.name or ''">María</t>,</p>
+    <p>Te recordamos tu turno en <t t-out="object.company_id.name or ''">Studio Bella</t>:</p>
+    <ul>
+        <li>Cuándo: <strong t-out="object.turno_texto or ''">martes 28 de octubre a las 09:00</strong></li>
+        <li t-if="object.servicios_texto">Servicios: <t t-out="object.servicios_texto">Corte de dama + Brushing</t></li>
+        <li>Te atiende: <t t-out="object.estilista_id.name or ''">Lorena</t></li>
+    </ul>
+    <p>
+        Si no podés venir, avisanos respondiendo este correo<t t-if="object.company_id.phone"> o llamando
+        al <t t-out="object.company_id.phone">0981 000 000</t></t>, así le damos el lugar a otra persona.
+    </p>
+    <p>¡Te esperamos!<br/><t t-out="object.company_id.name or ''">Studio Bella</t></p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

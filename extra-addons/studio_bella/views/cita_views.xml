@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bella_cita_calendar" model="ir.ui.view">
+        <field name="name">bella.cita.calendar</field>
+        <field name="model">bella.cita</field>
+        <field name="arch" type="xml">
+            <calendar string="Agenda" date_start="fecha_inicio" date_stop="fecha_fin" color="estilista_id"
+                      mode="week" scales="day,week,month" quick_create="0">
+                <field name="cliente_id"/>
+                <field name="telefono" widget="phone"/>
+                <field name="servicios_texto"/>
+                <field name="estilista_id" filters="1" avatar_field="avatar_128"/>
+                <field name="estado"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="total" widget="monetary"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_bella_cita_kanban" model="ir.ui.view">
+        <field name="name">bella.cita.kanban</field>
+        <field name="model">bella.cita</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="estado" default_order="fecha_inicio" quick_create="false"
+                    group_create="false" group_delete="false" group_edit="false">
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <field name="dia_texto" class="text-muted me-1"/>
+                                <field name="horario_texto" class="fw-bold"/>
+                            </div>
+                            <field name="estilista_id" widget="many2one_avatar_employee"/>
+                        </div>
+                        <field name="cliente_id" class="fw-bold fs-5"/>
+                        <field name="servicios_texto" class="text-muted"/>
+                        <footer>
+                            <field name="telefono" class="text-muted"/>
+                            <field name="total" widget="monetary" class="ms-auto fw-bold"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_bella_cita_list" model="ir.ui.view">
+        <field name="name">bella.cita.list</field>
+        <field name="model">bella.cita</field>
+        <field name="arch" type="xml">
+            <list string="Citas" decoration-muted="estado in ('cancelada', 'no_asistio')">
+                <field name="name" optional="show"/>
+                <field name="fecha_inicio"/>
+                <field name="horario_texto" optional="hide"/>
+                <field name="cliente_id"/>
+                <field name="telefono" optional="hide"/>
+                <field name="servicios_texto"/>
+                <field name="estilista_id" widget="many2one_avatar_employee"/>
+                <field name="duracion" optional="hide" sum="Total"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total" sum="Total"/>
+                <field name="metodo_pago" optional="hide"/>
+                <field name="estado" widget="badge"
+                       decoration-info="estado == 'confirmada'"
+                       decoration-warning="estado == 'en_atencion'"
+                       decoration-success="estado == 'cobrada'"
+                       decoration-danger="estado == 'no_asistio'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_cita_form" model="ir.ui.view">
+        <field name="name">bella.cita.form</field>
+        <field name="model">bella.cita</field>
+        <field name="arch" type="xml">
+            <form string="Cita">
+                <header>
+                    <button name="action_confirmar" string="Confirmar" type="object" class="btn-primary"
+                            invisible="estado != 'agendada' or not id"/>
+                    <button name="action_iniciar" string="Empezar a atender" type="object" class="btn-primary"
+                            invisible="estado != 'confirmada'"/>
+                    <button name="action_iniciar" string="Empezar a atender" type="object"
+                            invisible="estado != 'agendada' or not id"/>
+                    <button name="action_cobrar" string="Cobrar" type="object" class="btn-primary"
+                            invisible="estado != 'en_atencion'"/>
+                    <button name="action_cobrar" string="Cobrar" type="object"
+                            invisible="estado not in ('agendada', 'confirmada') or not id"/>
+                    <field name="whatsapp_url" invisible="1"/>
+                    <field name="cliente_email" invisible="1"/>
+                    <button name="action_whatsapp" string="Recordatorio por WhatsApp" type="object" icon="fa-whatsapp"
+                            invisible="estado not in ('agendada', 'confirmada') or not id or not whatsapp_url"/>
+                    <button name="action_enviar_recordatorio" string="Recordatorio por correo" type="object"
+                            icon="fa-envelope-o"
+                            invisible="estado not in ('agendada', 'confirmada') or not id or not cliente_email"/>
+                    <button name="action_no_asistio" string="No vino" type="object"
+                            invisible="estado not in ('agendada', 'confirmada') or not id"/>
+                    <button name="action_cancelar" string="Cancelar cita" type="object"
+                            invisible="estado not in ('agendada', 'confirmada', 'en_atencion') or not id"/>
+                    <button name="action_reagendar" string="Volver a agendar" type="object"
+                            invisible="estado not in ('cancelada', 'no_asistio')"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="agendada,confirmada,en_atencion,cobrada"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_factura" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not factura_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Factura</span>
+                            </div>
+                        </button>
+                        <button name="action_ver_movimientos" type="object" class="oe_stat_button" icon="fa-cubes"
+                                invisible="not movimiento_count">
+                            <field name="movimiento_count" widget="statinfo" string="Mov. de stock"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Cobrada" bg_color="text-bg-success" invisible="estado != 'cobrada'"/>
+                    <widget name="web_ribbon" title="No vino" bg_color="text-bg-warning" invisible="estado != 'no_asistio'"/>
+                    <widget name="web_ribbon" title="Cancelada" bg_color="text-bg-danger" invisible="estado != 'cancelada'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Cliente">
+                            <field name="cliente_id" readonly="estado not in ('agendada', 'confirmada', 'en_atencion')"
+                                   context="{'default_customer_rank': 1}"/>
+                            <field name="telefono" widget="phone"/>
+                        </group>
+                        <group string="Turno">
+                            <field name="estilista_id" widget="many2one_avatar_employee" options="{'no_create': True}"
+                                   readonly="estado not in ('agendada', 'confirmada', 'en_atencion')"/>
+                            <field name="fecha_inicio" readonly="estado not in ('agendada', 'confirmada')"/>
+                            <field name="fecha_fin" readonly="estado not in ('agendada', 'confirmada', 'en_atencion')"/>
+                            <field name="duracion"/>
+                            <label for="recordatorio_enviado" invisible="estado not in ('agendada', 'confirmada')"/>
+                            <div class="d-flex gap-2" invisible="estado not in ('agendada', 'confirmada')">
+                                <field name="recordatorio_enviado" nolabel="1"/>
+                                <field name="recordatorio_canal" nolabel="1" invisible="not recordatorio_canal"/>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Servicios" name="servicios">
+                            <field name="servicio_ids" readonly="estado not in ('agendada', 'confirmada', 'en_atencion')">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="servicio_id" options="{'no_create': True}"/>
+                                    <field name="duracion" sum="Total"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="precio" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Productos vendidos" name="productos">
+                            <field name="producto_ids" readonly="estado not in ('agendada', 'confirmada', 'en_atencion')">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="producto_id" options="{'no_create': True}"/>
+                                    <field name="stock_disponible" decoration-danger="stock_disponible &lt; cantidad"/>
+                                    <field name="cantidad"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota" placeholder="Preferencias del cliente, fórmula de color, alergias..."/>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group string="Cobro" invisible="not factura_id">
+                            <field name="metodo_pago"/>
+                            <field name="factura_id"/>
+                            <field name="estado_pago"/>
+                        </group>
+                        <group class="oe_subtotal_footer">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="total_servicios"/>
+                            <field name="total_productos"/>
+                            <field name="total" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bella_cita_search" model="ir.ui.view">
+        <field name="name">bella.cita.search</field>
+        <field name="model">bella.cita</field>
+        <field name="arch" type="xml">
+            <search string="Buscar citas">
+                <field name="cliente_id"/>
+                <field name="estilista_id"/>
+                <field name="name"/>
+                <field name="servicio_ids" string="Servicio" filter_domain="[('servicio_ids.servicio_id', 'ilike', self)]"/>
+                <filter name="hoy" string="Hoy"
+                        domain="[('fecha_inicio', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                                 ('fecha_inicio', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter name="manana" string="Mañana"
+                        domain="[('fecha_inicio', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                                 ('fecha_inicio', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=2), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter name="proximos_3_dias" string="Próximos 3 días"
+                        domain="[('fecha_inicio', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                                 ('fecha_inicio', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=4), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <separator/>
+                <filter name="recordatorio_pendiente" string="Recordatorio pendiente"
+                        domain="[('recordatorio_enviado', '=', False)]"/>
+                <separator/>
+                <filter name="por_cobrar" string="Por atender o cobrar"
+                        domain="[('estado', 'in', ('agendada', 'confirmada', 'en_atencion'))]"/>
+                <filter name="cobradas" string="Cobradas" domain="[('estado', '=', 'cobrada')]"/>
+                <filter name="activas" string="Sin canceladas ni ausentes"
+                        domain="[('estado', 'not in', ('cancelada', 'no_asistio'))]"/>
+                <separator/>
+                <filter name="fecha" string="Fecha" date="fecha_inicio"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_estilista" string="Estilista" context="{'group_by': 'estilista_id'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                    <filter name="group_dia" string="Día" context="{'group_by': 'fecha_inicio:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_cita" model="ir.actions.act_window">
+        <field name="name">Agenda</field>
+        <field name="res_model">bella.cita</field>
+        <field name="view_mode">calendar,list,kanban,form</field>
+        <field name="context">{'search_default_activas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Agende la primera cita</p>
+            <p>Haga clic en un horario del calendario, elija el cliente, el estilista y los servicios.
+                El sistema no deja dar dos turnos al mismo estilista a la misma hora ni fuera de su horario.</p>
+        </field>
+    </record>
+
+    <!-- Recordatorios: los turnos de mañana, con un botón para mandar el aviso por WhatsApp o por correo -->
+    <record id="view_bella_cita_recordatorio_list" model="ir.ui.view">
+        <field name="name">bella.cita.list.recordatorios</field>
+        <field name="model">bella.cita</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <list string="Recordatorios" create="false" default_order="fecha_inicio"
+                  decoration-muted="recordatorio_enviado">
+                <field name="dia_texto"/>
+                <field name="horario_texto"/>
+                <field name="cliente_id"/>
+                <field name="telefono"/>
+                <field name="servicios_texto"/>
+                <field name="estilista_id" widget="many2one_avatar_employee"/>
+                <field name="recordatorio_enviado" string="Enviado"/>
+                <field name="recordatorio_canal" string="Por"/>
+                <field name="whatsapp_url" column_invisible="True"/>
+                <field name="cliente_email" column_invisible="True"/>
+                <button name="action_whatsapp" type="object" string="WhatsApp" icon="fa-whatsapp"
+                        invisible="not whatsapp_url"/>
+                <button name="action_enviar_recordatorio" type="object" string="Correo" icon="fa-envelope-o"
+                        invisible="not cliente_email"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_bella_recordatorios" model="ir.actions.act_window">
+        <field name="name">Recordatorios</field>
+        <field name="res_model">bella.cita</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_bella_cita_recordatorio_list"/>
+        <field name="domain">[('estado', 'in', ('agendada', 'confirmada'))]</field>
+        <field name="context">{'search_default_manana': 1, 'search_default_recordatorio_pendiente': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No quedan recordatorios por mandar para mañana</p>
+            <p>Los clientes con correo lo reciben solos a las 10:00. A los demás se les manda por WhatsApp desde
+                esta lista: el botón abre WhatsApp con el mensaje escrito y solo hay que tocar Enviar.</p>
+        </field>
+    </record>
+
+    <record id="action_bella_cita_hoy" model="ir.actions.act_window">
+        <field name="name">Citas de hoy</field>
+        <field name="res_model">bella.cita</field>
+        <field name="view_mode">kanban,list,calendar,form</field>
+        <field name="context">{'search_default_hoy': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay citas para hoy</p>
+            <p>Las citas del día aparecen acá, ordenadas por hora y separadas por estado.</p>
+        </field>
+    </record>
+</odoo>

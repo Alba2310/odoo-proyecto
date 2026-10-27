@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bella_cobro_wizard_form" model="ir.ui.view">
+        <field name="name">bella.cobro.wizard.form</field>
+        <field name="model">bella.cobro.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cobrar">
+                <field name="cita_id" invisible="1"/>
+                <field name="venta_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <div class="text-center mb-3">
+                    <div class="text-muted">Total a cobrar a <field name="cliente_id" readonly="1" class="d-inline"/></div>
+                    <h1><field name="total" readonly="1"/></h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="metodo_pago" widget="radio"/>
+                        <field name="diario_id" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                    <group invisible="metodo_pago != 'efectivo'">
+                        <field name="monto_recibido"/>
+                        <field name="vuelto" class="fw-bold"/>
+                    </group>
+                </group>
+                <p class="text-muted">
+                    Se emite la factura, se registra el pago y se descuentan del stock los productos vendidos
+                    y los insumos de los servicios.
+                </p>
+                <footer>
+                    <button name="action_cobrar" string="Cobrar" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancelar" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

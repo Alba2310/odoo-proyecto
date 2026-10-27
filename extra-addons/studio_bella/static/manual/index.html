@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de Studio Bella</title>
+<style>
+    :root {
+        --ciruela: #7a2f78;
+        --rosa: #c2457a;
+        --rosa-claro: #fbeff5;
+        --texto: #2b2430;
+        --suave: #6b6370;
+        --borde: #e6dde6;
+        --fondo: #ffffff;
+        --fondo-alt: #faf7fa;
+        --aviso: #fff6e5;
+        --aviso-borde: #e9b44c;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        margin: 0;
+        background: var(--fondo);
+        color: var(--texto);
+        font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    .pagina { display: flex; max-width: 1280px; margin: 0 auto; }
+
+    /* Índice */
+    nav {
+        position: sticky; top: 0; align-self: flex-start;
+        width: 260px; flex: none; height: 100vh; overflow-y: auto;
+        padding: 28px 20px; border-right: 1px solid var(--borde); background: var(--fondo-alt);
+    }
+    nav .marca { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    nav .marca img { width: 40px; height: 40px; }
+    nav .marca strong { font-size: 17px; color: var(--ciruela); }
+    nav ol { list-style: none; margin: 0; padding: 0; counter-reset: indice; }
+    nav li { counter-increment: indice; }
+    nav a {
+        display: block; padding: 5px 8px; border-radius: 6px;
+        color: var(--texto); text-decoration: none; font-size: 14.5px;
+    }
+    nav a::before { content: counter(indice) ". "; color: var(--suave); }
+    nav a:hover { background: var(--rosa-claro); color: var(--ciruela); }
+
+    main { flex: 1; min-width: 0; padding: 40px 48px 80px; max-width: 980px; }
+
+    /* Portada */
+    .portada {
+        display: flex; align-items: center; gap: 24px;
+        padding: 28px 32px; margin-bottom: 36px; border-radius: 16px; color: #fff;
+        background: linear-gradient(135deg, #e47097, var(--ciruela));
+    }
+    .portada img { width: 84px; height: 84px; flex: none; }
+    .portada h1 { margin: 0; font-size: 34px; line-height: 1.2; }
+    .portada p { margin: 6px 0 0; opacity: .92; }
+
+    h2 {
+        margin: 56px 0 14px; padding-bottom: 8px; font-size: 26px;
+        color: var(--ciruela); border-bottom: 2px solid var(--rosa-claro);
+    }
+    h2 .num { color: var(--rosa); margin-right: 6px; }
+    h3 { margin: 30px 0 8px; font-size: 19px; }
+    p, li { max-width: 72ch; }
+    a { color: var(--ciruela); }
+
+    figure { margin: 18px 0 26px; }
+    figure img {
+        display: block; max-width: 100%; height: auto;
+        border: 1px solid var(--borde); border-radius: 10px; box-shadow: 0 6px 22px rgba(60, 20, 60, .10);
+    }
+    figcaption { margin-top: 8px; font-size: 14px; color: var(--suave); }
+
+    /* Pasos numerados */
+    ol.pasos { list-style: none; padding: 0; counter-reset: paso; }
+    ol.pasos > li { position: relative; padding: 2px 0 10px 44px; counter-increment: paso; }
+    ol.pasos > li::before {
+        content: counter(paso); position: absolute; left: 0; top: 0;
+        width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px;
+        background: var(--ciruela); color: #fff; font-weight: 700; font-size: 15px;
+    }
+
+    .boton {
+        display: inline-block; padding: 1px 8px; border-radius: 5px; white-space: nowrap;
+        background: #ede7ee; border: 1px solid #d9cfda; font-size: 14px; font-weight: 600;
+    }
+    .boton.primario { background: var(--ciruela); border-color: var(--ciruela); color: #fff; }
+    .ruta { white-space: nowrap; font-weight: 600; color: var(--ciruela); }
+
+    .nota, .aviso { margin: 18px 0; padding: 12px 16px; border-radius: 10px; border-left: 5px solid; }
+    .nota { background: var(--rosa-claro); border-color: var(--rosa); }
+    .aviso { background: var(--aviso); border-color: var(--aviso-borde); }
+    .nota strong:first-child, .aviso strong:first-child { display: block; margin-bottom: 2px; }
+
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 24px; font-size: 15px; }
+    th, td { padding: 9px 12px; border-bottom: 1px solid var(--borde); text-align: left; vertical-align: top; }
+    th { background: var(--fondo-alt); font-weight: 700; }
+    td.mensaje { font-style: italic; width: 44%; }
+    .si { color: #2f8a4c; font-weight: 700; }
+    .no { color: #b33a3a; font-weight: 700; }
+
+    details { margin: 10px 0; padding: 10px 16px; border: 1px solid var(--borde); border-radius: 10px; }
+    details[open] { background: var(--fondo-alt); }
+    summary { cursor: pointer; font-weight: 600; }
+
+    .pie { margin-top: 60px; color: var(--suave); font-size: 14px; }
+
+    @media (max-width: 900px) {
+        .pagina { display: block; }
+        nav { position: static; width: auto; height: auto; border-right: 0; border-bottom: 1px solid var(--borde); }
+        main { padding: 24px 16px 60px; }
+        .portada { flex-direction: column; text-align: center; padding: 24px 16px; }
+    }
+    @media print {
+        nav { display: none; }
+        main { padding: 0; max-width: none; }
+        h2 { break-before: page; }
+        .portada + h2 { break-before: auto; }
+        figure, table, .nota, .aviso { break-inside: avoid; }
+        figure img { box-shadow: none; }
+        details { border: 0; padding: 0; }
+        a { color: inherit; text-decoration: none; }
+    }
+</style>
+</head>
+<body>
+<div class="pagina">
+
+<nav aria-label="Índice">
+    <div class="marca">
+        <img src="../description/icon.png" alt="">
+        <strong>Studio Bella</strong>
+    </div>
+    <ol>
+        <li><a href="#entrar">Cómo entrar</a></li>
+        <li><a href="#permisos">Quién puede hacer qué</a></li>
+        <li><a href="#agenda">La agenda</a></li>
+        <li><a href="#agendar">Agendar una cita</a></li>
+        <li><a href="#hoy">Citas de hoy</a></li>
+        <li><a href="#productos-cita">Vender productos en la cita</a></li>
+        <li><a href="#cobrar">Cobrar</a></li>
+        <li><a href="#mostrador">Venta de mostrador</a></li>
+        <li><a href="#recordatorios">Recordatorios por correo</a></li>
+        <li><a href="#clientes">Clientes</a></li>
+        <li><a href="#compras">Compras y recepción de mercadería</a></li>
+        <li><a href="#configuracion">Configuración</a></li>
+        <li><a href="#reportes">Reportes</a></li>
+        <li><a href="#problemas">Problemas frecuentes</a></li>
+    </ol>
+</nav>
+
+<main>
+    <header class="portada">
+        <img src="../description/icon.png" alt="Logo de Studio Bella">
+        <div>
+            <h1>Manual de usuario</h1>
+            <p>Sistema de la peluquería Studio Bella, hecho sobre Odoo 18.<br>
+               Para recepción y administración.</p>
+        </div>
+    </header>
+
+    <p>Con este sistema se agendan las citas de cada estilista, se venden productos, se cobra con factura,
+       se avisa a los clientes el día antes de su turno y se compra a los proveedores. Este manual explica cómo hacer cada tarea, paso a paso.
+       Las capturas son de los datos de ejemplo.</p>
+
+    <!-- 1 ============================================================ -->
+    <h2 id="entrar"><span class="num">1.</span>Cómo entrar</h2>
+    <ol class="pasos">
+        <li>Abrí el navegador y entrá a la dirección del sistema. En la computadora donde está instalado es
+            <a href="http://localhost:8069/web/login?db=peluqueria">http://localhost:8069/web/login?db=peluqueria</a>.</li>
+        <li>Escribí tu usuario y tu contraseña y tocá <span class="boton primario">Iniciar sesión</span>.</li>
+        <li>Con el botón de los cuadraditos (arriba a la izquierda) abrís el menú de aplicaciones: elegí
+            <span class="ruta">Studio Bella</span>.</li>
+    </ol>
+    <figure>
+        <img src="img/01-menu-apps.png" alt="Menú de aplicaciones de Odoo abierto, con Studio Bella resaltado">
+        <figcaption>El menú de aplicaciones. Studio Bella tiene su propio ícono y su barra de menús.</figcaption>
+    </figure>
+    <div class="aviso">
+        <strong>¿Te abre otro sistema?</strong>
+        Si en la misma computadora hay otras bases de Odoo, el navegador vuelve a abrir la última que usaste.
+        En la pantalla de inicio de sesión tocá <span class="boton">Base de datos › Seleccionar</span> y elegí
+        <b>peluqueria</b>, o entrá con el enlace de arriba, que ya la elige.
+    </div>
+
+    <h3>Los menús de Studio Bella</h3>
+    <table>
+        <tr><th>Menú</th><th>Para qué sirve</th></tr>
+        <tr><td><span class="ruta">Agenda</span></td><td>El calendario con las citas de todos los estilistas.</td></tr>
+        <tr><td><span class="ruta">Citas de hoy</span></td><td>Las citas del día ordenadas por estado: para recibir, atender y cobrar.</td></tr>
+        <tr><td><span class="ruta">Recordatorios</span></td><td>Los turnos de mañana, para avisarles a los clientes por WhatsApp o por correo.</td></tr>
+        <tr><td><span class="ruta">Ventas de productos</span></td><td>Ventas de mostrador, sin cita.</td></tr>
+        <tr><td><span class="ruta">Compras</span></td><td>Recepción de mercadería; pedidos a proveedores y reposición de stock (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Clientes</span></td><td>Las fichas de los clientes y su historial de citas.</td></tr>
+        <tr><td><span class="ruta">Reportes</span></td><td>Servicios realizados y productos vendidos (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Configuración</span></td><td>Servicios, productos, estilistas y horarios (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Ayuda</span></td><td>Este manual.</td></tr>
+    </table>
+    <figure>
+        <img src="img/22-manual.png" alt="El manual de usuario abierto dentro de Odoo">
+        <figcaption>Este manual, en <span class="ruta">Ayuda › Manual de usuario</span>. Arriba a la derecha están los
+            botones para imprimirlo o abrirlo en otra pestaña.</figcaption>
+    </figure>
+
+    <!-- 2 ============================================================ -->
+    <h2 id="permisos"><span class="num">2.</span>Quién puede hacer qué</h2>
+    <p>Cada usuario tiene uno de estos dos permisos de Studio Bella:</p>
+    <table>
+        <tr><th>Tarea</th><th>Recepción</th><th>Administración</th></tr>
+        <tr><td>Agendar, confirmar, cancelar y mover citas</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Vender productos y cobrar</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Cargar y editar clientes</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Mandar recordatorios por WhatsApp o correo</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Recibir la mercadería de los proveedores</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Hacer pedidos a proveedores y reponer stock</td><td class="no">No</td><td class="si">Sí</td></tr>
+        <tr><td>Ver los reportes</td><td class="no">No</td><td class="si">Sí</td></tr>
+        <tr><td>Cargar servicios, productos, stock y estilistas</td><td class="no">No</td><td class="si">Sí</td></tr>
+        <tr><td>Borrar citas y ventas</td><td class="no">No</td><td class="si">Sí</td></tr>
+    </table>
+    <p>Los permisos se asignan en <span class="ruta">Ajustes › Usuarios</span>: abrí el usuario y, en la sección
+       Studio Bella, elegí <b>Recepción</b> o <b>Administración</b>.</p>
+
+    <!-- 3 ============================================================ -->
+    <h2 id="agenda"><span class="num">3.</span>La agenda</h2>
+    <p>Entrá a <span class="ruta">Studio Bella › Agenda</span>. Cada columna es un día y cada color es un estilista.</p>
+    <figure>
+        <img src="img/02-agenda.png" alt="Agenda semanal con citas de colores por estilista">
+        <figcaption>La semana de trabajo. A la derecha, la lista de estilistas con su color.</figcaption>
+    </figure>
+    <ul>
+        <li><b>Cambiar de semana:</b> con las flechas <span class="boton">←</span> <span class="boton">→</span>;
+            <span class="boton">Hoy</span> vuelve a la semana actual. El calendario chico de la derecha lleva a cualquier fecha.</li>
+        <li><b>Ver por día o por mes:</b> con el botón <span class="boton">Semana ▾</span>.</li>
+        <li><b>Ver solo algunos estilistas:</b> desmarcá en la lista de la derecha los que no quieras ver.</li>
+        <li><b>Ver una cita:</b> hacé clic en ella para ver el resumen (horario, cliente, teléfono, servicios, estilista y estado) y
+            <span class="boton">Editar</span> para abrirla completa.</li>
+        <li><b>Cambiar el horario:</b> arrastrá la cita a otro día u hora. Para que dure más o menos, estirá su borde de abajo.</li>
+    </ul>
+    <figure>
+        <img src="img/03-agenda-resumen.png" alt="Resumen de una cita al hacer clic en la agenda">
+        <figcaption>Al hacer clic en una cita aparece el resumen.</figcaption>
+    </figure>
+    <div class="nota">
+        <strong>La agenda esconde las citas canceladas.</strong>
+        El filtro <b>Sin canceladas ni ausentes</b> de la barra de búsqueda está puesto de entrada. Si querés verlas,
+        quitalo con la <b>✕</b>. Con los botones de arriba a la derecha podés ver las citas como lista o como tarjetas.
+    </div>
+
+    <!-- 4 ============================================================ -->
+    <h2 id="agendar"><span class="num">4.</span>Agendar una cita</h2>
+    <ol class="pasos">
+        <li>En la Agenda, hacé clic en el horario libre (el día y la hora en que viene el cliente). También podés
+            usar el botón <span class="boton primario">Nuevo</span>.</li>
+        <li><b>Cliente:</b> escribí el nombre y elegilo de la lista. Si es nuevo, elegí <b>Crear y editar…</b> y cargá
+            su teléfono y su correo: con el correo le llega el recordatorio.</li>
+        <li><b>Estilista:</b> quién lo va a atender.</li>
+        <li><b>Inicio:</b> la fecha y la hora (si hiciste clic en la agenda, ya está cargada).</li>
+        <li><b>Servicios:</b> en la pestaña Servicios tocá <b>Agregar una línea</b> y elegí el servicio. El precio y la
+            duración se completan solos (se pueden cambiar). Agregá todos los servicios que pidió.</li>
+        <li>El <b>Fin</b> se calcula sumando la duración de los servicios. Guardá con el ícono de la nube, arriba.</li>
+    </ol>
+    <figure>
+        <img src="img/04-cita.png" alt="Formulario de una cita con cliente, estilista, horario y servicios">
+        <figcaption>Una cita confirmada de corte y brushing: 60 + 45 minutos, de 11:00 a 12:45.</figcaption>
+    </figure>
+    <p>En la pestaña <b>Notas</b> se anotan las preferencias del cliente, la fórmula de color o las alergias.</p>
+
+    <h3>Si el sistema no te deja guardar</h3>
+    <p>La agenda controla que no haya errores. Estos son los avisos y qué hacer:</p>
+    <table>
+        <tr><th>Aviso</th><th>Qué significa</th></tr>
+        <tr><td class="mensaje">Camila Ortiz ya tiene la cita CITA/2026/0014 (Lucía Acosta) de 11:00 a 12:45.</td>
+            <td>La estilista está ocupada a esa hora. Elegí otro horario u otra estilista.</td></tr>
+        <tr><td class="mensaje">Diego Ramírez no trabaja el domingo 1/11 de 10:00 a 10:30.</td>
+            <td>Es fuera del horario de atención (lunes a sábado de 8:00 a 19:00), un feriado o un día de cierre.</td></tr>
+        <tr><td class="mensaje">Diego Ramírez no hace: Manicura.</td>
+            <td>Ese estilista no hace ese servicio. Elegí a otro.</td></tr>
+        <tr><td class="mensaje">La cita tiene que terminar después de empezar.</td>
+            <td>Revisá el Inicio y el Fin.</td></tr>
+    </table>
+    <div class="nota">
+        <strong>Las citas canceladas liberan el horario.</strong>
+        Si un cliente cancela o no viene, ese turno queda libre para otra persona.
+    </div>
+
+    <!-- 5 ============================================================ -->
+    <h2 id="hoy"><span class="num">5.</span>Citas de hoy</h2>
+    <p>En <span class="ruta">Studio Bella › Citas de hoy</span> están las citas del día en columnas, según en qué
+       paso están: <b>Agendada → Confirmada → En atención → Cobrada</b>. Cada tarjeta muestra el horario, el cliente,
+       los servicios, el teléfono, el total y la inicial del estilista.</p>
+    <figure>
+        <img src="img/06-citas-de-hoy.png" alt="Tablero de citas de hoy en columnas por estado">
+        <figcaption>El tablero del día. Para abrir una cita, hacé clic en la tarjeta.</figcaption>
+    </figure>
+    <p>Dentro de la cita, los botones de arriba cambian su estado:</p>
+    <table>
+        <tr><th>Botón</th><th>Cuándo usarlo</th></tr>
+        <tr><td><span class="boton">Confirmar</span></td><td>El cliente confirmó que viene.</td></tr>
+        <tr><td><span class="boton">Empezar a atender</span></td><td>El cliente llegó y se lo está atendiendo.</td></tr>
+        <tr><td><span class="boton primario">Cobrar</span></td><td>Terminó el trabajo: ver <a href="#cobrar">Cobrar</a>.</td></tr>
+        <tr><td><span class="boton">Recordatorio por WhatsApp</span></td><td>Avisarle su turno por WhatsApp: ver <a href="#recordatorios">Recordatorios</a>.</td></tr>
+        <tr><td><span class="boton">Recordatorio por correo</span></td><td>Mandarle ahora el correo con su turno (solo si tiene correo cargado).</td></tr>
+        <tr><td><span class="boton">No vino</span></td><td>El cliente faltó. El horario queda libre.</td></tr>
+        <tr><td><span class="boton">Cancelar cita</span></td><td>El cliente avisó que no viene. El horario queda libre.</td></tr>
+        <tr><td><span class="boton">Volver a agendar</span></td><td>Reactivar una cita cancelada o en la que no vino.</td></tr>
+    </table>
+    <div class="nota">
+        <strong>A "Cobrada" se llega solo cobrando.</strong>
+        Las tarjetas se pueden arrastrar entre columnas, pero no a "Cobrada": para eso está el botón Cobrar,
+        que emite la factura. Una cita cobrada ya no cambia.
+    </div>
+
+    <!-- 6 ============================================================ -->
+    <h2 id="productos-cita"><span class="num">6.</span>Vender productos en la cita</h2>
+    <p>Si el cliente se lleva un producto (shampoo, mascarilla, cera…), cargalo en la misma cita y se cobra
+       todo junto, en una sola factura.</p>
+    <ol class="pasos">
+        <li>En la cita, abrí la pestaña <b>Productos vendidos</b> y tocá <b>Agregar una línea</b>.</li>
+        <li>Elegí el producto y la cantidad. El precio se completa solo.</li>
+        <li>La columna <b>En stock</b> muestra cuántos hay en el depósito. Si se pone en rojo, no alcanza.</li>
+    </ol>
+    <figure>
+        <img src="img/05-cita-productos.png" alt="Pestaña Productos vendidos de una cita con shampoo y acondicionador">
+        <figcaption>Shampoo y acondicionador vendidos en una cita de corte y brushing.</figcaption>
+    </figure>
+    <p>Solo aparecen los productos de reventa. Los de uso profesional (tintes, oxidantes, keratina) no se venden:
+       se descuentan solos cuando se cobra un servicio que los usa.</p>
+
+    <!-- 7 ============================================================ -->
+    <h2 id="cobrar"><span class="num">7.</span>Cobrar</h2>
+    <ol class="pasos">
+        <li>En la cita, tocá <span class="boton primario">Cobrar</span>.</li>
+        <li>Elegí la <b>forma de pago</b>: Efectivo, Tarjeta o Transferencia / QR. El <b>diario</b> se elige solo:
+            el efectivo va a la caja y la tarjeta y la transferencia, al banco.</li>
+        <li>Si paga en efectivo, escribí en <b>Efectivo recibido</b> con cuánto paga y el sistema calcula el <b>vuelto</b>.</li>
+        <li>Tocá <span class="boton primario">Cobrar</span>.</li>
+    </ol>
+    <figure>
+        <img src="img/07-cobrar.png" alt="Ventana de cobro con total, forma de pago, efectivo recibido y vuelto">
+        <figcaption>Un arreglo de barba de 35.000 ₲ pagado con 50.000 ₲: el vuelto es 15.000 ₲.</figcaption>
+    </figure>
+    <p>Al cobrar, el sistema hace todo esto de una vez:</p>
+    <ul>
+        <li>Emite la <b>factura</b> con el IVA incluido en el precio y la deja <b>pagada</b>.</li>
+        <li>Descuenta del stock los <b>productos vendidos</b> y los <b>insumos</b> de los servicios
+            (por ejemplo, el tinte y el oxidante de una tintura).</li>
+        <li>La cita pasa a <b>Cobrada</b>. Arriba aparecen los botones <span class="boton">Factura</span>
+            y <span class="boton">Mov. de stock</span>.</li>
+    </ul>
+    <figure>
+        <img src="img/08-cita-cobrada.png" alt="Cita cobrada con la cinta verde Cobrada y los botones Factura y Mov. de stock">
+        <figcaption>Una cita cobrada.</figcaption>
+    </figure>
+    <h3>Imprimir o mandar la factura</h3>
+    <p>Tocá <span class="boton">Factura</span> en la cita. En la factura, <span class="boton primario">Imprimir</span>
+       la descarga en PDF y <span class="boton primario">Enviar</span> se la manda al cliente por correo.</p>
+    <figure>
+        <img src="img/09-factura.png" alt="Factura pagada con la cita, el servicio y el IVA 10 %">
+        <figcaption>La factura de la cita: el IVA 10 % ya está incluido en el precio.</figcaption>
+    </figure>
+    <h3>Si no te deja cobrar</h3>
+    <table>
+        <tr><th>Aviso</th><th>Qué hacer</th></tr>
+        <tr><td class="mensaje">No hay stock suficiente para cobrar: • Shampoo reparador 300 ml: se venden 2 y hay 1</td>
+            <td>En el sistema no hay tantos. Pedile a Administración que corrija el stock
+                (<a href="#productos">Productos y stock</a>) o quitá el producto de la cita.</td></tr>
+        <tr><td class="mensaje">El efectivo recibido es menor que el total a cobrar.</td>
+            <td>Revisá el monto que escribiste.</td></tr>
+        <tr><td class="mensaje">Cargue los servicios realizados antes de cobrar la cita.</td>
+            <td>La cita no tiene servicios ni productos.</td></tr>
+    </table>
+    <div class="nota">
+        <strong>Los insumos no frenan el cobro.</strong>
+        Si falta tinte, oxidante u otro insumo, el sistema cobra igual (el cliente ya fue atendido) y deja escrito en
+        el historial de la cita "Quedó stock negativo de: …" para que Administración revise el inventario.
+    </div>
+    <div class="aviso">
+        <strong>¿Te equivocaste después de cobrar?</strong>
+        Una cita cobrada no se puede modificar ni borrar porque ya tiene factura. Administración puede anular la
+        factura con el botón <span class="boton">Nota de crédito</span>, desde la misma factura.
+    </div>
+
+    <!-- 8 ============================================================ -->
+    <h2 id="mostrador"><span class="num">8.</span>Venta de mostrador</h2>
+    <p>Para alguien que pasa a comprar un producto sin tener cita.</p>
+    <ol class="pasos">
+        <li>Entrá a <span class="ruta">Studio Bella › Ventas de productos</span> y tocá <span class="boton primario">Nuevo</span>.</li>
+        <li>El cliente es <b>Consumidor final</b>. Si pide factura a su nombre, elegí el cliente.</li>
+        <li>Agregá los productos en la pestaña Productos.</li>
+        <li>Tocá <span class="boton primario">Cobrar</span>: funciona igual que en la cita.</li>
+    </ol>
+    <figure>
+        <img src="img/10-venta-mostrador.png" alt="Venta de mostrador en borrador con aceite de argán y esmalte">
+        <figcaption>Una venta lista para cobrar.</figcaption>
+    </figure>
+    <p>Una venta que todavía no se cobró se puede <span class="boton">Cancelar</span>. Una venta cobrada se anula
+       con una nota de crédito, igual que una cita.</p>
+
+    <!-- 9 ============================================================ -->
+    <h2 id="recordatorios"><span class="num">9.</span>Recordatorios por WhatsApp y por correo</h2>
+    <p>El día antes de cada turno hay que avisarle al cliente. Hay dos formas:</p>
+    <ul>
+        <li><b>Por correo, solo:</b> todos los días a las 10:00 el sistema manda un correo a los clientes que tienen
+            cita al día siguiente y tienen correo cargado. No hay que hacer nada.</li>
+        <li><b>Por WhatsApp, con un clic:</b> para los que no tienen correo (o si preferís avisar por WhatsApp).</li>
+    </ul>
+
+    <h3>Mandar los recordatorios por WhatsApp</h3>
+    <ol class="pasos">
+        <li>Entrá a <span class="ruta">Studio Bella › Recordatorios</span>. Aparecen los turnos de mañana a los que
+            todavía no se les avisó.</li>
+        <li>En cada cliente, tocá <span class="boton">WhatsApp</span>. Se abre WhatsApp (en el navegador o en la
+            aplicación) con el chat del cliente y el mensaje ya escrito: el día, la hora, los servicios y quién lo atiende.</li>
+        <li>Tocá <b>Enviar</b> en WhatsApp y volvé al sistema para seguir con el próximo.</li>
+    </ol>
+    <figure>
+        <img src="img/w1-recordatorios.png" alt="Lista de recordatorios de mañana con los botones WhatsApp y Correo">
+        <figcaption>Los turnos de mañana que faltan avisar. Cada uno tiene su botón de WhatsApp y, si tiene correo, el de Correo.</figcaption>
+    </figure>
+    <p>El mensaje que le llega al cliente es así:</p>
+    <div class="nota">
+        ¡Hola Sofía Villalba! Te recordamos tu turno en Studio Bella: miércoles 28 de octubre a las 10:00
+        (Tintura de raíz), con Lorena Benítez. Si no podés venir, avisanos por acá, así le damos el lugar a otra
+        persona. ¡Te esperamos!
+    </div>
+    <p>También se puede mandar desde la cita, con el botón <span class="boton">Recordatorio por WhatsApp</span>.</p>
+    <figure>
+        <img src="img/w2-cita-whatsapp.png" alt="Cita con los botones Recordatorio por WhatsApp y Recordatorio por correo">
+        <figcaption>Los botones de recordatorio en la cita.</figcaption>
+    </figure>
+    <ul>
+        <li>Al tocar el botón, la cita queda marcada como <b>Recordatorio enviado</b> (por WhatsApp o por correo) y sale
+            de la lista. Queda anotado en el historial de la cita.</li>
+        <li>Si cambiás la hora o el estilista de la cita, se desmarca para que le avises el horario nuevo.</li>
+        <li>Los <b>sábados</b>, para avisar a los clientes del lunes, cambiá el filtro <b>Mañana</b> por
+            <b>Próximos 3 días</b> en la barra de búsqueda.</li>
+    </ul>
+    <div class="aviso">
+        <strong>El WhatsApp que se usa es el de la computadora</strong>
+        El mensaje sale del WhatsApp que esté abierto en esa computadora. La primera vez, abrí
+        <a href="https://web.whatsapp.com">WhatsApp Web</a> y vinculá el celular de la peluquería escaneando el código QR
+        (en el celular: Dispositivos vinculados). El número del cliente se toma de su ficha: celular o teléfono, con o sin
+        el 0 adelante.
+    </div>
+    <figure>
+        <img src="img/12-recordatorio.png" alt="Correo de recordatorio en el historial de la cita">
+        <figcaption>El recordatorio por correo, guardado en el historial de la cita.</figcaption>
+    </figure>
+    <div class="aviso">
+        <strong>Para que los correos salgan de verdad</strong>
+        Odoo necesita un servidor de correo saliente (por ejemplo, una cuenta de Gmail). Lo configura el
+        administrador en <span class="ruta">Ajustes</span>. Mientras no esté configurado, los correos quedan en espera.
+    </div>
+
+    <!-- 10 ============================================================ -->
+    <h2 id="clientes"><span class="num">10.</span>Clientes</h2>
+    <p>En <span class="ruta">Studio Bella › Clientes</span> están todas las fichas. Para cargar uno nuevo, tocá
+       <span class="boton primario">Nuevo</span> y completá el nombre, el teléfono y el correo.</p>
+    <figure>
+        <img src="img/11-cliente.png" alt="Ficha de cliente con los botones Facturado y Citas">
+        <figcaption>La ficha del cliente. El botón <b>Citas</b> muestra su historial; <b>Facturado</b>, lo que se le facturó (sin IVA).</figcaption>
+    </figure>
+
+    <!-- 11 ============================================================ -->
+    <h2 id="compras"><span class="num">11.</span>Compras y recepción de mercadería</h2>
+    <p>Así se reponen los productos y los insumos: Administración hace el pedido al proveedor, la recepción recibe la
+       mercadería cuando llega y el stock sube solo. Todo está en <span class="ruta">Studio Bella › Compras</span>.</p>
+
+    <h3>El aviso de "Reponer stock"</h3>
+    <p>Cada producto tiene un <b>stock mínimo</b>. Cuando, al vender o al gastarse en un servicio, queda menos que eso,
+       el sistema crea una actividad <b>Reponer stock</b>. Las actividades se ven en el ícono del reloj, arriba a la
+       derecha: el número indica cuántas hay.</p>
+    <figure>
+        <img src="img/c5-aviso.png" alt="Menú de actividades con avisos de productos para reponer">
+        <figcaption>El reloj avisa que hay productos para reponer. Al tocar "Producto" se ve la lista.</figcaption>
+    </figure>
+    <p>El aviso dice cuántos quedan y cuántos conviene pedir. Se cierra solo cuando llega la mercadería.</p>
+
+    <h3>Hacer un pedido al proveedor (Administración)</h3>
+    <p>La forma más rápida es <span class="ruta">Compras › Reponer stock</span>: muestra cada producto con lo que hay,
+       lo que está por llegar (<b>Pronóstico</b>), el mínimo, el máximo y cuánto pedir (<b>Por ordenar</b>). En los que
+       hay que pedir aparece el botón <span class="boton">Orden</span>, que arma el pedido al proveedor del producto.</p>
+    <figure>
+        <img src="img/c4-reponer.png" alt="Pantalla de reposición con el decolorante para pedir">
+        <figcaption>Al decolorante le faltan 3 para llegar al máximo: con "Orden" se pide.</figcaption>
+    </figure>
+    <p>También se puede hacer el pedido a mano en <span class="ruta">Compras › Pedidos a proveedores</span> ›
+       <span class="boton primario">Nuevo</span>: elegí el proveedor y agregá los productos con la cantidad y el precio.</p>
+    <figure>
+        <img src="img/c1-pedidos.png" alt="Lista de pedidos a proveedores">
+        <figcaption>Los pedidos a proveedores. P00002 todavía es una <b>solicitud de cotización</b> (no se confirmó);
+            P00001 y P00003 ya son <b>órdenes de compra</b>.</figcaption>
+    </figure>
+    <ol class="pasos">
+        <li>Revisá el pedido y tocá <span class="boton primario">Confirmar orden</span>.</li>
+        <li>Para mandárselo al proveedor, usá <span class="boton">Enviar por correo electrónico</span> o imprimilo
+            desde el ícono del engranaje (<b>Imprimir</b>).</li>
+        <li>Al confirmarlo se prepara sola la recepción de la mercadería (botón <b>Recepción</b> arriba).</li>
+    </ol>
+    <figure>
+        <img src="img/c2-pedido.png" alt="Pedido confirmado a un proveedor con protector térmico y aceite de argán">
+        <figcaption>Un pedido confirmado: todavía no se recibió nada (columna Recibido en 0).</figcaption>
+    </figure>
+
+    <h3>Recibir la mercadería (Recepción)</h3>
+    <ol class="pasos">
+        <li>Cuando llega el pedido, entrá a <span class="ruta">Compras › Recepción de mercadería</span> y abrí la
+            recepción de ese proveedor.</li>
+        <li>Contá lo que llegó. Si vino menos de algo, corregí la <b>Cantidad</b> de esa línea.</li>
+        <li>Tocá <span class="boton primario">Validar</span>. El stock sube y se cierran los avisos de reponer.</li>
+    </ol>
+    <figure>
+        <img src="img/c3-recepcion.png" alt="Recepción de mercadería lista para validar">
+        <figcaption>La recepción del pedido P00003, lista para validar.</figcaption>
+    </figure>
+    <div class="nota">
+        <strong>¿Llegó incompleto?</strong>
+        Si validás con menos cantidad, el sistema pregunta si querés dejar pendiente lo que falta
+        (<b>Crear orden parcial</b>) para recibirlo después, o darlo por terminado (<b>Sin orden parcial</b>).
+    </div>
+
+    <h3>La factura del proveedor (Administración)</h3>
+    <p>En el pedido, <span class="boton">Crear factura</span> arma la factura del proveedor con lo recibido. Cargá el
+       número de la factura que te dio (por ejemplo, 001-001-0004521) y la fecha, y confirmala.</p>
+
+    <!-- 12 ============================================================ -->
+    <h2 id="configuracion"><span class="num">12.</span>Configuración</h2>
+    <p>Esta parte es solo para usuarios de <b>Administración</b>.</p>
+
+    <h3 id="servicios">Servicios</h3>
+    <p>En <span class="ruta">Configuración › Servicios</span> está la lista de servicios con su duración y su precio.</p>
+    <figure>
+        <img src="img/13-servicios.png" alt="Lista de servicios con categoría, duración, precio e IVA">
+        <figcaption>Los servicios de la peluquería.</figcaption>
+    </figure>
+    <p>Para crear uno, tocá <span class="boton primario">Nuevo</span> y cargá:</p>
+    <ul>
+        <li><b>Nombre</b> y <b>Categoría</b> (Cortes, Coloración, Tratamientos, Peinados, Barbería, Manos y pies).</li>
+        <li><b>Precio de venta</b> con el IVA incluido e <b>Impuestos</b>: IVA 10 %.</li>
+        <li>En la pestaña <b>Studio Bella</b>: la <b>duración</b> en minutos y los <b>insumos</b> que gasta cada vez.</li>
+    </ul>
+    <figure>
+        <img src="img/14-servicio-insumos.png" alt="Pestaña Studio Bella de un servicio con duración e insumos">
+        <figcaption>La tintura de raíz dura 90 minutos y gasta 1 tubo de tinte y 0,06 de una botella de oxidante de 1 L (60 ml).</figcaption>
+    </figure>
+
+    <h3 id="productos">Productos y stock</h3>
+    <p>En <span class="ruta">Configuración › Productos</span> están los productos con lo que hay en stock y su mínimo.
+       Los que están por debajo del mínimo aparecen en rojo; el filtro <b>Por reponer</b> muestra solo esos.</p>
+    <figure>
+        <img src="img/15-productos.png" alt="Lista de productos con stock, costo y precio de venta">
+        <figcaption>Productos de reventa (se venden) y de uso profesional (se gastan en los servicios).</figcaption>
+    </figure>
+    <ul>
+        <li><b>Producto de reventa:</b> con la casilla <b>Ventas</b> marcada. Aparece al vender en citas y en el mostrador.</li>
+        <li><b>Producto de uso profesional:</b> con la casilla <b>Ventas</b> desmarcada. No se vende; se carga como insumo de los servicios.</li>
+        <li><b>Proveedor y precio de compra:</b> en la pestaña <b>Compras</b> del producto.</li>
+        <li><b>Stock mínimo:</b> en la pestaña <b>Studio Bella</b>, el <b>Stock mínimo</b> (cuándo avisar) y
+            <b>Pedir hasta</b> (cuánto tener después de reponer). Ver <a href="#compras">Compras</a>.</li>
+        <li><b>Corregir el stock:</b> si el conteo no coincide con el sistema, abrí el producto, tocá
+            <span class="boton">Actualizar cantidad</span> y escribí la cantidad que contaste. La mercadería que
+            llega de un proveedor se carga con la <a href="#compras">recepción</a>, no con esto.</li>
+    </ul>
+    <figure>
+        <img src="img/c6-producto-minimo.png" alt="Pestaña Studio Bella de un producto con stock mínimo y aviso de reponer">
+        <figcaption>El protector térmico tiene mínimo 3 y hay 2: hay que reponer.</figcaption>
+    </figure>
+
+    <h3 id="estilistas">Estilistas</h3>
+    <p>En <span class="ruta">Configuración › Estilistas</span> están las personas que atienden. Cada estilista es un
+       empleado de Odoo.</p>
+    <figure>
+        <img src="img/16-estilistas.png" alt="Tarjetas de los cuatro estilistas">
+        <figcaption>El equipo de Studio Bella.</figcaption>
+    </figure>
+    <p>Para agregar uno, tocá <span class="boton primario">Nuevo</span>, escribí el nombre y en la pestaña
+       <b>Studio Bella</b> marcá <b>Atiende en Studio Bella</b> y elegí los <b>servicios que realiza</b>
+       (si se deja vacío, puede hacer todos). Su horario de trabajo está en la pestaña <b>Información de trabajo</b>.</p>
+    <figure>
+        <img src="img/17-estilista.png" alt="Pestaña Studio Bella de una estilista con sus servicios">
+        <figcaption>Lorena es colorista: hace cortes de dama, coloración, tratamientos y peinados.</figcaption>
+    </figure>
+
+    <h3 id="horario">Horario de atención y feriados</h3>
+    <p>En <span class="ruta">Configuración › Horarios de atención</span> (solo para el administrador del sistema)
+       se definen los días y horas de trabajo. La peluquería atiende de lunes a sábado de 8:00 a 19:00.</p>
+    <figure>
+        <img src="img/18-horario.png" alt="Horario de atención con las horas de cada día">
+        <figcaption>El horario de atención, por día.</figcaption>
+    </figure>
+    <p>En la pestaña <b>Feriados y cierres</b> se cargan los días en que la peluquería está cerrada: tocá
+       <b>Agregar una línea</b>, escribí el motivo y la fecha. Esos días la agenda no deja dar turnos.</p>
+    <figure>
+        <img src="img/18b-feriados.png" alt="Pestaña Feriados y cierres con el 8 y el 25 de diciembre">
+        <figcaption>Feriados cargados: Virgen de Caacupé y Navidad.</figcaption>
+    </figure>
+
+    <!-- 12 ============================================================ -->
+    <h2 id="reportes"><span class="num">13.</span>Reportes</h2>
+    <p>En <span class="ruta">Studio Bella › Reportes</span> (solo Administración):</p>
+    <h3>Servicios realizados</h3>
+    <p>Qué servicios se hicieron y cuánto se facturó, solo de las citas cobradas. De entrada muestra el mes actual;
+       el filtro de fecha se cambia en la barra de búsqueda.</p>
+    <figure>
+        <img src="img/19-reporte-servicios.png" alt="Gráfico de barras de lo facturado por servicio">
+        <figcaption>Lo facturado por cada servicio en el mes.</figcaption>
+    </figure>
+    <p>Con el botón de la tabla (arriba a la derecha) se ve cuánto facturó cada estilista en cada categoría.
+       El botón <b>⤓</b> la descarga en Excel.</p>
+    <figure>
+        <img src="img/20-reporte-pivot.png" alt="Tabla de lo facturado por categoría y estilista">
+        <figcaption>Lo facturado por categoría de servicio y por estilista.</figcaption>
+    </figure>
+    <h3>Productos vendidos</h3>
+    <p>Las cantidades vendidas de cada producto, en citas y en el mostrador.</p>
+    <figure>
+        <img src="img/21-productos-vendidos.png" alt="Gráfico de cantidades vendidas por producto">
+        <figcaption>Productos vendidos en el período.</figcaption>
+    </figure>
+
+    <!-- 13 ============================================================ -->
+    <h2 id="problemas"><span class="num">14.</span>Problemas frecuentes</h2>
+    <details>
+        <summary>Entro al sistema y me aparece otra empresa u otro sistema</summary>
+        <p>Estás en otra base de datos. Salí, y en la pantalla de inicio de sesión elegí la base <b>peluqueria</b>
+           (ver <a href="#entrar">Cómo entrar</a>).</p>
+    </details>
+    <details>
+        <summary>No me deja guardar la cita</summary>
+        <p>Leé el aviso: el estilista está ocupado, es fuera del horario o feriado, o no hace ese servicio.
+           Ver la tabla de <a href="#agendar">Agendar una cita</a>.</p>
+    </details>
+    <details>
+        <summary>No encuentro un servicio al cargar la cita</summary>
+        <p>Tiene que estar en <span class="ruta">Configuración › Servicios</span>. Si el estilista tiene una lista de
+           servicios que realiza, tiene que estar en esa lista.</p>
+    </details>
+    <details>
+        <summary>No encuentro un producto para vender</summary>
+        <p>En la ficha del producto tiene que estar marcada la casilla <b>Ventas</b> y tiene que estar en
+           <span class="ruta">Configuración › Productos</span>.</p>
+    </details>
+    <details>
+        <summary>No me deja cobrar por falta de stock</summary>
+        <p>El sistema cree que no hay suficiente. Administración corrige el stock con
+           <span class="boton">Actualizar cantidad</span> en el producto. Ver <a href="#productos">Productos y stock</a>.</p>
+    </details>
+    <details>
+        <summary>El cliente no recibió el recordatorio por correo</summary>
+        <p>Revisá que tenga el correo bien cargado en su ficha, que la cita esté agendada o confirmada y que esté
+           configurado el servidor de correo (ver <a href="#recordatorios">Recordatorios</a>). Si no usa el correo,
+           mandáselo por WhatsApp.</p>
+    </details>
+    <details>
+        <summary>No aparece el botón de WhatsApp</summary>
+        <p>El cliente no tiene teléfono ni celular cargado en su ficha. Cargalo (por ejemplo, 0981 234 567) y el botón aparece.</p>
+    </details>
+    <details>
+        <summary>WhatsApp dice que el número no es válido</summary>
+        <p>Revisá el número en la ficha del cliente. Los números de Paraguay se escriben con el 0 adelante
+           (0981 234 567); los de otro país, con el + y el código del país (+54 9 11 1234 5678).</p>
+    </details>
+    <details>
+        <summary>No se va el aviso de "Reponer stock"</summary>
+        <p>Se cierra solo cuando el stock vuelve a estar por encima del mínimo, al validar la recepción de la mercadería.
+           Si ya no querés que avise, bajá el stock mínimo del producto o marcá la actividad como hecha.</p>
+    </details>
+    <details>
+        <summary>Quiero ver las citas canceladas</summary>
+        <p>En la Agenda, quitá el filtro <b>Sin canceladas ni ausentes</b> de la barra de búsqueda.</p>
+    </details>
+    <details>
+        <summary>Cobré algo mal</summary>
+        <p>La cita cobrada no se modifica. Administración anula la factura con <span class="boton">Nota de crédito</span>
+           y se vuelve a cargar la cita o la venta correcta.</p>
+    </details>
+
+    <p class="pie">Studio Bella · Manual de usuario · Octubre de 2026.
+       Este manual se abre desde <span class="ruta">Studio Bella › Ayuda › Manual de usuario</span>.</p>
+</main>
+</div>
+</body>
+</html>
