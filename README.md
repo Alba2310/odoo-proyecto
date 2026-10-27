@@ -1,19 +1,21 @@
-# AutoFlow ERP · Odoo 18
+# AutoFlow ERP y Studio Bella · Odoo 18
 
-Sistema para concesionaria y taller mecánico hecho sobre Odoo 18 Community, más el sitio web para venderlo.
+Dos sistemas hechos sobre Odoo 18 Community, cada uno con su sitio web para venderlo: AutoFlow, para
+concesionarias y talleres mecánicos, y Studio Bella, para peluquerías.
 
 ## Qué hay en el proyecto
 
 | Carpeta | Contenido |
 |---|---|
 | `extra-addons/autoflow_management` | Módulo **AutoFlow ERP**: vehículos, pruebas de manejo, órdenes de servicio con kanban, repuestos, checklist de entrega, acta PDF con firma y análisis de fallas por modelo y por mecánico |
-| `extra-addons/autoflow_sitio_web` | Recibe el formulario de contacto del sitio y lo guarda como oportunidad en el CRM ([detalle](extra-addons/autoflow_sitio_web/README.md)) |
+| `extra-addons/autoflow_sitio_web` | Recibe los formularios de contacto de los dos sitios y los guarda como oportunidades en el CRM ([detalle](extra-addons/autoflow_sitio_web/README.md)) |
 | `extra-addons/studio_bella` | Módulo **Studio Bella** (peluquería): agenda de citas por estilista, servicios con insumos, venta de productos con stock, cobro con factura, recordatorios por correo y WhatsApp, compras y recepción de mercadería con stock mínimo, y manual de usuario ([detalle](extra-addons/studio_bella/README.md)) |
 | `extra-addons/tienda_*` | Módulos de práctica: inventario, ventas y personal de una tienda |
 | `extra-addons/mi_modulo` | Primer módulo de prueba |
 | `sitio-web` | Sitio web de venta de AutoFlow ([detalle](sitio-web/README.md)) |
+| `sitio-bella` | Sitio web de venta de Studio Bella, con demo interactiva ([detalle](sitio-bella/README.md)) |
 | `presentacion` | Imágenes y gráficos de la presentación |
-| `docker-compose.yml` | Odoo, PostgreSQL, el Odoo del CRM de ventas y el sitio web |
+| `docker-compose.yml` | Odoo, PostgreSQL, el Odoo del CRM de ventas y los dos sitios web |
 
 ## Cómo levantarlo en otra computadora
 
@@ -46,7 +48,8 @@ Hace falta **Git** y **Docker**. En Windows: [Git para Windows](https://git-scm.
 |---|---|
 | Odoo | http://localhost:8069 |
 | CRM de ventas del sitio | http://localhost:8070 |
-| Sitio web | http://localhost:5500 |
+| Sitio web de AutoFlow | http://localhost:5500 |
+| Sitio web de Studio Bella | http://localhost:5501 |
 
 Las bases de datos viven en los volúmenes de Docker y **no se suben a GitHub**: en cada computadora se crean de nuevo.
 Para AutoFlow, crear una base desde http://localhost:8069 e instalar el módulo **AutoFlow ERP** en Aplicaciones.

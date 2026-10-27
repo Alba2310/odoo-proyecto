@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Funciones · Studio Bella</title>
+  <meta name="description" content="Agenda por estilista, citas del día, cobro con factura, recordatorios por WhatsApp, productos e insumos con stock, compras a proveedores y reportes. Todo lo que incluye Studio Bella.">
+  <meta name="theme-color" content="#2B0F2E">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__barra">
+      <a class="marca" href="index.html" aria-label="Studio Bella, inicio"><img src="img/logo.svg" alt="" width="38" height="38"><span>Studio Bella</span></a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="funciones.html" aria-current="page">Funciones</a>
+        <a href="demo.html">Demo en vivo</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="btn btn--acento btn--chico" href="contacto.html">Pedí tu demo</a>
+      </nav>
+      <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="cabeza-pagina">
+      <div class="contenedor">
+        <span class="pastilla" data-revelar><b>FUNCIONES</b> Todo lo que incluye Studio Bella</span>
+        <h1 data-revelar data-retraso="80">Del turno agendado al producto repuesto</h1>
+        <p data-revelar data-retraso="160">Conocé cada parte del sistema con capturas reales. Tocá cualquier imagen para verla en grande.</p>
+      </div>
+    </section>
+
+    <nav class="subnav" aria-label="Secciones de la página">
+      <div class="contenedor">
+        <ul class="subnav__lista">
+          <li><a href="#agenda"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg> Agenda</a></li>
+          <li><a href="#dia"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg> Citas de hoy</a></li>
+          <li><a href="#cobro"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg> Cobro</a></li>
+          <li><a href="#recordatorios"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> Recordatorios</a></li>
+          <li><a href="#productos"><svg class="ico" aria-hidden="true"><use href="#i-gota"></use></svg> Productos e insumos</a></li>
+          <li><a href="#compras"><svg class="ico" aria-hidden="true"><use href="#i-camion"></use></svg> Compras</a></li>
+          <li><a href="#equipo"><svg class="ico" aria-hidden="true"><use href="#i-usuarios"></use></svg> Estilistas</a></li>
+          <li><a href="#reportes"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg> Reportes</a></li>
+          <li><a href="#permisos"><svg class="ico" aria-hidden="true"><use href="#i-escudo"></use></svg> Permisos</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <section class="seccion">
+      <div class="contenedor">
+
+        <article class="funcion" id="agenda">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Agenda</span>
+            <h2>Una agenda que no deja cometer errores</h2>
+            <p>El calendario de toda la peluquería, con un color por estilista. Hacés clic en un horario libre, elegís la clienta y los servicios, y listo.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> No deja dar dos turnos a la misma estilista a la misma hora.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Respeta el horario de trabajo de cada estilista, los feriados y los días de cierre.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Cada estilista solo puede tomar los servicios que hace.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> La duración y el fin del turno salen de los servicios elegidos.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Se mueve arrastrando la cita; se alarga estirándola.</li>
+            </ul>
+            <div class="funcion__extra">
+              <span class="chip">Agendada</span>
+              <span class="chip chip--ciruela">Confirmada</span>
+              <span class="chip chip--ambar">En atención</span>
+              <span class="chip chip--verde">Cobrada</span>
+              <span class="chip chip--rojo">No vino</span>
+            </div>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/agenda.png" data-titulo="Agenda de la semana" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/agenda.png" alt="Agenda semanal con citas de colores por estilista" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/cita.png" data-titulo="Una cita por dentro" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/cita.png" alt="Formulario de una cita con clienta, estilista, horario y servicios" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion funcion--invertida" id="dia">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta etiqueta--acento">Citas de hoy</span>
+            <h2>La recepción, siempre al día</h2>
+            <p>Un tablero con las citas del día ordenadas por estado. Cada tarjeta tiene el horario, la clienta, los servicios, el teléfono y el total.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Botones para confirmar, empezar a atender, cobrar o marcar que no vino.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Los turnos cancelados o de clientes que no vinieron liberan el horario.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Notas en cada cita: preferencias, fórmula de color, alergias.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Historial completo de citas en la ficha de cada cliente.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/citas-de-hoy.png" data-titulo="Citas de hoy" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/citas-de-hoy.png" alt="Tablero de las citas de hoy por estado" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion" id="cobro">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Cobro y factura</span>
+            <h2>Cobrás, facturás y descontás el stock de una vez</h2>
+            <p>El botón Cobrar abre la caja: elegís la forma de pago y, si es en efectivo, escribís con cuánto paga para ver el vuelto. Al confirmar, el sistema hace el resto.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Factura con IVA 10 % incluido en el precio, ya pagada.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> El efectivo entra a la caja; la tarjeta y la transferencia, al banco.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Servicios y productos de la cita en la misma factura.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Si un producto vendido no tiene stock, avisa antes de cobrar.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Venta de mostrador para quien pasa a comprar sin turno.</li>
+            </ul>
+            <div class="funcion__extra">
+              <span class="chip chip--verde">Efectivo</span>
+              <span class="chip chip--ciruela">Tarjeta</span>
+              <span class="chip chip--ambar">Transferencia / QR</span>
+            </div>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/cobrar.png" data-titulo="Cobrar una cita" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/cobrar.png" alt="Ventana de cobro con el vuelto calculado" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/factura.png" data-titulo="La factura, pagada" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/factura.png" alt="Factura pagada con el detalle de la cita y el IVA 10 %" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion funcion--invertida" id="recordatorios">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta etiqueta--acento">Recordatorios</span>
+            <h2>Menos turnos vacíos, sin trabajo extra</h2>
+            <p>El día antes de cada turno hay que avisar. Studio Bella lo hace por correo solo, y para WhatsApp te deja el mensaje escrito.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Correo automático todos los días a las 10:00.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Lista de turnos de mañana con un botón de WhatsApp por cliente.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> El mensaje lleva el día, la hora, los servicios y quién atiende.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Sale del WhatsApp de la peluquería, sin pagar por mensaje.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Si se cambia el horario, se vuelve a avisar.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/recordatorios.png" data-titulo="Recordatorios de mañana" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/recordatorios.png" alt="Lista de turnos de mañana con botones de WhatsApp y Correo" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/recordatorio-correo.png" data-titulo="El recordatorio por correo" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/recordatorio-correo.png" alt="Correo de recordatorio guardado en el historial de la cita" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion" id="productos">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Productos e insumos</span>
+            <h2>Cada servicio sabe qué gasta</h2>
+            <p>Los productos de reventa se venden en la cita o en el mostrador. Los de uso profesional se cargan como insumos de cada servicio y se descuentan solos al cobrar.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Una tintura de raíz descuenta un tubo de tinte y 60 ml de oxidante.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Stock en tiempo real de shampoo, ceras, esmaltes y más.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Si falta un insumo, cobra igual y avisa para revisar el inventario.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Precio de venta y costo de cada producto en guaraníes.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/servicio-insumos.png" data-titulo="Servicio con sus insumos" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/servicio-insumos.png" alt="Servicio de tintura de raíz con la duración y los insumos que usa" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/cita-productos.png" data-titulo="Productos vendidos en la cita" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/cita-productos.png" alt="Cita con shampoo y acondicionador vendidos" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion funcion--invertida" id="compras">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta etiqueta--acento">Compras y reposición</span>
+            <h2>Nunca más sin tinte a mitad de semana</h2>
+            <p>Cada producto tiene su stock mínimo. Cuando baja de ahí, aparece el aviso “Reponer stock” y el pedido al proveedor se arma con un clic.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Stock mínimo y cantidad a pedir por producto.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Proveedores con su precio de compra.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Recepción de la mercadería: contás, validás y el stock sube.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> El aviso de reponer se cierra solo al recibir.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Factura del proveedor desde el mismo pedido.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/reponer.png" data-titulo="Reponer stock" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/reponer.png" alt="Pantalla de reposición con el decolorante para pedir" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/recepcion.png" data-titulo="Recepción de mercadería" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/recepcion.png" alt="Recepción de un pedido al proveedor lista para validar" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion" id="equipo">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Estilistas y horarios</span>
+            <h2>Cada estilista, con lo suyo</h2>
+            <p>Los estilistas son empleados de Odoo. Para cada uno cargás qué servicios hace y su horario; la agenda lo respeta.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Servicios que hace cada estilista (colorista, barbero, manicura…).</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Horario de atención por día de la semana.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Feriados y días de cierre: esos días no se dan turnos.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/estilista.png" data-titulo="Servicios de una estilista" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/estilista.png" alt="Ficha de la estilista con los servicios que realiza" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/feriados.png" data-titulo="Feriados y cierres" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/feriados.png" alt="Horario de atención con los feriados cargados" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion funcion--invertida" id="reportes">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta etiqueta--acento">Reportes</span>
+            <h2>Sabé qué funciona en tu salón</h2>
+            <p>Lo que factura cada estilista, los servicios que más se piden y los productos que más se venden, con filtros por fecha.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Servicios realizados por estilista y por categoría.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Productos vendidos, en citas y en el mostrador.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Gráficos, tablas dinámicas y descarga en Excel.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/reporte-servicios.png" data-titulo="Lo facturado por servicio" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/reporte-servicios.png" alt="Gráfico de barras de lo facturado por servicio" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/reporte-tabla.png" data-titulo="Lo facturado por estilista" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/reporte-tabla.png" alt="Tabla de lo facturado por categoría y estilista" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="seccion seccion--alt" id="permisos">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Permisos y manual</span>
+          <h2>Cada uno ve lo que le toca</h2>
+          <p>Dos perfiles para el equipo y un manual de usuario con capturas, dentro del mismo sistema.</p>
+        </div>
+        <div class="tabla-envoltorio" data-revelar>
+          <table class="tabla">
+            <thead>
+              <tr><th scope="col">Tarea</th><th scope="col" class="centro">Recepción</th><th scope="col" class="centro">Administración</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Agendar, confirmar y mover citas</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Cobrar y vender productos</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Mandar recordatorios</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Recibir mercadería</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Pedidos a proveedores y stock mínimo</th><td class="centro no"><svg class="ico" aria-label="No"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Servicios, precios y estilistas</th><td class="centro no"><svg class="ico" aria-label="No"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Reportes</th><td class="centro no"><svg class="ico" aria-label="No"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="funcion" style="margin-top:clamp(48px,7vw,90px)">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Manual de usuario</span>
+            <h2>Todo explicado, paso a paso</h2>
+            <p>El manual está dentro del sistema, en Ayuda: 14 capítulos con capturas, desde agendar el primer turno hasta reponer el stock. Se puede imprimir.</p>
+            <a class="enlace-flecha" href="demo.html">Probá la demo mientras tanto <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+          </div>
+          <div class="funcion__visual" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/manual.png" data-titulo="Manual de usuario dentro de Odoo" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/manual.png" alt="Manual de usuario abierto dentro de Odoo" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion seccion--compacta">
+      <div class="contenedor">
+        <div class="banda-cta" data-revelar>
+          <svg class="banda-cta__dibujo ico" aria-hidden="true"><use href="#i-calendario"></use></svg>
+          <div>
+            <h2>¿Querés verlo funcionando?</h2>
+            <p>Probá la demo interactiva o pedinos una presentación con los datos de tu salón.</p>
+          </div>
+          <div class="grupo-botones">
+            <a class="btn btn--acento btn--grande" href="contacto.html">Pedí tu demo gratis</a>
+            <a class="btn btn--fantasma btn--grande" href="demo.html"><svg class="ico" aria-hidden="true"><use href="#i-play"></use></svg> Demo interactiva</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grilla">
+        <div>
+          <a class="marca" href="index.html"><img src="img/logo.svg" alt="" width="38" height="38"><span>Studio Bella</span></a>
+          <p>Sistema para peluquerías, barberías y salones de estética construido sobre Odoo 18. Agenda, cobro con factura, stock y recordatorios en un solo lugar.</p>
+        </div>
+        <div>
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="funciones.html">Funciones</a></li>
+            <li><a href="demo.html">Demo interactiva</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li><a href="precios.html#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Funciones</h4>
+          <ul>
+            <li><a href="#agenda">Agenda</a></li>
+            <li><a href="#cobro">Cobro y factura</a></li>
+            <li><a href="#recordatorios">Recordatorios</a></li>
+            <li><a href="#compras">Compras y stock</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="contacto.html" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a></li>
+            <li><a href="contacto.html" data-contacto="email"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> <span data-texto="email">Correo</span></a></li>
+            <li><a href="contacto.html" data-contacto="telefono"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg> <span data-texto="telefono">Teléfono</span></a></li>
+            <li><a href="contacto.html"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg> <span data-texto="direccion">Paraguay</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pie__base">
+        <span>© <span data-anio>2026</span> Studio Bella. Todos los derechos reservados.</span>
+        <span>Odoo es una marca de Odoo S.A. Studio Bella es un módulo independiente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="flotantes">
+    <button class="boton-redondo boton-redondo--arriba" type="button" aria-label="Volver arriba"><svg class="ico" aria-hidden="true"><use href="#i-arriba"></use></svg></button>
+    <a class="boton-redondo boton-redondo--wa" href="contacto.html" data-contacto="whatsapp" aria-label="Escribinos por WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></a>
+  </div>
+</body>
+</html>

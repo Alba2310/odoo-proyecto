@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'AutoFlow · Solicitudes del sitio web',
-    'summary': 'Recibe en el CRM las solicitudes de demo del sitio web de AutoFlow y avisa por correo',
+    'name': 'Solicitudes de los sitios web (AutoFlow y Studio Bella)',
+    'summary': 'Recibe en el CRM las solicitudes de demo de los sitios web de AutoFlow y Studio Bella y avisa por correo',
     'description': """
-Solicitudes del sitio web de AutoFlow
-=====================================
-* Ruta pública ``POST /autoflow/solicitud`` que usa el formulario de ``sitio-web/contacto.html``.
-* Cada solicitud se guarda como oportunidad del CRM con la etiqueta "Sitio web".
+Solicitudes de los sitios web
+=============================
+* Ruta pública ``POST /autoflow/solicitud`` que usan los formularios de ``sitio-web/contacto.html`` (AutoFlow)
+  y ``sitio-bella/contacto.html`` (Studio Bella, que manda ``producto=studio_bella``).
+* Cada solicitud se guarda como oportunidad del CRM con la etiqueta "Sitio web" y la del producto.
 * Envía un correo de aviso a la dirección del parámetro del sistema ``autoflow_sitio_web.email_aviso``
   (si no está cargado, al correo de la compañía).
 """,

@@ -1,13 +1,16 @@
-# AutoFlow · Solicitudes del sitio web (`autoflow_sitio_web`)
+# Solicitudes de los sitios web (`autoflow_sitio_web`)
 
-Recibe el formulario de `sitio-web/contacto.html` y lo guarda en el CRM. Instalado en la base `autoflow_ventas`,
+Recibe los formularios de `sitio-web/contacto.html` (AutoFlow) y `sitio-bella/contacto.html` (Studio Bella)
+y los guarda en el mismo CRM. Instalado en la base `autoflow_ventas`,
 que atiende el servicio `ventas` de `docker-compose.yml` (http://localhost:8070).
 
 ## Cómo funciona
 
 - `controllers/main.py`: ruta pública `POST /autoflow/solicitud` (`auth='public'`, `cors='*'`).
   Valida los datos, descarta lo que manda un robot (campo trampa `sitio_web`) y crea una oportunidad
-  con la etiqueta "Sitio web", el medio "Website" y el detalle del formulario en la descripción.
+  con la etiqueta "Sitio web", la del producto, el medio "Website" y el detalle del formulario en la descripción.
+- El campo `producto` dice de qué sitio viene: `studio_bella` o, si no viene, `autoflow`. Cada producto tiene
+  sus tipos de negocio y sus planes (`PRODUCTOS` en `controllers/main.py`).
 - El aviso por correo usa la plantilla `mail_aviso_solicitud` (`data/crm_data.xml`) y va a la dirección del
   parámetro del sistema `autoflow_sitio_web.email_aviso`.
 - Responde JSON: `{"ok": true}` o `{"ok": false, "errores": [...]}` con estado 400.

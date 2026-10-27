@@ -4,7 +4,10 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
 
 - `studio_bella`: sistema de la peluquería Studio Bella (citas, cobro con factura, productos con stock, compras,
   recordatorios por correo y WhatsApp, manual de usuario). Detalle en `extra-addons/studio_bella/README.md`.
-- `autoflow_management` y `autoflow_sitio_web`: concesionaria y taller, y el CRM de su sitio web (`sitio-web/`).
+- `autoflow_management`: concesionaria y taller; su sitio de venta es `sitio-web/` (puerto 5500).
+- `sitio-bella/`: sitio de venta de Studio Bella (puerto 5501), hecho sobre la base de `sitio-web/`.
+- `autoflow_sitio_web`: guarda en el CRM (base `autoflow_ventas`, puerto 8070) los formularios de los dos sitios;
+  el campo `producto` dice de cuál viene.
 - `tienda_*` y `mi_modulo`: módulos de práctica.
 
 ## Cómo trabajar

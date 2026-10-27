@@ -4,17 +4,24 @@
         <record id="tag_sitio_web" model="crm.tag">
             <field name="name">Sitio web</field>
         </record>
+        <!-- De qué sistema es la solicitud: cada uno tiene su sitio web -->
+        <record id="tag_autoflow" model="crm.tag">
+            <field name="name">AutoFlow</field>
+        </record>
+        <record id="tag_studio_bella" model="crm.tag">
+            <field name="name">Studio Bella</field>
+        </record>
     </data>
 
     <record id="mail_aviso_solicitud" model="mail.template">
-        <field name="name">AutoFlow: aviso de solicitud del sitio web</field>
+        <field name="name">Sitio web: aviso de solicitud de demo</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="subject">Nueva solicitud de demo: {{ object.partner_name }}</field>
+        <field name="subject">Nueva solicitud: {{ object.name }}</field>
         <field name="email_from">{{ object.company_id.email_formatted }}</field>
         <field name="auto_delete" eval="False"/>
         <field name="body_html" type="html">
 <div style="font-family: Arial, sans-serif; font-size: 14px; color: #1F2937;">
-    <p>Llegó una nueva solicitud de demostración desde el sitio web de AutoFlow.</p>
+    <p>Llegó una nueva solicitud de demostración desde el sitio web: <b t-out="object.name"/>.</p>
     <table cellpadding="6" style="border-collapse: collapse;">
         <tr><td><b>Nombre</b></td><td t-out="object.contact_name"/></tr>
         <tr><td><b>Empresa</b></td><td t-out="object.partner_name"/></tr>

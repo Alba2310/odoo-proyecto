@@ -41,7 +41,9 @@ class TestSolicitudSitioWeb(HttpCase):
         self.assertEqual(lead.type, 'opportunity')
         self.assertEqual(lead.contact_name, 'María González')
         self.assertEqual(lead.partner_name, 'Automotores del Sur')
+        self.assertEqual(lead.name, 'Demo AutoFlow · Automotores del Sur')
         self.assertIn(self.env.ref('autoflow_sitio_web.tag_sitio_web'), lead.tag_ids)
+        self.assertIn(self.env.ref('autoflow_sitio_web.tag_autoflow'), lead.tag_ids)
         self.assertNotEqual(lead.user_id, self.env.ref('base.public_user'))
         self.assertIn('Concesionaria con taller', lead.description)
         self.assertIn('Profesional', lead.description)
@@ -51,6 +53,17 @@ class TestSolicitudSitioWeb(HttpCase):
         self.assertEqual(len(correos), 1)
         self.assertEqual(correos.email_to, 'ventas@example.com')
         self.assertIn('Automotores del Sur', correos.subject)
+
+    def test_solicitud_de_studio_bella(self):
+        self._enviar(producto='studio_bella', empresa='Peluquería Glamour', tipo='peluqueria', plan='salon')
+
+        lead = self._oportunidades()
+        self.assertEqual(lead.name, 'Demo Studio Bella · Peluquería Glamour')
+        self.assertIn(self.env.ref('autoflow_sitio_web.tag_studio_bella'), lead.tag_ids)
+        self.assertNotIn(self.env.ref('autoflow_sitio_web.tag_autoflow'), lead.tag_ids)
+        self.assertIn('Peluquería', lead.description)
+        self.assertIn('Estilistas', lead.description)
+        self.assertIn('Salón', lead.description)
 
     def test_rechaza_datos_invalidos(self):
         respuesta = self._enviar(email='no-es-un-correo', telefono='12')

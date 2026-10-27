@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo interactiva · Studio Bella</title>
+  <meta name="description" content="Probá Studio Bella en el navegador: agendá un turno, mandá el recordatorio por WhatsApp, cobrá con factura y reponé el stock.">
+  <meta name="theme-color" content="#2B0F2E">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="css/demo.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="js/main.js" defer></script>
+  <script src="js/demo.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__barra">
+      <a class="marca" href="index.html" aria-label="Studio Bella, inicio"><img src="img/logo.svg" alt="" width="38" height="38"><span>Studio Bella</span></a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="funciones.html">Funciones</a>
+        <a href="demo.html" aria-current="page">Demo en vivo</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="btn btn--acento btn--chico" href="contacto.html">Pedí tu demo</a>
+      </nav>
+      <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="cabeza-pagina" style="padding-bottom:clamp(96px,11vw,140px)">
+      <div class="contenedor">
+        <span class="pastilla" data-revelar><b>DEMO</b> Funciona en tu navegador</span>
+        <h1 data-revelar data-retraso="80">Un turno en Studio Bella, de punta a punta</h1>
+        <p data-revelar data-retraso="160">Agendá a Sofía, mandale el recordatorio, cobrale y mirá cómo se cuida el stock. Es una simulación: no se guarda nada.</p>
+      </div>
+    </section>
+
+    <section class="seccion" style="padding-top:0">
+      <div class="contenedor">
+        <div class="demo" data-demo>
+          <ol class="demo__pasos" aria-label="Pasos de la demo">
+            <li><button type="button" data-ir-paso="agendar" aria-current="step"><span>1</span> Agendar</button></li>
+            <li><button type="button" data-ir-paso="recordar" disabled><span>2</span> Recordar</button></li>
+            <li><button type="button" data-ir-paso="cobrar" disabled><span>3</span> Cobrar</button></li>
+            <li><button type="button" data-ir-paso="reponer" disabled><span>4</span> Reponer</button></li>
+          </ol>
+
+          <!-- 1. Agendar -->
+          <div class="demo__panel" data-paso="agendar">
+            <div class="demo__columnas">
+              <form class="demo__formulario" data-form-turno novalidate>
+                <h2>Agendar un turno para mañana</h2>
+                <p class="demo__ayuda">Probá también algo que no se puede, por ejemplo <button type="button" class="demo__pista" data-pista="superpuesto">Lorena a las 10:00</button> o <button type="button" class="demo__pista" data-pista="servicio">Diego con tintura</button>.</p>
+                <div class="formulario__grilla">
+                  <div class="campo">
+                    <label for="d-cliente">Clienta</label>
+                    <input id="d-cliente" name="cliente" type="text" value="Sofía Villalba">
+                  </div>
+                  <div class="campo">
+                    <label for="d-telefono">Celular</label>
+                    <input id="d-telefono" name="telefono" type="tel" value="0982 113 908">
+                  </div>
+                  <div class="campo">
+                    <label for="d-estilista">Estilista</label>
+                    <select id="d-estilista" name="estilista"></select>
+                  </div>
+                  <div class="campo">
+                    <label for="d-hora">Hora</label>
+                    <select id="d-hora" name="hora"></select>
+                  </div>
+                  <fieldset class="campo ancho">
+                    <legend>Servicios</legend>
+                    <div class="demo__servicios" data-servicios></div>
+                  </fieldset>
+                </div>
+                <div class="demo__resumen" aria-live="polite">
+                  <span>Duración <b data-r="duracion">—</b></span>
+                  <span>Termina <b data-r="fin">—</b></span>
+                  <span>Total <b data-r="total">—</b></span>
+                </div>
+                <p class="demo__error" data-error-turno role="alert" hidden></p>
+                <button class="btn btn--acento btn--grande" type="submit">Agendar turno <svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg></button>
+              </form>
+
+              <div class="demo__agenda">
+                <div class="demo__agenda-cabeza"><b>Agenda de mañana</b><small>8:00 a 19:00</small></div>
+                <div class="agenda-mini" data-agenda></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Recordar -->
+          <div class="demo__panel" data-paso="recordar" hidden>
+            <div class="demo__columnas">
+              <div>
+                <h2>Recordatorios de mañana</h2>
+                <p class="demo__ayuda">Los clientes con correo lo reciben solo a las 10:00. A Sofía, que no tiene correo, se lo mandás por WhatsApp.</p>
+                <div class="recordatorios" data-recordatorios></div>
+                <p class="demo__nota"><svg class="ico" aria-hidden="true"><use href="#i-mensaje"></use></svg> En el sistema, el botón abre el WhatsApp de la peluquería con este mensaje escrito. Acá lo simulamos.</p>
+                <button class="btn btn--primario" type="button" data-siguiente="cobrar" hidden>Siguiente: llegó Sofía <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button>
+              </div>
+              <div class="chat" data-chat aria-live="polite">
+                <div class="chat__pantalla">
+                  <div class="chat__cabeza">
+                    <img src="img/logo.svg" alt="" width="36" height="36">
+                    <span><b data-chat-nombre>Sofía Villalba</b><small data-chat-numero>+595 982 113 908</small></span>
+                  </div>
+                  <div class="chat__cuerpo" data-chat-cuerpo>
+                    <span class="chat__fecha">Hoy</span>
+                  </div>
+                  <div class="chat__escribir">
+                    <div class="chat__texto" data-chat-borrador>Tocá “WhatsApp” en la lista para escribir el mensaje.</div>
+                    <button class="chat__enviar" type="button" data-chat-enviar disabled aria-label="Enviar mensaje"><svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Cobrar -->
+          <div class="demo__panel" data-paso="cobrar" hidden>
+            <div class="demo__columnas">
+              <form class="demo__formulario" data-form-cobro novalidate>
+                <h2>Cobrar el turno de <span data-c="cliente">Sofía</span></h2>
+                <p class="demo__ayuda">Terminó la atención. Si se lleva un producto, agregalo antes de cobrar.</p>
+                <ul class="demo__lineas" data-lineas></ul>
+                <label class="casilla demo__producto"><input type="checkbox" name="shampoo"> <span>Se lleva <b>Shampoo reparador 300 ml</b> (85.000 ₲) · quedan <b data-stock-shampoo>6</b></span></label>
+                <div class="demo__total"><span>Total a cobrar</span><b data-c="total">0 ₲</b></div>
+                <fieldset class="campo">
+                  <legend>Forma de pago</legend>
+                  <div class="demo__pagos">
+                    <label><input type="radio" name="pago" value="efectivo" checked> Efectivo</label>
+                    <label><input type="radio" name="pago" value="tarjeta"> Tarjeta</label>
+                    <label><input type="radio" name="pago" value="transferencia"> Transferencia / QR</label>
+                  </div>
+                </fieldset>
+                <div class="campo" data-efectivo>
+                  <label for="d-recibido">Efectivo recibido</label>
+                  <input id="d-recibido" name="recibido" type="text" inputmode="numeric">
+                  <p class="demo__vuelto">Vuelto: <b data-c="vuelto">0 ₲</b></p>
+                </div>
+                <p class="demo__error" data-error-cobro role="alert" hidden></p>
+                <button class="btn btn--acento btn--grande" type="submit">Cobrar <svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg></button>
+              </form>
+
+              <div class="demo__resultado" data-resultado-cobro>
+                <div class="demo__vacio">
+                  <svg class="ico" aria-hidden="true"><use href="#i-factura"></use></svg>
+                  <p>Acá vas a ver la factura y lo que se descuenta del stock.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Reponer -->
+          <div class="demo__panel" data-paso="reponer" hidden>
+            <div class="demo__columnas">
+              <div>
+                <h2>El stock, después del turno</h2>
+                <p class="demo__ayuda">Cada producto tiene un mínimo. Cuando baja de ahí, aparece el aviso “Reponer stock”.</p>
+                <div class="stock" data-stock></div>
+              </div>
+              <div data-reposicion></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion seccion--compacta" style="padding-top:0">
+      <div class="contenedor">
+        <div class="banda-cta" data-revelar>
+          <svg class="banda-cta__dibujo ico" aria-hidden="true"><use href="#i-tijeras"></use></svg>
+          <div>
+            <h2>¿Te imaginás tu salón así?</h2>
+            <p>Te mostramos Studio Bella con tus servicios, tus estilistas y tus precios.</p>
+          </div>
+          <div class="grupo-botones">
+            <a class="btn btn--acento btn--grande" href="contacto.html?origen=demo">Pedí tu demo gratis</a>
+            <a class="btn btn--fantasma btn--grande" href="precios.html">Ver precios</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grilla">
+        <div>
+          <a class="marca" href="index.html"><img src="img/logo.svg" alt="" width="38" height="38"><span>Studio Bella</span></a>
+          <p>Sistema para peluquerías, barberías y salones de estética construido sobre Odoo 18. Agenda, cobro con factura, stock y recordatorios en un solo lugar.</p>
+        </div>
+        <div>
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="funciones.html">Funciones</a></li>
+            <li><a href="demo.html">Demo interactiva</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li><a href="precios.html#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Funciones</h4>
+          <ul>
+            <li><a href="funciones.html#agenda">Agenda</a></li>
+            <li><a href="funciones.html#cobro">Cobro y factura</a></li>
+            <li><a href="funciones.html#recordatorios">Recordatorios</a></li>
+            <li><a href="funciones.html#compras">Compras y stock</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="contacto.html" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a></li>
+            <li><a href="contacto.html" data-contacto="email"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> <span data-texto="email">Correo</span></a></li>
+            <li><a href="contacto.html" data-contacto="telefono"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg> <span data-texto="telefono">Teléfono</span></a></li>
+            <li><a href="contacto.html"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg> <span data-texto="direccion">Paraguay</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pie__base">
+        <span>© <span data-anio>2026</span> Studio Bella. Todos los derechos reservados.</span>
+        <span>Odoo es una marca de Odoo S.A. Studio Bella es un módulo independiente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="flotantes">
+    <button class="boton-redondo boton-redondo--arriba" type="button" aria-label="Volver arriba"><svg class="ico" aria-hidden="true"><use href="#i-arriba"></use></svg></button>
+    <a class="boton-redondo boton-redondo--wa" href="contacto.html" data-contacto="whatsapp" aria-label="Escribinos por WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></a>
+  </div>
+</body>
+</html>

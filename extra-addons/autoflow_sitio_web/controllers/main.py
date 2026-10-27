@@ -21,16 +21,41 @@ CAMPOS = {
     'usuarios': 20,
     'plan': 20,
     'mensaje': 2000,
+    'producto': 20,
 }
-TIPOS = {
-    'concesionaria': 'Concesionaria',
-    'taller': 'Taller mecánico',
-    'ambos': 'Concesionaria con taller',
-}
-PLANES = {
-    'inicial': 'Inicial',
-    'profesional': 'Profesional',
-    'empresa': 'Empresa',
+
+# Cada sitio manda en "producto" de qué sistema es la solicitud. El sitio de AutoFlow no lo manda.
+PRODUCTOS = {
+    'autoflow': {
+        'nombre': 'AutoFlow',
+        'etiqueta': 'autoflow_sitio_web.tag_autoflow',
+        'tipos': {
+            'concesionaria': 'Concesionaria',
+            'taller': 'Taller mecánico',
+            'ambos': 'Concesionaria con taller',
+        },
+        'planes': {
+            'inicial': 'Inicial',
+            'profesional': 'Profesional',
+            'empresa': 'Empresa',
+        },
+        'usuarios': 'Usuarios',
+    },
+    'studio_bella': {
+        'nombre': 'Studio Bella',
+        'etiqueta': 'autoflow_sitio_web.tag_studio_bella',
+        'tipos': {
+            'peluqueria': 'Peluquería',
+            'barberia': 'Barbería',
+            'estetica': 'Uñas y estética',
+        },
+        'planes': {
+            'esencial': 'Esencial',
+            'salon': 'Salón',
+            'medida': 'A medida',
+        },
+        'usuarios': 'Estilistas',
+    },
 }
 
 
@@ -74,10 +99,11 @@ class SolicitudSitioWeb(http.Controller):
         # Sin vendedor explícito, Odoo pondría al "Usuario público" que hace la petición.
         equipo = env.ref('sales_team.team_sales_department', raise_if_not_found=False)
         vendedor = (equipo and equipo.user_id) or env.ref('base.user_admin')
+        producto = PRODUCTOS.get(valores['producto'], PRODUCTOS['autoflow'])
         detalle = [
-            ('Tipo de negocio', TIPOS.get(valores['tipo'], 'Sin indicar')),
-            ('Usuarios', valores['usuarios'] or 'Sin indicar'),
-            ('Plan de interés', PLANES.get(valores['plan'], 'Todavía no sabe')),
+            ('Tipo de negocio', producto['tipos'].get(valores['tipo'], 'Sin indicar')),
+            (producto['usuarios'], valores['usuarios'] or 'Sin indicar'),
+            ('Plan de interés', producto['planes'].get(valores['plan'], 'Todavía no sabe')),
             ('Mensaje', valores['mensaje'] or '—'),
         ]
         descripcion = Markup('<ul>%s</ul>') % Markup().join(
@@ -85,7 +111,7 @@ class SolicitudSitioWeb(http.Controller):
         )
         medio = env.ref('utm.utm_medium_website', raise_if_not_found=False)
         return {
-            'name': f"Demo AutoFlow · {valores['empresa']}",
+            'name': f"Demo {producto['nombre']} · {valores['empresa']}",
             'type': 'opportunity',
             'contact_name': valores['nombre'],
             'partner_name': valores['empresa'],
@@ -94,7 +120,8 @@ class SolicitudSitioWeb(http.Controller):
             'description': descripcion,
             'user_id': vendedor.id,
             'team_id': equipo.id if equipo else False,
-            'tag_ids': [Command.link(env.ref('autoflow_sitio_web.tag_sitio_web').id)],
+            'tag_ids': [Command.link(env.ref('autoflow_sitio_web.tag_sitio_web').id),
+                        Command.link(env.ref(producto['etiqueta']).id)],
             'medium_id': medio.id if medio else False,
         }
 

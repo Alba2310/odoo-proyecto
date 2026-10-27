@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio Bella · Sistema para peluquerías en Odoo 18</title>
+  <meta name="description" content="Studio Bella junta la agenda de tus estilistas, el cobro con factura, los productos con stock y el recordatorio por WhatsApp en un solo sistema, hecho sobre Odoo 18.">
+  <meta name="theme-color" content="#2B0F2E">
+  <meta property="og:title" content="Studio Bella · Tu peluquería ordenada y sin turnos perdidos">
+  <meta property="og:description" content="Agenda por estilista, cobro con factura, stock de productos e insumos y recordatorios por WhatsApp.">
+  <meta property="og:image" content="img/capturas/agenda.png">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__barra">
+      <a class="marca" href="index.html" aria-label="Studio Bella, inicio"><img src="img/logo.svg" alt="" width="38" height="38"><span>Studio Bella</span></a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="index.html" aria-current="page">Inicio</a>
+        <a href="funciones.html">Funciones</a>
+        <a href="demo.html">Demo en vivo</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="btn btn--acento btn--chico" href="contacto.html">Pedí tu demo</a>
+      </nav>
+      <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- Héroe -->
+    <section class="heroe">
+      <div class="contenedor heroe__grilla">
+        <div class="heroe__texto">
+          <span class="pastilla" data-revelar><b>NUEVO</b> Sistema para peluquerías en Odoo 18</span>
+          <h1 data-revelar data-retraso="80">Tu peluquería ordenada, <span class="resaltado">sin turnos perdidos</span>.</h1>
+          <p class="lead" data-revelar data-retraso="160">Studio Bella junta la agenda de tus estilistas, el cobro con factura, los productos y el recordatorio por WhatsApp en un solo sistema. Menos clientes que se olvidan del turno y más tiempo para atender.</p>
+          <div class="grupo-botones" data-revelar data-retraso="240">
+            <a class="btn btn--acento btn--grande" href="contacto.html">Pedí tu demo gratis <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+            <a class="btn btn--fantasma btn--grande" href="demo.html"><svg class="ico" aria-hidden="true"><use href="#i-play"></use></svg> Probar la demo interactiva</a>
+          </div>
+          <ul class="heroe__garantias" data-revelar data-retraso="320">
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Instalación y capacitación incluidas</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Precios en guaraníes con IVA</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Recordatorios por WhatsApp sin costo extra</li>
+          </ul>
+        </div>
+
+        <div class="heroe__visual" data-revelar data-retraso="200">
+          <div class="navegador">
+            <div class="navegador__barra">
+              <span class="navegador__puntos"><i></i><i></i><i></i></span>
+              <span class="navegador__url">tupeluqueria.com.py/odoo/studio-bella/agenda</span>
+            </div>
+            <img src="img/capturas/agenda.png" alt="Agenda semanal de Studio Bella con las citas de cada estilista en un color distinto" width="1200" height="720" fetchpriority="high">
+          </div>
+          <div class="flotante flotante--1">
+            <span class="flotante__ico c-verde"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span>
+            <span><b>Recordatorio enviado</b><small>Sofía · mañana a las 10:00</small></span>
+          </div>
+          <div class="flotante flotante--2">
+            <span class="flotante__ico c-acento"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg></span>
+            <span><b>Cobrado 250.000 ₲</b><small>factura con IVA incluido</small></span>
+          </div>
+          <div class="flotante flotante--3">
+            <span class="flotante__ico c-rojo"><svg class="ico" aria-hidden="true"><use href="#i-campana"></use></svg></span>
+            <span><b>Reponer keratina</b><small>quedan 1,9 · mínimo 2</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Integraciones -->
+    <section class="integraciones" aria-label="Aplicaciones de Odoo con las que trabaja">
+      <div class="contenedor integraciones__fila">
+        <span class="integraciones__titulo">Funciona sobre Odoo 18, con las apps que ya conocés:</span>
+        <ul class="integraciones__lista">
+          <li><svg class="ico" aria-hidden="true"><use href="#i-factura"></use></svg> Facturación</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-caja"></use></svg> Inventario</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-camion"></use></svg> Compras</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-usuarios"></use></svg> Empleados</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> Correo</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Problema / solución -->
+    <section class="seccion">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta etiqueta--acento">¿Te suena?</span>
+          <h2>¿Tu agenda todavía es un cuaderno y un montón de chats?</h2>
+          <p>Cuando los turnos, los cobros y el stock están cada uno por su lado, se pierden clientes, productos y tiempo. Studio Bella pone todo en el mismo lugar.</p>
+        </div>
+
+        <div class="comparacion">
+          <div class="comparacion__col comparacion__col--antes" data-revelar>
+            <h3>Sin Studio Bella</h3>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Dos clientas para la misma estilista a la misma hora.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Clientes que se olvidan del turno y el horario queda vacío.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> El tinte o la keratina se terminan sin que nadie avise.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Cobros anotados en un papel y la factura hecha aparte.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> No sabés cuánto factura cada estilista ni qué servicio se pide más.</li>
+            </ul>
+          </div>
+          <div class="comparacion__flecha" aria-hidden="true"><span><svg class="ico"><use href="#i-flecha"></use></svg></span></div>
+          <div class="comparacion__col comparacion__col--despues" data-revelar data-retraso="150">
+            <h3>Con Studio Bella</h3>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> La agenda no deja superponer turnos ni agendar fuera de horario.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Recordatorio el día antes por WhatsApp o por correo.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Cada servicio descuenta sus insumos y el sistema avisa cuándo reponer.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Al cobrar sale la factura con IVA y se calcula el vuelto.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Reportes de lo que factura cada estilista, por categoría.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Funciones -->
+    <section class="seccion seccion--alt" id="funciones">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Todo en un lugar</span>
+          <h2>Lo que tu salón necesita, en un solo sistema</h2>
+          <p>Recepción, estilistas y administración trabajan sobre los mismos datos, cada uno con lo que le toca.</p>
+        </div>
+
+        <div class="grilla grilla--4">
+          <a class="tarjeta" href="funciones.html#agenda" data-revelar>
+            <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg></span>
+            <h3>Agenda por estilista</h3>
+            <p>Calendario con un color por estilista. Sin turnos superpuestos, fuera de horario ni en feriados.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#dia" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-acento"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg></span>
+            <h3>Citas del día</h3>
+            <p>Tablero con quién viene, quién está en atención y quién ya pagó, con el teléfono a mano.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#cobro" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg></span>
+            <h3>Cobro con factura</h3>
+            <p>Efectivo con vuelto, tarjeta o transferencia. Factura con IVA incluido y pago registrado.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#recordatorios" data-revelar data-retraso="240">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span>
+            <h3>Recordatorios</h3>
+            <p>Por correo, automático; por WhatsApp, con el mensaje ya escrito y un solo clic.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#productos" data-revelar>
+            <span class="tarjeta__icono c-violeta"><svg class="ico" aria-hidden="true"><use href="#i-gota"></use></svg></span>
+            <h3>Productos e insumos</h3>
+            <p>Vendé shampoo o cera en la cita o en el mostrador. Los servicios descuentan su tinte y oxidante.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#compras" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-camion"></use></svg></span>
+            <h3>Compras y reposición</h3>
+            <p>Stock mínimo con aviso, pedido al proveedor con un clic y recepción de la mercadería.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#equipo" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-usuarios"></use></svg></span>
+            <h3>Estilistas y horarios</h3>
+            <p>Qué servicios hace cada uno, su horario de trabajo y los días que el salón cierra.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="tarjeta" href="funciones.html#reportes" data-revelar data-retraso="240">
+            <span class="tarjeta__icono c-rojo"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg></span>
+            <h3>Reportes</h3>
+            <p>Cuánto factura cada estilista, qué servicios se piden más y qué productos se venden.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="seccion" id="como-funciona">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Cómo funciona</span>
+          <h2>Un turno, de principio a fin</h2>
+          <p>Tocá cada paso para ver qué hace Studio Bella por vos, sin que nadie tenga que acordarse.</p>
+        </div>
+
+        <div data-pestanas data-progreso data-revelar>
+          <div class="pasos pasos--5" role="tablist" aria-label="Pasos de un turno">
+            <button class="paso" type="button" role="tab" id="paso-1" aria-controls="panel-paso-1" aria-selected="true"><span class="paso__num">1</span>Agendar</button>
+            <button class="paso" type="button" role="tab" id="paso-2" aria-controls="panel-paso-2" aria-selected="false" tabindex="-1"><span class="paso__num">2</span>Recordar</button>
+            <button class="paso" type="button" role="tab" id="paso-3" aria-controls="panel-paso-3" aria-selected="false" tabindex="-1"><span class="paso__num">3</span>Atender</button>
+            <button class="paso" type="button" role="tab" id="paso-4" aria-controls="panel-paso-4" aria-selected="false" tabindex="-1"><span class="paso__num">4</span>Cobrar</button>
+            <button class="paso" type="button" role="tab" id="paso-5" aria-controls="panel-paso-5" aria-selected="false" tabindex="-1"><span class="paso__num">5</span>Reponer</button>
+          </div>
+
+          <div class="paso__panel" role="tabpanel" id="panel-paso-1" aria-labelledby="paso-1">
+            <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg></span>
+            <div>
+              <h3>La clienta pide su turno</h3>
+              <p>Hacés clic en el horario libre de la agenda, elegís la clienta, la estilista y los servicios. El precio, la duración y el fin del turno se calculan solos.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> No deja dar dos turnos a la misma estilista a la misma hora.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Respeta el horario de cada una, los feriados y los días de cierre.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Avisa si la estilista no hace ese servicio.</li>
+              </ul>
+              <div class="paso__nav"><span></span><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente paso <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-2" aria-labelledby="paso-2" hidden>
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span>
+            <div>
+              <h3>El día antes, le avisás</h3>
+              <p>A las 10:00 sale solo el correo para quien lo tiene cargado. Para el resto, la lista de recordatorios tiene un botón que abre WhatsApp con el mensaje escrito.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Mensaje con el día, la hora, los servicios y quién la atiende.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Sin pagar la API de WhatsApp: solo tocás Enviar.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Si cambia el horario, se vuelve a avisar.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente paso <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-3" aria-labelledby="paso-3" hidden>
+            <span class="tarjeta__icono c-acento"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg></span>
+            <div>
+              <h3>Llega y se la atiende</h3>
+              <p>En el tablero del día la recepción ve quién viene, marca que llegó con “Empezar a atender” y anota los productos que se lleva.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Agendada, Confirmada, En atención y Cobrada.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> “No vino” y “Cancelar” liberan el horario.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Notas con la fórmula de color o las alergias.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente paso <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-4" aria-labelledby="paso-4" hidden>
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-factura"></use></svg></span>
+            <div>
+              <h3>Cobrás con un clic</h3>
+              <p>Elegís cómo paga y, si es en efectivo, el sistema calcula el vuelto. Al confirmar hace todo lo demás:</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Emite la factura con IVA 10 % incluido y la deja pagada.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> El efectivo va a la caja; la tarjeta y la transferencia, al banco.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Descuenta del stock lo vendido y los insumos usados.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente paso <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
+            </div>
+          </div>
+          <div class="paso__panel" role="tabpanel" id="panel-paso-5" aria-labelledby="paso-5" hidden>
+            <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-camion"></use></svg></span>
+            <div>
+              <h3>El stock se cuida solo</h3>
+              <p>Cuando un producto baja de su mínimo, aparece el aviso “Reponer stock”. Desde ahí se arma el pedido al proveedor y, cuando llega, se recibe con un clic.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Stock mínimo y cantidad a pedir por producto.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Pedido al proveedor con su precio de compra.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Al recibir la mercadería, el aviso se cierra solo.</li>
+              </ul>
+              <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><a class="btn btn--primario btn--chico" href="demo.html">Probalo en la demo <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galería -->
+    <section class="seccion seccion--oscura" id="pantallas">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Así se ve</span>
+          <h2>Pantallas reales del sistema</h2>
+          <p>Capturas de Studio Bella funcionando en Odoo 18 con datos de ejemplo de una peluquería de Asunción. Tocá una imagen para agrandarla.</p>
+        </div>
+
+        <div data-pestanas data-revelar>
+          <div class="pestanas" role="tablist" aria-label="Pantallas del sistema">
+            <button class="pestana" type="button" role="tab" id="tab-agenda" aria-controls="gal-agenda" aria-selected="true"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg> Agenda</button>
+            <button class="pestana" type="button" role="tab" id="tab-dia" aria-controls="gal-dia" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg> Citas de hoy</button>
+            <button class="pestana" type="button" role="tab" id="tab-cobro" aria-controls="gal-cobro" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg> Cobro</button>
+            <button class="pestana" type="button" role="tab" id="tab-recordatorios" aria-controls="gal-recordatorios" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> Recordatorios</button>
+            <button class="pestana" type="button" role="tab" id="tab-stock" aria-controls="gal-stock" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-caja"></use></svg> Stock</button>
+            <button class="pestana" type="button" role="tab" id="tab-reportes" aria-controls="gal-reportes" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg> Reportes</button>
+          </div>
+
+          <div class="panel-galeria" role="tabpanel" id="gal-agenda" aria-labelledby="tab-agenda">
+            <button class="captura" type="button" data-visor="img/capturas/agenda-resumen.png" data-titulo="Agenda de la semana" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/agenda-resumen.png" alt="Agenda semanal con el resumen de una cita abierto" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Agenda de la semana</h3>
+              <p>Cada estilista tiene su color. Un clic en la cita muestra el resumen; arrastrándola cambiás el horario.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Vista por día, semana o mes.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Filtro por estilista.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> El fin del turno sale de la duración de los servicios.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-dia" aria-labelledby="tab-dia" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/citas-de-hoy.png" data-titulo="Citas de hoy" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/citas-de-hoy.png" alt="Tablero de las citas del día separadas por estado" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>El día de un vistazo</h3>
+              <p>La recepción ve en qué paso está cada cita: agendada, confirmada, en atención o cobrada.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Horario, servicios, teléfono y total en cada tarjeta.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> La inicial de la estilista con su color.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Se pasa de una columna a otra arrastrando.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-cobro" aria-labelledby="tab-cobro" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/cobrar.png" data-titulo="Cobrar una cita" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/cobrar.png" alt="Ventana de cobro con el total, la forma de pago y el vuelto" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Cobro con vuelto y factura</h3>
+              <p>Un arreglo de barba de 35.000 ₲ pagado con 50.000 ₲: el vuelto aparece solo. Al confirmar, sale la factura pagada.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Efectivo, tarjeta o transferencia / QR.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> IVA 10 % incluido en el precio.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Factura para imprimir o mandar por correo.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-recordatorios" aria-labelledby="tab-recordatorios" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/recordatorios.png" data-titulo="Recordatorios de mañana" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/recordatorios.png" alt="Lista de turnos de mañana con botones de WhatsApp y Correo" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Recordatorios de mañana</h3>
+              <p>Los turnos a los que todavía no se les avisó, cada uno con su botón de WhatsApp y de correo.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> El correo sale solo a las 10:00.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> WhatsApp con el mensaje ya escrito.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Queda anotado a quién se le avisó y por dónde.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-stock" aria-labelledby="tab-stock" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/productos.png" data-titulo="Productos con stock mínimo" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/productos.png" alt="Lista de productos con stock y mínimo, en rojo los que hay que reponer" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Productos e insumos con stock</h3>
+              <p>Lo que se vende y lo que se usa en los servicios, con su stock y su mínimo. En rojo, lo que hay que reponer.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Productos de reventa y de uso profesional.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Costo y precio de venta en guaraníes.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Aviso para reponer y pedido al proveedor.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-reportes" aria-labelledby="tab-reportes" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/reporte-tabla.png" data-titulo="Servicios realizados por estilista" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/reporte-tabla.png" alt="Tabla con lo facturado por categoría de servicio y por estilista" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Cuánto factura cada estilista</h3>
+              <p>Lo cobrado por categoría de servicio y por estilista en el mes, listo para descargar en Excel.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Gráficos y tablas dinámicas.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Filtros por fecha, servicio o estilista.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Productos más vendidos.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WhatsApp -->
+    <section class="seccion">
+      <div class="contenedor whatsapp-destacado">
+        <div data-revelar>
+          <span class="etiqueta">Recordatorios por WhatsApp</span>
+          <h2>Que tus clientes no se olviden del turno</h2>
+          <p style="font-size:1.06rem;color:var(--suave)">Cada turno vacío es plata que no entra. El día antes, Studio Bella te deja el mensaje escrito con el día, la hora, los servicios y quién atiende. Vos solo tocás Enviar.</p>
+          <ul class="lista-iconos">
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Usa el WhatsApp de la peluquería, sin costos por mensaje.</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> El número se arma solo, con o sin el 0 adelante.</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Los que tienen correo lo reciben automático a las 10:00.</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Queda registrado a quién se le avisó.</li>
+          </ul>
+          <div class="grupo-botones" style="margin-top:26px">
+            <a class="btn btn--primario" href="demo.html#recordar">Verlo en la demo <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+          </div>
+        </div>
+        <div class="chat" data-revelar data-retraso="150" aria-label="Ejemplo del mensaje que recibe el cliente">
+          <div class="chat__pantalla">
+            <div class="chat__cabeza">
+              <img src="img/logo.svg" alt="" width="36" height="36">
+              <span><b>Studio Bella</b><small>en línea</small></span>
+            </div>
+            <div class="chat__cuerpo">
+              <span class="chat__fecha">Hoy</span>
+              <p class="burbuja" style="margin:0">¡Hola Sofía! Te recordamos tu turno en Studio Bella: miércoles 28 de octubre a las 10:00 (Tintura de raíz), con Lorena. Si no podés venir, avisanos por acá, así le damos el lugar a otra persona. ¡Te esperamos!<span class="burbuja__hora">10:02 <svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg></span></p>
+              <p class="burbuja burbuja--recibida" style="margin:0">¡Gracias! Ahí estoy 😊<span class="burbuja__hora">10:15</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculadora -->
+    <section class="seccion seccion--alt" id="calculadora">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta etiqueta--acento">Calculadora</span>
+          <h2>¿Cuánta plata te cuestan los turnos vacíos?</h2>
+          <p>Mové las barras con los números de tu salón y mirá cuánto podés recuperar avisando el día antes.</p>
+        </div>
+
+        <form class="calculadora" data-calculadora data-revelar onsubmit="return false">
+          <div class="calculadora__entradas">
+            <div class="control">
+              <label for="calc-citas">Turnos por mes <output data-salida="citas">400</output></label>
+              <input id="calc-citas" name="citas" type="range" min="50" max="1500" step="10" value="400">
+            </div>
+            <div class="control">
+              <label for="calc-faltan">Clientes que hoy no vienen <output data-salida="faltan">10 %</output></label>
+              <input id="calc-faltan" name="faltan" type="range" min="2" max="30" step="1" value="10">
+            </div>
+            <div class="control">
+              <label for="calc-ticket">Lo que deja un turno en promedio <output data-salida="ticket">Gs. 120.000</output></label>
+              <input id="calc-ticket" name="ticket" type="range" min="30000" max="400000" step="5000" value="120000">
+            </div>
+            <div class="control">
+              <label for="calc-evitadas">Faltas que se evitan con el recordatorio <output data-salida="evitadas">50 %</output></label>
+              <input id="calc-evitadas" name="evitadas" type="range" min="20" max="80" step="5" value="50">
+            </div>
+          </div>
+          <div class="calculadora__resultado" aria-live="polite">
+            <h3>Lo que podés recuperar</h3>
+            <div class="resultado__grande"><span data-salida="recuperadas">20</span> <small>turnos al mes</small></div>
+            <div style="margin-top:18px">
+              <div class="resultado__fila"><span>Faltas por mes hoy</span><b data-salida="faltas">40</b></div>
+              <div class="resultado__fila"><span>Plata recuperada por mes</span><b data-salida="mes">Gs. 2.400.000</b></div>
+              <div class="resultado__fila"><span>Plata recuperada por año</span><b data-salida="anio">Gs. 28.800.000</b></div>
+            </div>
+            <p class="calculadora__nota">Estimación orientativa calculada con los valores que elegiste.</p>
+            <a class="btn btn--acento" href="contacto.html" style="margin-top:8px;align-self:flex-start">Quiero dejar de perder turnos <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Para quién -->
+    <section class="seccion">
+      <div class="contenedor">
+        <div class="seccion__cabeza" data-revelar>
+          <span class="etiqueta">Para quién es</span>
+          <h2>Hecho para salones de belleza</h2>
+        </div>
+        <div class="grilla grilla--3">
+          <div class="tarjeta publico" data-revelar>
+            <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg></span>
+            <h3>Peluquerías</h3>
+            <p>Cortes, color, tratamientos y peinados, con los insumos de cada servicio y la agenda de todo el equipo.</p>
+          </div>
+          <div class="tarjeta publico" data-revelar data-retraso="100">
+            <span class="tarjeta__icono c-acento"><svg class="ico" aria-hidden="true"><use href="#i-reloj"></use></svg></span>
+            <h3>Barberías</h3>
+            <p>Turnos cortos y seguidos sin superposiciones, cobro rápido y venta de ceras y productos en el mostrador.</p>
+          </div>
+          <div class="tarjeta publico" data-revelar data-retraso="200">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-chispas"></use></svg></span>
+            <h3>Uñas y estética</h3>
+            <p>Manicura, pedicura y semipermanente con el control del esmalte y de cada insumo que se usa.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Llamada final -->
+    <section class="seccion seccion--compacta">
+      <div class="contenedor">
+        <div class="banda-cta" data-revelar>
+          <svg class="banda-cta__dibujo ico" aria-hidden="true"><use href="#i-tijeras"></use></svg>
+          <div>
+            <h2>Mirá Studio Bella con los datos de tu salón</h2>
+            <p>Te mostramos el sistema en una llamada de 30 minutos, sin compromiso.</p>
+          </div>
+          <div class="grupo-botones">
+            <a class="btn btn--acento btn--grande" href="contacto.html">Pedí tu demo gratis</a>
+            <a class="btn btn--fantasma btn--grande" href="precios.html">Ver precios</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grilla">
+        <div>
+          <a class="marca" href="index.html"><img src="img/logo.svg" alt="" width="38" height="38"><span>Studio Bella</span></a>
+          <p>Sistema para peluquerías, barberías y salones de estética construido sobre Odoo 18. Agenda, cobro con factura, stock y recordatorios en un solo lugar.</p>
+        </div>
+        <div>
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="funciones.html">Funciones</a></li>
+            <li><a href="demo.html">Demo interactiva</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li><a href="precios.html#preguntas">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Funciones</h4>
+          <ul>
+            <li><a href="funciones.html#agenda">Agenda</a></li>
+            <li><a href="funciones.html#cobro">Cobro y factura</a></li>
+            <li><a href="funciones.html#recordatorios">Recordatorios</a></li>
+            <li><a href="funciones.html#compras">Compras y stock</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="contacto.html" data-contacto="whatsapp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> WhatsApp</a></li>
+            <li><a href="contacto.html" data-contacto="email"><svg class="ico" aria-hidden="true"><use href="#i-sobre"></use></svg> <span data-texto="email">Correo</span></a></li>
+            <li><a href="contacto.html" data-contacto="telefono"><svg class="ico" aria-hidden="true"><use href="#i-telefono"></use></svg> <span data-texto="telefono">Teléfono</span></a></li>
+            <li><a href="contacto.html"><svg class="ico" aria-hidden="true"><use href="#i-ubicacion"></use></svg> <span data-texto="direccion">Paraguay</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pie__base">
+        <span>© <span data-anio>2026</span> Studio Bella. Todos los derechos reservados.</span>
+        <span>Odoo es una marca de Odoo S.A. Studio Bella es un módulo independiente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="flotantes">
+    <button class="boton-redondo boton-redondo--arriba" type="button" aria-label="Volver arriba"><svg class="ico" aria-hidden="true"><use href="#i-arriba"></use></svg></button>
+    <a class="boton-redondo boton-redondo--wa" href="contacto.html" data-contacto="whatsapp" aria-label="Escribinos por WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></a>
+  </div>
+</body>
+</html>

@@ -46,6 +46,16 @@ services:
       - ./nginx/sitio.conf:/etc/nginx/conf.d/default.conf:ro
     restart: unless-stopped
 
+  # Sitio web de venta de Studio Bella (carpeta sitio-bella) en http://localhost:5501
+  sitio-bella:
+    image: nginx:alpine
+    ports:
+      - "5501:80"
+    volumes:
+      - ./sitio-bella:/usr/share/nginx/html:ro
+      - ./nginx/sitio.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
   db:
     image: postgres:15
     environment:
