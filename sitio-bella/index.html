@@ -12,7 +12,7 @@
   <link rel="icon" href="img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
   <script>document.documentElement.classList.add('js')</script>
   <script src="js/main.js" defer></script>
@@ -55,20 +55,31 @@
           </ul>
         </div>
 
-        <div class="heroe__visual" data-revelar data-retraso="200">
-          <div class="navegador">
-            <div class="navegador__barra">
-              <span class="navegador__puntos"><i></i><i></i><i></i></span>
-              <span class="navegador__url">tupeluqueria.com.py/odoo/studio-bella/agenda</span>
+        <div class="heroe__visual heroe__visual--salon" data-revelar data-retraso="200">
+          <span class="arco" aria-hidden="true"></span>
+          <div class="chat chat--heroe" aria-label="Ejemplo del recordatorio que le llega a la clienta">
+            <div class="chat__pantalla">
+              <div class="chat__cabeza">
+                <img src="img/logo.svg" alt="" width="36" height="36">
+                <span><b>Studio Bella</b><small>en línea</small></span>
+              </div>
+              <div class="chat__cuerpo">
+                <span class="chat__fecha">Hoy</span>
+                <p class="burbuja" style="margin:0">¡Hola Sofía! Te recordamos tu turno en Studio Bella: mañana a las 10:00 (Tintura de raíz), con Lorena. ¡Te esperamos!<span class="burbuja__hora">10:02 <svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg></span></p>
+                <p class="burbuja burbuja--recibida" style="margin:0">¡Gracias! Ahí estoy 😊<span class="burbuja__hora">10:15</span></p>
+              </div>
             </div>
-            <img src="img/capturas/agenda.png" alt="Agenda semanal de Studio Bella con las citas de cada estilista en un color distinto" width="1200" height="720" fetchpriority="high">
+          </div>
+          <div class="flotante flotante--agenda">
+            <b>Agenda de mañana</b>
+            <ul>
+              <li><i style="background:#5BA94A"></i> 09:00 Rosa · Tintura completa</li>
+              <li><i style="background:#C9A50F"></i> 11:00 Lucía · Corte + Brushing</li>
+              <li><i style="background:#C4532F"></i> 17:00 Rodrigo · Corte</li>
+            </ul>
           </div>
           <div class="flotante flotante--1">
-            <span class="flotante__ico c-verde"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span>
-            <span><b>Recordatorio enviado</b><small>Sofía · mañana a las 10:00</small></span>
-          </div>
-          <div class="flotante flotante--2">
-            <span class="flotante__ico c-acento"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg></span>
+            <span class="flotante__ico c-verde"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg></span>
             <span><b>Cobrado 250.000 ₲</b><small>factura con IVA incluido</small></span>
           </div>
           <div class="flotante flotante--3">
@@ -137,55 +148,105 @@
           <p>Recepción, estilistas y administración trabajan sobre los mismos datos, cada uno con lo que le toca.</p>
         </div>
 
-        <div class="grilla grilla--4">
-          <a class="tarjeta" href="funciones.html#agenda" data-revelar>
+        <div class="bento">
+          <a class="bento__item bento__item--grande" href="funciones.html#agenda" data-revelar>
             <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg></span>
             <h3>Agenda por estilista</h3>
-            <p>Calendario con un color por estilista. Sin turnos superpuestos, fuera de horario ni en feriados.</p>
+            <p>Calendario con un color por estilista. No deja superponer turnos, agendar fuera de horario ni en feriados.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+            <span class="bento__captura"><img src="img/capturas/agenda.png" alt="Agenda semanal con las citas de cada estilista en un color distinto" width="1200" height="720" loading="lazy"></span>
           </a>
-          <a class="tarjeta" href="funciones.html#dia" data-revelar data-retraso="80">
-            <span class="tarjeta__icono c-acento"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg></span>
-            <h3>Citas del día</h3>
-            <p>Tablero con quién viene, quién está en atención y quién ya pagó, con el teléfono a mano.</p>
-            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
-          </a>
-          <a class="tarjeta" href="funciones.html#cobro" data-revelar data-retraso="160">
+          <a class="bento__item" href="funciones.html#cobro" data-revelar data-retraso="80">
             <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg></span>
             <h3>Cobro con factura</h3>
             <p>Efectivo con vuelto, tarjeta o transferencia. Factura con IVA incluido y pago registrado.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
           </a>
-          <a class="tarjeta" href="funciones.html#recordatorios" data-revelar data-retraso="240">
+          <a class="bento__item bento__item--miel" href="funciones.html#recordatorios" data-revelar data-retraso="160">
             <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span>
             <h3>Recordatorios</h3>
-            <p>Por correo, automático; por WhatsApp, con el mensaje ya escrito y un solo clic.</p>
+            <p>Por correo, automático; por WhatsApp, con el mensaje escrito y un clic.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
           </a>
-          <a class="tarjeta" href="funciones.html#productos" data-revelar>
+          <a class="bento__item bento__item--salvia" href="funciones.html#dia" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-acento"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg></span>
+            <h3>Citas del día</h3>
+            <p>Quién viene, quién está en atención y quién ya pagó, con el teléfono a mano.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="bento__item" href="funciones.html#productos" data-revelar data-retraso="160">
             <span class="tarjeta__icono c-violeta"><svg class="ico" aria-hidden="true"><use href="#i-gota"></use></svg></span>
             <h3>Productos e insumos</h3>
-            <p>Vendé shampoo o cera en la cita o en el mostrador. Los servicios descuentan su tinte y oxidante.</p>
+            <p>Vendé shampoo o cera en la cita. Cada servicio descuenta su tinte y su oxidante.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
           </a>
-          <a class="tarjeta" href="funciones.html#compras" data-revelar data-retraso="80">
+          <a class="bento__item bento__item--ancho" href="funciones.html#compras" data-revelar>
             <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-camion"></use></svg></span>
             <h3>Compras y reposición</h3>
-            <p>Stock mínimo con aviso, pedido al proveedor con un clic y recepción de la mercadería.</p>
+            <p>Cada producto tiene su stock mínimo. Cuando baja, aparece el aviso, el pedido al proveedor se arma con un clic y la mercadería se recibe en la misma pantalla.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
           </a>
-          <a class="tarjeta" href="funciones.html#equipo" data-revelar data-retraso="160">
+          <a class="bento__item" href="funciones.html#equipo" data-revelar data-retraso="80">
             <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-usuarios"></use></svg></span>
             <h3>Estilistas y horarios</h3>
-            <p>Qué servicios hace cada uno, su horario de trabajo y los días que el salón cierra.</p>
+            <p>Qué servicios hace cada uno, su horario y los días que cierra el salón.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
           </a>
-          <a class="tarjeta" href="funciones.html#reportes" data-revelar data-retraso="240">
+          <a class="bento__item bento__item--salvia" href="funciones.html#reportes" data-revelar data-retraso="160">
             <span class="tarjeta__icono c-rojo"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg></span>
             <h3>Reportes</h3>
-            <p>Cuánto factura cada estilista, qué servicios se piden más y qué productos se venden.</p>
+            <p>Cuánto factura cada estilista y qué servicios se piden más.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
           </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Carta de servicios -->
+    <section class="seccion">
+      <div class="contenedor carta">
+        <div class="carta__texto" data-revelar>
+          <span class="etiqueta">Tu carta de servicios</span>
+          <h2>Cada servicio, con su precio y su tiempo</h2>
+          <p>Cargás los servicios de tu salón con el precio (IVA incluido), cuánto duran y qué insumos gastan. Con eso la agenda calcula a qué hora termina cada turno y el stock se descuenta solo.</p>
+          <a class="enlace-flecha" href="funciones.html#productos">Ver cómo se cargan <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+        </div>
+        <div class="carta__pizarra" data-revelar data-retraso="120">
+            <div class="carta__grupo">
+              <h3>Cortes</h3>
+              <ul>
+                <li><span>Corte de dama</span><i></i><small>60 min</small><b>80.000</b></li>
+                <li><span>Corte de caballero</span><i></i><small>30 min</small><b>50.000</b></li>
+                <li><span>Corte infantil</span><i></i><small>30 min</small><b>40.000</b></li>
+              </ul>
+            </div>
+            <div class="carta__grupo">
+              <h3>Coloración</h3>
+              <ul>
+                <li><span>Tintura de raíz</span><i></i><small>90 min</small><b>180.000</b></li>
+                <li><span>Tintura completa</span><i></i><small>120 min</small><b>250.000</b></li>
+                <li><span>Mechas balayage</span><i></i><small>180 min</small><b>450.000</b></li>
+              </ul>
+            </div>
+            <div class="carta__grupo">
+              <h3>Tratamientos y peinados</h3>
+              <ul>
+                <li><span>Alisado con keratina</span><i></i><small>150 min</small><b>350.000</b></li>
+                <li><span>Hidratación profunda</span><i></i><small>45 min</small><b>90.000</b></li>
+                <li><span>Brushing</span><i></i><small>45 min</small><b>60.000</b></li>
+                <li><span>Peinado de fiesta</span><i></i><small>60 min</small><b>150.000</b></li>
+              </ul>
+            </div>
+            <div class="carta__grupo">
+              <h3>Barbería, manos y pies</h3>
+              <ul>
+                <li><span>Arreglo de barba</span><i></i><small>30 min</small><b>35.000</b></li>
+                <li><span>Manicura</span><i></i><small>45 min</small><b>50.000</b></li>
+                <li><span>Pedicura</span><i></i><small>60 min</small><b>70.000</b></li>
+                <li><span>Esmaltado semipermanente</span><i></i><small>60 min</small><b>90.000</b></li>
+              </ul>
+            </div>
+            <p class="carta__nota">Precios de ejemplo en guaraníes. En tu salón, cargás los tuyos.</p>
         </div>
       </div>
     </section>
@@ -278,7 +339,7 @@
     </section>
 
     <!-- Galería -->
-    <section class="seccion seccion--oscura" id="pantallas">
+    <section class="seccion seccion--rubor" id="pantallas">
       <div class="contenedor">
         <div class="seccion__cabeza" data-revelar>
           <span class="etiqueta">Así se ve</span>
@@ -407,18 +468,11 @@
             <a class="btn btn--primario" href="demo.html#recordar">Verlo en la demo <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
           </div>
         </div>
-        <div class="chat" data-revelar data-retraso="150" aria-label="Ejemplo del mensaje que recibe el cliente">
-          <div class="chat__pantalla">
-            <div class="chat__cabeza">
-              <img src="img/logo.svg" alt="" width="36" height="36">
-              <span><b>Studio Bella</b><small>en línea</small></span>
-            </div>
-            <div class="chat__cuerpo">
-              <span class="chat__fecha">Hoy</span>
-              <p class="burbuja" style="margin:0">¡Hola Sofía! Te recordamos tu turno en Studio Bella: miércoles 28 de octubre a las 10:00 (Tintura de raíz), con Lorena. Si no podés venir, avisanos por acá, así le damos el lugar a otra persona. ¡Te esperamos!<span class="burbuja__hora">10:02 <svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg></span></p>
-              <p class="burbuja burbuja--recibida" style="margin:0">¡Gracias! Ahí estoy 😊<span class="burbuja__hora">10:15</span></p>
-            </div>
-          </div>
+        <div data-revelar data-retraso="150">
+          <button class="captura" type="button" data-visor="img/capturas/cita-whatsapp.png" data-titulo="Recordatorio desde la cita" data-grupo="whatsapp">
+            <span class="navegador"><img src="img/capturas/cita-whatsapp.png" alt="Cita con los botones Recordatorio por WhatsApp y Recordatorio por correo" width="1200" height="720" loading="lazy"></span>
+            <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+          </button>
         </div>
       </div>
     </section>

@@ -1,14 +1,16 @@
 # Sitio web de venta de Studio Bella
 
 Sitio estático (HTML, CSS y JavaScript, sin dependencias) para vender el módulo `studio_bella`, el sistema para
-peluquerías. Se adapta a computadora, tablet y celular. Está hecho sobre la misma base que el sitio de AutoFlow
-(`sitio-web/`), con la paleta ciruela, rosa y dorado de Studio Bella.
+peluquerías. Se adapta a computadora, tablet y celular. Parte de la misma base que el sitio de AutoFlow
+(`sitio-web/`), pero tiene un estilo propio para que no se parezcan: fondos claros en crema y rosa, arcos, letra
+DM Sans con títulos en Fraunces y la paleta ciruela y rosa. Ese estilo está en la «Capa Studio Bella», al final de
+`css/estilos.css`, que pisa las reglas de la base.
 
 ## Páginas
 
 | Archivo | Contenido |
 |---|---|
-| `index.html` | Portada: problema/solución, funciones, un turno paso a paso, capturas, recordatorio por WhatsApp, calculadora de turnos perdidos |
+| `index.html` | Portada: celular con el recordatorio, problema/solución, funciones en mosaico, carta de servicios con precios de ejemplo, un turno paso a paso, capturas, recordatorio por WhatsApp, calculadora de turnos perdidos |
 | `funciones.html` | Detalle de cada parte del sistema con capturas reales, permisos y manual |
 | `demo.html` | Demo interactiva: agendar (con las validaciones del sistema), recordar por WhatsApp, cobrar con factura y reponer stock. Todo simulado en el navegador (`js/demo.js`) |
 | `precios.html` | Planes mensual/anual, comparación y preguntas frecuentes |

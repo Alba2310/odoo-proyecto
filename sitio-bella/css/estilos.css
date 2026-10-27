@@ -806,3 +806,189 @@ a.dato:hover { border-color: var(--ciruela-200); transform: translateY(-2px); bo
 
 /* Portada: los 5 pasos de un turno en una fila (en pantallas chicas valen las reglas de .pasos) */
 @media (min-width: 901px) { .pasos--5 { grid-template-columns: repeat(5, 1fr); } }
+
+/* ==========================================================================
+   Capa Studio Bella: lo que diferencia este sitio del de AutoFlow.
+   Fondos claros color crema y rubor, formas de arco, títulos de sección en
+   cursiva y botones con esquinas suaves. Va al final para pisar la base.
+   ========================================================================== */
+
+:root {
+  --crema: #FBF4EF;
+  --rubor: #F7E6EC;
+  --lila: #EFE7F5;
+  --salvia: #E6F0E7;
+  --miel: #FCF0DC;
+  --degradado: linear-gradient(135deg, #D2558F, #6E2A6A);
+  --fuente: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Botones */
+.btn { border-radius: 14px; }
+.btn--acento { --btn-bg: var(--degradado); --btn-color: #fff; }
+.btn--acento:hover { --btn-bg: linear-gradient(135deg, #C2447F, #5A2160); box-shadow: 0 14px 30px -12px rgba(138, 46, 110, .6); }
+.btn--fantasma { --btn-bg: rgba(255, 255, 255, .6); --btn-color: var(--ciruela-700); border-color: var(--ciruela-200); }
+.btn--fantasma:hover { --btn-bg: #fff; border-color: var(--ciruela-500); }
+.final .btn--fantasma { --btn-bg: transparent; --btn-color: #fff; border-color: rgba(255, 255, 255, .45); }
+.final .btn--fantasma:hover { --btn-bg: rgba(255, 255, 255, .12); border-color: #fff; }
+
+/* Cabecera: clara desde arriba */
+.cabecera { color: var(--tinta); }
+.cabecera--fija { background: rgba(251, 244, 239, .92); }
+.marca img { box-shadow: none; }
+.menu a[aria-current="page"]::after { bottom: 0; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--ciruela-500); }
+
+/* Títulos de sección: cursiva con un trazo, en vez de etiqueta en píldora */
+.etiqueta, .seccion--oscura .etiqueta {
+  display: inline-flex; align-items: center; gap: 10px; padding: 0; border-radius: 0; background: none;
+  font-family: var(--fuente-titulos); font-style: italic; font-weight: 600; font-size: 1.08rem;
+  letter-spacing: 0; text-transform: none; color: var(--ciruela-600);
+}
+.etiqueta::before { content: ""; width: 26px; height: 1.5px; background: currentColor; }
+.seccion__cabeza .etiqueta::after { content: ""; width: 26px; height: 1.5px; background: currentColor; }
+.etiqueta--acento { color: #A8641B; background: none; }
+
+.pastilla { color: var(--ciruela-800); background: #fff; border-color: var(--ciruela-200); box-shadow: var(--sombra-s); }
+.pastilla b { background: var(--ciruela-600); color: #fff; }
+
+/* Portada clara con un arco detrás del celular */
+.heroe {
+  color: var(--texto);
+  background:
+    radial-gradient(520px 420px at 88% 18%, rgba(236, 112, 151, .22), transparent 70%),
+    radial-gradient(480px 380px at 4% 96%, rgba(240, 178, 74, .18), transparent 70%),
+    var(--crema);
+}
+.heroe::before { display: none; }
+.heroe h1 { color: var(--ciruela-900); }
+.heroe h1 .resaltado { font-style: italic; background: var(--degradado); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.heroe__texto .lead { color: var(--texto); }
+.heroe__garantias { color: var(--suave); }
+.heroe__garantias .ico { color: var(--verde); }
+
+.heroe__visual--salon { display: grid; place-items: center; padding: 36px 0 44px; }
+.arco {
+  position: absolute; z-index: -1; left: 50%; top: 0; bottom: 0; width: min(420px, 88%); transform: translateX(-50%);
+  border-radius: 999px 999px 36px 36px;
+  background: linear-gradient(180deg, #F6D3E0, #E9B6CD 60%, #D99ABB);
+}
+.chat--heroe { max-width: 320px; transform: rotate(2.5deg); }
+.chat--heroe .chat__cuerpo { min-height: 230px; }
+.flotante--agenda { left: -56px; bottom: -4%; flex-direction: column; align-items: flex-start; gap: 6px; padding: 12px 16px; animation-delay: -2s; }
+.flotante--agenda ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.flotante--agenda li { display: flex; align-items: center; gap: 7px; color: var(--suave); }
+.flotante--agenda i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+@media (max-width: 960px) { .flotante--agenda { left: max(0px, calc(50% - 345px)); } }
+@media (max-width: 600px) { .flotante--agenda { display: none; } }
+
+/* Problema y solución */
+.comparacion__col--antes { background: var(--crema); border: 1px dashed #E6D3D9; }
+.comparacion__col--despues { background: #fff; color: var(--texto); border: 2px solid var(--ciruela-200); box-shadow: var(--sombra); }
+.comparacion__col--despues h3 { color: var(--ciruela-800); }
+.comparacion__col--despues .ico { color: var(--verde); }
+.comparacion__flecha span { background: var(--degradado); color: #fff; }
+
+.seccion--alt { background: var(--crema); }
+
+/* Funciones en mosaico */
+.bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: dense; gap: 16px; }
+.bento__item {
+  position: relative; display: flex; flex-direction: column; gap: 4px; padding: 26px; overflow: hidden;
+  border-radius: 24px; background: #fff; border: 1px solid var(--borde); color: var(--texto);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.bento__item:hover { transform: translateY(-4px); box-shadow: var(--sombra); color: var(--texto); }
+.bento__item h3 { margin: 12px 0 2px; }
+.bento__item p { margin: 0; color: var(--suave); font-size: .95rem; }
+.bento__item .enlace-flecha { margin-top: auto; padding-top: 14px; color: var(--ciruela-600); }
+.bento__item .tarjeta__icono { width: 48px; height: 48px; border-radius: 16px; background: rgba(255, 255, 255, .9); }
+.bento__item--grande { grid-column: span 2; grid-row: span 2; background: var(--rubor); border-color: transparent; }
+.bento__item--ancho { grid-column: span 2; background: var(--lila); border-color: transparent; }
+.bento__item--salvia { background: var(--salvia); border-color: transparent; }
+.bento__item--miel { background: var(--miel); border-color: transparent; }
+.bento__captura { display: block; margin: 22px -26px -26px 26px; }
+.bento__captura img { border-radius: 14px 0 0 0; box-shadow: var(--sombra); }
+@media (max-width: 960px) { .bento { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) {
+  .bento { grid-template-columns: 1fr; }
+  .bento__item--grande, .bento__item--ancho { grid-column: auto; grid-row: auto; }
+  /* En el celular las tarjetas chicas van en fila: ícono a la izquierda y texto al lado */
+  .bento__item:not(.bento__item--grande) { display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; align-items: start; padding: 18px; }
+  .bento__item:not(.bento__item--grande) .tarjeta__icono { grid-row: span 2; width: 44px; height: 44px; border-radius: 14px; }
+  .bento__item:not(.bento__item--grande) h3 { margin: 2px 0 2px; }
+  .bento__item:not(.bento__item--grande) .enlace-flecha { display: none; }
+}
+
+/* Carta de servicios, como la pizarra de precios de una peluquería */
+.carta { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.carta__texto > p { color: var(--suave); font-size: 1.06rem; }
+.carta__pizarra {
+  padding: clamp(56px, 7vw, 84px) clamp(24px, 4vw, 48px) clamp(28px, 4vw, 40px);
+  border-radius: 999px 999px 32px 32px; background: var(--crema); border: 1px solid #EFDCE3;
+  columns: 2 260px; column-gap: 40px;
+}
+.carta__grupo { break-inside: avoid; margin-bottom: 22px; }
+.carta__grupo h3 { margin: 0 0 10px; font-family: var(--fuente-titulos); font-style: italic; font-weight: 600; font-size: 1.15rem; color: var(--ciruela-700); }
+.carta__grupo ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.carta__grupo li { display: flex; align-items: baseline; gap: 8px; font-size: .95rem; color: var(--tinta); }
+.carta__grupo li i { flex: 1; min-width: 12px; border-bottom: 1.5px dotted #D9C3CF; transform: translateY(-4px); }
+.carta__grupo li small { color: var(--suave); white-space: nowrap; }
+.carta__grupo li b { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.carta__nota { margin: 6px 0 0; text-align: center; font-size: .85rem; color: var(--suave); column-span: all; }
+@media (max-width: 900px) { .carta { grid-template-columns: 1fr; } .carta__pizarra { border-radius: 200px 200px 28px 28px; } }
+
+/* Galería sobre fondo rubor */
+.seccion--rubor { background: var(--rubor); }
+.seccion--rubor .pestanas { background: #fff; border-color: #EEDCE4; }
+.seccion--rubor .pestana { color: var(--suave); }
+.seccion--rubor .pestana:hover { color: var(--ciruela-700); }
+.seccion--rubor .pestana[aria-selected="true"] { background: var(--ciruela-600); color: #fff; }
+.seccion--rubor .panel-galeria .lista-iconos .ico { color: var(--verde); }
+
+/* Para quién: tarjetas con forma de arco */
+.grilla .publico { align-items: center; text-align: center; padding-top: 48px; border: 0; border-radius: 180px 180px 24px 24px; background: var(--crema); }
+.grilla .publico:nth-child(2) { background: var(--rubor); }
+.grilla .publico:nth-child(3) { background: var(--salvia); }
+.grilla .publico .tarjeta__icono { background: #fff; }
+
+/* Calculadora y llamada final, claras */
+.calculadora { border: 0; }
+.calculadora__resultado { color: var(--texto); background: radial-gradient(400px 260px at 100% 0%, rgba(236, 112, 151, .28), transparent 70%), var(--rubor); }
+.calculadora__resultado h3 { color: var(--ciruela-800); }
+.resultado__grande { color: var(--ciruela-800); }
+.resultado__grande small { color: var(--ciruela-500); }
+.resultado__fila { border-bottom-color: rgba(138, 46, 110, .15); }
+.resultado__fila b { color: var(--ciruela-900); }
+.calculadora__nota { color: var(--suave); }
+
+.banda-cta {
+  color: var(--texto); border-radius: 32px;
+  background: radial-gradient(520px 260px at 100% 100%, rgba(240, 178, 74, .28), transparent 65%), var(--rubor);
+}
+.banda-cta h2 { color: var(--ciruela-900); }
+.banda-cta__dibujo { color: var(--ciruela-500); opacity: .12; }
+
+/* Encabezado de las páginas internas */
+.cabeza-pagina { color: var(--texto); background: radial-gradient(640px 320px at 50% 0%, rgba(236, 112, 151, .22), transparent 70%), var(--crema); }
+.cabeza-pagina h1 { color: var(--ciruela-900); }
+.periodo { background: #fff; border-color: var(--ciruela-200); }
+.periodo button { color: var(--texto); }
+.periodo button[aria-pressed="true"] { background: var(--ciruela-600); color: #fff; }
+.plan__cinta { background: var(--degradado); color: #fff; }
+.horario { background: var(--rubor); color: var(--texto); }
+.horario h3, .horario b { color: var(--ciruela-900); }
+
+/* Pie claro */
+.pie { background: var(--crema); color: var(--suave); border-top: 1px solid var(--borde); }
+.pie .marca, .pie h4 { color: var(--ciruela-900); }
+.pie a { color: var(--texto); }
+.pie a:hover { color: var(--ciruela-600); }
+.pie__base { border-top-color: var(--borde); }
+
+/* Página "llamar" */
+.llamar { color: var(--texto); background: radial-gradient(700px 400px at 50% 0%, rgba(236, 112, 151, .24), transparent 70%), var(--crema); }
+.llamar .marca { color: var(--ciruela-900); }
+.llamar__etiqueta, .llamar__ayuda, .llamar__horario { color: var(--suave); }
+.llamar__numero { color: var(--ciruela-800); }
+.llamar__numero:hover { color: var(--ciruela-500); }
+.llamar .enlace-flecha { color: var(--ciruela-600); }
