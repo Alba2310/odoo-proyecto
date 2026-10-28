@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Gastos de las propiedades -->
+    <record id="view_alquiler_gasto_list" model="ir.ui.view">
+        <field name="name">alquiler.gasto.list</field>
+        <field name="model">alquiler.gasto</field>
+        <field name="arch" type="xml">
+            <list string="Gastos">
+                <field name="fecha"/>
+                <field name="propiedad_id"/>
+                <field name="unidad_id" optional="show"/>
+                <field name="name"/>
+                <field name="categoria"/>
+                <field name="proveedor" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="monto" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_gasto_form" model="ir.ui.view">
+        <field name="name">alquiler.gasto.form</field>
+        <field name="model">alquiler.gasto</field>
+        <field name="arch" type="xml">
+            <form string="Gasto">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Pintura del Depto 3"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="fecha"/>
+                            <field name="propiedad_id"/>
+                            <field name="unidad_id"/>
+                            <field name="categoria"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monto"/>
+                            <field name="proveedor"/>
+                            <field name="comprobante" filename="comprobante_nombre"/>
+                            <field name="comprobante_nombre" invisible="1"/>
+                            <field name="mantenimiento_id" invisible="not mantenimiento_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_gasto_search" model="ir.ui.view">
+        <field name="name">alquiler.gasto.search</field>
+        <field name="model">alquiler.gasto</field>
+        <field name="arch" type="xml">
+            <search string="Buscar gastos">
+                <field name="name"/>
+                <field name="propiedad_id"/>
+                <field name="proveedor"/>
+                <filter name="reparaciones" string="Reparaciones" domain="[('categoria', '=', 'reparacion')]"/>
+                <filter name="impuestos" string="Impuestos" domain="[('categoria', '=', 'impuesto')]"/>
+                <filter name="servicios" string="Servicios" domain="[('categoria', '=', 'servicios')]"/>
+                <separator/>
+                <filter name="filtro_fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_propiedad" string="Propiedad" context="{'group_by': 'propiedad_id'}"/>
+                    <filter name="group_categoria" string="Categoría" context="{'group_by': 'categoria'}"/>
+                    <filter name="group_mes" string="Mes" context="{'group_by': 'fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_alquiler_gasto_pivot" model="ir.ui.view">
+        <field name="name">alquiler.gasto.pivot</field>
+        <field name="model">alquiler.gasto</field>
+        <field name="arch" type="xml">
+            <pivot string="Gastos" sample="1">
+                <field name="categoria" type="row"/>
+                <field name="fecha" interval="month" type="col"/>
+                <field name="monto" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_alquiler_gasto" model="ir.actions.act_window">
+        <field name="name">Gastos</field>
+        <field name="res_model">alquiler.gasto</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue el primer gasto</p>
+            <p>Reparaciones, impuesto inmobiliario, la luz del pasillo, la limpieza del edificio... Con los gastos,
+                el Panel muestra cuánto deja de verdad cada propiedad.</p>
+        </field>
+    </record>
+
+    <!-- Ingresos y gastos (ganancia real) -->
+    <record id="view_alquiler_resultado_pivot" model="ir.ui.view">
+        <field name="name">alquiler.resultado.pivot</field>
+        <field name="model">alquiler.resultado</field>
+        <field name="arch" type="xml">
+            <pivot string="Ingresos y gastos" sample="1">
+                <field name="propiedad_id" type="row"/>
+                <field name="fecha" interval="month" type="col"/>
+                <field name="ingreso" type="measure"/>
+                <field name="gasto" type="measure"/>
+                <field name="ganancia" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_alquiler_resultado_graph" model="ir.ui.view">
+        <field name="name">alquiler.resultado.graph</field>
+        <field name="model">alquiler.resultado</field>
+        <field name="arch" type="xml">
+            <graph string="Ganancia por mes" type="bar" sample="1">
+                <field name="fecha" interval="month"/>
+                <field name="ganancia" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_alquiler_resultado_list" model="ir.ui.view">
+        <field name="name">alquiler.resultado.list</field>
+        <field name="model">alquiler.resultado</field>
+        <field name="arch" type="xml">
+            <list string="Ingresos y gastos" create="false" decoration-danger="tipo == 'gasto'">
+                <field name="fecha"/>
+                <field name="tipo"/>
+                <field name="propiedad_id"/>
+                <field name="unidad_id" optional="show"/>
+                <field name="concepto"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="ingreso" sum="Total"/>
+                <field name="gasto" sum="Total"/>
+                <field name="ganancia" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_resultado_search" model="ir.ui.view">
+        <field name="name">alquiler.resultado.search</field>
+        <field name="model">alquiler.resultado</field>
+        <field name="arch" type="xml">
+            <search string="Buscar ingresos y gastos">
+                <field name="propiedad_id"/>
+                <field name="concepto"/>
+                <filter name="ingresos" string="Cobrado" domain="[('tipo', '=', 'ingreso')]"/>
+                <filter name="gastos" string="Gastos" domain="[('tipo', '=', 'gasto')]"/>
+                <separator/>
+                <filter name="filtro_fecha" string="Fecha" date="fecha" default_period="year"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_propiedad" string="Propiedad" context="{'group_by': 'propiedad_id'}"/>
+                    <filter name="group_mes" string="Mes" context="{'group_by': 'fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_resultado" model="ir.actions.act_window">
+        <field name="name">Ganancia por propiedad</field>
+        <field name="res_model">alquiler.resultado</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_filtro_fecha': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay movimientos</p>
+            <p>Lo cobrado a los inquilinos menos los gastos de cada propiedad, mes por mes.</p>
+        </field>
+    </record>
+
+    <!-- Panel (static/src/panel) -->
+    <record id="action_alquiler_panel" model="ir.actions.client">
+        <field name="name">Panel</field>
+        <field name="tag">alquileres.panel</field>
+    </record>
+</odoo>

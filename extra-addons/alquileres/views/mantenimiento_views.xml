@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_alquiler_mantenimiento_kanban" model="ir.ui.view">
+        <field name="name">alquiler.mantenimiento.kanban</field>
+        <field name="model">alquiler.mantenimiento</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="estado" quick_create="false" group_create="false" group_delete="false"
+                    group_edit="false" sample="1">
+                <field name="prioridad"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between gap-2">
+                            <field name="name" class="fw-bold"/>
+                            <field name="prioridad" widget="priority"/>
+                        </div>
+                        <field name="unidad_id" class="text-muted"/>
+                        <div class="d-flex justify-content-between small text-muted">
+                            <field name="responsable"/>
+                            <field name="costo" invisible="not costo"/>
+                        </div>
+                        <footer class="pt-1">
+                            <field name="fecha" class="small text-muted"/>
+                            <field name="inquilino_id" widget="many2one_avatar" class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_alquiler_mantenimiento_list" model="ir.ui.view">
+        <field name="name">alquiler.mantenimiento.list</field>
+        <field name="model">alquiler.mantenimiento</field>
+        <field name="arch" type="xml">
+            <list string="Mantenimiento" decoration-muted="estado in ('resuelto', 'cancelado')">
+                <field name="prioridad" widget="priority" nolabel="1"/>
+                <field name="fecha"/>
+                <field name="unidad_id"/>
+                <field name="name"/>
+                <field name="responsable" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="costo" sum="Total"/>
+                <field name="paga" optional="show"/>
+                <field name="estado" widget="badge" decoration-danger="estado == 'nuevo'"
+                       decoration-warning="estado == 'en_proceso'" decoration-success="estado == 'resuelto'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_mantenimiento_form" model="ir.ui.view">
+        <field name="name">alquiler.mantenimiento.form</field>
+        <field name="model">alquiler.mantenimiento</field>
+        <field name="arch" type="xml">
+            <form string="Pedido de mantenimiento">
+                <header>
+                    <button name="action_en_proceso" string="Empezar" type="object" class="btn-primary"
+                            invisible="estado != 'nuevo'"/>
+                    <button name="action_resolver" string="Resuelto" type="object" class="btn-primary"
+                            invisible="estado not in ('nuevo', 'en_proceso')"
+                            confirm="¿Darlo por resuelto? Si tiene costo, se carga como gasto de la propiedad o se le suma al inquilino en su próxima cuota."/>
+                    <button name="action_cancelar" string="Cancelar pedido" type="object"
+                            invisible="estado not in ('nuevo', 'en_proceso')"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="nuevo,en_proceso,resuelto"/>
+                </header>
+                <sheet>
+                    <field name="foto" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Pierde agua la canilla de la cocina"/></h1>
+                        <field name="prioridad" widget="priority"/> <span class="text-muted">Urgente</span>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="unidad_id" readonly="estado in ('resuelto', 'cancelado')"/>
+                            <field name="inquilino_id"/>
+                            <field name="fecha"/>
+                            <field name="responsable"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="costo" readonly="estado in ('resuelto', 'cancelado')"/>
+                            <field name="paga" widget="radio" readonly="estado in ('resuelto', 'cancelado')"/>
+                            <field name="fecha_resuelto" invisible="not fecha_resuelto"/>
+                            <field name="gasto_id" invisible="not gasto_id"/>
+                            <field name="cargo_id" invisible="not cargo_id"/>
+                        </group>
+                    </group>
+                    <field name="nota" placeholder="Detalles, presupuestos, cuándo se puede entrar..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_mantenimiento_search" model="ir.ui.view">
+        <field name="name">alquiler.mantenimiento.search</field>
+        <field name="model">alquiler.mantenimiento</field>
+        <field name="arch" type="xml">
+            <search string="Buscar pedidos">
+                <field name="name"/>
+                <field name="unidad_id"/>
+                <field name="propiedad_id"/>
+                <filter name="abiertos" string="Sin resolver" domain="[('estado', 'in', ('nuevo', 'en_proceso'))]"/>
+                <filter name="urgentes" string="Urgentes" domain="[('prioridad', '=', '1')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_propiedad" string="Propiedad" context="{'group_by': 'propiedad_id'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_mantenimiento" model="ir.actions.act_window">
+        <field name="name">Mantenimiento</field>
+        <field name="res_model">alquiler.mantenimiento</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay pedidos de mantenimiento</p>
+            <p>Cuando un inquilino avisa que algo se rompió, cárguelo acá: quién lo arregla, cuánto cuesta y quién
+                paga. Al resolverlo, el costo va solo a los gastos o a la cuota del inquilino.</p>
+        </field>
+    </record>
+</odoo>

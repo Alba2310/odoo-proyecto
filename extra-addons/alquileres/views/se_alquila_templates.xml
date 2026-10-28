@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Página pública "Se alquila" (/se-alquila): las unidades libres con foto y precio, y un formulario para dejar
+         los datos. static/se_alquila/se_alquila.js filtra por ciudad y elige la unidad en el formulario. -->
+    <template id="pagina_se_alquila" name="Óga: página Se alquila">&lt;!DOCTYPE html&gt;
+        <html lang="es">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Se alquila · <t t-out="empresa.name"/></title>
+                <meta name="description" content="Casas y departamentos en alquiler. Consultá por WhatsApp."/>
+                <meta name="theme-color" content="#0f5c55"/>
+                <link rel="icon" href="/alquileres/static/description/icon.png"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=Figtree:wght@400;500;600&amp;display=swap"/>
+                <link rel="stylesheet" t-attf-href="/alquileres/static/se_alquila/se_alquila.css?v={{ version }}"/>
+                <script t-attf-src="/alquileres/static/se_alquila/se_alquila.js?v={{ version }}" defer="defer"></script>
+            </head>
+            <body>
+                <header class="cabeza">
+                    <div class="cabeza__marca">
+                        <img t-if="empresa.logo" t-att-src="'/web/binary/company_logo?company=%s' % empresa.id" alt="" width="40" height="40"/>
+                        <span t-out="empresa.name"/>
+                    </div>
+                    <a t-if="whatsapp" class="boton boton--wa" t-att-href="whatsapp" target="_blank" rel="noopener">
+                        <t t-call="alquileres.icono_whatsapp"/> Escribinos
+                    </a>
+                </header>
+
+                <section class="portada">
+                    <p class="etiqueta">Se alquila</p>
+                    <h1>Encontrá tu próximo hogar</h1>
+                    <p t-if="unidades" class="portada__texto">
+                        <t t-out="len(unidades)"/> <t t-if="len(unidades) == 1">lugar disponible</t><t t-else="">lugares disponibles</t>
+                        en <t t-out="', '.join(ciudades)"/>. Consultá sin compromiso.
+                    </p>
+                    <nav t-if="len(ciudades) &gt; 1" class="filtros" aria-label="Filtrar por ciudad">
+                        <button type="button" class="filtro activo" data-ciudad="">Todas</button>
+                        <button t-foreach="ciudades" t-as="ciudad" type="button" class="filtro" t-att-data-ciudad="ciudad" t-out="ciudad"/>
+                    </nav>
+                </section>
+
+                <main class="grilla">
+                    <article t-foreach="unidades" t-as="unidad" class="tarjeta" t-att-data-ciudad="unidad['ciudad']">
+                        <div class="tarjeta__foto">
+                            <img t-if="unidad['foto']" t-att-src="'/se-alquila/foto/%s' % unidad['id']" t-att-alt="unidad['nombre']" loading="lazy"/>
+                            <svg t-else="" class="tarjeta__dibujo" viewBox="0 0 120 90" aria-hidden="true">
+                                <path d="M60 14 104 50h-12v30H28V50H16z" fill="currentColor" opacity=".9"/>
+                                <rect x="52" y="58" width="16" height="22" rx="2" fill="#fff" opacity=".85"/>
+                                <rect x="36" y="56" width="11" height="10" rx="1.5" fill="#fff" opacity=".85"/>
+                                <rect x="73" y="56" width="11" height="10" rx="1.5" fill="#fff" opacity=".85"/>
+                            </svg>
+                            <span class="tarjeta__ciudad" t-out="unidad['ciudad']"/>
+                        </div>
+                        <div class="tarjeta__cuerpo">
+                            <h2 t-out="unidad['nombre']"/>
+                            <p t-if="unidad['precio']" class="tarjeta__precio"><t t-out="unidad['precio']"/> <small>por mes</small></p>
+                            <ul t-if="unidad['dormitorios'] or unidad['banos']" class="tarjeta__datos">
+                                <li t-if="unidad['dormitorios']"><t t-out="unidad['dormitorios']"/> <t t-if="unidad['dormitorios'] == 1">dormitorio</t><t t-else="">dormitorios</t></li>
+                                <li t-if="unidad['banos']"><t t-out="unidad['banos']"/> <t t-if="unidad['banos'] == 1">baño</t><t t-else="">baños</t></li>
+                            </ul>
+                            <p t-if="unidad['descripcion']" class="tarjeta__texto" t-out="unidad['descripcion']"/>
+                            <div class="tarjeta__acciones">
+                                <a t-if="unidad['whatsapp']" class="boton boton--wa" t-att-href="unidad['whatsapp']" target="_blank" rel="noopener">
+                                    <t t-call="alquileres.icono_whatsapp"/> Consultar
+                                </a>
+                                <a class="boton boton--claro" href="#consulta" t-att-data-unidad="unidad['id']">Dejar mis datos</a>
+                            </div>
+                        </div>
+                    </article>
+                    <div t-if="not unidades" class="vacio">
+                        <h2>Ahora está todo alquilado</h2>
+                        <p>Dejanos tus datos y te avisamos apenas se libere un lugar.</p>
+                    </div>
+                </main>
+
+                <section class="consulta" id="consulta">
+                    <div class="consulta__caja">
+                        <div t-if="gracias" class="gracias" role="status">
+                            <h2>¡Gracias! Recibimos tus datos.</h2>
+                            <p>Te vamos a escribir pronto para coordinar una visita.</p>
+                        </div>
+                        <t t-else="">
+                            <h2>Dejanos tus datos</h2>
+                            <p>Te escribimos para contarte más o coordinar una visita.</p>
+                            <form method="post" action="/se-alquila/consulta" class="formulario">
+                                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                                <input type="text" name="web" class="trampa" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+                                <label>Nombre <input type="text" name="nombre" required="required" maxlength="100" autocomplete="name"/></label>
+                                <label>Teléfono (WhatsApp) <input type="tel" name="telefono" required="required" maxlength="40" placeholder="0981 123 456" autocomplete="tel"/></label>
+                                <label>Correo <small>(opcional)</small> <input type="email" name="email" maxlength="100" autocomplete="email"/></label>
+                                <label>¿Qué te interesa?
+                                    <select name="unidad_id" id="unidad">
+                                        <option value="">Cualquiera</option>
+                                        <option t-foreach="unidades" t-as="unidad" t-att-value="unidad['id']" t-out="unidad['nombre']"/>
+                                    </select>
+                                </label>
+                                <label class="ancho">Mensaje <small>(opcional)</small> <textarea name="mensaje" rows="3" maxlength="2000" placeholder="Por ejemplo: somos 3, tenemos una mascota, nos mudamos en diciembre..."></textarea></label>
+                                <button type="submit" class="boton boton--lleno ancho">Enviar</button>
+                            </form>
+                        </t>
+                    </div>
+                </section>
+
+                <footer class="pie">
+                    <span><t t-out="empresa.name"/><t t-if="empresa.phone"> · <t t-out="empresa.phone"/></t></span>
+                    <span>Hecho con Óga</span>
+                </footer>
+            </body>
+        </html>
+    </template>
+
+    <template id="icono_whatsapp" name="Ícono de WhatsApp">
+        <svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3a2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 1 2.4 10.2 10.2 0 0 0 3.9 3.5c1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1l-.6-.3z"/></svg>
+    </template>
+</odoo>

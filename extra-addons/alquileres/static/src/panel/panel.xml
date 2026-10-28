@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="alquileres.PanelOga">
+        <div class="o_action o_oga_panel h-100 overflow-auto">
+            <t t-set="datos" t-value="estado.datos"/>
+            <div t-if="datos" class="container-fluid py-3 px-4">
+                <div class="d-flex align-items-baseline justify-content-between mb-3">
+                    <h2 class="mb-0">Panel</h2>
+                    <span class="text-muted" t-out="datos.hoy"/>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div t-foreach="datos.indicadores" t-as="indicador" t-key="indicador.clave"
+                         class="col-12 col-sm-6 col-xl-3">
+                        <button class="o_oga_indicador card w-100 h-100 text-start p-3"
+                                t-on-click="() => this.abrirIndicador(indicador.clave)">
+                            <span class="text-muted small text-uppercase fw-semibold" t-out="indicador.titulo"/>
+                            <span t-attf-class="fs-3 fw-bold {{ indicador.alerta ? 'text-danger' : '' }}"
+                                  t-out="indicador.valor"/>
+                            <span class="text-muted small" t-out="indicador.detalle"/>
+                            <div t-if="indicador.progreso !== undefined" class="progress w-100 mt-2" style="height: 6px;">
+                                <div class="progress-bar o_oga_progreso" t-att-style="'width: ' + indicador.progreso + '%'"/>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12 col-lg-7">
+                        <div class="card p-3 mb-3">
+                            <h5>Cobrado y gastos de los últimos meses</h5>
+                            <div class="o_oga_barras">
+                                <div t-foreach="datos.meses" t-as="mes" t-key="mes_index" class="o_oga_mes">
+                                    <div class="o_oga_columnas">
+                                        <div class="o_oga_barra o_oga_cobrado" t-att-style="'height: ' + mes.alto_cobrado + '%'"
+                                             t-att-title="'Cobrado: ' + mes.cobrado_texto"/>
+                                        <div class="o_oga_barra o_oga_gastos" t-att-style="'height: ' + mes.alto_gastos + '%'"
+                                             t-att-title="'Gastos: ' + mes.gastos_texto"/>
+                                    </div>
+                                    <span class="small text-muted" t-out="mes.mes"/>
+                                </div>
+                            </div>
+                            <div class="small text-muted mt-2">
+                                <span class="o_oga_punto o_oga_cobrado"/> Cobrado
+                                <span class="o_oga_punto o_oga_gastos ms-3"/> Gastos
+                            </div>
+                        </div>
+
+                        <div class="card p-3">
+                            <h5>Propiedades en el año</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Propiedad</th>
+                                            <th>Ocupación</th>
+                                            <th class="text-end">Cobrado</th>
+                                            <th class="text-end">Gastos</th>
+                                            <th class="text-end">Ganancia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="datos.propiedades" t-as="fila" t-key="fila.id" class="o_oga_fila"
+                                            t-on-click="() => this.abrirRegistro('alquiler.propiedad', fila.id)">
+                                            <td>
+                                                <div class="fw-semibold" t-out="fila.nombre"/>
+                                                <div class="small text-muted" t-out="fila.ciudad"/>
+                                            </td>
+                                            <td>
+                                                <t t-out="fila.ocupacion"/>
+                                                <div t-if="fila.deuda" class="small text-danger">Deben <t t-out="fila.deuda"/></div>
+                                            </td>
+                                            <td class="text-end text-nowrap" t-out="fila.cobrado"/>
+                                            <td class="text-end text-nowrap" t-out="fila.gastos"/>
+                                            <td t-attf-class="text-end text-nowrap fw-semibold {{ fila.perdida ? 'text-danger' : 'text-success' }}"
+                                                t-out="fila.ganancia"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-5">
+                        <div class="card p-3">
+                            <h5>Para atender</h5>
+                            <p t-if="!datos.atender.length" class="text-muted mb-0">Todo al día: no hay nada pendiente.</p>
+                            <button t-foreach="datos.atender" t-as="pendiente" t-key="pendiente_index"
+                                    class="btn btn-light text-start d-flex align-items-center gap-2 w-100 mb-2"
+                                    t-on-click="() => this.abrirPendiente(pendiente)">
+                                <i t-attf-class="fa fa-fw {{ pendiente.icono }} text-{{ pendiente.color }}"/>
+                                <span t-out="pendiente.texto"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_alquiler_acta" model="ir.actions.report">
+        <field name="name">Acta de entrega</field>
+        <field name="model">alquiler.acta</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">alquileres.report_acta</field>
+        <field name="report_file">alquileres.report_acta</field>
+        <field name="print_report_name">object.name</field>
+        <field name="binding_model_id" ref="model_alquiler_acta"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="view_alquiler_acta_list" model="ir.ui.view">
+        <field name="name">alquiler.acta.list</field>
+        <field name="model">alquiler.acta</field>
+        <field name="arch" type="xml">
+            <list string="Actas de entrega">
+                <field name="fecha"/>
+                <field name="tipo"/>
+                <field name="unidad_id"/>
+                <field name="inquilino_id"/>
+                <field name="contrato_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_acta_form" model="ir.ui.view">
+        <field name="name">alquiler.acta.form</field>
+        <field name="model">alquiler.acta</field>
+        <field name="arch" type="xml">
+            <form string="Acta de entrega">
+                <header>
+                    <button name="%(action_report_alquiler_acta)d" string="Imprimir" type="action" icon="fa-print"
+                            class="btn-primary" invisible="not id"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1" invisible="not id"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contrato_id" options="{'no_create': True}"/>
+                            <field name="tipo" widget="radio"/>
+                            <field name="fecha"/>
+                        </group>
+                        <group>
+                            <field name="lectura_ande"/>
+                            <field name="lectura_agua"/>
+                            <field name="llaves"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Estado de la unidad" name="estado">
+                            <field name="linea_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="elemento"/>
+                                    <field name="estado"/>
+                                    <field name="nota"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Fotos" name="fotos">
+                            <field name="foto_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Observaciones" name="observaciones">
+                            <field name="observaciones" placeholder="Manchas en la pared del living, falta un vidrio..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_acta_search" model="ir.ui.view">
+        <field name="name">alquiler.acta.search</field>
+        <field name="model">alquiler.acta</field>
+        <field name="arch" type="xml">
+            <search string="Buscar actas">
+                <field name="unidad_id"/>
+                <field name="inquilino_id"/>
+                <filter name="entradas" string="Entradas" domain="[('tipo', '=', 'entrada')]"/>
+                <filter name="salidas" string="Salidas" domain="[('tipo', '=', 'salida')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_acta" model="ir.actions.act_window">
+        <field name="name">Actas de entrega</field>
+        <field name="res_model">alquiler.acta</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay actas</p>
+            <p>Al entregar una unidad, anote cómo está cada cosa, las lecturas de los medidores y saque fotos.
+                Al devolverla, haga el acta de salida: así sabe qué descontar del depósito.</p>
+        </field>
+    </record>
+
+    <template id="report_acta">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="acta">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 t-out="acta.name"/>
+                        <p>
+                            <strong>Inquilino:</strong> <span t-field="acta.inquilino_id"/> ·
+                            <strong>Contrato:</strong> <span t-field="acta.contrato_id"/> ·
+                            <strong>Fecha:</strong> <t t-out="acta._fecha_texto()"/>
+                        </p>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr><th>Qué se revisó</th><th>Estado</th><th>Nota</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="acta.linea_ids" t-as="linea">
+                                    <td t-out="linea.elemento"/>
+                                    <td><span t-field="linea.estado"/></td>
+                                    <td t-out="linea.nota or ''"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            <t t-if="acta.lectura_ande"><strong>Medidor de ANDE:</strong> <t t-out="acta.lectura_ande"/>. </t>
+                            <t t-if="acta.lectura_agua"><strong>Medidor de agua:</strong> <t t-out="acta.lectura_agua"/>. </t>
+                            <t t-if="acta.llaves"><strong>Llaves entregadas:</strong> <t t-out="acta.llaves"/>.</t>
+                        </p>
+                        <p t-if="acta.observaciones"><strong>Observaciones:</strong> <t t-out="acta.observaciones"/></p>
+                        <div t-if="acta._fotos()" style="page-break-inside: avoid;">
+                            <h5>Fotos</h5>
+                            <t t-foreach="acta._fotos()" t-as="foto">
+                                <img t-att-src="image_data_uri(foto.datas)" style="width: 31%; margin: 0 1% 8px 0; vertical-align: top;"/>
+                            </t>
+                        </div>
+                        <table class="table table-borderless" style="margin-top: 70px;">
+                            <tr>
+                                <td class="text-center" style="width: 45%; border-top: 1px solid #000 !important;">
+                                    Por el dueño<br/><strong t-out="acta.contrato_id._parte_locadora().name"/>
+                                </td>
+                                <td style="width: 10%;"/>
+                                <td class="text-center" style="width: 45%; border-top: 1px solid #000 !important;">
+                                    Inquilino<br/><strong t-out="acta.inquilino_id.name"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

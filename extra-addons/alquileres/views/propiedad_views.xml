@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Propiedades -->
+    <record id="view_alquiler_propiedad_list" model="ir.ui.view">
+        <field name="name">alquiler.propiedad.list</field>
+        <field name="model">alquiler.propiedad</field>
+        <field name="arch" type="xml">
+            <list string="Propiedades">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="tipo"/>
+                <field name="ciudad"/>
+                <field name="propietario_id" optional="show"/>
+                <field name="ocupacion"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="alquiler_mensual"/>
+                <field name="deuda" decoration-danger="deuda &gt; 0"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_propiedad_form" model="ir.ui.view">
+        <field name="name">alquiler.propiedad.form</field>
+        <field name="model">alquiler.propiedad</field>
+        <field name="arch" type="xml">
+            <form string="Propiedad">
+                <sheet>
+                    <widget name="web_ribbon" title="Archivada" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="foto" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Casa Caacupé"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tipo"/>
+                            <field name="ciudad"/>
+                            <field name="direccion"/>
+                            <field name="propietario_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group invisible="not id">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="ocupacion"/>
+                            <field name="alquiler_mensual"/>
+                            <field name="deuda"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Unidades" name="unidades">
+                            <p class="text-muted" invisible="tipo != 'casa' or unidad_ids">
+                                Una casa se alquila entera: al guardar se crea su única unidad.
+                            </p>
+                            <field name="unidad_ids" context="{'default_propiedad_id': id}">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="piso"/>
+                                    <field name="descripcion" optional="show"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="alquiler_sugerido"/>
+                                    <field name="estado" widget="badge" decoration-success="estado == 'alquilada'"/>
+                                    <field name="inquilino_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_propiedad_search" model="ir.ui.view">
+        <field name="name">alquiler.propiedad.search</field>
+        <field name="model">alquiler.propiedad</field>
+        <field name="arch" type="xml">
+            <search string="Buscar propiedades">
+                <field name="name"/>
+                <field name="ciudad"/>
+                <field name="propietario_id"/>
+                <filter name="archivadas" string="Archivadas" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_ciudad" string="Ciudad" context="{'group_by': 'ciudad'}"/>
+                    <filter name="group_propietario" string="Dueño" context="{'group_by': 'propietario_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_propiedad" model="ir.actions.act_window">
+        <field name="name">Propiedades</field>
+        <field name="res_model">alquiler.propiedad</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue la primera propiedad</p>
+            <p>Una casa se alquila entera. En un edificio, cargue un departamento por cada unidad que se alquila.</p>
+        </field>
+    </record>
+
+    <!-- Unidades -->
+    <record id="view_alquiler_unidad_list" model="ir.ui.view">
+        <field name="name">alquiler.unidad.list</field>
+        <field name="model">alquiler.unidad</field>
+        <field name="arch" type="xml">
+            <list string="Unidades">
+                <field name="propiedad_id"/>
+                <field name="name"/>
+                <field name="piso" optional="show"/>
+                <field name="ciudad" optional="show"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'alquilada'"/>
+                <field name="inquilino_id"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="monto"/>
+                <field name="deuda" decoration-danger="deuda &gt; 0"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_unidad_form" model="ir.ui.view">
+        <field name="name">alquiler.unidad.form</field>
+        <field name="model">alquiler.unidad</field>
+        <field name="arch" type="xml">
+            <form string="Unidad">
+                <header>
+                    <button name="action_nuevo_contrato" string="Nuevo contrato" type="object" class="btn-primary"
+                            invisible="estado != 'libre' or not id" groups="alquileres.group_alquiler_admin"/>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_contratos" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not contrato_count">
+                            <field name="contrato_count" widget="statinfo" string="Contratos"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Depto 1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="propiedad_id"/>
+                            <field name="piso"/>
+                            <field name="descripcion"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="alquiler_sugerido"/>
+                        </group>
+                    </group>
+                    <group string="Contrato vigente" invisible="not contrato_id">
+                        <group>
+                            <field name="contrato_id"/>
+                            <field name="inquilino_id"/>
+                            <field name="telefono" widget="phone"/>
+                        </group>
+                        <group>
+                            <field name="monto"/>
+                            <field name="dia_pago"/>
+                            <field name="proximo_vencimiento"/>
+                            <field name="deuda"/>
+                        </group>
+                    </group>
+                    <group string="Página &quot;Se alquila&quot;">
+                        <group>
+                            <field name="publicar" widget="boolean_toggle"/>
+                            <field name="dormitorios"/>
+                            <field name="banos"/>
+                            <field name="detalle_web" placeholder="Luminoso, con patio, a dos cuadras de la ruta..."/>
+                        </group>
+                        <group>
+                            <field name="foto" widget="image" options="{'size': [240, 180]}" nolabel="1" colspan="2"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tablero de control: todas las unidades por propiedad, con el color de cómo está cada una. -->
+    <record id="view_alquiler_unidad_kanban" model="ir.ui.view">
+        <field name="name">alquiler.unidad.kanban</field>
+        <field name="model">alquiler.unidad</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color" default_group_by="propiedad_id" action="action_abrir" type="object"
+                    create="false" quick_create="false" records_draggable="false"
+                    group_create="false" group_delete="false" group_edit="false">
+                <field name="contrato_id"/>
+                <field name="color"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-start justify-content-between gap-2">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <span t-attf-class="badge rounded-pill #{
+                                record.color.raw_value == 1 ? 'text-bg-danger' :
+                                record.color.raw_value == 3 ? 'text-bg-warning' :
+                                record.color.raw_value == 10 ? 'text-bg-success' : 'text-bg-light'}">
+                                <field name="situacion"/>
+                            </span>
+                        </div>
+                        <t t-if="record.contrato_id.raw_value">
+                            <field name="inquilino_id" class="text-truncate"/>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><field name="monto"/> por mes</span>
+                                <span>vence el <field name="dia_pago"/></span>
+                            </div>
+                        </t>
+                        <div t-else="" class="text-muted">
+                            Sin inquilino<t t-if="record.piso.raw_value"> · piso <field name="piso"/></t>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_alquiler_unidad_search" model="ir.ui.view">
+        <field name="name">alquiler.unidad.search</field>
+        <field name="model">alquiler.unidad</field>
+        <field name="arch" type="xml">
+            <search string="Buscar unidades">
+                <field name="name"/>
+                <field name="propiedad_id"/>
+                <field name="inquilino_id"/>
+                <field name="ciudad"/>
+                <filter name="libres" string="Libres" domain="[('estado', '=', 'libre')]"/>
+                <filter name="alquiladas" string="Alquiladas" domain="[('estado', '=', 'alquilada')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_propiedad" string="Propiedad" context="{'group_by': 'propiedad_id'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_control" model="ir.actions.act_window">
+        <field name="name">Control</field>
+        <field name="res_model">alquiler.unidad</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_alquiler_unidad_kanban"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay propiedades</p>
+            <p>Cargue sus casas y edificios en Configuración › Propiedades. Acá va a ver todas las unidades:
+                en verde las que están al día, en amarillo las que vencen en estos días y en rojo las que deben.</p>
+        </field>
+    </record>
+
+    <record id="action_alquiler_unidad" model="ir.actions.act_window">
+        <field name="name">Unidades</field>
+        <field name="res_model">alquiler.unidad</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_alquiler_unidad_list"/>
+    </record>
+</odoo>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_alquiler_contrato_list" model="ir.ui.view">
+        <field name="name">alquiler.contrato.list</field>
+        <field name="model">alquiler.contrato</field>
+        <field name="arch" type="xml">
+            <list string="Contratos" decoration-muted="estado == 'terminado'" decoration-info="estado == 'borrador'">
+                <field name="name"/>
+                <field name="propiedad_id" optional="hide"/>
+                <field name="unidad_id"/>
+                <field name="inquilino_id"/>
+                <field name="telefono" widget="phone" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="monto" sum="Total"/>
+                <field name="dia_pago" optional="show"/>
+                <field name="fecha_inicio" optional="hide"/>
+                <field name="fecha_fin" optional="show"/>
+                <field name="puntaje" widget="priority" readonly="1" optional="show"/>
+                <field name="deuda" decoration-danger="deuda &gt; 0"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'vigente'"
+                       decoration-info="estado == 'borrador'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_contrato_form" model="ir.ui.view">
+        <field name="name">alquiler.contrato.form</field>
+        <field name="model">alquiler.contrato</field>
+        <field name="arch" type="xml">
+            <form string="Contrato de alquiler">
+                <header>
+                    <button name="action_activar" string="Activar contrato" type="object" class="btn-primary"
+                            invisible="estado != 'borrador'" groups="alquileres.group_alquiler_admin"/>
+                    <button name="%(action_report_alquiler_contrato)d" string="Imprimir para firmar" type="action"
+                            icon="fa-print" invisible="not id"/>
+                    <button name="action_avisar_vencimiento" string="Avisar que vence" type="object" icon="fa-whatsapp"
+                            invisible="not vence_pronto"/>
+                    <button name="action_avisar_reajuste" string="Avisar el reajuste" type="object" icon="fa-whatsapp"
+                            invisible="not reajuste_pronto"/>
+                    <button name="action_renovar" string="Renovar" type="object" invisible="estado != 'vigente'"
+                            groups="alquileres.group_alquiler_admin"/>
+                    <button name="action_terminar" string="Terminar contrato" type="object"
+                            invisible="estado != 'vigente'" groups="alquileres.group_alquiler_admin"/>
+                    <button name="action_deposito_devuelto" string="Ya devolví el depósito" type="object"
+                            invisible="estado != 'terminado' or deposito_devuelto or not deposito_a_devolver"
+                            groups="alquileres.group_alquiler_admin"/>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_cuotas" type="object" class="oe_stat_button" icon="fa-calendar"
+                                invisible="not cuota_count">
+                            <field name="cuota_count" widget="statinfo" string="Cuotas"/>
+                        </button>
+                        <button name="action_ver_pagos" type="object" class="oe_stat_button" icon="fa-money"
+                                invisible="not pago_count">
+                            <field name="pago_count" widget="statinfo" string="Pagos"/>
+                        </button>
+                        <button name="action_ver_actas" type="object" class="oe_stat_button" icon="fa-clipboard"
+                                invisible="not acta_count">
+                            <field name="acta_count" widget="statinfo" string="Actas"/>
+                        </button>
+                        <button name="action_nueva_acta" type="object" class="oe_stat_button" icon="fa-plus"
+                                invisible="not id or estado == 'borrador'" groups="alquileres.group_alquiler_admin">
+                            <span class="o_stat_text">Acta de entrega</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Terminado" bg_color="text-bg-secondary"
+                            invisible="estado != 'terminado'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="cuotas_atrasadas" invisible="1"/>
+                    <field name="vence_pronto" invisible="1"/>
+                    <field name="reajuste_pronto" invisible="1"/>
+                    <div class="alert alert-danger mb-3" role="alert" invisible="not deuda">
+                        <i class="fa fa-exclamation-triangle me-1" title="Deuda"/>
+                        Debe <field name="deuda" class="fw-bold"/>:
+                        <span invisible="cuotas_atrasadas != 1">una cuota atrasada.</span>
+                        <span invisible="cuotas_atrasadas &lt; 2"><field name="cuotas_atrasadas" class="fw-bold"/> cuotas atrasadas.</span>
+                    </div>
+                    <div class="alert alert-warning mb-3" role="status" invisible="not vence_pronto">
+                        <i class="fa fa-calendar-times-o me-1" title="Vence"/>
+                        El contrato vence el <field name="fecha_fin" readonly="1" class="fw-bold"/>.
+                        Avísele al inquilino o renuévelo.
+                    </div>
+                    <div class="alert alert-info mb-3" role="status" invisible="not reajuste_pronto">
+                        <i class="fa fa-line-chart me-1" title="Reajuste"/>
+                        El <field name="fecha_reajuste" readonly="1" class="fw-bold"/> el alquiler pasa a
+                        <field name="monto_reajustado" class="fw-bold"/>.
+                    </div>
+                    <div class="alert alert-info mb-3" role="status" invisible="estado != 'borrador'">
+                        Revise los datos y toque <strong>Activar contrato</strong>: la unidad pasa a alquilada y se
+                        crean las cuotas de cada mes.
+                    </div>
+                    <group>
+                        <group string="Unidad e inquilino">
+                            <field name="unidad_id" readonly="estado != 'borrador'" options="{'no_create': True}"/>
+                            <field name="inquilino_id" readonly="estado == 'terminado'"/>
+                            <field name="telefono" widget="phone" readonly="estado == 'terminado'"
+                                   placeholder="0981 123 456"/>
+                            <field name="garante_id"/>
+                            <label for="puntaje" invisible="estado == 'borrador'"/>
+                            <div class="o_row" invisible="estado == 'borrador'">
+                                <field name="puntaje" widget="priority" readonly="1"/>
+                                <field name="puntaje_texto" class="text-muted"/>
+                            </div>
+                        </group>
+                        <group string="Condiciones">
+                            <field name="monto" readonly="estado == 'terminado'"/>
+                            <field name="dia_pago" readonly="estado == 'terminado'"/>
+                            <field name="fecha_inicio" readonly="estado != 'borrador'"/>
+                            <field name="fecha_fin" readonly="estado == 'terminado'"/>
+                            <field name="proximo_vencimiento" invisible="estado != 'vigente' or not proximo_vencimiento"/>
+                            <label for="reajuste_pct"/>
+                            <div class="o_row">
+                                <field name="reajuste_pct" readonly="estado == 'terminado'"/>
+                                <span invisible="not reajuste_pct">desde el</span>
+                                <field name="fecha_reajuste" invisible="not reajuste_pct" readonly="estado == 'terminado'"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Depósito de garantía">
+                            <field name="deposito" readonly="estado == 'terminado'"/>
+                            <field name="deposito_aplicado" invisible="estado != 'terminado'"/>
+                            <field name="deposito_descuento" invisible="estado != 'terminado' or not deposito_descuento"/>
+                            <field name="deposito_motivo" invisible="not deposito_motivo"/>
+                            <field name="deposito_a_devolver" invisible="estado != 'terminado'" class="fw-bold"/>
+                            <field name="deposito_devuelto" invisible="not deposito_devuelto"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Cuotas" name="cuotas" invisible="estado == 'borrador'">
+                            <field name="cuota_ids" readonly="1">
+                                <list decoration-danger="atrasada" decoration-muted="estado == 'pagada'">
+                                    <field name="name"/>
+                                    <field name="fecha_vencimiento"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="monto" optional="hide"/>
+                                    <field name="cargos" optional="show" invisible="not cargos"/>
+                                    <field name="total" sum="Total"/>
+                                    <field name="pagado" sum="Total"/>
+                                    <field name="saldo" sum="Total"/>
+                                    <field name="fecha_pago" optional="show"/>
+                                    <field name="atrasada" column_invisible="True"/>
+                                    <field name="dias_atraso" string="Atraso (días)" invisible="not dias_atraso"/>
+                                    <field name="estado" widget="badge" decoration-success="estado == 'pagada'"
+                                           decoration-warning="estado == 'parcial'" decoration-info="estado == 'pendiente'"/>
+                                    <button name="action_whatsapp" type="object" string="Avisar por WhatsApp"
+                                            icon="fa-whatsapp" class="text-success" invisible="estado == 'pagada'"/>
+                                    <button name="action_registrar_pago" type="object" string="Registrar pago"
+                                            icon="fa-money" invisible="estado == 'pagada'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Cláusulas adicionales" name="clausulas">
+                            <field name="clausulas_extra"
+                                   placeholder="Se agregan al contrato impreso. Por ejemplo: se permite una mascota pequeña; el inquilino paga la recolección de basura..."/>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota" placeholder="Notas internas: no salen en el contrato impreso."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_contrato_search" model="ir.ui.view">
+        <field name="name">alquiler.contrato.search</field>
+        <field name="model">alquiler.contrato</field>
+        <field name="arch" type="xml">
+            <search string="Buscar contratos">
+                <field name="name"/>
+                <field name="inquilino_id"/>
+                <field name="unidad_id"/>
+                <field name="propiedad_id"/>
+                <filter name="vigentes" string="Vigentes" domain="[('estado', '=', 'vigente')]"/>
+                <filter name="borradores" string="Borradores" domain="[('estado', '=', 'borrador')]"/>
+                <filter name="terminados" string="Terminados" domain="[('estado', '=', 'terminado')]"/>
+                <separator/>
+                <filter name="por_vencer" string="Vencen en los próximos 60 días"
+                        domain="[('estado', '=', 'vigente'), ('fecha_fin', '!=', False),
+                                 ('fecha_fin', '&lt;=', (context_today() + relativedelta(days=60)).strftime('%Y-%m-%d'))]"/>
+                <filter name="reajuste_proximo" string="Reajuste en los próximos 30 días"
+                        domain="[('estado', '=', 'vigente'), ('reajuste_pct', '&gt;', 0),
+                                 ('fecha_reajuste', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter name="deposito_por_devolver" string="Depósito por devolver"
+                        domain="[('estado', '=', 'terminado'), ('deposito_a_devolver', '&gt;', 0), ('deposito_devuelto', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_propiedad" string="Propiedad" context="{'group_by': 'propiedad_id'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_contrato" model="ir.actions.act_window">
+        <field name="name">Contratos</field>
+        <field name="res_model">alquiler.contrato</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_vigentes': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue el primer contrato</p>
+            <p>Elija la unidad y el inquilino, el alquiler mensual y el día de pago, y actívelo: desde ahí las cuotas
+                de cada mes se crean solas.</p>
+        </field>
+    </record>
+</odoo>

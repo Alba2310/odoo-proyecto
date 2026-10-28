@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_alquiler_cuota_list" model="ir.ui.view">
+        <field name="name">alquiler.cuota.list</field>
+        <field name="model">alquiler.cuota</field>
+        <field name="arch" type="xml">
+            <list string="Cuotas" create="false" decoration-danger="atrasada" decoration-muted="estado == 'pagada'">
+                <field name="propiedad_id" optional="hide"/>
+                <field name="unidad_id"/>
+                <field name="inquilino_id"/>
+                <field name="telefono" widget="phone" optional="hide"/>
+                <field name="name"/>
+                <field name="fecha_vencimiento"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="monto" sum="Total" optional="hide"/>
+                <field name="cargos" sum="Total" optional="hide"/>
+                <field name="total" sum="Total"/>
+                <field name="pagado" sum="Total" optional="show"/>
+                <field name="saldo" sum="Total"/>
+                <field name="atrasada" column_invisible="True"/>
+                <field name="dias_atraso" string="Atraso (días)" invisible="not dias_atraso" optional="show"/>
+                <field name="ultimo_aviso" optional="hide"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'pagada'"
+                       decoration-warning="estado == 'parcial'" decoration-info="estado == 'pendiente'"/>
+                <button name="action_whatsapp" type="object" string="Avisar por WhatsApp" icon="fa-whatsapp"
+                        class="text-success" invisible="estado == 'pagada'"/>
+                <button name="action_registrar_pago" type="object" string="Registrar pago" icon="fa-money"
+                        invisible="estado == 'pagada'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_cuota_form" model="ir.ui.view">
+        <field name="name">alquiler.cuota.form</field>
+        <field name="model">alquiler.cuota</field>
+        <field name="arch" type="xml">
+            <form string="Cuota" create="false">
+                <header>
+                    <button name="action_registrar_pago" string="Registrar pago" type="object" class="btn-primary"
+                            invisible="estado == 'pagada'"/>
+                    <button name="action_whatsapp" string="Avisar por WhatsApp" type="object" icon="fa-whatsapp"
+                            invisible="estado == 'pagada'"/>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                        <field name="unidad_id" readonly="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contrato_id" readonly="1"/>
+                            <field name="inquilino_id"/>
+                            <field name="telefono" widget="phone"/>
+                            <field name="fecha_vencimiento" readonly="estado == 'pagada'"/>
+                            <field name="dias_atraso" invisible="not dias_atraso"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monto" readonly="estado != 'pendiente'"/>
+                            <field name="cargos" invisible="not cargos"/>
+                            <field name="total" class="fw-bold"/>
+                            <field name="pagado"/>
+                            <field name="saldo"/>
+                            <field name="fecha_pago" invisible="estado != 'pagada'"/>
+                        </group>
+                    </group>
+                    <separator string="Cargos extra (ANDE, agua, reparaciones...)"/>
+                    <field name="cargo_ids" readonly="estado == 'pagada'">
+                        <list editable="bottom">
+                            <field name="concepto"/>
+                            <field name="detalle"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="monto" sum="Total"/>
+                            <field name="mantenimiento_id" optional="hide"/>
+                        </list>
+                    </field>
+                    <separator string="Pagos"/>
+                    <group string="Avisos de pago por WhatsApp" invisible="estado == 'pagada'">
+                        <group>
+                            <field name="proximo_aviso"/>
+                            <field name="ultimo_aviso" invisible="not ultimo_aviso"/>
+                            <field name="avisos_enviados" invisible="not avisos_enviados"/>
+                        </group>
+                    </group>
+                    <field name="pago_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="fecha"/>
+                            <field name="medio"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="monto" sum="Total"/>
+                            <button name="%(action_report_alquiler_recibo)d" type="action" string="Recibo"
+                                    icon="fa-print"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_cuota_search" model="ir.ui.view">
+        <field name="name">alquiler.cuota.search</field>
+        <field name="model">alquiler.cuota</field>
+        <field name="arch" type="xml">
+            <search string="Buscar cuotas">
+                <field name="inquilino_id"/>
+                <field name="unidad_id"/>
+                <field name="propiedad_id"/>
+                <filter name="para_avisar" string="Para avisar hoy"
+                        domain="[('estado', '!=', 'pagada'), ('proximo_aviso', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="atrasadas" string="Atrasadas"
+                        domain="[('estado', '!=', 'pagada'), ('fecha_vencimiento', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="sin_pagar" string="Sin pagar" domain="[('estado', '!=', 'pagada')]"/>
+                <filter name="pagadas" string="Pagadas" domain="[('estado', '=', 'pagada')]"/>
+                <separator/>
+                <filter name="este_mes" string="Vencen este mes"
+                        domain="[('fecha_vencimiento', '&gt;=', context_today().strftime('%Y-%m-01')),
+                                 ('fecha_vencimiento', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <filter name="filtro_vencimiento" string="Vencimiento" date="fecha_vencimiento" default_period="year"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_propiedad" string="Propiedad" context="{'group_by': 'propiedad_id'}"/>
+                    <filter name="group_unidad" string="Unidad" context="{'group_by': 'unidad_id'}"/>
+                    <filter name="group_inquilino" string="Inquilino" context="{'group_by': 'inquilino_id'}"/>
+                    <filter name="group_mes" string="Mes de vencimiento" context="{'group_by': 'fecha_vencimiento:month'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_alquiler_cuota_pivot" model="ir.ui.view">
+        <field name="name">alquiler.cuota.pivot</field>
+        <field name="model">alquiler.cuota</field>
+        <field name="arch" type="xml">
+            <pivot string="Cobros por mes" sample="1">
+                <field name="propiedad_id" type="row"/>
+                <field name="fecha_vencimiento" interval="month" type="col"/>
+                <field name="monto" type="measure"/>
+                <field name="pagado" type="measure"/>
+                <field name="saldo" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_alquiler_cuota_graph" model="ir.ui.view">
+        <field name="name">alquiler.cuota.graph</field>
+        <field name="model">alquiler.cuota</field>
+        <field name="arch" type="xml">
+            <graph string="Cobros por mes" type="bar" stacked="1" sample="1">
+                <field name="fecha_vencimiento" interval="month"/>
+                <field name="propiedad_id"/>
+                <field name="pagado" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Lo que hay que avisar hoy: cuotas sin pagar cuyo próximo aviso ya llegó. -->
+    <record id="action_alquiler_avisos" model="ir.actions.act_window">
+        <field name="name">Avisos de hoy</field>
+        <field name="res_model">alquiler.cuota</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_para_avisar': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay avisos para hoy</p>
+            <p>Acá aparecen los inquilinos a los que hay que avisar: 3 días antes de que venza el alquiler, el día
+                que vence y, si no pagan, cada 3 días. Con el botón de WhatsApp se abre el mensaje ya escrito:
+                solo falta tocar Enviar.</p>
+        </field>
+    </record>
+
+    <record id="action_alquiler_cuota" model="ir.actions.act_window">
+        <field name="name">Cuotas</field>
+        <field name="res_model">alquiler.cuota</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="context">{'search_default_sin_pagar': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay cuotas</p>
+            <p>Las cuotas de cada mes se crean solas cuando el contrato está vigente.</p>
+        </field>
+    </record>
+
+    <record id="action_alquiler_cobros_por_mes" model="ir.actions.act_window">
+        <field name="name">Cobros por mes</field>
+        <field name="res_model">alquiler.cuota</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_filtro_vencimiento': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay cobros</p>
+            <p>Lo que hay que cobrar, lo cobrado y lo que falta, por propiedad y por mes.</p>
+        </field>
+    </record>
+</odoo>

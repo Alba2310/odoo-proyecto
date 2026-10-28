@@ -1,0 +1,25 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_alquiler_propiedad_encargado,alquiler.propiedad encargado,model_alquiler_propiedad,group_alquiler_encargado,1,0,0,0
+access_alquiler_propiedad_admin,alquiler.propiedad admin,model_alquiler_propiedad,group_alquiler_admin,1,1,1,1
+access_alquiler_unidad_encargado,alquiler.unidad encargado,model_alquiler_unidad,group_alquiler_encargado,1,0,0,0
+access_alquiler_unidad_admin,alquiler.unidad admin,model_alquiler_unidad,group_alquiler_admin,1,1,1,1
+access_alquiler_contrato_encargado,alquiler.contrato encargado,model_alquiler_contrato,group_alquiler_encargado,1,0,0,0
+access_alquiler_contrato_admin,alquiler.contrato admin,model_alquiler_contrato,group_alquiler_admin,1,1,1,1
+access_alquiler_cuota_encargado,alquiler.cuota encargado,model_alquiler_cuota,group_alquiler_encargado,1,1,0,0
+access_alquiler_cuota_admin,alquiler.cuota admin,model_alquiler_cuota,group_alquiler_admin,1,1,1,1
+access_alquiler_cuota_cargo_encargado,alquiler.cuota.cargo encargado,model_alquiler_cuota_cargo,group_alquiler_encargado,1,1,1,0
+access_alquiler_cuota_cargo_admin,alquiler.cuota.cargo admin,model_alquiler_cuota_cargo,group_alquiler_admin,1,1,1,1
+access_alquiler_pago_encargado,alquiler.pago encargado,model_alquiler_pago,group_alquiler_encargado,1,1,1,0
+access_alquiler_pago_admin,alquiler.pago admin,model_alquiler_pago,group_alquiler_admin,1,1,1,1
+access_alquiler_gasto_encargado,alquiler.gasto encargado,model_alquiler_gasto,group_alquiler_encargado,1,0,0,0
+access_alquiler_gasto_admin,alquiler.gasto admin,model_alquiler_gasto,group_alquiler_admin,1,1,1,1
+access_alquiler_resultado_encargado,alquiler.resultado encargado,model_alquiler_resultado,group_alquiler_encargado,1,0,0,0
+access_alquiler_mantenimiento_encargado,alquiler.mantenimiento encargado,model_alquiler_mantenimiento,group_alquiler_encargado,1,1,1,0
+access_alquiler_mantenimiento_admin,alquiler.mantenimiento admin,model_alquiler_mantenimiento,group_alquiler_admin,1,1,1,1
+access_alquiler_acta_encargado,alquiler.acta encargado,model_alquiler_acta,group_alquiler_encargado,1,1,1,0
+access_alquiler_acta_admin,alquiler.acta admin,model_alquiler_acta,group_alquiler_admin,1,1,1,1
+access_alquiler_acta_linea_encargado,alquiler.acta.linea encargado,model_alquiler_acta_linea,group_alquiler_encargado,1,1,1,1
+access_alquiler_interesado_encargado,alquiler.interesado encargado,model_alquiler_interesado,group_alquiler_encargado,1,1,1,0
+access_alquiler_interesado_admin,alquiler.interesado admin,model_alquiler_interesado,group_alquiler_admin,1,1,1,1
+access_alquiler_terminar_wizard_admin,alquiler.terminar.wizard admin,model_alquiler_terminar_wizard,group_alquiler_admin,1,1,1,1
+access_alquiler_renovar_wizard_admin,alquiler.renovar.wizard admin,model_alquiler_renovar_wizard,group_alquiler_admin,1,1,1,1

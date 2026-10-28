@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_alquiler_recibo" model="ir.actions.report">
+        <field name="name">Recibo</field>
+        <field name="model">alquiler.pago</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">alquileres.report_recibo</field>
+        <field name="report_file">alquileres.report_recibo</field>
+        <field name="print_report_name">'Recibo %s' % object.name</field>
+        <field name="binding_model_id" ref="model_alquiler_pago"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_recibo">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="pago">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <table class="table table-borderless mb-4">
+                            <tr>
+                                <td class="ps-0"><h2 class="mb-0">Recibo de alquiler</h2></td>
+                                <td class="text-end pe-0">
+                                    <div>N° <strong t-field="pago.name"/></div>
+                                    <div class="fs-3 fw-bold border px-3 py-1 d-inline-block mt-1"
+                                         t-out="pago._monto_texto()"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <p class="fs-5" style="line-height: 1.8;">
+                            Recibí de <strong t-field="pago.inquilino_id"/> la suma de
+                            <strong t-out="pago._monto_en_letras()"/> (<t t-out="pago._monto_texto()"/>),
+                            en concepto de alquiler de <strong t-out="pago.unidad_id.display_name"/>
+                            <t t-if="pago.propiedad_id.direccion">(<t t-out="pago.propiedad_id.direccion"/>,
+                                <t t-out="pago.propiedad_id.ciudad"/>)</t>,
+                            correspondiente a <strong t-out="pago._mes_texto()"/>.
+                        </p>
+                        <p t-if="pago._detalle_cuota()">Detalle de la cuota: <t t-out="pago._detalle_cuota()"/>.</p>
+                        <p>Medio de pago: <span t-field="pago.medio"/>.<t t-if="pago.nota"> <t t-out="pago.nota"/>.</t></p>
+                        <p t-if="pago._saldo_despues() &gt; 0">Queda pendiente de ese mes:
+                            <strong t-out="pago._saldo_despues_texto()"/>.
+                        </p>
+                        <p class="mt-4"><t t-out="pago.propiedad_id.ciudad"/>, <t t-out="pago._fecha_texto()"/>.</p>
+                        <table class="table table-borderless" style="margin-top: 90px;">
+                            <tr>
+                                <td style="width: 50%;"/>
+                                <td class="text-center" style="border-top: 1px solid #000 !important;">
+                                    Firma y aclaración<br/>
+                                    <strong t-out="pago._firma()"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_alquiler_root" name="Óga" sequence="46"
+              web_icon="alquileres,static/description/icon.png"
+              groups="group_alquiler_encargado"/>
+
+    <menuitem id="menu_alquiler_panel" name="Panel" parent="menu_alquiler_root"
+              action="action_alquiler_panel" sequence="5"/>
+    <menuitem id="menu_alquiler_control" name="Control" parent="menu_alquiler_root"
+              action="action_alquiler_control" sequence="10"/>
+    <menuitem id="menu_alquiler_avisos" name="Avisos de hoy" parent="menu_alquiler_root"
+              action="action_alquiler_avisos" sequence="20"/>
+
+    <menuitem id="menu_alquiler_cobros" name="Cobros y gastos" parent="menu_alquiler_root" sequence="30"/>
+    <menuitem id="menu_alquiler_cuotas" name="Cuotas" parent="menu_alquiler_cobros"
+              action="action_alquiler_cuota" sequence="10"/>
+    <menuitem id="menu_alquiler_pagos" name="Pagos y recibos" parent="menu_alquiler_cobros"
+              action="action_alquiler_pago" sequence="20"/>
+    <menuitem id="menu_alquiler_gastos" name="Gastos" parent="menu_alquiler_cobros"
+              action="action_alquiler_gasto" sequence="30" groups="group_alquiler_admin"/>
+
+    <menuitem id="menu_alquiler_contratos_raiz" name="Contratos" parent="menu_alquiler_root" sequence="40"/>
+    <menuitem id="menu_alquiler_contratos" name="Contratos" parent="menu_alquiler_contratos_raiz"
+              action="action_alquiler_contrato" sequence="10"/>
+    <menuitem id="menu_alquiler_actas" name="Actas de entrega" parent="menu_alquiler_contratos_raiz"
+              action="action_alquiler_acta" sequence="20"/>
+    <menuitem id="menu_alquiler_inquilinos" name="Inquilinos" parent="menu_alquiler_contratos_raiz"
+              action="action_alquiler_inquilinos" sequence="30"/>
+
+    <menuitem id="menu_alquiler_mantenimiento" name="Mantenimiento" parent="menu_alquiler_root"
+              action="action_alquiler_mantenimiento" sequence="50"/>
+
+    <menuitem id="menu_alquiler_se_alquila" name="Se alquila" parent="menu_alquiler_root" sequence="60"/>
+    <menuitem id="menu_alquiler_interesados" name="Interesados" parent="menu_alquiler_se_alquila"
+              action="action_alquiler_interesado" sequence="10"/>
+    <menuitem id="menu_alquiler_ver_pagina" name="Ver la página" parent="menu_alquiler_se_alquila"
+              action="action_alquiler_ver_pagina" sequence="20"/>
+
+    <menuitem id="menu_alquiler_reportes" name="Reportes" parent="menu_alquiler_root" sequence="80"
+              groups="group_alquiler_admin"/>
+    <menuitem id="menu_alquiler_resultado" name="Ganancia por propiedad" parent="menu_alquiler_reportes"
+              action="action_alquiler_resultado" sequence="5"/>
+    <menuitem id="menu_alquiler_cobros_por_mes" name="Cobros por mes" parent="menu_alquiler_reportes"
+              action="action_alquiler_cobros_por_mes" sequence="10"/>
+
+    <menuitem id="menu_alquiler_config" name="Configuración" parent="menu_alquiler_root" sequence="90"
+              groups="group_alquiler_admin"/>
+    <menuitem id="menu_alquiler_propiedades" name="Propiedades" parent="menu_alquiler_config"
+              action="action_alquiler_propiedad" sequence="10"/>
+    <menuitem id="menu_alquiler_unidades" name="Unidades" parent="menu_alquiler_config"
+              action="action_alquiler_unidad" sequence="20"/>
+</odoo>

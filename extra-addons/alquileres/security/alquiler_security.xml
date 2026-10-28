@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_alquileres" model="ir.module.category">
+        <field name="name">Alquileres</field>
+        <field name="description">Alquiler de viviendas</field>
+        <field name="sequence">46</field>
+    </record>
+
+    <!-- Encargado de cobros: ve las unidades y los contratos, registra pagos y manda los avisos de pago. -->
+    <record id="group_alquiler_encargado" model="res.groups">
+        <field name="name">Encargado de cobros</field>
+        <field name="category_id" ref="module_category_alquileres"/>
+    </record>
+
+    <!-- Administrador: además carga propiedades, unidades, inquilinos y contratos, y ve los reportes. -->
+    <record id="group_alquiler_admin" model="res.groups">
+        <field name="name">Administrador</field>
+        <field name="category_id" ref="module_category_alquileres"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_alquiler_encargado')),
+                                         Command.link(ref('base.group_partner_manager'))]"/>
+        <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+    </record>
+</odoo>

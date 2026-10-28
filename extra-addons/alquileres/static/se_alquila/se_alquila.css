@@ -1,0 +1,136 @@
+/* Página pública "Se alquila" de Óga */
+:root {
+  --fondo: #f6f1e8;
+  --papel: #fffdf8;
+  --tinta: #1f2a28;
+  --suave: #5d6966;
+  --linea: #e4dccd;
+  --verde: #0f5c55;
+  --verde-claro: #d9ece8;
+  --terracota: #c8643b;
+  --wa: #1f9d55;
+  --radio: 18px;
+  --sombra: 0 1px 2px rgba(31, 42, 40, .06), 0 8px 24px rgba(31, 42, 40, .06);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--tinta);
+  font: 16px/1.55 "Figtree", system-ui, sans-serif;
+}
+
+h1, h2 { font-family: "Bricolage Grotesque", "Figtree", sans-serif; line-height: 1.1; margin: 0; }
+
+.icono { width: 1.15em; height: 1.15em; flex: none; }
+
+/* Botones */
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45em;
+  padding: .7em 1.15em; border-radius: 999px; border: 0;
+  font: 600 .95rem/1 "Figtree", sans-serif; text-decoration: none; cursor: pointer;
+  transition: transform .15s, background-color .15s;
+}
+.boton:hover { transform: translateY(-1px); }
+.boton:focus-visible, .filtro:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--terracota); outline-offset: 2px;
+}
+.boton--wa { background: var(--wa); color: #fff; }
+.boton--wa:hover { background: #188547; }
+.boton--claro { background: var(--verde-claro); color: var(--verde); }
+.boton--lleno { background: var(--verde); color: #fff; padding: .9em 1.4em; font-size: 1rem; }
+
+/* Cabecera */
+.cabeza {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  max-width: 1120px; margin: 0 auto; padding: 18px 20px;
+}
+.cabeza__marca { display: flex; align-items: center; gap: .7rem; font-weight: 600; font-size: 1.05rem; }
+.cabeza__marca img { border-radius: 10px; }
+
+/* Portada */
+.portada { max-width: 1120px; margin: 0 auto; padding: 36px 20px 20px; }
+.etiqueta {
+  display: inline-block; margin: 0 0 14px; padding: .3em .8em; border-radius: 999px;
+  background: var(--terracota); color: #fff; font-weight: 600; font-size: .85rem;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.portada h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); font-weight: 800; letter-spacing: -.02em; max-width: 14ch; }
+.portada__texto { color: var(--suave); font-size: 1.1rem; margin: 14px 0 0; }
+
+.filtros { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.filtro {
+  padding: .5em 1em; border-radius: 999px; border: 1px solid var(--linea); background: var(--papel);
+  color: var(--tinta); font: 500 .95rem "Figtree", sans-serif; cursor: pointer;
+}
+.filtro.activo { background: var(--tinta); border-color: var(--tinta); color: #fff; }
+
+/* Unidades */
+.grilla {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px;
+  max-width: 1120px; margin: 0 auto; padding: 20px 20px 48px;
+}
+.tarjeta {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--papel); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra);
+}
+.tarjeta[hidden] { display: none; }
+.tarjeta__foto {
+  position: relative; aspect-ratio: 4 / 3; display: grid; place-items: center;
+  background: linear-gradient(135deg, #2b8f83, var(--verde)); color: #fff;
+}
+.tarjeta__foto img { width: 100%; height: 100%; object-fit: cover; }
+.tarjeta__dibujo { width: 46%; opacity: .95; }
+.tarjeta__ciudad {
+  position: absolute; left: 14px; top: 14px; padding: .3em .75em; border-radius: 999px;
+  background: rgba(255, 253, 248, .92); color: var(--tinta); font-size: .85rem; font-weight: 600;
+}
+.tarjeta__cuerpo { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 20px; flex: 1; }
+.tarjeta h2 { font-size: 1.3rem; font-weight: 600; }
+.tarjeta__precio { margin: 0; font-size: 1.35rem; font-weight: 600; color: var(--verde); }
+.tarjeta__precio small { font-size: .85rem; font-weight: 500; color: var(--suave); }
+.tarjeta__datos { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tarjeta__datos li { padding: .2em .65em; border-radius: 8px; background: var(--fondo); font-size: .9rem; }
+.tarjeta__texto { margin: 0; color: var(--suave); }
+.tarjeta__acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 6px; }
+
+.vacio { grid-column: 1 / -1; padding: 40px 24px; text-align: center; background: var(--papel);
+  border: 1px dashed var(--linea); border-radius: var(--radio); }
+.vacio p { color: var(--suave); }
+
+/* Formulario */
+.consulta { padding: 0 20px 56px; }
+.consulta__caja {
+  max-width: 760px; margin: 0 auto; padding: 32px; border-radius: 24px;
+  background: var(--verde); color: #fff;
+}
+.consulta__caja > p { color: #cfe5e1; margin: 8px 0 22px; }
+.consulta h2 { font-size: 1.8rem; }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.formulario label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: .95rem; }
+.formulario small { font-weight: 400; color: #cfe5e1; }
+.formulario input, .formulario select, .formulario textarea {
+  width: 100%; padding: .75em .9em; border: 0; border-radius: 12px;
+  background: var(--papel); color: var(--tinta); font: 1rem "Figtree", sans-serif;
+}
+.formulario .ancho { grid-column: 1 / -1; }
+.formulario .boton--lleno { background: var(--terracota); }
+.formulario .boton--lleno:hover { background: #b25530; }
+.trampa { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.gracias p { color: #cfe5e1; margin-bottom: 0; }
+
+.pie {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
+  max-width: 1120px; margin: 0 auto; padding: 20px; border-top: 1px solid var(--linea);
+  color: var(--suave); font-size: .9rem;
+}
+
+@media (max-width: 640px) {
+  .cabeza { padding: 14px 16px; }
+  .portada, .grilla { padding-left: 16px; padding-right: 16px; }
+  .consulta { padding: 0 16px 40px; }
+  .consulta__caja { padding: 24px 18px; }
+  .formulario { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_alquiler_pago_list" model="ir.ui.view">
+        <field name="name">alquiler.pago.list</field>
+        <field name="model">alquiler.pago</field>
+        <field name="arch" type="xml">
+            <list string="Pagos">
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="propiedad_id" optional="hide"/>
+                <field name="unidad_id"/>
+                <field name="inquilino_id"/>
+                <field name="mes"/>
+                <field name="medio"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="monto" sum="Total"/>
+                <button name="%(action_report_alquiler_recibo)d" type="action" string="Recibo" icon="fa-print"/>
+                <button name="action_whatsapp" type="object" string="Avisar el pago por WhatsApp" icon="fa-whatsapp"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_pago_form" model="ir.ui.view">
+        <field name="name">alquiler.pago.form</field>
+        <field name="model">alquiler.pago</field>
+        <field name="arch" type="xml">
+            <form string="Pago">
+                <header>
+                    <button name="%(action_report_alquiler_recibo)d" string="Imprimir recibo" type="action"
+                            icon="fa-print" class="btn-primary" invisible="not id"/>
+                    <button name="action_whatsapp" string="Avisar el pago por WhatsApp" type="object"
+                            icon="fa-whatsapp" invisible="not id"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Recibo N°</span>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cuota_id" readonly="id" options="{'no_create': True}"/>
+                            <field name="inquilino_id"/>
+                            <field name="unidad_id"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fecha"/>
+                            <field name="monto"/>
+                            <field name="medio"/>
+                            <field name="saldo_cuota" invisible="not id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="comprobante" filename="comprobante_nombre"/>
+                        <field name="comprobante_nombre" invisible="1"/>
+                        <field name="nota"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Se abre en una ventana desde la cuota ("Registrar pago"): la cuota y el monto ya vienen cargados. -->
+    <record id="view_alquiler_pago_form_registrar" model="ir.ui.view">
+        <field name="name">alquiler.pago.form.registrar</field>
+        <field name="model">alquiler.pago</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Registrar pago">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="cuota_id" readonly="1" force_save="1"/>
+                            <field name="unidad_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="saldo_cuota"/>
+                        </group>
+                        <group>
+                            <field name="fecha"/>
+                            <field name="monto"/>
+                            <field name="medio"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="comprobante" filename="comprobante_nombre"/>
+                        <field name="comprobante_nombre" invisible="1"/>
+                        <field name="nota" placeholder="Por ejemplo: pagó el hijo, transferencia del Banco Familiar..."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Registrar pago" special="save" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancelar" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_pago_search" model="ir.ui.view">
+        <field name="name">alquiler.pago.search</field>
+        <field name="model">alquiler.pago</field>
+        <field name="arch" type="xml">
+            <search string="Buscar pagos">
+                <field name="name"/>
+                <field name="inquilino_id"/>
+                <field name="unidad_id"/>
+                <field name="propiedad_id"/>
+                <filter name="efectivo" string="Efectivo" domain="[('medio', '=', 'efectivo')]"/>
+                <filter name="transferencia" string="Transferencia" domain="[('medio', '=', 'transferencia')]"/>
+                <filter name="billetera" string="Billetera" domain="[('medio', '=', 'billetera')]"/>
+                <separator/>
+                <filter name="filtro_fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_propiedad" string="Propiedad" context="{'group_by': 'propiedad_id'}"/>
+                    <filter name="group_medio" string="Medio de pago" context="{'group_by': 'medio'}"/>
+                    <filter name="group_mes" string="Mes del pago" context="{'group_by': 'fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_pago" model="ir.actions.act_window">
+        <field name="name">Pagos y recibos</field>
+        <field name="res_model">alquiler.pago</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_alquiler_pago_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay pagos</p>
+            <p>Los pagos se registran desde la cuota de cada mes, con el botón "Registrar pago".
+                Cada pago tiene su recibo numerado para imprimir.</p>
+        </field>
+    </record>
+</odoo>

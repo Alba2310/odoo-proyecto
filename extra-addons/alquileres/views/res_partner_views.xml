@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_alquileres" model="ir.ui.view">
+        <field name="name">res.partner.form.alquileres</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_alquiler_ver_contratos" type="object" class="oe_stat_button" icon="fa-home"
+                        groups="alquileres.group_alquiler_encargado" invisible="not alquiler_contrato_count">
+                    <field name="alquiler_contrato_count" widget="statinfo" string="Alquileres"/>
+                </button>
+            </div>
+            <field name="vat" position="after">
+                <label for="alquiler_puntaje" groups="alquileres.group_alquiler_encargado"
+                       invisible="not alquiler_es_inquilino"/>
+                <div class="o_row" groups="alquileres.group_alquiler_encargado" invisible="not alquiler_es_inquilino">
+                    <field name="alquiler_es_inquilino" invisible="1"/>
+                    <field name="alquiler_puntaje" widget="priority" readonly="1"/>
+                    <field name="alquiler_puntaje_texto" class="text-muted"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_partner_list_inquilinos" model="ir.ui.view">
+        <field name="name">res.partner.list.inquilinos</field>
+        <field name="model">res.partner</field>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <list string="Inquilinos">
+                <field name="name"/>
+                <field name="vat" string="C.I." optional="show"/>
+                <field name="phone" widget="phone"/>
+                <field name="email" optional="hide"/>
+                <field name="alquiler_contrato_count" string="Contratos"/>
+                <field name="alquiler_puntaje" widget="priority" readonly="1"/>
+                <field name="alquiler_puntaje_texto"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_alquiler_inquilinos" model="ir.actions.act_window">
+        <field name="name">Inquilinos</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="view_partner_list_inquilinos"/>
+        <field name="domain">[('alquiler_es_inquilino', '=', True)]</field>
+        <field name="context">{'default_alquiler_es_inquilino': True, 'default_is_company': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay inquilinos</p>
+            <p>Cargue nombre, cédula y teléfono (el de WhatsApp) de cada inquilino. También se pueden crear desde el
+                contrato.</p>
+        </field>
+    </record>
+</odoo>

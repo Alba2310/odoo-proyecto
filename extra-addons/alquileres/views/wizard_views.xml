@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_alquiler_terminar_wizard_form" model="ir.ui.view">
+        <field name="name">alquiler.terminar.wizard.form</field>
+        <field name="model">alquiler.terminar.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Terminar contrato">
+                <p class="text-muted">
+                    La unidad queda libre y se borran las cuotas sin pagar que vencen después de ese día.
+                    Lo que quedó debiendo se paga con el depósito de garantía.
+                </p>
+                <group>
+                    <group>
+                        <field name="contrato_id"/>
+                        <field name="fecha"/>
+                    </group>
+                    <group string="Depósito de garantía">
+                        <field name="currency_id" invisible="1"/>
+                        <field name="deposito"/>
+                        <field name="deuda" string="- Queda debiendo"/>
+                        <field name="descuento" string="- Descuento por daños"/>
+                        <field name="motivo" invisible="not descuento" required="descuento"/>
+                        <field name="a_devolver" class="fw-bold"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_confirmar" string="Terminar contrato" type="object" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancelar" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_renovar_wizard_form" model="ir.ui.view">
+        <field name="name">alquiler.renovar.wizard.form</field>
+        <field name="model">alquiler.renovar.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Renovar contrato">
+                <group>
+                    <group>
+                        <field name="contrato_id"/>
+                        <field name="fecha_fin_actual"/>
+                    </group>
+                    <group>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="fecha_fin"/>
+                        <field name="monto"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_confirmar" string="Renovar" type="object" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancelar" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

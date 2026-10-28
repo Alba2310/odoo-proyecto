@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_alquiler_interesado_kanban" model="ir.ui.view">
+        <field name="name">alquiler.interesado.kanban</field>
+        <field name="model">alquiler.interesado</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="estado" quick_create="false" group_create="false" group_delete="false"
+                    group_edit="false" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold"/>
+                        <field name="unidad_id" class="text-muted"/>
+                        <field name="telefono" class="small"/>
+                        <footer class="pt-1">
+                            <field name="create_date" widget="date" class="small text-muted"/>
+                            <button name="action_whatsapp" type="object" class="btn btn-sm btn-link text-success ms-auto p-0"
+                                    title="Escribirle por WhatsApp">
+                                <i class="fa fa-whatsapp fa-lg"/>
+                            </button>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_alquiler_interesado_list" model="ir.ui.view">
+        <field name="name">alquiler.interesado.list</field>
+        <field name="model">alquiler.interesado</field>
+        <field name="arch" type="xml">
+            <list string="Interesados">
+                <field name="create_date" string="Consultó el" widget="date"/>
+                <field name="name"/>
+                <field name="telefono"/>
+                <field name="unidad_id"/>
+                <field name="estado" widget="badge" decoration-info="estado == 'nuevo'"
+                       decoration-success="estado == 'alquilo'" decoration-muted="estado == 'descartado'"/>
+                <button name="action_whatsapp" type="object" string="Escribirle por WhatsApp" icon="fa-whatsapp"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_alquiler_interesado_form" model="ir.ui.view">
+        <field name="name">alquiler.interesado.form</field>
+        <field name="model">alquiler.interesado</field>
+        <field name="arch" type="xml">
+            <form string="Interesado">
+                <header>
+                    <button name="action_whatsapp" string="Escribirle por WhatsApp" type="object" icon="fa-whatsapp"
+                            class="btn-primary"/>
+                    <field name="estado" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="telefono" widget="phone"/>
+                            <field name="email" widget="email"/>
+                        </group>
+                        <group>
+                            <field name="unidad_id"/>
+                            <field name="desde_la_pagina" invisible="not desde_la_pagina"/>
+                        </group>
+                    </group>
+                    <field name="mensaje" placeholder="Lo que escribió..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_alquiler_interesado_search" model="ir.ui.view">
+        <field name="name">alquiler.interesado.search</field>
+        <field name="model">alquiler.interesado</field>
+        <field name="arch" type="xml">
+            <search string="Buscar interesados">
+                <field name="name"/>
+                <field name="telefono"/>
+                <field name="unidad_id"/>
+                <filter name="nuevos" string="Nuevos" domain="[('estado', '=', 'nuevo')]"/>
+                <filter name="activos" string="Sin cerrar" domain="[('estado', 'not in', ('alquilo', 'descartado'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_alquiler_interesado" model="ir.actions.act_window">
+        <field name="name">Interesados</field>
+        <field name="res_model">alquiler.interesado</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay interesados</p>
+            <p>Los que dejan sus datos en la página "Se alquila" aparecen acá. Escribiles por WhatsApp con un toque.</p>
+        </field>
+    </record>
+
+    <!-- Abre la página pública "Se alquila" -->
+    <record id="action_alquiler_ver_pagina" model="ir.actions.server">
+        <field name="name">Ver la página "Se alquila"</field>
+        <field name="model_id" ref="model_alquiler_unidad"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_ver_pagina()</field>
+    </record>
+</odoo>
