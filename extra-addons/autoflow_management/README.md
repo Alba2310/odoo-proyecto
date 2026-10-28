@@ -64,5 +64,5 @@ La factura se crea con `sudo()`, así quien entrega el vehículo no necesita per
 ## Pruebas
 
 ```bash
-docker compose run --rm web odoo -d autoflow -u autoflow_management --test-enable --test-tags /autoflow_management --stop-after-init
+docker compose run --rm web odoo -d autoflow_py -u autoflow_management --test-enable --test-tags /autoflow_management --stop-after-init
 ```

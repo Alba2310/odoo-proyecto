@@ -40,8 +40,9 @@ También se puede abrir `index.html` con doble clic, sin servidor.
 
 ## Formulario de contacto
 
-Usa el mismo CRM que AutoFlow: el formulario manda la solicitud a `CONFIG.odoo` (servicio `ventas`, base
-`autoflow_ventas`, http://localhost:8070) con `producto=studio_bella`. El módulo `extra-addons/autoflow_sitio_web`
+Usa el mismo CRM que AutoFlow: el formulario manda la solicitud a `CONFIG.odoo` con `producto=studio_bella`.
+Hoy `CONFIG.odoo` está vacío: ese CRM se quitó el 28/10/2026 (ver `sitio-web/README.md` para volver a usarlo)
+y el cliente siempre la envía por WhatsApp o correo. El módulo `extra-addons/autoflow_sitio_web`
 la guarda como oportunidad "Demo Studio Bella · …" con las etiquetas "Sitio web" y "Studio Bella" y manda el aviso
 por correo. Si Odoo no responde, el sitio le ofrece al cliente enviarla por WhatsApp o por correo con un toque.
 

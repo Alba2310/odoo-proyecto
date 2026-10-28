@@ -1,8 +1,9 @@
 # Solicitudes de los sitios web (`autoflow_sitio_web`)
 
 Recibe los formularios de `sitio-web/contacto.html` (AutoFlow) y `sitio-bella/contacto.html` (Studio Bella)
-y los guarda en el mismo CRM. Instalado en la base `autoflow_ventas`,
-que atiende el servicio `ventas` de `docker-compose.yml` (http://localhost:8070).
+y los guarda en el mismo CRM. Estaba instalado en la base `autoflow_ventas`, que atendía el servicio `ventas`
+de `docker-compose.yml` (http://localhost:8070). Los dos se quitaron el 28/10/2026: hoy no está instalado.
+Para volver a usarlo, restaurar el respaldo de esa base y volver a agregar el servicio (está en el historial de git).
 
 ## Cómo funciona
 

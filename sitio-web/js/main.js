@@ -9,9 +9,10 @@ const CONFIG = {
   telefono: '+595 982 600 740',        // como se muestra en pantalla
   email: 'albamariafarinamoran@gmail.com',
   direccion: 'Asunción, Paraguay',
-  // Odoo que guarda las solicitudes del formulario en el CRM (servicio "ventas" de docker-compose).
+  // Odoo que guarda las solicitudes del formulario en el CRM (módulo autoflow_sitio_web).
+  // Vacío: no hay CRM y el cliente envía la solicitud por WhatsApp o correo con un toque.
   // Al publicar el sitio, tiene que ser una dirección https accesible desde internet.
-  odoo: 'http://localhost:8070',
+  odoo: '',
   mensajeWhatsapp: 'Hola, quiero conocer AutoFlow para mi concesionaria/taller.',
 };
 

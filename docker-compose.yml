@@ -15,15 +15,17 @@ services:
       - USER=odoo
       - PASSWORD=odoo
     user: "root"  # <--- Añadimos esta línea para que corra como root y evite cualquier bloqueo de permisos
+    restart: unless-stopped  # se levanta solo al abrir Docker Desktop, sin docker compose up
 
-  # Segundo Odoo que atiende solo la base autoflow_ventas (CRM de las ventas de AutoFlow).
-  # El formulario del sitio web manda las solicitudes acá: con una sola base, Odoo sabe dónde guardarlas.
-  ventas:
+  # Segundo Odoo que atiende solo la base peluqueria: la página de turnos de Studio Bella para las clientas,
+  # en http://127.0.0.1:8071/turnos. Con una sola base, Odoo sabe de qué peluquería son los turnos sin
+  # que la clienta inicie sesión. (127.0.0.1 y no localhost: así no comparte la sesión con el 8069.)
+  turnos:
     image: odoo:18.0
     depends_on:
       - db
     ports:
-      - "8070:8069"
+      - "8071:8069"
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./extra-addons:/mnt/extra-addons
@@ -34,7 +36,30 @@ services:
       - USER=odoo
       - PASSWORD=odoo
     user: "root"
-    command: ["odoo", "--db-filter=^autoflow_ventas$$"]
+    command: ["odoo", "--db-filter=^peluqueria$$"]
+    restart: unless-stopped
+
+  # Tercer Odoo que atiende solo la base alquileres: la página pública "Se alquila" de Óga, en
+  # http://se-alquila.localhost:8072/se-alquila. Un nombre propio (se-alquila.localhost) para que no comparta la
+  # sesión con el Odoo de siempre ni con la página de turnos.
+  oga:
+    image: odoo:18.0
+    depends_on:
+      - db
+    ports:
+      - "8072:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./extra-addons:/mnt/extra-addons
+      - ./odoo-source:/mnt/odoo-source
+      - ./odoo.conf:/etc/odoo/odoo.conf
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    user: "root"
+    command: ["odoo", "--db-filter=^alquileres$$"]
+    restart: unless-stopped
 
   # Sitio web de venta de AutoFlow (carpeta sitio-web) en http://localhost:5500
   sitio:
@@ -56,6 +81,16 @@ services:
       - ./nginx/sitio.conf:/etc/nginx/conf.d/default.conf:ro
     restart: unless-stopped
 
+  # Sitio web de venta de Óga (carpeta sitio-oga) en http://localhost:5502
+  sitio-oga:
+    image: nginx:alpine
+    ports:
+      - "5502:80"
+    volumes:
+      - ./sitio-oga:/usr/share/nginx/html:ro
+      - ./nginx/sitio.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
   db:
     image: postgres:15
     environment:
@@ -64,6 +99,7 @@ services:
       - POSTGRES_USER=odoo
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
 
 volumes:
   odoo-web-data:

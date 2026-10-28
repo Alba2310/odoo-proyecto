@@ -46,7 +46,10 @@ Después el cliente puede escribirte también por WhatsApp con el mensaje ya arm
 Si Odoo no responde (apagado o sin acceso desde internet), no se pierde nada: el sitio le pide al cliente
 que la envíe por WhatsApp o por correo con un toque.
 
-- Odoo de ventas: `docker compose up -d ventas` → http://localhost:8070 (base `autoflow_ventas`, usuario admin / admin).
+- Hoy `CONFIG.odoo` está vacío: el CRM (base `autoflow_ventas`, servicio `ventas`) se quitó el 28/10/2026 y
+  el cliente siempre la envía por WhatsApp o correo. Para volver a usarlo: restaurar el respaldo de esa base,
+  volver a agregar el servicio `ventas` a `docker-compose.yml` (está en el historial de git) y poner
+  `http://localhost:8070` en `CONFIG.odoo`.
 - Para que salgan los correos, cargá la contraseña de aplicación de Gmail en el servidor "Gmail"
   (Ajustes → Técnico → Servidores de correo saliente).
 - Al publicar el sitio, `CONFIG.odoo` tiene que ser una dirección **https** de ese Odoo accesible desde internet;
