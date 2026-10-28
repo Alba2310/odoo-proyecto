@@ -16,6 +16,12 @@ Sistema de la peluquería Studio Bella para Odoo 18. Depende de `account` (Factu
 - **Compras**: pedidos a proveedores y recepción de mercadería con las pantallas de Compras e Inventario de Odoo,
   dentro del menú de Studio Bella. Cada producto tiene **stock mínimo** y "pedir hasta" (guardados en la regla de
   reabastecimiento de Odoo); cuando baja del mínimo aparece la actividad "Reponer stock", que se cierra sola al recibir.
+- **Turnos por internet**: página pública `/turnos` (sin usuario) donde la clienta elige servicios, estilista
+  (o "cualquiera"), día y hora libres, y deja nombre y celular. El turno entra a la agenda como Agendada con
+  `origen = internet`; la recepción los ve en *Turnos por internet › Turnos pedidos* y los confirma.
+- **Cierre de caja** del día: lo cobrado en efectivo, tarjeta y transferencia (según la fecha de la factura),
+  arqueo del efectivo (cambio al abrir + efectivo cobrado − salidas = tiene que haber; contado − eso = diferencia),
+  lo que queda de cambio y lo que se retira. Se imprime y, cerrado, no deja cobrar con esa fecha.
 - **Reportes**: servicios realizados por estilista y categoría; productos vendidos (análisis de facturas de Odoo).
 - **Feriados y cierres**: pestaña agregada al horario de atención; esos días la agenda no da turnos.
 - **Manual de usuario** dentro de Odoo: *Studio Bella › Ayuda › Manual de usuario*.
@@ -40,6 +46,10 @@ una semana en caché; desde el menú de Odoo siempre se ve la última versión).
 | `bella.linea.producto` | `models/cobro.py` | Campos y cálculos comunes de las líneas de productos (`AbstractModel`) |
 | `bella.servicio.insumo` | `models/producto.py` | Insumos que gasta cada servicio (tinte, oxidante, keratina...) |
 | `bella.cobro.wizard` | `wizard/cobro_wizard.py` | Ventana de cobro: forma de pago, diario, efectivo recibido y vuelto |
+| `bella.turnos` | `models/turnos.py` | Turnos por internet: horarios libres, reserva y datos de la página (`AbstractModel`) |
+| — | `controllers/turnos.py` | Rutas públicas `/turnos`, `/turnos/horarios` y `/turnos/reservar` |
+| — | `views/turnos_templates.xml`, `static/turnos/` | La página de turnos (QWeb, CSS y JS sin dependencias) |
+| `bella.cierre.caja` | `models/cierre_caja.py` | Cierre de caja del día, con su comprobante imprimible |
 | `product.template` | `models/producto.py` | Agrega la duración y los insumos del servicio, el stock mínimo y el aviso de reponer |
 | `stock.picking` | `models/stock_picking.py` | Al validar una recepción o una salida, revisa los avisos de reponer |
 | `hr.employee` | `models/hr_employee.py` | Agrega "Atiende en Studio Bella" y los servicios que hace cada estilista |
@@ -62,13 +72,21 @@ una semana en caché; desde el menú de Odoo siempre se ve la última versión).
 - **Reponer stock**: la actividad se crea al cobrar, al validar movimientos y en una revisión diaria a las 7:00;
   no se duplica y se da por hecha cuando el stock vuelve a estar por encima del mínimo.
 - La recepción no necesita permisos de Empleados: elige estilistas a través de `hr.employee.public`.
+- **Turnos por internet**: los horarios libres salen de `_work_intervals_batch` del horario de cada estilista
+  (feriados y ausencias incluidos) menos sus citas, cada 30 minutos, con una hora de anticipación y hasta 14 días
+  adelante (constantes al principio de `models/turnos.py`). Al reservar se vuelve a calcular y valen las mismas
+  restricciones de la cita. La clienta se reconoce por el celular (`numero_whatsapp`); si no existe, se crea.
+  Hasta 3 turnos pendientes por clienta, y un campo oculto frena a los robots. Solo se ofrecen los servicios con
+  "Se reserva por internet" (`bella_reserva_online`).
+- **Cierre de caja**: uno por día. Los totales se recalculan con cada cobro de ese día mientras está abierto;
+  cerrado, `_bella_cobrar` no deja cobrar con esa fecha y solo Administración lo reabre.
 
 ## Permisos
 
 | Grupo | Puede |
 |---|---|
-| Studio Bella / Recepción | Agendar, vender, cobrar, mandar recordatorios y recibir mercadería (incluye Facturación y Usuario de Inventario) |
-| Studio Bella / Administración | Además: pedidos a proveedores, servicios, productos, estilistas, reportes y borrar citas (incluye Administrador de Compras) |
+| Studio Bella / Recepción | Agendar, vender, cobrar, mandar recordatorios, confirmar turnos pedidos por internet, cerrar la caja y recibir mercadería (incluye Facturación y Usuario de Inventario) |
+| Studio Bella / Administración | Además: reabrir una caja cerrada, pedidos a proveedores, servicios, productos, estilistas, reportes y borrar citas (incluye Administrador de Compras) |
 
 ## Base de datos `peluqueria`
 
@@ -88,8 +106,8 @@ El script hace tres pasos:
 `scripts/configurar_base.py` pone la empresa en guaraníes, crea el IVA 10 % y 5 % incluidos en el precio y carga
 `demo/demo_data.xml` (14 servicios, 13 productos con stock, 4 estilistas, 12 clientes, citas de la semana pasada,
 de hoy, de mañana y de la semana que viene, y los cobros de la semana pasada) y `demo/demo_compras.xml`
-(2 proveedores, stock mínimo, un pedido recibido, uno confirmado esperando la recepción y uno en borrador).
-Las fechas son relativas al día de carga.
+(2 proveedores, stock mínimo, un pedido recibido, uno confirmado esperando la recepción y uno en borrador),
+y cierra la caja de los días de esos cobros (uno con un faltante de 10.000). Las fechas son relativas al día de carga.
 
 Usuario: `admin` / `admin`.
 
@@ -99,4 +117,13 @@ Usuario: `admin` / `admin`.
 docker compose exec -T web odoo -c /etc/odoo/odoo.conf -d peluqueria -u studio_bella --test-enable --test-tags /studio_bella --stop-after-init --http-port=8079
 ```
 
-Después de cambiar código Python hay que reiniciar Odoo: `docker compose restart web`.
+Después de cambiar código Python hay que reiniciar Odoo: `docker compose restart web turnos`.
+
+## Página de turnos
+
+Odoo tiene que saber de qué base son los turnos sin que la clienta inicie sesión. En el servidor de la peluquería,
+con una sola base (o con `--db-filter`), la página es la dirección de Odoo seguida de `/turnos`.
+En este proyecto, que tiene varias bases, la atiende el servicio `turnos` de `docker-compose.yml` (un Odoo con
+`--db-filter=^peluqueria$`): **http://127.0.0.1:8071/turnos**. Se usa 127.0.0.1 y no localhost para que no
+comparta la sesión con el Odoo del puerto 8069. Desde Odoo, *Turnos por internet › Página para las clientas*
+abre `/turnos` en el mismo servidor (funciona porque la sesión ya está en la base `peluqueria`).

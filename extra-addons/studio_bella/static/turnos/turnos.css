@@ -1,0 +1,157 @@
+/* Página de turnos de Studio Bella (/turnos). Pensada primero para el celular. */
+:root {
+    --crema: #FBF4EF;
+    --rubor: #F7E6EC;
+    --ciruela: #6E2A6A;
+    --rosa: #D2558F;
+    --texto: #2B0F2E;
+    --suave: #6B5866;
+    --borde: #EADDE3;
+    --blanco: #FFFFFF;
+    --rojo: #A3261E;
+    --degradado: linear-gradient(135deg, #D2558F, #6E2A6A);
+    --radio: 16px;
+    color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+    margin: 0;
+    background: var(--crema);
+    color: var(--texto);
+    font: 16px/1.5 "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+button, input, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+.turnos { max-width: 640px; margin: 0 auto; padding: 22px 16px 130px; }
+
+/* Cabecera y pasos */
+.cabeza { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.cabeza__logo { width: 44px; height: 44px; border-radius: 12px; flex: none; }
+.cabeza h1 { margin: 0; font: 600 1.45rem/1.15 Fraunces, Georgia, serif; }
+.cabeza p { margin: 0; color: var(--suave); font-size: .95rem; }
+
+.pasos ol { list-style: none; margin: 0 0 22px; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.pasos li { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: .75rem; color: var(--suave); text-align: center; }
+.pasos li span {
+    width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--blanco); border: 1px solid var(--borde); font-weight: 700;
+}
+.pasos li.activo { color: var(--ciruela); font-weight: 700; }
+.pasos li.activo span { background: var(--degradado); border-color: transparent; color: #fff; }
+.pasos li.hecho span { background: var(--rubor); border-color: transparent; color: var(--ciruela); }
+
+.paso h2, .listo h2 { margin: 0 0 4px; font: 600 1.65rem/1.2 Fraunces, Georgia, serif; }
+.ayuda { margin: 0 0 16px; color: var(--suave); }
+.vacio, .cargando { color: var(--suave); }
+.aviso { margin: 0 0 16px; padding: 12px 14px; border-radius: 12px; background: #FCE8E6; color: var(--rojo); font-weight: 600; }
+
+/* Paso 1: servicios */
+.grupo { border: 0; margin: 0 0 18px; padding: 0; min-width: 0; }
+.grupo legend { padding: 0; margin-bottom: 8px; font: italic 600 1.1rem Fraunces, Georgia, serif; color: var(--ciruela); }
+.servicio {
+    display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "marca nombre precio" "marca detalle precio";
+    column-gap: 12px; align-items: center; padding: 12px 14px; margin-bottom: 8px;
+    background: var(--blanco); border: 1.5px solid var(--borde); border-radius: var(--radio); cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+}
+.servicio input { grid-area: marca; width: 20px; height: 20px; margin: 0; accent-color: var(--ciruela); }
+.servicio__nombre { grid-area: nombre; font-weight: 600; }
+.servicio__detalle { grid-area: detalle; color: var(--suave); font-size: .85rem; }
+.servicio__precio { grid-area: precio; white-space: nowrap; }
+.servicio:has(input:checked) { border-color: var(--rosa); background: var(--rubor); }
+
+/* Paso 2: estilista */
+.opciones { display: grid; gap: 10px; }
+.opcion {
+    position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    background: var(--blanco); border: 1.5px solid var(--borde); border-radius: var(--radio); cursor: pointer;
+}
+.opcion input { position: absolute; opacity: 0; pointer-events: none; }
+.opcion:has(input:checked) { border-color: var(--rosa); background: var(--rubor); }
+.opcion:has(input:focus-visible) { outline: 3px solid rgba(210, 85, 143, .35); outline-offset: 2px; }
+.avatar {
+    width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    background: var(--degradado); color: #fff; font-weight: 700;
+}
+.opcion__texto { display: flex; flex-direction: column; }
+.opcion__texto small { color: var(--suave); }
+
+/* Paso 3: día y hora */
+.dias {
+    display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px 6px; padding: 2px 16px 12px;
+    scroll-snap-type: x proximity; scrollbar-width: thin;
+}
+.dia {
+    flex: none; width: 62px; padding: 8px 0; display: flex; flex-direction: column; align-items: center;
+    background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 14px; cursor: pointer; scroll-snap-align: start;
+}
+.dia small { font-size: .72rem; color: var(--suave); text-transform: capitalize; }
+.dia b { font-size: 1.3rem; line-height: 1.2; }
+.dia:disabled { opacity: .4; cursor: default; }
+.dia--activo { background: var(--degradado); border-color: transparent; color: #fff; }
+.dia--activo small { color: rgba(255, 255, 255, .88); }
+.franja h3 { margin: 10px 0 8px; font-size: .9rem; font-weight: 600; color: var(--suave); }
+.franja__horas { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; }
+.hora {
+    padding: 10px 0; background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px;
+    font-weight: 700; cursor: pointer;
+}
+.hora:hover, .dia:not(:disabled):hover, .servicio:hover, .opcion:hover { border-color: var(--rosa); }
+.hora--activa { background: var(--ciruela); border-color: var(--ciruela); color: #fff; }
+
+/* Paso 4: datos */
+.formulario { display: grid; gap: 14px; }
+.formulario label { display: grid; gap: 6px; font-weight: 600; font-size: .95rem; }
+.formulario small { font-weight: 400; color: var(--suave); }
+.formulario input, .formulario textarea {
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--borde); border-radius: 12px;
+    background: var(--blanco); font-weight: 400;
+}
+.formulario input:focus, .formulario textarea:focus { outline: none; border-color: var(--rosa); box-shadow: 0 0 0 3px rgba(210, 85, 143, .18); }
+.formulario .trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.resumen { padding: 14px 16px; background: var(--blanco); border: 1.5px dashed var(--rosa); border-radius: var(--radio); }
+.resumen dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; }
+.resumen dt { color: var(--suave); }
+.resumen dd { margin: 0; font-weight: 600; }
+
+/* Listo */
+.listo { text-align: center; padding: 28px 4px; }
+.listo__icono {
+    width: 76px; height: 76px; margin: 0 auto 16px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--degradado); color: #fff;
+}
+.listo__turno { font-size: 1.1rem; }
+.listo .boton { margin: 10px 4px 0; }
+
+.pie { margin-top: 28px; text-align: center; font-size: .9rem; color: var(--suave); }
+.pie a { color: var(--ciruela); font-weight: 600; }
+
+/* Barra de abajo: resumen y botones */
+.barra {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, .96); border-top: 1px solid var(--borde);
+    box-shadow: 0 -8px 24px rgba(74, 23, 71, .08); backdrop-filter: blur(8px);
+}
+.barra__contenido { max-width: 640px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+.barra__resumen { flex: 1; min-width: 0; font-size: .9rem; line-height: 1.35; color: var(--suave); }
+.barra__resumen b { display: block; font-size: 1.05rem; color: var(--texto); }
+.barra__detalle { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .85rem; }
+.barra__botones { display: flex; gap: 8px; flex: none; }
+
+.boton {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px;
+    border: 0; border-radius: 14px; background: var(--degradado); color: #fff; font-weight: 700;
+    text-decoration: none; cursor: pointer;
+}
+.boton:disabled { opacity: .45; cursor: default; }
+.boton--claro { background: var(--blanco); color: var(--ciruela); border: 1.5px solid var(--borde); }
+.boton--wa { background: #128C4B; }
+
+@media (min-width: 700px) {
+    .turnos { padding-top: 40px; }
+    .franja__horas { grid-template-columns: repeat(6, 1fr); }
+}

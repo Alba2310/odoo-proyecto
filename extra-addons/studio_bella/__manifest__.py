@@ -16,9 +16,13 @@ Sistema de gestión de la peluquería Studio Bella
 * Recordatorio automático por correo al cliente el día antes de su cita, y por WhatsApp con un clic
   para los clientes que no tienen correo.
 * Compras a proveedores y recepción de mercadería, con stock mínimo y aviso para reponer.
+* Turnos por internet: una página (/turnos) donde las clientas eligen servicios, estilista, día y hora
+  libres, y el turno entra solo a la agenda.
+* Cierre de caja del día: lo cobrado en efectivo, tarjeta y transferencia, y el arqueo del efectivo
+  (cuadra, sobra o falta). Con la caja cerrada no se cobra con esa fecha.
 * Reportes de servicios realizados por estilista y de productos vendidos.
 """,
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.1.0',
     'category': 'Services',
     'license': 'LGPL-3',
     'depends': ['account', 'purchase_stock', 'hr'],
@@ -37,6 +41,8 @@ Sistema de gestión de la peluquería Studio Bella
         'views/hr_employee_views.xml',
         'views/res_partner_views.xml',
         'views/report_views.xml',
+        'views/cierre_caja_views.xml',
+        'views/turnos_templates.xml',
         'views/manual_views.xml',
         'views/menus.xml',
     ],

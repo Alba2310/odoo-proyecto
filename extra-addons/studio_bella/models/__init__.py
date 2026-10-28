@@ -6,3 +6,5 @@ from . import cita
 from . import venta
 from . import res_partner
 from . import stock_picking
+from . import turnos
+from . import cierre_caja

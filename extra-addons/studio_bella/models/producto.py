@@ -12,6 +12,8 @@ class ProductTemplate(models.Model):
 
     bella_duracion = fields.Integer('Duración (min)', default=30,
                                     help='Tiempo que lleva el servicio. Con esto se calcula cuándo termina la cita.')
+    bella_reserva_online = fields.Boolean('Se reserva por internet', default=True,
+                                          help='Aparece en la página de turnos, para que las clientas lo reserven solas.')
     bella_insumo_ids = fields.One2many('bella.servicio.insumo', 'servicio_tmpl_id', string='Insumos que usa',
                                        help='Productos que se gastan cada vez que se hace el servicio. '
                                             'Se descuentan del stock al cobrar la cita.')

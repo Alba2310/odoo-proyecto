@@ -12,9 +12,11 @@ Hace esto:
   de Odoo trae un impuesto de 15 % que acá se archiva).
 * Carga demo/demo_data.xml (servicios, productos con stock, estilistas, clientes, citas y cobros)
   y demo/demo_compras.xml (proveedores, stock mínimo y pedidos a proveedores).
+* Cierra la caja de los días de esos cobros.
 """
 import base64
 
+from odoo import fields
 from odoo.tools import convert_file, file_open
 
 admin = env.ref('base.user_admin')
@@ -81,6 +83,19 @@ if not Tax.search([('company_id', '=', company.id), ('name', '=', 'IVA 10 %')]):
 for archivo, registro in (('demo/demo_data.xml', 'cita_01'), ('demo/demo_compras.xml', 'compra_01')):
     if not env.ref(f'studio_bella.{registro}', raise_if_not_found=False):
         convert_file(env, 'studio_bella', archivo, {}, mode='init', noupdate=True, kind='demo')
+
+# Cierres de caja de los días con cobros de ejemplo: con 200.000 de cambio. El miércoles faltaron 10.000 y el
+# sábado se sacaron 50.000 de la caja para compras chicas.
+if not env['bella.cierre.caja'].search_count([]):
+    facturas = env['bella.cita'].search([]).factura_id | env['bella.venta'].search([]).factura_id
+    hoy = fields.Date.context_today(admin)
+    # Solo días anteriores: la caja de hoy queda abierta para seguir cobrando.
+    for dia in sorted(dia for dia in set(facturas.mapped('invoice_date')) if dia < hoy):
+        cierre = env['bella.cierre.caja'].create({'fecha': dia, 'fondo_inicial': 200000})
+        if dia.weekday() == 5:
+            cierre.write({'retiros': 50000, 'nota': 'Compra de café, azúcar y agua para las clientas.'})
+        cierre.efectivo_contado = cierre.efectivo_esperado - (10000 if dia.weekday() == 2 else 0)
+        cierre.action_cerrar()
 
 env.cr.commit()
 print('Studio Bella: base configurada.')

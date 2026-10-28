@@ -35,6 +35,8 @@
                         </div>
                         <field name="cliente_id" class="fw-bold fs-5"/>
                         <field name="servicios_texto" class="text-muted"/>
+                        <field name="origen" invisible="origen != 'internet'" widget="badge"
+                               decoration-info="origen == 'internet'" class="align-self-start"/>
                         <footer>
                             <field name="telefono" class="text-muted"/>
                             <field name="total" widget="monetary" class="ms-auto fw-bold"/>
@@ -61,6 +63,7 @@
                 <field name="currency_id" column_invisible="True"/>
                 <field name="total" sum="Total"/>
                 <field name="metodo_pago" optional="hide"/>
+                <field name="origen" optional="hide"/>
                 <field name="estado" widget="badge"
                        decoration-info="estado == 'confirmada'"
                        decoration-warning="estado == 'en_atencion'"
@@ -137,6 +140,8 @@
                                 <field name="recordatorio_enviado" nolabel="1"/>
                                 <field name="recordatorio_canal" nolabel="1" invisible="not recordatorio_canal"/>
                             </div>
+                            <field name="origen" invisible="origen != 'internet'" widget="badge"
+                                   decoration-info="origen == 'internet'"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -209,6 +214,8 @@
                 <filter name="proximos_3_dias" string="Próximos 3 días"
                         domain="[('fecha_inicio', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
                                  ('fecha_inicio', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=4), datetime.time(0, 0, 0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <separator/>
+                <filter name="por_internet" string="Pedidas por internet" domain="[('origen', '=', 'internet')]"/>
                 <separator/>
                 <filter name="recordatorio_pendiente" string="Recordatorio pendiente"
                         domain="[('recordatorio_enviado', '=', False)]"/>
@@ -290,5 +297,26 @@
             <p class="o_view_nocontent_smiling_face">No hay citas para hoy</p>
             <p>Las citas del día aparecen acá, ordenadas por hora y separadas por estado.</p>
         </field>
+    </record>
+
+    <!-- Turnos por internet: los que reservaron las clientas solas, para confirmarlos -->
+    <record id="action_bella_cita_internet" model="ir.actions.act_window">
+        <field name="name">Turnos pedidos por internet</field>
+        <field name="res_model">bella.cita</field>
+        <field name="view_mode">list,kanban,calendar,form</field>
+        <field name="domain">[('origen', '=', 'internet')]</field>
+        <field name="context">{'search_default_activas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay turnos pedidos por internet</p>
+            <p>Compartí el enlace de la página de turnos (por WhatsApp o en Instagram): las clientas eligen el
+                servicio, la estilista, el día y la hora, y el turno entra solo a la agenda como "Agendada".
+                Desde acá los confirmás.</p>
+        </field>
+    </record>
+
+    <record id="action_bella_pagina_turnos" model="ir.actions.act_url">
+        <field name="name">Página de turnos</field>
+        <field name="url">/turnos</field>
+        <field name="target">new</field>
     </record>
 </odoo>

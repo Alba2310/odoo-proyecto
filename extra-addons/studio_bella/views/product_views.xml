@@ -11,6 +11,7 @@
                     <group invisible="type != 'service'">
                         <group>
                             <field name="bella_duracion"/>
+                            <field name="bella_reserva_online"/>
                         </group>
                     </group>
                     <separator string="Insumos que usa cada vez" invisible="type != 'service'"/>

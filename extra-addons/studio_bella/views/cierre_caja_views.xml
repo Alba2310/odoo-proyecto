@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Comprobante imprimible del cierre -->
+    <record id="action_report_bella_cierre_caja" model="ir.actions.report">
+        <field name="name">Cierre de caja</field>
+        <field name="model">bella.cierre.caja</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">studio_bella.report_cierre_caja</field>
+        <field name="report_file">studio_bella.report_cierre_caja</field>
+        <field name="print_report_name">object.name</field>
+        <field name="binding_model_id" ref="model_bella_cierre_caja"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="view_bella_cierre_caja_list" model="ir.ui.view">
+        <field name="name">bella.cierre.caja.list</field>
+        <field name="model">bella.cierre.caja</field>
+        <field name="arch" type="xml">
+            <list string="Cierres de caja" decoration-muted="estado == 'abierta'">
+                <field name="fecha"/>
+                <field name="responsable_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="cantidad_cobros" optional="hide" sum="Total"/>
+                <field name="total_efectivo" sum="Total"/>
+                <field name="total_tarjeta" sum="Total" optional="show"/>
+                <field name="total_transferencia" sum="Total" optional="show"/>
+                <field name="total_cobrado" sum="Total"/>
+                <field name="efectivo_esperado" optional="hide"/>
+                <field name="efectivo_contado" optional="hide"/>
+                <field name="diferencia" sum="Total"
+                       decoration-danger="resultado == 'falta'" decoration-warning="resultado == 'sobra'"
+                       decoration-success="resultado == 'cuadra' and estado == 'cerrada'"/>
+                <field name="resultado" column_invisible="True"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'cerrada'"
+                       decoration-info="estado == 'abierta'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_cierre_caja_form" model="ir.ui.view">
+        <field name="name">bella.cierre.caja.form</field>
+        <field name="model">bella.cierre.caja</field>
+        <field name="arch" type="xml">
+            <form string="Cierre de caja">
+                <header>
+                    <button name="action_cerrar" string="Cerrar caja" type="object" class="btn-primary"
+                            invisible="estado != 'abierta'"
+                            confirm="¿Cerrar la caja? Después no se va a poder cobrar con la fecha de este día."/>
+                    <button name="action_reabrir" string="Reabrir" type="object" groups="studio_bella.group_bella_admin"
+                            invisible="estado != 'cerrada'"/>
+                    <button name="%(action_report_bella_cierre_caja)d" string="Imprimir" type="action" icon="fa-print"
+                            invisible="not id"/>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Cerrada" bg_color="text-bg-success" invisible="estado != 'cerrada'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="fecha" readonly="estado != 'abierta'"/>
+                            <field name="responsable_id" widget="many2one_avatar_user" readonly="estado != 'abierta'"/>
+                        </group>
+                        <group>
+                            <field name="cantidad_cobros"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Cobrado en el día">
+                            <!-- La compañía tiene que estar en la vista para que un cierre nuevo muestre la moneda. -->
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="total_efectivo"/>
+                            <field name="total_tarjeta"/>
+                            <field name="total_transferencia"/>
+                            <field name="total_cobrado" class="fw-bold"/>
+                        </group>
+                        <group string="Arqueo del efectivo">
+                            <field name="fondo_inicial" readonly="estado != 'abierta'"/>
+                            <field name="total_efectivo" string="+ Cobrado en efectivo"/>
+                            <field name="retiros" string="- Salidas de efectivo" readonly="estado != 'abierta'"/>
+                            <field name="efectivo_esperado" class="fw-bold"/>
+                            <field name="efectivo_contado" readonly="estado != 'abierta'" class="fw-bold"/>
+                            <field name="diferencia" invisible="not efectivo_contado"/>
+                        </group>
+                    </group>
+                    <field name="resultado" invisible="1"/>
+                    <div class="alert alert-success mb-3" role="status"
+                         invisible="resultado != 'cuadra' or not efectivo_contado">
+                        <i class="fa fa-check-circle me-1" title="Cuadra"/> <field name="resultado_texto" class="fw-bold"/>
+                    </div>
+                    <div class="alert alert-warning mb-3" role="status" invisible="resultado != 'sobra' or not efectivo_contado">
+                        <i class="fa fa-exclamation-circle me-1" title="Sobra"/> <field name="resultado_texto" class="fw-bold"/>:
+                        hay más efectivo del que tendría que haber. Revise si falta registrar algún cobro.
+                    </div>
+                    <div class="alert alert-danger mb-3" role="status" invisible="resultado != 'falta' or not efectivo_contado">
+                        <i class="fa fa-exclamation-triangle me-1" title="Falta"/> <field name="resultado_texto" class="fw-bold"/>:
+                        revise el vuelto de los cobros y las salidas de efectivo del día.
+                    </div>
+                    <group>
+                        <group string="Al cerrar">
+                            <field name="queda_en_caja" readonly="estado != 'abierta'"/>
+                            <field name="para_retirar" invisible="not efectivo_contado"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Citas cobradas" name="citas">
+                            <field name="cita_ids">
+                                <list create="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="horario_texto" string="Turno"/>
+                                    <field name="cliente_id"/>
+                                    <field name="estilista_id" widget="many2one_avatar_employee"/>
+                                    <field name="metodo_pago"/>
+                                    <field name="factura_id"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="total" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ventas de productos" name="ventas">
+                            <field name="venta_ids">
+                                <list create="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="cliente_id"/>
+                                    <field name="vendedor_id" widget="many2one_avatar_user"/>
+                                    <field name="metodo_pago"/>
+                                    <field name="factura_id"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="total" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota" placeholder="Por ejemplo: se pagó el delivery de insumos con plata de la caja..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bella_cierre_caja_search" model="ir.ui.view">
+        <field name="name">bella.cierre.caja.search</field>
+        <field name="model">bella.cierre.caja</field>
+        <field name="arch" type="xml">
+            <search string="Buscar cierres de caja">
+                <field name="fecha"/>
+                <field name="responsable_id"/>
+                <filter name="abiertas" string="Abiertas" domain="[('estado', '=', 'abierta')]"/>
+                <filter name="cerradas" string="Cerradas" domain="[('estado', '=', 'cerrada')]"/>
+                <separator/>
+                <filter name="con_diferencia" string="Con diferencia" domain="[('resultado', '!=', 'cuadra')]"/>
+                <separator/>
+                <filter name="filtro_fecha" string="Día" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_mes" string="Mes" context="{'group_by': 'fecha:month'}"/>
+                    <filter name="group_responsable" string="Responsable" context="{'group_by': 'responsable_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_cierre_caja" model="ir.actions.act_window">
+        <field name="name">Cierre de caja</field>
+        <field name="res_model">bella.cierre.caja</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cierre la caja del día</p>
+            <p>Al terminar el día, cree el cierre: muestra lo cobrado en efectivo, con tarjeta y por transferencia.
+                Cuente el efectivo de la caja, cárguelo y el sistema le dice si cuadra, si sobra o si falta.</p>
+        </field>
+    </record>
+
+    <template id="report_cierre_caja">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="cierre">
+                <t t-call="web.external_layout">
+                    <t t-set="moneda" t-value="cierre.currency_id"/>
+                    <div class="page">
+                        <h2 t-field="cierre.name"/>
+                        <p>
+                            <span t-if="cierre.estado == 'cerrada'">Cerrada por</span>
+                            <span t-else="">Abierta · responsable:</span>
+                            <span t-field="cierre.responsable_id"/>
+                        </p>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <h5>Cobrado en el día</h5>
+                                <table class="table table-sm">
+                                    <tr><td>Efectivo</td><td class="text-end"><span t-field="cierre.total_efectivo"/></td></tr>
+                                    <tr><td>Tarjeta</td><td class="text-end"><span t-field="cierre.total_tarjeta"/></td></tr>
+                                    <tr><td>Transferencia / QR</td><td class="text-end"><span t-field="cierre.total_transferencia"/></td></tr>
+                                    <tr class="fw-bold"><td>Total (<t t-out="cierre.cantidad_cobros"/> cobros)</td>
+                                        <td class="text-end"><span t-field="cierre.total_cobrado"/></td></tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <h5>Arqueo del efectivo</h5>
+                                <table class="table table-sm">
+                                    <tr><td>Cambio al abrir</td><td class="text-end"><span t-field="cierre.fondo_inicial"/></td></tr>
+                                    <tr><td>+ Cobrado en efectivo</td><td class="text-end"><span t-field="cierre.total_efectivo"/></td></tr>
+                                    <tr><td>- Salidas de efectivo</td><td class="text-end"><span t-field="cierre.retiros"/></td></tr>
+                                    <tr class="fw-bold"><td>Tiene que haber</td><td class="text-end"><span t-field="cierre.efectivo_esperado"/></td></tr>
+                                    <tr><td>Efectivo contado</td><td class="text-end"><span t-field="cierre.efectivo_contado"/></td></tr>
+                                    <tr class="fw-bold"><td>Diferencia</td><td class="text-end"><span t-field="cierre.diferencia"/></td></tr>
+                                </table>
+                                <p class="fw-bold" t-out="cierre.resultado_texto"/>
+                                <p>Queda de cambio: <span t-field="cierre.queda_en_caja"/> · Para retirar: <span t-field="cierre.para_retirar"/></p>
+                            </div>
+                        </div>
+                        <h5 class="mt-3">Detalle de los cobros</h5>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr><th>Número</th><th>Cliente</th><th>Forma de pago</th><th>Factura</th><th class="text-end">Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="cierre.cita_ids" t-as="cita">
+                                    <td><span t-field="cita.name"/> · <span t-field="cita.estilista_id"/></td>
+                                    <td><span t-field="cita.cliente_id"/></td>
+                                    <td><span t-field="cita.metodo_pago"/></td>
+                                    <td><span t-field="cita.factura_id"/></td>
+                                    <td class="text-end"><span t-field="cita.total"/></td>
+                                </tr>
+                                <tr t-foreach="cierre.venta_ids" t-as="venta">
+                                    <td><span t-field="venta.name"/></td>
+                                    <td><span t-field="venta.cliente_id"/></td>
+                                    <td><span t-field="venta.metodo_pago"/></td>
+                                    <td><span t-field="venta.factura_id"/></td>
+                                    <td class="text-end"><span t-field="venta.total"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p t-if="cierre.nota" t-field="cierre.nota"/>
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <p>_____________________________</p>
+                                <p>Entregó</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>_____________________________</p>
+                                <p>Recibió</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

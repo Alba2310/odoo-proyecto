@@ -9,3 +9,5 @@ access_bella_venta_linea_recepcion,bella.venta.linea recepcion,model_bella_venta
 access_bella_servicio_insumo_user,bella.servicio.insumo user,model_bella_servicio_insumo,base.group_user,1,0,0,0
 access_bella_servicio_insumo_admin,bella.servicio.insumo admin,model_bella_servicio_insumo,group_bella_admin,1,1,1,1
 access_bella_cobro_wizard_recepcion,bella.cobro.wizard recepcion,model_bella_cobro_wizard,group_bella_recepcion,1,1,1,1
+access_bella_cierre_caja_recepcion,bella.cierre.caja recepcion,model_bella_cierre_caja,group_bella_recepcion,1,1,1,0
+access_bella_cierre_caja_admin,bella.cierre.caja admin,model_bella_cierre_caja,group_bella_admin,1,1,1,1

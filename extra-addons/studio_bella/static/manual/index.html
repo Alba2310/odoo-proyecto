@@ -72,6 +72,8 @@
         border: 1px solid var(--borde); border-radius: 10px; box-shadow: 0 6px 22px rgba(60, 20, 60, .10);
     }
     figcaption { margin-top: 8px; font-size: 14px; color: var(--suave); }
+    .celulares { display: flex; flex-wrap: wrap; gap: 20px; }
+    .celulares figure { flex: 1 1 220px; max-width: 300px; }
 
     /* Pasos numerados */
     ol.pasos { list-style: none; padding: 0; counter-reset: paso; }
@@ -142,7 +144,9 @@
         <li><a href="#productos-cita">Vender productos en la cita</a></li>
         <li><a href="#cobrar">Cobrar</a></li>
         <li><a href="#mostrador">Venta de mostrador</a></li>
-        <li><a href="#recordatorios">Recordatorios por correo</a></li>
+        <li><a href="#caja">Cierre de caja</a></li>
+        <li><a href="#recordatorios">Recordatorios por WhatsApp y correo</a></li>
+        <li><a href="#turnos">Turnos por internet</a></li>
         <li><a href="#clientes">Clientes</a></li>
         <li><a href="#compras">Compras y recepción de mercadería</a></li>
         <li><a href="#configuracion">Configuración</a></li>
@@ -214,6 +218,9 @@
         <tr><td>Cargar y editar clientes</td><td class="si">Sí</td><td class="si">Sí</td></tr>
         <tr><td>Mandar recordatorios por WhatsApp o correo</td><td class="si">Sí</td><td class="si">Sí</td></tr>
         <tr><td>Recibir la mercadería de los proveedores</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Confirmar los turnos pedidos por internet</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Cerrar la caja del día</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Reabrir una caja cerrada</td><td class="no">No</td><td class="si">Sí</td></tr>
         <tr><td>Hacer pedidos a proveedores y reponer stock</td><td class="no">No</td><td class="si">Sí</td></tr>
         <tr><td>Ver los reportes</td><td class="no">No</td><td class="si">Sí</td></tr>
         <tr><td>Cargar servicios, productos, stock y estilistas</td><td class="no">No</td><td class="si">Sí</td></tr>
@@ -399,7 +406,40 @@
        con una nota de crédito, igual que una cita.</p>
 
     <!-- 9 ============================================================ -->
-    <h2 id="recordatorios"><span class="num">9.</span>Recordatorios por WhatsApp y por correo</h2>
+    <h2 id="caja"><span class="num">9.</span>Cierre de caja</h2>
+    <p>Al terminar el día se cierra la caja: el sistema suma lo que se cobró con cada forma de pago y te dice cuánto
+       efectivo tiene que haber. Vos contás la plata y ves si cuadra.</p>
+    <ol class="pasos">
+        <li>Entrá a <span class="ruta">Studio Bella › Cierre de caja</span> y tocá <span class="boton primario">Nuevo</span>.
+            El día ya viene puesto y aparece lo cobrado en efectivo, con tarjeta y por transferencia, con la lista de
+            las citas y las ventas de ese día.</li>
+        <li>Revisá el <b>Cambio al abrir</b> (el efectivo que había a la mañana; viene de lo que quedó en el cierre
+            anterior) y cargá las <b>Salidas de efectivo</b> si se sacó plata de la caja durante el día: compras
+            chicas, pagos o un depósito al banco.</li>
+        <li>Contá el efectivo de la caja y cargalo en <b>Efectivo contado</b>. El sistema te dice si <b>cuadra</b>,
+            si <b>sobra</b> o si <b>falta</b>, y cuánto.</li>
+        <li>Revisá cuánto <b>queda de cambio</b> para mañana: el sistema calcula cuánto hay <b>para retirar</b>.</li>
+        <li>Tocá <span class="boton primario">Cerrar caja</span>. Con <span class="boton">Imprimir</span> sale el
+            comprobante, con lugar para que firmen quien entrega y quien recibe la plata.</li>
+    </ol>
+    <figure>
+        <img src="img/k2-cierre.png" alt="Cierre de caja cerrado: cobrado por forma de pago, arqueo del efectivo y aviso de que faltan 10.000">
+        <figcaption>La caja del 21/10: tenía que haber 290.000 en efectivo y se contaron 280.000, así que faltan 10.000.</figcaption>
+    </figure>
+    <ul>
+        <li>Mientras la caja del día está abierta, cada cobro nuevo se suma solo.</li>
+        <li>Con la caja cerrada <b>no se puede cobrar con la fecha de ese día</b>. Si hace falta corregir algo,
+            alguien de Administración la abre con <span class="boton">Reabrir</span>.</li>
+        <li>Hay un solo cierre por día.</li>
+        <li>La tarjeta y la transferencia no están en la caja: se controlan con el resumen del banco o del POS.</li>
+    </ul>
+    <figure>
+        <img src="img/k1-cierres.png" alt="Lista de cierres de caja con lo cobrado cada día y la diferencia">
+        <figcaption>Los cierres de cada día. La diferencia aparece en rojo cuando faltó plata.</figcaption>
+    </figure>
+
+    <!-- 10 ============================================================ -->
+    <h2 id="recordatorios"><span class="num">10.</span>Recordatorios por WhatsApp y por correo</h2>
     <p>El día antes de cada turno hay que avisarle al cliente. Hay dos formas:</p>
     <ul>
         <li><b>Por correo, solo:</b> todos los días a las 10:00 el sistema manda un correo a los clientes que tienen
@@ -454,8 +494,60 @@
         administrador en <span class="ruta">Ajustes</span>. Mientras no esté configurado, los correos quedan en espera.
     </div>
 
-    <!-- 10 ============================================================ -->
-    <h2 id="clientes"><span class="num">10.</span>Clientes</h2>
+    <!-- 11 ============================================================ -->
+    <h2 id="turnos"><span class="num">11.</span>Turnos por internet</h2>
+    <p>Las clientas pueden sacar turno solas desde el celular, a cualquier hora, con un enlace que compartís por
+       WhatsApp, Instagram o Facebook. Los turnos entran directo a la agenda.</p>
+
+    <h3>Lo que ve la clienta</h3>
+    <ol class="pasos">
+        <li>Elige uno o más servicios. Ve el precio (con IVA) y cuánto dura cada uno.</li>
+        <li>Elige la estilista, o <b>Cualquiera</b> para el primer horario libre. Solo aparecen las estilistas que
+            hacen todos los servicios que eligió.</li>
+        <li>Elige el día y la hora. Solo aparecen los horarios libres: se respeta el horario de cada estilista, los
+            feriados, los cierres y las citas que ya hay. No se puede reservar con menos de una hora de anticipación
+            ni más de 14 días adelante.</li>
+        <li>Deja su nombre y su celular (el correo es opcional) y toca <b>Reservar</b>.</li>
+    </ol>
+    <div class="celulares">
+        <figure>
+            <img src="img/t1-pagina-turnos.png" alt="Página de turnos en el celular: lista de servicios con precio y duración">
+            <figcaption>Paso 1: los servicios, con su precio y su duración.</figcaption>
+        </figure>
+        <figure>
+            <img src="img/t2-turnos-horarios.png" alt="Página de turnos en el celular: días y horarios libres">
+            <figcaption>Paso 3: solo los días y las horas en que hay lugar.</figcaption>
+        </figure>
+    </div>
+
+    <h3>Lo que pasa en el sistema</h3>
+    <ul>
+        <li>El turno entra a la agenda como <b>Agendada</b>, con la marca <b>Internet</b>. Ese horario ya no se le
+            ofrece a nadie más.</li>
+        <li>Si la clienta ya estaba cargada, se la reconoce por el celular, aunque lo escriba con +595 o sin el 0.
+            Si es nueva, se la agrega a Clientes.</li>
+        <li>Los turnos pedidos están en <span class="ruta">Studio Bella › Turnos por internet › Turnos pedidos</span>.
+            Escribile o llamala y tocá <span class="boton primario">Confirmar</span>, como en cualquier cita.</li>
+        <li>El día anterior recibe el recordatorio igual que las demás clientas.</li>
+        <li>Para evitar abusos, una misma clienta puede tener hasta 3 turnos pendientes pedidos por internet.</li>
+    </ul>
+    <figure>
+        <img src="img/t3-turnos-pedidos.png" alt="Lista de turnos pedidos por internet">
+        <figcaption>Los turnos que reservaron las clientas, listos para confirmar.</figcaption>
+    </figure>
+
+    <h3>El enlace para compartir</h3>
+    <p>En <span class="ruta">Studio Bella › Turnos por internet › Página para las clientas</span> se abre la página
+       tal como la ven ellas. La dirección es la del sistema seguida de <b>/turnos</b> (por ejemplo,
+       <b>https://studiobella.com.py/turnos</b>): esa es la que se comparte.</p>
+    <div class="aviso">
+        <strong>Qué servicios aparecen</strong>
+        Todos, salvo los que tengan desmarcado <b>Se reserva por internet</b> en la ficha del servicio (pestaña
+        Studio Bella). Sirve para los que necesitan una consulta antes, como un peinado de novia.
+    </div>
+
+    <!-- 12 ============================================================ -->
+    <h2 id="clientes"><span class="num">12.</span>Clientes</h2>
     <p>En <span class="ruta">Studio Bella › Clientes</span> están todas las fichas. Para cargar uno nuevo, tocá
        <span class="boton primario">Nuevo</span> y completá el nombre, el teléfono y el correo.</p>
     <figure>
@@ -463,8 +555,8 @@
         <figcaption>La ficha del cliente. El botón <b>Citas</b> muestra su historial; <b>Facturado</b>, lo que se le facturó (sin IVA).</figcaption>
     </figure>
 
-    <!-- 11 ============================================================ -->
-    <h2 id="compras"><span class="num">11.</span>Compras y recepción de mercadería</h2>
+    <!-- 13 ============================================================ -->
+    <h2 id="compras"><span class="num">13.</span>Compras y recepción de mercadería</h2>
     <p>Así se reponen los productos y los insumos: Administración hace el pedido al proveedor, la recepción recibe la
        mercadería cuando llega y el stock sube solo. Todo está en <span class="ruta">Studio Bella › Compras</span>.</p>
 
@@ -525,8 +617,8 @@
     <p>En el pedido, <span class="boton">Crear factura</span> arma la factura del proveedor con lo recibido. Cargá el
        número de la factura que te dio (por ejemplo, 001-001-0004521) y la fecha, y confirmala.</p>
 
-    <!-- 12 ============================================================ -->
-    <h2 id="configuracion"><span class="num">12.</span>Configuración</h2>
+    <!-- 14 ============================================================ -->
+    <h2 id="configuracion"><span class="num">14.</span>Configuración</h2>
     <p>Esta parte es solo para usuarios de <b>Administración</b>.</p>
 
     <h3 id="servicios">Servicios</h3>
@@ -539,7 +631,8 @@
     <ul>
         <li><b>Nombre</b> y <b>Categoría</b> (Cortes, Coloración, Tratamientos, Peinados, Barbería, Manos y pies).</li>
         <li><b>Precio de venta</b> con el IVA incluido e <b>Impuestos</b>: IVA 10 %.</li>
-        <li>En la pestaña <b>Studio Bella</b>: la <b>duración</b> en minutos y los <b>insumos</b> que gasta cada vez.</li>
+        <li>En la pestaña <b>Studio Bella</b>: la <b>duración</b> en minutos, los <b>insumos</b> que gasta cada vez y
+            si <b>se reserva por internet</b> (ver <a href="#turnos">Turnos por internet</a>).</li>
     </ul>
     <figure>
         <img src="img/14-servicio-insumos.png" alt="Pestaña Studio Bella de un servicio con duración e insumos">
@@ -597,8 +690,8 @@
         <figcaption>Feriados cargados: Virgen de Caacupé y Navidad.</figcaption>
     </figure>
 
-    <!-- 12 ============================================================ -->
-    <h2 id="reportes"><span class="num">13.</span>Reportes</h2>
+    <!-- 15 ============================================================ -->
+    <h2 id="reportes"><span class="num">15.</span>Reportes</h2>
     <p>En <span class="ruta">Studio Bella › Reportes</span> (solo Administración):</p>
     <h3>Servicios realizados</h3>
     <p>Qué servicios se hicieron y cuánto se facturó, solo de las citas cobradas. De entrada muestra el mes actual;
@@ -620,12 +713,24 @@
         <figcaption>Productos vendidos en el período.</figcaption>
     </figure>
 
-    <!-- 13 ============================================================ -->
-    <h2 id="problemas"><span class="num">14.</span>Problemas frecuentes</h2>
+    <!-- 16 ============================================================ -->
+    <h2 id="problemas"><span class="num">16.</span>Problemas frecuentes</h2>
     <details>
         <summary>Entro al sistema y me aparece otra empresa u otro sistema</summary>
         <p>Estás en otra base de datos. Salí, y en la pantalla de inicio de sesión elegí la base <b>peluqueria</b>
            (ver <a href="#entrar">Cómo entrar</a>).</p>
+    </details>
+    <details>
+        <summary>Al cobrar dice que la caja está cerrada</summary>
+        <p>Ya se cerró la caja de ese día. Si hay que cobrar algo más con esa fecha, alguien de Administración abre el
+           cierre en <span class="ruta">Studio Bella › Cierre de caja</span>, toca <span class="boton">Reabrir</span>,
+           y después de cobrar lo vuelve a cerrar (ver <a href="#caja">Cierre de caja</a>).</p>
+    </details>
+    <details>
+        <summary>Una clienta no encuentra el horario que quiere en la página de turnos</summary>
+        <p>La página solo muestra horarios en los que la estilista está libre todo el tiempo que duran los servicios
+           elegidos. Si eligió varios servicios largos, probá con <b>Cualquiera</b> o con menos servicios. También
+           puede ser que la estilista no haga alguno de esos servicios (ver <a href="#estilistas">Estilistas</a>).</p>
     </details>
     <details>
         <summary>No me deja guardar la cita</summary>

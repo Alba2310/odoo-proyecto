@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Página pública de turnos (/turnos): la clienta elige servicios, estilista, día y hora, y deja sus datos.
+         Los servicios y estilistas llegan en data-datos; static/turnos/turnos.js arma cada paso. -->
+    <template id="pagina_turnos" name="Studio Bella: turnos por internet">&lt;!DOCTYPE html&gt;
+        <html lang="es">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Reservá tu turno · <t t-out="salon"/></title>
+                <meta name="theme-color" content="#6E2A6A"/>
+                <link rel="icon" href="/studio_bella/static/description/icon.png"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&amp;display=swap"/>
+                <link rel="stylesheet" t-attf-href="/studio_bella/static/turnos/turnos.css?v={{ version }}"/>
+                <script t-attf-src="/studio_bella/static/turnos/turnos.js?v={{ version }}" defer="defer"></script>
+            </head>
+            <body>
+                <main class="turnos" id="turnos" t-att-data-datos="datos">
+                    <header class="cabeza">
+                        <img class="cabeza__logo" src="/studio_bella/static/description/icon.png" alt="" width="44" height="44"/>
+                        <div>
+                            <h1 t-out="salon"/>
+                            <p>Reservá tu turno en un minuto</p>
+                        </div>
+                    </header>
+
+                    <nav class="pasos" id="pasos" aria-label="Pasos de la reserva">
+                        <ol>
+                            <li data-paso="1"><span>1</span>Servicios</li>
+                            <li data-paso="2"><span>2</span>Estilista</li>
+                            <li data-paso="3"><span>3</span>Día y hora</li>
+                            <li data-paso="4"><span>4</span>Tus datos</li>
+                        </ol>
+                    </nav>
+
+                    <p class="aviso" id="aviso" role="alert" hidden="hidden"></p>
+
+                    <section class="paso" data-paso="1">
+                        <h2>¿Qué te hacemos?</h2>
+                        <p class="ayuda">Podés elegir más de un servicio. Los precios ya tienen el IVA.</p>
+                        <div id="servicios"></div>
+                    </section>
+
+                    <section class="paso" data-paso="2" hidden="hidden">
+                        <h2>¿Con quién?</h2>
+                        <p class="ayuda">Si te da igual, te damos el primer horario libre.</p>
+                        <div class="opciones" id="estilistas"></div>
+                    </section>
+
+                    <section class="paso" data-paso="3" hidden="hidden">
+                        <h2>¿Cuándo?</h2>
+                        <p class="ayuda">Elegí el día y después la hora.</p>
+                        <div class="dias" id="dias"></div>
+                        <div class="horarios" id="horarios" aria-live="polite"></div>
+                    </section>
+
+                    <section class="paso" data-paso="4" hidden="hidden">
+                        <h2>Tus datos</h2>
+                        <p class="ayuda">Para avisarte si hay algún cambio en tu turno.</p>
+                        <form class="formulario" id="formulario" novalidate="novalidate">
+                            <label><span>Nombre y apellido</span>
+                                <input name="nombre" autocomplete="name" maxlength="80" required="required"/>
+                            </label>
+                            <label><span>Celular</span>
+                                <input name="telefono" type="tel" autocomplete="tel" inputmode="tel" maxlength="30"
+                                       placeholder="0981 123 456" required="required"/>
+                            </label>
+                            <label><span>Correo <small>(opcional)</small></span>
+                                <input name="email" type="email" autocomplete="email" maxlength="120"/>
+                            </label>
+                            <label><span>¿Algo que tengamos que saber? <small>(opcional)</small></span>
+                                <textarea name="nota" rows="2" maxlength="500"
+                                          placeholder="Por ejemplo: tengo el pelo largo, soy alérgica a..."></textarea>
+                            </label>
+                            <label class="trampa" aria-hidden="true">No completar
+                                <input name="web" tabindex="-1" autocomplete="off"/>
+                            </label>
+                            <div class="resumen" id="resumen"></div>
+                        </form>
+                    </section>
+
+                    <section class="listo" id="listo" hidden="hidden">
+                        <div class="listo__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor"
+                                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+                        </div>
+                        <h2 id="listo-titulo">¡Listo!</h2>
+                        <p class="listo__turno" id="listo-texto"></p>
+                        <p class="ayuda">El día anterior te mandamos un recordatorio. Si no podés venir, avisanos así le damos el lugar a otra persona.</p>
+                        <a class="boton boton--wa" id="listo-whatsapp" target="_blank" rel="noopener" hidden="hidden">Avisar por WhatsApp</a>
+                        <button class="boton boton--claro" id="otro" type="button">Reservar otro turno</button>
+                    </section>
+
+                    <p class="pie" id="pie" hidden="hidden"></p>
+
+                    <noscript><p class="aviso">Para reservar tu turno, activá JavaScript en el navegador o llamanos.</p></noscript>
+
+                    <footer class="barra" id="barra">
+                        <div class="barra__contenido">
+                            <div class="barra__resumen" id="barra-resumen"></div>
+                            <div class="barra__botones">
+                                <button class="boton boton--claro" id="atras" type="button" hidden="hidden">Atrás</button>
+                                <button class="boton" id="siguiente" type="button" disabled="disabled">Siguiente</button>
+                            </div>
+                        </div>
+                    </footer>
+                </main>
+            </body>
+        </html>
+    </template>
+</odoo>

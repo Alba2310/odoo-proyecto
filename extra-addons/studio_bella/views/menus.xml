@@ -10,8 +10,15 @@
               action="action_bella_cita_hoy" sequence="20"/>
     <menuitem id="menu_bella_recordatorios" name="Recordatorios" parent="menu_bella_root"
               action="action_bella_recordatorios" sequence="25"/>
+    <menuitem id="menu_bella_turnos" name="Turnos por internet" parent="menu_bella_root" sequence="27"/>
+    <menuitem id="menu_bella_turnos_pedidos" name="Turnos pedidos" parent="menu_bella_turnos"
+              action="action_bella_cita_internet" sequence="10"/>
+    <menuitem id="menu_bella_pagina_turnos" name="Página para las clientas" parent="menu_bella_turnos"
+              action="action_bella_pagina_turnos" sequence="20"/>
     <menuitem id="menu_bella_venta" name="Ventas de productos" parent="menu_bella_root"
               action="action_bella_venta" sequence="30"/>
+    <menuitem id="menu_bella_caja" name="Cierre de caja" parent="menu_bella_root"
+              action="action_bella_cierre_caja" sequence="32"/>
 
     <!-- Compras: se usan las pantallas de Compras e Inventario de Odoo -->
     <menuitem id="menu_bella_compras" name="Compras" parent="menu_bella_root" sequence="35"/>

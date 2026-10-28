@@ -31,6 +31,11 @@ CANALES_RECORDATORIO = [
     ('whatsapp', 'WhatsApp'),
 ]
 
+ORIGENES_CITA = [
+    ('recepcion', 'Recepción'),
+    ('internet', 'Internet'),
+]
+
 
 def numero_whatsapp(telefono, codigo_pais='595'):
     """Número en el formato que pide wa.me: solo dígitos, con el código del país y sin el 0 de adelante.
@@ -80,6 +85,8 @@ class BellaCita(models.Model):
     recordatorio_enviado = fields.Boolean('Recordatorio enviado', readonly=True, copy=False)
     recordatorio_canal = fields.Selection(CANALES_RECORDATORIO, string='Recordatorio por', readonly=True, copy=False)
     whatsapp_url = fields.Char('Enlace de WhatsApp', compute='_compute_whatsapp_url')
+    origen = fields.Selection(ORIGENES_CITA, string='Pedida por', default='recepcion', required=True, readonly=True,
+                              copy=False, help='Internet: la clienta reservó sola desde la página de turnos.')
 
     currency_id = fields.Many2one(related='company_id.currency_id')
     total_servicios = fields.Monetary('Total servicios', compute='_compute_totales', store=True)

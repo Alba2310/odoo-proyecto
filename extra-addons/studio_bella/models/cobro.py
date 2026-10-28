@@ -60,6 +60,7 @@ class BellaCobroMixin(models.AbstractModel):
         self._bella_verificar_stock()
         diario = diario or self._bella_diario(metodo_pago)
         fecha = fecha or fields.Date.context_today(self)
+        self.env['bella.cierre.caja']._verificar_caja_abierta(self.company_id, fecha)
 
         factura = self.env['account.move'].with_company(self.company_id).create({
             'move_type': 'out_invoice',
@@ -78,6 +79,7 @@ class BellaCobroMixin(models.AbstractModel):
             ).create({'journal_id': diario.id, 'payment_date': fecha})._create_payments()
 
         self.write({'factura_id': factura.id, 'metodo_pago': metodo_pago})
+        self.env['bella.cierre.caja']._actualizar_dia(self.company_id, fecha)
         self._bella_descontar_stock()
         self.message_post(body=Markup('Cobrado (%s) con la factura %s.') % (
             dict(METODOS_PAGO)[metodo_pago], factura._get_html_link()))
