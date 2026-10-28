@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Óga · Control de alquileres</title>
+  <meta name="description" content="Óga es el sistema para cobrar tus alquileres a tiempo: avisos por WhatsApp, recibos, contratos, gastos y la ganancia real de cada propiedad. Hecho en Paraguay.">
+  <meta name="theme-color" content="#0f3d36">
+  <link rel="icon" href="img/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Ir al contenido</a>
+
+  <header class="cabeza" id="cabeza">
+    <a class="marca" href="#inicio" aria-label="Óga, inicio">
+      <img src="img/icon.png" alt="" width="36" height="36">
+      <span>Óga</span>
+    </a>
+    <button class="menu-boton" id="menu-boton" aria-expanded="false" aria-controls="menu">Menú</button>
+    <nav class="menu" id="menu" aria-label="Secciones">
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#demo">Probalo</a>
+      <a href="#funciones">Funciones</a>
+      <a href="#precios">Precios</a>
+      <a href="#preguntas">Preguntas</a>
+      <a class="boton boton--chico" href="#contacto">Pedí tu demo</a>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    <!-- Portada -->
+    <section class="portada" id="inicio">
+      <div class="portada__texto">
+        <p class="sobretitulo">Control de alquileres · hecho en Paraguay</p>
+        <h1>Cobrá tus alquileres a tiempo, <em>sin perseguir a nadie.</em></h1>
+        <p class="portada__bajada">
+          Óga crea la cuota de cada mes, te arma el aviso de WhatsApp para cada inquilino y te muestra
+          quién pagó, quién debe y cuánto te deja de verdad cada casa.
+        </p>
+        <div class="portada__acciones">
+          <a class="boton" href="#contacto">Pedí tu demo gratis</a>
+          <a class="boton boton--borde" href="#demo">Probalo acá mismo</a>
+        </div>
+        <ul class="portada__puntos">
+          <li>En guaraníes, con recibo y el monto en letras</li>
+          <li>Para casas, departamentos y edificios</li>
+          <li>Un encargado puede cobrar por vos</li>
+        </ul>
+      </div>
+
+      <div class="portada__escena" aria-hidden="true">
+        <svg class="nanduti nanduti--portada" viewBox="0 0 200 200"><use href="#nanduti"/></svg>
+        <div class="telefono">
+          <div class="telefono__barra">
+            <span class="telefono__avatar">L</span>
+            <div><strong>Lucía · Depto 1</strong><small>en línea</small></div>
+          </div>
+          <div class="chat">
+            <p class="chat__dia">Hoy</p>
+            <p class="burbuja burbuja--mia b1">¡Hola Lucía! Te recordamos que el 30 de octubre vence el alquiler de octubre (Edificio Ypacaraí · Depto 1): Gs. 1.300.000. ¡Gracias!<span class="hora">08:02 ✓✓</span></p>
+            <p class="burbuja burbuja--suya b2">¡Gracias por avisar! Ya te transferí 🙌<span class="hora">10:47</span></p>
+            <p class="burbuja burbuja--mia b3">Recibimos tu pago de Gs. 1.300.000. Recibo N° REC/2026/0048. ¡Muchas gracias!<span class="hora">10:52 ✓✓</span></p>
+          </div>
+        </div>
+        <div class="ficha ficha--cobro">
+          <span class="ficha__punto ficha__punto--verde"></span>
+          <div><small>Cobrado en octubre</small><strong>Gs. 8.000.000</strong></div>
+        </div>
+        <div class="ficha ficha--deuda">
+          <span class="ficha__punto ficha__punto--rojo"></span>
+          <div><small>Casa Itauguá</small><strong>Debe 27 días</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ¿Te suena? -->
+    <section class="suena">
+      <h2 class="titulo-chico">¿Te suena?</h2>
+      <div class="suena__notas">
+        <figure class="nota nota--1"><blockquote>“¿Me pagó junio o era julio? Tengo que buscar en el cuaderno…”</blockquote></figure>
+        <figure class="nota nota--2"><blockquote>“Todos los meses le escribo a cada inquilino, uno por uno.”</blockquote></figure>
+        <figure class="nota nota--3"><blockquote>“Entre la ANDE, el impuesto y los arreglos, ya no sé cuánto me deja el edificio.”</blockquote></figure>
+      </div>
+      <p class="suena__remate">Óga ordena todo eso en un solo lugar. <a href="#como-funciona">Mirá cómo es un mes →</a></p>
+    </section>
+
+    <!-- Un mes con Óga -->
+    <section class="mes" id="como-funciona">
+      <div class="seccion__cabeza">
+        <p class="sobretitulo sobretitulo--claro">Cómo funciona</p>
+        <h2>Un mes con Óga</h2>
+        <p>Cargás tus propiedades y contratos una vez. Después, cada mes pasa esto:</p>
+      </div>
+      <ol class="linea">
+        <li class="linea__paso">
+          <span class="linea__dia">10 días antes</span>
+          <h3>La cuota se crea sola</h3>
+          <p>Con el alquiler, y la ANDE o el agua si se los cobrás.</p>
+        </li>
+        <li class="linea__paso">
+          <span class="linea__dia">3 días antes</span>
+          <h3>El aviso está listo</h3>
+          <p>Abrís “Avisos de hoy”, tocás el botón y WhatsApp se abre con el mensaje escrito.</p>
+        </li>
+        <li class="linea__paso">
+          <span class="linea__dia">El día de pago</span>
+          <h3>Registrás el pago</h3>
+          <p>Efectivo, transferencia o billetera. Sale el recibo en PDF con el monto en letras.</p>
+        </li>
+        <li class="linea__paso linea__paso--alerta">
+          <span class="linea__dia">Si se atrasa</span>
+          <h3>Óga no se olvida</h3>
+          <p>Te recuerda avisar cada 3 días y la unidad aparece en rojo en el tablero.</p>
+        </li>
+        <li class="linea__paso">
+          <span class="linea__dia">Fin de mes</span>
+          <h3>Ves la ganancia real</h3>
+          <p>Lo cobrado menos los gastos de cada propiedad, mes por mes.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Demo -->
+    <section class="demo" id="demo">
+      <div class="seccion__cabeza">
+        <p class="sobretitulo">Probalo acá mismo</p>
+        <h2>Así se ve tu tablero</h2>
+        <p>Tocá una unidad para ver su situación. Probá mandar un aviso o registrar un pago.</p>
+      </div>
+
+      <div class="tablero">
+        <div class="tablero__resumen">
+          <div><small>Cobrado este mes</small><strong id="demo-cobrado">Gs. 0</strong></div>
+          <div><small>Deben</small><strong id="demo-deuda" class="rojo">Gs. 0</strong></div>
+          <div><small>Ocupación</small><strong id="demo-ocupacion">0 %</strong></div>
+          <button class="boton boton--borde boton--chico" id="demo-reiniciar" type="button">Empezar de nuevo</button>
+        </div>
+        <div class="tablero__cuerpo">
+          <div class="tablero__unidades" id="demo-unidades" role="list" aria-label="Unidades"></div>
+          <aside class="tablero__detalle" id="demo-detalle" aria-live="polite">
+            <p class="tablero__vacio">Elegí una unidad del tablero.</p>
+          </aside>
+        </div>
+        <p class="tablero__leyenda">
+          <span><i class="punto punto--verde"></i>Al día</span>
+          <span><i class="punto punto--sol"></i>Vence pronto</span>
+          <span><i class="punto punto--rojo"></i>Debe</span>
+          <span><i class="punto punto--gris"></i>Libre</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Funciones -->
+    <section class="funciones" id="funciones">
+      <div class="seccion__cabeza">
+        <p class="sobretitulo">Funciones</p>
+        <h2>Todo lo que pasa con tus alquileres</h2>
+      </div>
+      <div class="mosaico">
+        <article class="pieza pieza--grande pieza--bosque">
+          <h3>Panel con los números del mes</h3>
+          <p>Cobrado, lo que falta, quién debe, ocupación y ganancia. Y una lista de lo que tenés que atender hoy.</p>
+          <div class="mini-barras" aria-hidden="true">
+            <span style="--alto: 62%"></span><span style="--alto: 48%"></span><span style="--alto: 90%"></span>
+            <span style="--alto: 78%"></span><span style="--alto: 92%"></span><span style="--alto: 80%"></span>
+          </div>
+        </article>
+        <article class="pieza">
+          <span class="pieza__icono">💬</span>
+          <h3>Avisos por WhatsApp</h3>
+          <p>De pago, de que vence el contrato y del reajuste anual. Gratis, desde tu número.</p>
+        </article>
+        <article class="pieza">
+          <span class="pieza__icono">🧾</span>
+          <h3>Recibos y contratos en PDF</h3>
+          <p>Recibo numerado con el monto en letras y contrato listo para firmar, con garante.</p>
+        </article>
+        <article class="pieza pieza--terracota">
+          <span class="pieza__icono">📊</span>
+          <h3>Gastos y ganancia real</h3>
+          <p>Impuesto inmobiliario, la luz del pasillo, arreglos. Sabés cuánto te deja cada propiedad.</p>
+        </article>
+        <article class="pieza">
+          <span class="pieza__icono">🔧</span>
+          <h3>Mantenimiento</h3>
+          <p>“Se rompió la canilla”: quién lo arregla, cuánto cuesta y quién paga. Va solo a los gastos o a la cuota.</p>
+        </article>
+        <article class="pieza">
+          <span class="pieza__icono">📸</span>
+          <h3>Actas con fotos y depósito</h3>
+          <p>Cómo entregás y cómo te devuelven la unidad. Al irse, el depósito cubre deudas y daños.</p>
+        </article>
+        <article class="pieza pieza--ancha pieza--menta">
+          <span class="pieza__icono">🏠</span>
+          <h3>Tu página “Se alquila”</h3>
+          <p>Tus unidades libres con foto y precio. Los interesados te escriben por WhatsApp o dejan sus datos, y los
+            ves en una lista.</p>
+        </article>
+        <article class="pieza">
+          <span class="pieza__icono">⭐</span>
+          <h3>Puntaje de cada inquilino</h3>
+          <p>Cuántas cuotas pagó a tiempo. Para decidir si renovás.</p>
+        </article>
+        <article class="pieza">
+          <span class="pieza__icono">👤</span>
+          <h3>Encargado de cobros</h3>
+          <p>Registra pagos y manda avisos, pero no ve tus ganancias ni cambia contratos.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Calculadora -->
+    <section class="cuentas" id="cuentas">
+      <svg class="nanduti nanduti--cuentas" viewBox="0 0 200 200" aria-hidden="true"><use href="#nanduti"/></svg>
+      <div class="cuentas__caja">
+        <div class="cuentas__entradas">
+          <p class="sobretitulo sobretitulo--claro">Hacé la cuenta</p>
+          <h2>¿Cuánto te ahorra Óga?</h2>
+          <label for="calc-unidades">Unidades que alquilás <output id="calc-unidades-valor">7</output></label>
+          <input type="range" id="calc-unidades" min="1" max="60" value="7">
+          <label for="calc-alquiler">Alquiler promedio <output id="calc-alquiler-valor">Gs. 1.500.000</output></label>
+          <input type="range" id="calc-alquiler" min="500000" max="6000000" step="100000" value="1500000">
+          <label for="calc-atraso">Inquilinos que se atrasan cada mes <output id="calc-atraso-valor">30 %</output></label>
+          <input type="range" id="calc-atraso" min="0" max="80" step="5" value="30">
+        </div>
+        <div class="cuentas__resultados" aria-live="polite">
+          <div class="resultado">
+            <strong id="calc-horas">5 horas</strong>
+            <span>por mes que no pasás anotando, buscando y escribiendo a cada uno</span>
+          </div>
+          <div class="resultado">
+            <strong id="calc-plata">Gs. 3.150.000</strong>
+            <span>por mes que hoy te llega tarde y con avisos a tiempo cobrás antes</span>
+          </div>
+          <p class="cuentas__nota">Cálculo aproximado: 40 minutos por unidad al mes y que la mitad de los atrasos se
+            corrigen con avisos a tiempo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Precios -->
+    <section class="precios" id="precios">
+      <div class="seccion__cabeza">
+        <p class="sobretitulo">Precios</p>
+        <h2>Pagás según cuántas unidades tenés</h2>
+        <p>Todas las funciones en todos los planes. Sin contrato de permanencia.</p>
+      </div>
+      <div class="precios__caja">
+        <label class="precios__pregunta" for="precio-unidades">¿Cuántas unidades alquilás? <output id="precio-unidades-valor">7</output></label>
+        <input type="range" id="precio-unidades" min="1" max="60" value="7">
+        <div class="planes" id="planes"></div>
+        <ul class="precios__incluye">
+          <li>Te cargamos las propiedades y los contratos</li>
+          <li>Capacitación por videollamada</li>
+          <li>Soporte por WhatsApp</li>
+          <li>30 días de prueba sin pagar</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Paraguay -->
+    <section class="local">
+      <svg class="nanduti nanduti--local" viewBox="0 0 200 200" aria-hidden="true"><use href="#nanduti"/></svg>
+      <h2>Hecho acá, para alquilar acá</h2>
+      <div class="local__puntos">
+        <p><strong>Guaraníes</strong> sin centavos, y los montos en letras como pide un recibo.</p>
+        <p><strong>Billeteras</strong> Tigo Money, Personal y transferencias, además del efectivo.</p>
+        <p><strong>Contratos</strong> con garante, depósito y reajuste anual, como se usan acá.</p>
+        <p><strong>Óga</strong> quiere decir casa en guaraní. Nos pareció el nombre justo.</p>
+      </div>
+    </section>
+
+    <!-- Preguntas -->
+    <section class="preguntas" id="preguntas">
+      <div class="seccion__cabeza">
+        <p class="sobretitulo">Preguntas</p>
+        <h2>Lo que nos preguntan siempre</h2>
+      </div>
+      <div class="acordeon">
+        <details>
+          <summary>¿Los mensajes de WhatsApp salen solos?</summary>
+          <p>Óga te arma el mensaje y abre WhatsApp con todo escrito: vos solo tocás Enviar. Así sale de tu número y es
+            gratis. Si querés que salgan solos, se puede conectar la API oficial de WhatsApp (tiene un costo por
+            mensaje de Meta).</p>
+        </details>
+        <details>
+          <summary>¿Tengo que instalar algo?</summary>
+          <p>No. Entrás desde el navegador de la computadora o del celular, con tu usuario y contraseña.</p>
+        </details>
+        <details>
+          <summary>¿Sirve si tengo una sola casa?</summary>
+          <p>Sí. El plan más chico es para 1 a 3 unidades. Y si mañana sumás un edificio, solo agregás las unidades.</p>
+        </details>
+        <details>
+          <summary>¿Puede usarlo la persona que cobra por mí?</summary>
+          <p>Sí. Le creás un usuario de “Encargado de cobros”: registra pagos, carga reparaciones y manda avisos, pero
+            no ve tus ganancias ni puede cambiar los contratos.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa con el depósito cuando se va un inquilino?</summary>
+          <p>Al terminar el contrato, Óga usa el depósito para pagar lo que quedó debiendo, descuenta los daños que
+            anotaste en el acta de salida y te dice cuánto tenés que devolver.</p>
+        </details>
+        <details>
+          <summary>¿Cuánto tarda empezar?</summary>
+          <p>Si nos pasás la lista de propiedades e inquilinos, en un par de días está todo cargado y te enseñamos a
+            usarlo.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="contacto" id="contacto">
+      <div class="contacto__caja">
+        <div class="contacto__texto">
+          <h2>Probalo 30 días gratis</h2>
+          <p>Dejanos tus datos y te escribimos por WhatsApp para mostrarte Óga con tus propias casas.</p>
+          <p class="contacto__directo">¿Preferís hablar ya? <a id="contacto-whatsapp" href="#" target="_blank" rel="noopener">Escribinos por WhatsApp</a> o
+            <a id="contacto-email" href="#">mandanos un correo</a>.</p>
+        </div>
+        <form class="formulario" id="formulario" novalidate>
+          <label>Tu nombre <input name="nombre" required maxlength="80" autocomplete="name"></label>
+          <label>Teléfono <input name="telefono" type="tel" required maxlength="30" autocomplete="tel" placeholder="0981 123 456"></label>
+          <label>¿Cuántas unidades alquilás?
+            <select name="unidades">
+              <option>1 a 3</option>
+              <option selected>4 a 10</option>
+              <option>11 a 40</option>
+              <option>Más de 40</option>
+            </select>
+          </label>
+          <label>Ciudad <input name="ciudad" maxlength="60" placeholder="Ypacaraí"></label>
+          <label class="ancho">¿Algo que quieras contarnos? <textarea name="mensaje" rows="3" maxlength="600" placeholder="Tengo un edificio y dos casas, cobra mi sobrino..."></textarea></label>
+          <p class="formulario__error ancho" id="formulario-error" role="alert" hidden></p>
+          <button class="boton boton--terracota ancho" type="submit">Pedir mi demo por WhatsApp</button>
+          <p class="formulario__nota ancho">Se abre WhatsApp con tus datos escritos: solo tocás Enviar.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="marca marca--pie"><img src="img/icon.png" alt="" width="28" height="28"><span>Óga</span></div>
+    <p>Control de alquileres hecho en Paraguay · © <span id="anio">2026</span></p>
+    <a href="#inicio">Volver arriba ↑</a>
+  </footer>
+
+  <div class="aviso-demo" id="aviso-demo" role="status" hidden></div>
+
+  <!-- Ñandutí: el encaje paraguayo, como motivo de fondo -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <symbol id="nanduti" viewBox="0 0 200 200">
+      <g fill="none" stroke="currentColor" stroke-width="1.4">
+        <circle cx="100" cy="100" r="96"/>
+        <circle cx="100" cy="100" r="78" stroke-dasharray="3 5"/>
+        <circle cx="100" cy="100" r="56"/>
+        <circle cx="100" cy="100" r="30" stroke-dasharray="2 4"/>
+        <circle cx="100" cy="100" r="10"/>
+        <g id="nanduti-petalo">
+          <path d="M100 90 C 92 70, 92 50, 100 22 C 108 50, 108 70, 100 90 Z"/>
+          <line x1="100" y1="4" x2="100" y2="22"/>
+          <circle cx="100" cy="14" r="3"/>
+        </g>
+        <use href="#nanduti-petalo" transform="rotate(30 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(60 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(90 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(120 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(150 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(180 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(210 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(240 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(270 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(300 100 100)"/>
+        <use href="#nanduti-petalo" transform="rotate(330 100 100)"/>
+      </g>
+    </symbol>
+  </svg>
+</body>
+</html>
