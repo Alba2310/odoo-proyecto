@@ -18,7 +18,9 @@ Sistema de la peluquería Studio Bella para Odoo 18. Depende de `account` (Factu
   reabastecimiento de Odoo); cuando baja del mínimo aparece la actividad "Reponer stock", que se cierra sola al recibir.
 - **Turnos por internet**: página pública `/turnos` (sin usuario) donde la clienta elige servicios, estilista
   (o "cualquiera"), día y hora libres, y deja nombre y celular. El turno entra a la agenda como Agendada con
-  `origen = internet`; la recepción los ve en *Turnos por internet › Turnos pedidos* y los confirma.
+  `origen = internet`; la recepción los ve en *Turnos por internet › Turnos pedidos* y los confirma. Si nadie hace
+  todos los servicios elegidos (un corte y una manicura), con "cualquiera" se reservan uno detrás del otro: una cita
+  por tramo, cada una con quien lo hace (`bella.turnos._tramos`).
 - **Cierre de caja** del día: lo cobrado en efectivo, tarjeta y transferencia (según la fecha de la factura),
   arqueo del efectivo (cambio al abrir + efectivo cobrado − salidas = tiene que haber; contado − eso = diferencia),
   lo que queda de cambio y lo que se retira. Se imprime y, cerrado, no deja cobrar con esa fecha.
@@ -92,7 +94,9 @@ una semana en caché; desde el menú de Odoo siempre se ve la última versión).
   adelante (constantes al principio de `models/turnos.py`). Al reservar se vuelve a calcular y valen las mismas
   restricciones de la cita. La clienta se reconoce por el celular (`numero_whatsapp`); si no existe, se crea.
   Hasta 3 turnos pendientes por clienta, y un campo oculto frena a los robots. Solo se ofrecen los servicios con
-  "Se reserva por internet" (`bella_reserva_online`).
+  "Se reserva por internet" (`bella_reserva_online`). Servicios de distintas estilistas: los servicios se juntan, en
+  el orden en que se eligieron, en tramos que puede hacer una sola estilista; un horario sirve si cada tramo tiene
+  alguien libre justo cuando termina el anterior (esos tramos se buscan cada 5 minutos).
 - **Cierre de caja**: uno por día. Los totales se recalculan con cada cobro de ese día mientras está abierto;
   cerrado, `_bella_cobrar` no deja cobrar con esa fecha y solo Administración lo reabre.
 - **Clientas que no vuelven**: la última visita (`bella_ultima_visita`, guardada) es el día de la última cita

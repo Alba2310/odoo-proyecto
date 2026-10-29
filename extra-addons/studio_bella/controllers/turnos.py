@@ -58,8 +58,8 @@ class TurnosPorInternet(http.Controller):
             return {'error': 'Elegí el día y la hora de nuevo, por favor.'}
         try:
             with request.env.cr.savepoint():
-                cita = turnos._reservar(self._servicios(servicio_ids), momento, nombre, telefono,
-                                        estilista=self._estilista(estilista_id), email=email, nota=nota)
+                citas = turnos._reservar(self._servicios(servicio_ids), momento, nombre, telefono,
+                                         estilista=self._estilista(estilista_id), email=email, nota=nota)
         except (UserError, ValidationError) as error:
             return {'error': error.args[0]}
-        return turnos._confirmacion(cita, nombre)
+        return turnos._confirmacion(citas, nombre)

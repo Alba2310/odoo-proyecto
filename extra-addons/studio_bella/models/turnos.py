@@ -17,6 +17,9 @@ from .cita import ESTADOS_LIBRES, MINUTOS_SIN_SERVICIOS, numero_whatsapp
 DIAS_A_LA_VISTA = 14  # Hasta cuántos días adelante se puede reservar.
 ANTICIPACION_MINUTOS = 60  # No se reserva un turno que empieza dentro de menos de una hora.
 PASO_MINUTOS = 30  # Los turnos empiezan en punto o y media.
+# Cuando los servicios se hacen uno detrás del otro con distintas estilistas, el segundo empieza cuando termina el
+# primero (por ejemplo, a las 10:45): para esos se buscan horarios cada 5 minutos.
+PASO_MINUTOS_SEGUIDOS = 5
 MAXIMO_TURNOS_PENDIENTES = 3  # Turnos por venir que una misma clienta puede tener reservados por internet.
 
 
@@ -64,18 +67,64 @@ class BellaTurnos(models.AbstractModel):
     # Horarios libres
 
     @api.model
+    def _tramos(self, servicios):
+        """Los servicios, en el orden en que se eligieron, en tramos seguidos que puede hacer una misma estilista.
+
+        Si alguien hace todos, es un solo tramo. Si algún servicio no lo hace nadie, no hay tramos.
+        """
+        tramos = []
+        for servicio in servicios:
+            if tramos and self._estilistas(tramos[-1] | servicio):
+                tramos[-1] |= servicio
+            elif self._estilistas(servicio):
+                tramos.append(servicio)
+            else:
+                return []
+        return tramos
+
+    @api.model
+    def _duracion(self, servicios):
+        return timedelta(minutes=sum(servicios.mapped('bella_duracion')) or MINUTOS_SIN_SERVICIOS)
+
+    @api.model
     def _disponibilidad(self, servicios, estilista=None, ahora=None):
-        """Horarios en los que se pueden hacer los servicios: ``{inicio (UTC): estilistas libres}``.
+        """Horarios en los que se pueden hacer los servicios: ``{inicio (UTC): plan}``.
+
+        El plan es la lista de tramos ``(servicios, inicio, estilistas libres)``. Casi siempre es uno solo: una
+        estilista hace todo. Sin estilista elegida y si nadie hace todos los servicios (un corte y una manicura),
+        se hacen uno detrás del otro, cada tramo con quien lo haga.
+        """
+        ahora = ahora or fields.Datetime.now()
+        tramos = ([servicios] if servicios else []) if estilista else self._tramos(servicios)
+        if not tramos:
+            return {}
+        libres = [self._libres(tramos[0], estilista, ahora)]
+        libres += [self._libres(tramo, estilista, ahora, PASO_MINUTOS_SEGUIDOS) for tramo in tramos[1:]]
+        disponibles = {}
+        for inicio, estilistas in libres[0].items():
+            plan = [(tramos[0], inicio, estilistas)]
+            momento = inicio + self._duracion(tramos[0])
+            for tramo, libres_tramo in zip(tramos[1:], libres[1:]):
+                if momento not in libres_tramo:
+                    break
+                plan.append((tramo, momento, libres_tramo[momento]))
+                momento += self._duracion(tramo)
+            else:
+                disponibles[inicio] = plan
+        return disponibles
+
+    @api.model
+    def _libres(self, servicios, estilista, ahora, paso=PASO_MINUTOS):
+        """Horarios en los que una sola estilista puede hacer los servicios: ``{inicio (UTC): estilistas libres}``.
 
         Sin estilista, junta los horarios de todos los que hacen esos servicios.
         """
-        ahora = ahora or fields.Datetime.now()
         candidatos = self._estilistas(servicios)
         if estilista:
             candidatos &= estilista
-        if not servicios or not candidatos:
+        if not candidatos:
             return {}
-        duracion = timedelta(minutes=sum(servicios.mapped('bella_duracion')) or MINUTOS_SIN_SERVICIOS)
+        duracion = self._duracion(servicios)
         desde = ahora + timedelta(minutes=ANTICIPACION_MINUTOS)
         tz = self._zona_horaria(candidatos)
         hoy = pytz.utc.localize(ahora).astimezone(tz).date()
@@ -84,12 +133,12 @@ class BellaTurnos(models.AbstractModel):
 
         libres = defaultdict(lambda: self.env['hr.employee'])
         for candidato in candidatos:
-            for inicio in self._inicios_libres(candidato, duracion, desde, hasta):
+            for inicio in self._inicios_libres(candidato, duracion, desde, hasta, paso):
                 libres[inicio] |= candidato
         return dict(sorted(libres.items()))
 
     @api.model
-    def _inicios_libres(self, estilista, duracion, desde, hasta):
+    def _inicios_libres(self, estilista, duracion, desde, hasta, paso=PASO_MINUTOS):
         """Horas (UTC, sin zona) en las que el estilista puede empezar un turno de esa duración."""
         horario = estilista.resource_calendar_id
         recurso = estilista.resource_id
@@ -111,7 +160,7 @@ class BellaTurnos(models.AbstractModel):
             ('fecha_inicio', '<', hasta),
             ('fecha_fin', '>', desde),
         ])]
-        paso = timedelta(minutes=PASO_MINUTOS)
+        paso = timedelta(minutes=paso)
         inicios = []
         for inicio_tramo, fin_tramo in tramos:
             # Primer horario redondo del tramo, en la hora de la peluquería.
@@ -133,7 +182,7 @@ class BellaTurnos(models.AbstractModel):
         """Los próximos días con sus horarios libres, para la página."""
         ahora = ahora or fields.Datetime.now()
         libres = self._disponibilidad(servicios, estilista, ahora)
-        tz = self._zona_horaria(estilista or self._estilistas(servicios))
+        tz = self._zona_horaria(estilista or self._estilistas(servicios[:1]))
         por_dia = defaultdict(list)
         for inicio in libres:
             local = pytz.utc.localize(inicio).astimezone(tz)
@@ -155,7 +204,8 @@ class BellaTurnos(models.AbstractModel):
 
     @api.model
     def _reservar(self, servicios, inicio, nombre, telefono, estilista=None, email=None, nota=None, ahora=None):
-        """Agenda el turno que pidió la clienta. Devuelve la cita."""
+        """Agenda el turno que pidió la clienta. Devuelve la cita (o las citas seguidas, si los servicios los hacen
+        distintas estilistas)."""
         ahora = ahora or fields.Datetime.now()
         nombre = (nombre or '').strip()
         email = (email or '').strip()
@@ -172,10 +222,9 @@ class BellaTurnos(models.AbstractModel):
         if email and not single_email_re.match(email):
             raise UserError('Revisá el correo: parece que le falta algo.')
 
-        libres = self._disponibilidad(servicios, estilista, ahora).get(inicio)
-        if not libres:
+        plan = self._disponibilidad(servicios, estilista, ahora).get(inicio)
+        if not plan:
             raise UserError('Ese horario ya no está libre. Elegí otro, por favor.')
-        estilista = self._elegir_estilista(libres, inicio)
         cliente = self._cliente(nombre, telefono, numero, email, codigo_pais)
         pendientes = self.env['bella.cita'].search_count([
             ('cliente_id', '=', cliente.id),
@@ -186,22 +235,29 @@ class BellaTurnos(models.AbstractModel):
         if pendientes >= MAXIMO_TURNOS_PENDIENTES:
             raise UserError(f'Ya tenés {pendientes} turnos reservados. Para sacar otro, escribinos o llamanos.')
 
-        # Si dos clientas eligen el mismo horario a la vez, la segunda choca acá: Odoo repite su pedido y la
-        # validación de la cita ve el turno de la primera.
-        self.env.cr.execute('UPDATE hr_employee SET write_date = write_date WHERE id = %s', [estilista.id])
-        cita = self.env['bella.cita'].create({
-            'cliente_id': cliente.id,
-            'estilista_id': estilista.id,
-            'fecha_inicio': inicio,
-            'servicio_ids': [Command.create({'servicio_id': servicio.id}) for servicio in servicios],
-            'nota': (nota or '').strip()[:500] or False,
-            'origen': 'internet',
-        })
+        citas = self.env['bella.cita']
+        for tramo, inicio_tramo, libres in plan:
+            elegida = self._elegir_estilista(libres, inicio_tramo)
+            # Si dos clientas eligen el mismo horario a la vez, la segunda choca acá: Odoo repite su pedido y la
+            # validación de la cita ve el turno de la primera.
+            self.env.cr.execute('UPDATE hr_employee SET write_date = write_date WHERE id = %s', [elegida.id])
+            citas |= self.env['bella.cita'].create({
+                'cliente_id': cliente.id,
+                'estilista_id': elegida.id,
+                'fecha_inicio': inicio_tramo,
+                'servicio_ids': [Command.create({'servicio_id': servicio.id}) for servicio in tramo],
+                'nota': (nota or '').strip()[:500] or False,
+                'origen': 'internet',
+            })
         mensaje = 'Turno pedido por internet desde la página de turnos.'
+        if len(citas) > 1:
+            mensaje += Markup('<br/>Es parte de un turno con varios servicios seguidos: %s.') % ', '.join(
+                f'{cita.name} ({cita.servicios_texto}, {cita.horario_texto})' for cita in citas)
         if cliente.name.casefold() != nombre.casefold():
             mensaje += Markup('<br/>Nombre que escribió: %s.') % nombre
-        cita.message_post(body=mensaje)
-        return cita
+        for cita in citas:
+            cita.message_post(body=mensaje)
+        return citas
 
     @api.model
     def _elegir_estilista(self, estilistas, inicio):
@@ -273,17 +329,24 @@ class BellaTurnos(models.AbstractModel):
         }
 
     @api.model
-    def _confirmacion(self, cita, nombre):
-        """Lo que ve la clienta después de reservar."""
-        cita = cita.with_context(lang=self._idioma())
-        salon = cita.company_id
+    def _confirmacion(self, citas, nombre):
+        """Lo que ve la clienta después de reservar (una cita o varias seguidas)."""
+        citas = citas.with_context(lang=self._idioma())
+        primera = citas[0]
+        salon = primera.company_id
         numero = numero_whatsapp(salon.mobile, str(salon.country_id.phone_code or 595))
-        texto = (f'¡Hola! Soy {nombre.strip()}. Reservé un turno por internet para el {cita.turno_texto} '
-                 f'({cita.servicios_texto}) con {cita.estilista_id.name}.')
+        servicios = ' + '.join(citas.mapped('servicios_texto'))
+        if len(citas) == 1:
+            estilista = primera.estilista_id.name
+        else:
+            estilista = ' y '.join(
+                f'{cita.estilista_id.name} ({cita.servicios_texto}, de {cita.horario_texto})' for cita in citas)
+        texto = (f'¡Hola! Soy {nombre.strip()}. Reservé un turno por internet para el {primera.turno_texto} '
+                 f'({servicios}) con {estilista}.')
         return {
             'nombre': nombre.strip().split()[0],
-            'turno': cita.turno_texto,
-            'estilista': cita.estilista_id.name,
-            'servicios': cita.servicios_texto,
+            'turno': primera.turno_texto,
+            'estilista': estilista,
+            'servicios': servicios,
             'whatsapp': f'https://wa.me/{numero}?text={quote(texto)}' if numero else False,
         }

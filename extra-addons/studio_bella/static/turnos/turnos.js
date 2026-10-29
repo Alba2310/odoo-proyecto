@@ -73,14 +73,26 @@
     const total = () => elegidos().reduce((suma, servicio) => suma + servicio.precio, 0);
     const diaElegido = () => (estado.dias || []).find((dia) => dia.fecha === estado.dia);
 
+    const haceServicio = (estilista, id) => !estilista.servicios.length || estilista.servicios.includes(id);
+
     function estilistasPosibles() {
-        return datos.estilistas.filter((estilista) => !estilista.servicios.length
-            || estado.servicios.every((id) => estilista.servicios.includes(id)));
+        return datos.estilistas.filter((estilista) => estado.servicios.every((id) => haceServicio(estilista, id)));
     }
+
+    /** Servicios elegidos que no hace nadie: esos no se pueden reservar por internet. */
+    function sinEstilista() {
+        return elegidos().filter((servicio) => !datos.estilistas.some((estilista) => haceServicio(estilista, servicio.id)));
+    }
+
+    /** Nadie hace todos los servicios elegidos, pero cada uno lo hace alguien: van uno detrás del otro. */
+    const porSeparado = () => !estilistasPosibles().length && !sinEstilista().length;
 
     function nombreEstilista() {
         const estilista = datos.estilistas.find((opcion) => opcion.id === estado.estilista);
-        return estilista ? estilista.nombre : 'El primero libre';
+        if (estilista) {
+            return estilista.nombre;
+        }
+        return porSeparado() ? 'Quien haga cada servicio, uno detrás del otro' : 'El primero libre';
     }
 
     function textoDia(dia) {
@@ -146,13 +158,20 @@
     // Paso 2: estilista
 
     function pintarEstilistas() {
-        const posibles = estilistasPosibles();
-        if (!posibles.length) {
+        const faltan = sinEstilista();
+        if (faltan.length) {
             $('#estilistas').replaceChildren(el('p', {class: 'vacio'},
-                'Nadie hace todos esos servicios en el mismo turno. Probá reservarlos por separado o llamanos.'));
+                `${faltan.map((servicio) => servicio.nombre).join(' y ')} no se puede reservar por internet. `
+                + 'Sacalo de la lista o llamanos y te damos un turno.'));
             return;
         }
-        const opciones = [{id: 0, nombre: 'Cualquiera', detalle: 'Te damos el primer horario libre'}].concat(posibles);
+        const posibles = estilistasPosibles();
+        const opciones = [{
+            id: 0,
+            nombre: 'Cualquiera',
+            detalle: posibles.length ? 'Te damos el primer horario libre'
+                : 'Nadie hace todos esos servicios: te los hacemos uno detrás del otro, cada uno con quien lo hace',
+        }].concat(posibles);
         $('#estilistas').replaceChildren(...opciones.map((opcion) => el('label', {class: 'opcion'},
             el('input', {
                 type: 'radio',
@@ -328,7 +347,7 @@
     function puedeSeguir() {
         switch (estado.paso) {
             case 1: return estado.servicios.length > 0;
-            case 2: return estilistasPosibles().length > 0;
+            case 2: return !sinEstilista().length;
             case 3: return Boolean(estado.horario);
             default: return !estado.enviando;
         }

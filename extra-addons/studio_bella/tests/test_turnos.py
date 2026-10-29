@@ -147,6 +147,42 @@ class TestTurnosPorInternet(StudioBellaCommon):
         with self.assertRaisesRegex(UserError, 'no está libre'):
             self._reservar('10:00', telefono='0981 444 555', estilista=self.estilista)
 
+    def test_servicios_de_distintas_estilistas_uno_detras_del_otro(self):
+        manicurista = self.env['hr.employee'].create({
+            'name': 'Manicurista de prueba',
+            'bella_estilista': True,
+            'resource_calendar_id': self.horario.id,
+            'tz': 'America/Asuncion',
+            'bella_servicio_ids': [Command.set(self.manicura.ids)],
+        })
+        corte_y_manicura = self.corte | self.manicura  # Nadie hace las dos cosas.
+        self.assertEqual(self.turnos._tramos(corte_y_manicura), [self.corte, self.manicura])
+        self.assertEqual(self.turnos._tramos(self.manicura | self.corte), [self.manicura, self.corte])
+
+        # La manicurista ya tiene un turno de 10:00 a 10:45.
+        self._cita(inicio=self._local('10:00'), servicios=self.manicura, estilista_id=manicurista.id)
+        # Corte (1 h) y después manicura: a las 9:00 y 9:30 la manicura chocaría con ese turno.
+        lunes = self._horas(self.turnos._disponibilidad(corte_y_manicura, ahora=self.ahora), date(2026, 11, 2))
+        self.assertEqual(lunes[0], '10:00')
+        # Manicura (45 min) y después corte: el corte empieza a las 9:45, fuera de los horarios redondos.
+        manicura_y_corte = self.manicura | self.corte
+        lunes = self._horas(self.turnos._disponibilidad(manicura_y_corte, ahora=self.ahora), date(2026, 11, 2))
+        self.assertEqual(lunes[0], '09:00')
+        # Con una estilista elegida, tiene que hacer todo ella.
+        self.assertFalse(self.turnos._disponibilidad(corte_y_manicura, estilista=self.estilista, ahora=self.ahora))
+
+        citas = self._reservar('09:00', servicios=manicura_y_corte, nombre='Clienta Combinada')
+        self.assertEqual(len(citas), 2)
+        self.assertEqual(citas.mapped('estilista_id'), manicurista | self.estilista)
+        self.assertEqual([cita.fecha_inicio for cita in citas], [self._local('09:00'), self._local('09:45')])
+        self.assertEqual(citas.cliente_id.name, 'Clienta Combinada')
+        self.assertTrue(all('varios servicios seguidos' in cita.message_ids[0].body for cita in citas))
+
+        confirmacion = self.turnos._confirmacion(citas, 'Clienta Combinada')
+        self.assertIn('Manicurista de prueba', confirmacion['estilista'])
+        self.assertIn('Estilista de prueba', confirmacion['estilista'])
+        self.assertEqual(confirmacion['servicios'], 'Manicura de prueba + Corte de prueba')
+
 
 @tagged('post_install', '-at_install')
 class TestPaginaTurnos(HttpCase):
