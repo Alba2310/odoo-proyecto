@@ -21,10 +21,11 @@ class BellaFichaTecnica(models.Model):
     _check_company_auto = True
 
     name = fields.Char('Trabajo', compute='_compute_name', store=True)
-    company_id = fields.Many2one('res.company', string='Compañía', required=True,
-                                 default=lambda self: self.env.company)
     cita_id = fields.Many2one('bella.cita', string='Cita', ondelete='set null', index=True, check_company=True)
-    # Si la ficha se carga desde la cita, la clienta, la estilista y el día salen de ahí.
+    # Si la ficha se carga desde la cita, la compañía, la clienta, la estilista y el día salen de ahí (y la siguen
+    # si se corrige la cita).
+    company_id = fields.Many2one('res.company', string='Compañía', required=True,
+                                 compute='_compute_desde_cita', store=True, readonly=False, precompute=True)
     cliente_id = fields.Many2one('res.partner', string='Cliente', required=True, index=True, check_company=True,
                                  compute='_compute_desde_cita', store=True, readonly=False, precompute=True)
     estilista_id = fields.Many2one('hr.employee', string='Estilista', check_company=True,
@@ -47,15 +48,17 @@ class BellaFichaTecnica(models.Model):
             fecha = ficha.fecha.strftime('%d/%m/%Y') if ficha.fecha else ''
             ficha.name = ' · '.join(parte for parte in (tipos.get(ficha.tipo), fecha) if parte)
 
-    @api.depends('cita_id')
+    @api.depends('cita_id.company_id', 'cita_id.cliente_id', 'cita_id.estilista_id', 'cita_id.fecha_inicio')
     def _compute_desde_cita(self):
         for ficha in self:
             cita = ficha.cita_id
             if cita:
+                ficha.company_id = cita.company_id
                 ficha.cliente_id = cita.cliente_id
                 ficha.estilista_id = cita.estilista_id
                 ficha.fecha = cita._dia_local(cita.fecha_inicio) if cita.fecha_inicio else fields.Date.context_today(ficha)
             else:
+                ficha.company_id = ficha.company_id or self.env.company
                 ficha.cliente_id = ficha.cliente_id
                 ficha.estilista_id = ficha.estilista_id
                 ficha.fecha = ficha.fecha or fields.Date.context_today(ficha)

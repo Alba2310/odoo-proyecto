@@ -2,14 +2,15 @@
 from datetime import date, timedelta
 
 from odoo import Command
-from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tests import new_test_user, tagged
 
 from odoo.addons.studio_bella.tests.common import StudioBellaCommon
 
 
 @tagged('post_install', '-at_install')
 class TestComisiones(StudioBellaCommon):
+    """La liquidación cuenta el día del cobro (la fecha de la factura), no el del turno."""
 
     @classmethod
     def setUpClass(cls):
@@ -28,16 +29,18 @@ class TestComisiones(StudioBellaCommon):
     def _citas_de_noviembre(self):
         corte = self._cita(producto_ids=[Command.create({'producto_id': self.shampoo.id, 'cantidad': 1})])
         color = self._cita(inicio=self.lunes_10 + timedelta(hours=2), servicios=self.color)
-        self._cobrar(corte)  # Corte 100 + shampoo 50
-        self._cobrar(color)  # Color 200
+        corte._bella_cobrar('efectivo', fecha=date(2026, 11, 2))  # Corte 100 + shampoo 50
+        color._bella_cobrar('tarjeta', fecha=date(2026, 11, 2))  # Color 200
         return corte, color
 
     def test_calcula_la_comision_del_periodo(self):
         corte, color = self._citas_de_noviembre()
-        # No entran: una cita sin cobrar, la de otra estilista y una de diciembre.
+        # No entran: una cita sin cobrar, la de otra estilista y una cobrada en diciembre.
         self._cita(inicio=self.lunes_10 + timedelta(days=1))
-        self._cobrar(self._cita(inicio=self.lunes_10 + timedelta(days=2), estilista_id=self.otra_estilista.id))
-        self._cobrar(self._cita(inicio=self.lunes_10 + timedelta(weeks=4, days=1)))  # Martes 1/12
+        self._cita(inicio=self.lunes_10 + timedelta(days=2), estilista_id=self.otra_estilista.id)._bella_cobrar(
+            'efectivo', fecha=date(2026, 11, 4))
+        self._cita(inicio=self.lunes_10 + timedelta(weeks=4, days=1))._bella_cobrar(
+            'efectivo', fecha=date(2026, 12, 1))
 
         liquidacion = self._liquidacion(adelantos=20)
         self.assertEqual(liquidacion.name, 'Estilista de prueba · 01/11 al 30/11/2026')
@@ -52,8 +55,24 @@ class TestComisiones(StudioBellaCommon):
         liquidacion.porcentaje_servicios = 50
         self.assertEqual(liquidacion.total, 135)
 
-    def test_nada_se_paga_dos_veces(self):
+    def test_cuenta_el_dia_del_cobro(self):
+        # Turno del sábado 31/10, cobrado el lunes 2/11 (por ejemplo, después de pagar las comisiones de octubre).
+        cita = self._cita(inicio=self.lunes_10 - timedelta(days=2))
+        cita._bella_cobrar('efectivo', fecha=date(2026, 11, 2))
+        octubre = self._liquidacion(fecha_desde=date(2026, 10, 1), fecha_hasta=date(2026, 10, 31))
+        self.assertFalse(octubre.servicio_ids)
+        self.assertEqual(self._liquidacion().servicio_ids, cita.servicio_ids)
+
+    def test_factura_anulada_no_cuenta(self):
         corte, color = self._citas_de_noviembre()
+        nota = corte.factura_id._reverse_moves([{'invoice_date': date(2026, 11, 3)}])
+        nota.action_post()
+        liquidacion = self._liquidacion()
+        self.assertEqual(liquidacion.servicio_ids, color.servicio_ids)
+        self.assertFalse(liquidacion.producto_ids)
+
+    def test_nada_se_paga_dos_veces(self):
+        self._citas_de_noviembre()
         primera = self._liquidacion()
         primera.action_pagar()
         self.assertEqual(primera.estado, 'pagada')
@@ -66,7 +85,7 @@ class TestComisiones(StudioBellaCommon):
 
         # Una cita cobrada después entra en la liquidación en borrador al actualizarla.
         nueva = self._cita(inicio=self.lunes_10 + timedelta(days=3))
-        self._cobrar(nueva)
+        nueva._bella_cobrar('efectivo', fecha=date(2026, 11, 5))
         segunda.action_actualizar()
         self.assertEqual(segunda.servicio_ids, nueva.servicio_ids)
 
@@ -78,6 +97,9 @@ class TestComisiones(StudioBellaCommon):
             liquidacion.adelantos = 50
         with self.assertRaises(UserError):
             liquidacion.unlink()
+        # Tampoco se le pueden sacar servicios por fuera de la pantalla.
+        with self.assertRaises(UserError):
+            liquidacion.servicio_ids[0].liquidacion_id = False
 
         # Vuelta a borrador se puede borrar, y sus servicios quedan libres para otra liquidación.
         servicios = liquidacion.servicio_ids
@@ -85,6 +107,26 @@ class TestComisiones(StudioBellaCommon):
         liquidacion.unlink()
         self.assertFalse(servicios.liquidacion_id)
         self.assertEqual(self._liquidacion().servicio_ids, servicios)
+
+    def test_las_lineas_cobradas_no_se_cambian(self):
+        corte, _color = self._citas_de_noviembre()
+        with self.assertRaises(UserError):
+            corte.servicio_ids.precio = 1
+        with self.assertRaises(UserError):
+            corte.producto_ids.unlink()
+
+        # La recepción no puede sacar ni mover líneas de una liquidación.
+        recepcion = new_test_user(
+            self.env, login='recepcion_comisiones', groups='studio_bella.group_bella_recepcion',
+            company_id=self.company.id, company_ids=[Command.set(self.company.ids)],
+        )
+        with self.assertRaises(AccessError):
+            corte.servicio_ids.with_user(recepcion).write({'liquidacion_id': False})
+
+        # Mientras no está cobrada, la cita se corrige libremente.
+        abierta = self._cita(inicio=self.lunes_10 + timedelta(days=1))
+        abierta.servicio_ids.precio = 90
+        self.assertEqual(abierta.total, 90)
 
     def test_adelantos_mayores_que_la_comision(self):
         self._citas_de_noviembre()

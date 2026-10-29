@@ -53,6 +53,14 @@ class TestClientasQueNoVuelven(StudioBellaCommon):
         ])
         self.assertEqual(no_vuelven, self.ana)
 
+        # El próximo turno también se filtra por fecha (filtro personalizado).
+        Partner = self.env['res.partner']
+        self.assertEqual(Partner.search([('id', 'in', (self.ana | self.bea).ids),
+                                         ('bella_proxima_cita', '>', proxima.fecha_inicio - timedelta(days=1))]),
+                         self.bea)
+        self.assertFalse(Partner.search([('id', '=', self.bea.id),
+                                         ('bella_proxima_cita', '<', proxima.fecha_inicio)]))
+
         # Si Bea cancela el turno, vuelve a la lista.
         proxima.action_cancelar()
         self.assertFalse(self.bea.bella_proxima_cita)

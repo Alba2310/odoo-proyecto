@@ -97,7 +97,7 @@ class BellaVenta(models.Model):
 
 class BellaVentaLinea(models.Model):
     _name = 'bella.venta.linea'
-    _inherit = 'bella.linea.producto'
+    _inherit = ['bella.linea.producto', 'bella.linea.cobrada']
     _description = 'Producto de la venta'
     _order = 'venta_id, sequence, id'
     _check_company_auto = True
@@ -105,3 +105,6 @@ class BellaVentaLinea(models.Model):
     venta_id = fields.Many2one('bella.venta', string='Venta', required=True, ondelete='cascade', index=True)
     company_id = fields.Many2one(related='venta_id.company_id', store=True)
     currency_id = fields.Many2one(related='venta_id.currency_id')
+
+    def _bella_documento(self):
+        return self.venta_id

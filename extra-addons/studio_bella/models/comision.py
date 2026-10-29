@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, time, timedelta
-
-import pytz
 from markupsafe import Markup
 
 from odoo import api, fields, models
@@ -18,7 +15,11 @@ CAMPOS_LIQUIDACION_PAGADA = {'estado', 'nota', 'fecha_pago'}
 
 class BellaLiquidacionComision(models.Model):
     """Comisiones de una estilista en un período: un porcentaje de los servicios que hizo y de los productos que
-    vendió en sus citas cobradas (precios con IVA incluido, como se cobraron).
+    vendió en sus citas cobradas en el período (precios con IVA incluido, como se cobraron).
+
+    Cuenta el día del cobro (la fecha de la factura, como en el cierre de caja), no el del turno: una cita que se
+    cobra después de pagar la liquidación de su día entra en la del período en que se cobró. Las citas cuya factura
+    se anuló entera con notas de crédito no cuentan.
 
     Cada servicio y cada producto entra en una sola liquidación (``liquidacion_id`` en la línea de la cita), así
     nada se paga dos veces. Los porcentajes salen de la ficha de la estilista y se pueden ajustar en el borrador.
@@ -115,31 +116,20 @@ class BellaLiquidacionComision(models.Model):
 
     # Servicios y productos del período
 
-    def _rango_utc(self):
-        """Principio y fin del período en UTC, con los días de la zona horaria de la estilista."""
-        self.ensure_one()
-        zona = pytz.timezone(self.estilista_id.sudo().tz or self.env.user.tz or 'UTC')
-        desde = zona.localize(datetime.combine(self.fecha_desde, time.min))
-        hasta = zona.localize(datetime.combine(self.fecha_hasta + timedelta(days=1), time.min))
-        return (desde.astimezone(pytz.utc).replace(tzinfo=None), hasta.astimezone(pytz.utc).replace(tzinfo=None))
-
     def _buscar_lineas(self):
-        """Junta los servicios y productos de las citas cobradas del período que todavía no se liquidaron."""
+        """Junta los servicios y productos de las citas cobradas en el período que todavía no se liquidaron."""
         for liquidacion in self.filtered(lambda liq: liq.estado == 'borrador'):
-            desde, hasta = liquidacion._rango_utc()
-            libres = [('liquidacion_id', 'in', (False, liquidacion.id))]
-            servicios = self.env['bella.cita.servicio'].search(libres + [
-                ('estilista_id', '=', liquidacion.estilista_id.id),
-                ('estado', '=', 'cobrada'),
-                ('fecha', '>=', desde),
-                ('fecha', '<', hasta),
-            ])
-            productos = self.env['bella.cita.producto'].search(libres + [
+            dominio = [
+                ('liquidacion_id', 'in', (False, liquidacion.id)),
                 ('cita_id.estilista_id', '=', liquidacion.estilista_id.id),
-                ('cita_id.estado', '=', 'cobrada'),
-                ('cita_id.fecha_inicio', '>=', desde),
-                ('cita_id.fecha_inicio', '<', hasta),
-            ])
+                ('cita_id.factura_id.invoice_date', '>=', liquidacion.fecha_desde),
+                ('cita_id.factura_id.invoice_date', '<=', liquidacion.fecha_hasta),
+            ]
+            servicios = self.env['bella.cita.servicio'].search(dominio)
+            productos = self.env['bella.cita.producto'].search(dominio)
+            anuladas = (servicios.cita_id | productos.cita_id).filtered(lambda cita: cita._bella_factura_anulada())
+            servicios = servicios.filtered(lambda linea: linea.cita_id not in anuladas)
+            productos = productos.filtered(lambda linea: linea.cita_id not in anuladas)
             (liquidacion.servicio_ids - servicios).liquidacion_id = False
             (liquidacion.producto_ids - productos).liquidacion_id = False
             servicios.liquidacion_id = liquidacion

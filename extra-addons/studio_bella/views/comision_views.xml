@@ -112,8 +112,9 @@
                         </page>
                     </notebook>
                     <p class="text-muted">
-                        Entran los servicios y los productos de las citas cobradas del período que atendió la estilista
-                        y que no están en otra liquidación. Si se paga con el efectivo de la caja, cárguelo en
+                        Entran los servicios y los productos de las citas que atendió la estilista cobradas en el
+                        período (cuenta el día del cobro) y que no están en otra liquidación. Las citas con la factura
+                        anulada por nota de crédito no entran. Si se paga con el efectivo de la caja, cárguelo en
                         "Salidas de efectivo" del cierre de caja de ese día.
                     </p>
                 </sheet>

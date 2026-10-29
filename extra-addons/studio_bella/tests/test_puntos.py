@@ -108,6 +108,19 @@ class TestPuntos(StudioBellaCommon):
             wizard.save().action_cobrar()
         self.assertFalse(cita.factura_id)
 
+    def test_cada_compania_tiene_sus_puntos(self):
+        self._regalar_puntos(10)
+        otra = self.env['res.company'].create({'name': 'Otra sucursal'})
+        self.env['bella.puntos'].sudo().create({
+            'company_id': otra.id, 'cliente_id': self.cliente.id, 'puntos': 50, 'concepto': 'En la otra sucursal',
+        })
+        self.assertEqual(self.cliente._bella_saldo_puntos(self.company), 10)
+        self.assertEqual(self.cliente._bella_saldo_puntos(otra), 50)
+        cita = self._cita()
+        self.assertEqual(cita.cliente_puntos, 10)
+        with self.assertRaises(UserError):
+            cita._bella_cobrar('efectivo', puntos=20)
+
     def test_no_mas_descuento_que_el_total(self):
         self._regalar_puntos(500)
         cita = self._cita()  # 100

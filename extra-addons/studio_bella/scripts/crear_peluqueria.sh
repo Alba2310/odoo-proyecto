@@ -17,7 +17,7 @@ echo "1/3 Creando la base \"$BASE\" (español de Paraguay)..."
 docker compose exec -T web python3 - "$BASE" < "$SCRIPTS/crear_base.py"
 
 echo "2/3 Instalando Studio Bella (tarda unos minutos)..."
-echo "    (si aparece \"Unexpected indentation\", es un aviso de Odoo y se puede ignorar)"
+echo "    (si aparece \"Unexpected indentation\", es un aviso del módulo mail de Odoo y se puede ignorar)"
 docker compose exec -T web "${ODOO[@]}" -i studio_bella --without-demo=all --stop-after-init
 
 echo "3/3 Configurando la empresa y cargando los datos de ejemplo..."

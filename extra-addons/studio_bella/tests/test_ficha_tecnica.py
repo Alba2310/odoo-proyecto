@@ -39,6 +39,17 @@ class TestFichaTecnica(StudioBellaCommon):
         self.assertEqual(segunda.ficha_ids, nueva)
         self.assertEqual(primera.ficha_anterior_ids, nueva)
 
+    def test_la_ficha_sigue_a_la_cita(self):
+        cita = self._cita(servicios=self.color)
+        ficha = self.env['bella.ficha.tecnica'].create({'cita_id': cita.id, 'formula': '7.1 con oxidante 20 vol'})
+        # Se había cargado la cita a otra clienta y otro día: al corregirla, la ficha la sigue.
+        otra = self.env['res.partner'].create({'name': 'Clienta correcta'})
+        cita.write({'cliente_id': otra.id, 'fecha_inicio': self.lunes_10 + timedelta(days=1)})
+        self.assertEqual(ficha.cliente_id, otra)
+        self.assertEqual(ficha.fecha, date(2026, 11, 3))
+        self.assertEqual(otra.bella_ficha_ids, ficha)
+        self.assertFalse(self.cliente.bella_ficha_ids)
+
     def test_alergias_a_la_vista_en_la_cita(self):
         cita = self._cita()
         self.assertFalse(cita.cliente_alergias)

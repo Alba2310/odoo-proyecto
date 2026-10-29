@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import operator
 from urllib.parse import quote
 
 from odoo import api, fields, models
@@ -9,6 +10,10 @@ from .cita import numero_whatsapp
 
 # Una cita por venir cuenta como "ya tiene turno" mientras no se atendió, canceló ni se marcó que no vino.
 ESTADOS_TURNO_PEDIDO = ('agendada', 'confirmada')
+# Filtros que se pueden armar sobre "Próximo turno" (además de "está / no está establecido").
+COMPARACIONES = {
+    '=': operator.eq, '!=': operator.ne, '<': operator.lt, '<=': operator.le, '>': operator.gt, '>=': operator.ge,
+}
 
 
 class ResPartner(models.Model):
@@ -58,9 +63,19 @@ class ResPartner(models.Model):
             partner.bella_cita_count = cantidades.get(partner, 0)
 
     @api.depends('bella_puntos_ids.puntos')
+    @api.depends_context('company')
     def _compute_bella_puntos(self):
         for partner in self:
-            partner.bella_puntos = sum(partner.bella_puntos_ids.mapped('puntos'))
+            partner.bella_puntos = partner._bella_saldo_puntos(self.env.company)
+
+    def _bella_saldo_puntos(self, company):
+        """Saldo de puntos de la clienta en una compañía: cada compañía tiene su propio programa."""
+        self.ensure_one()
+        if not self._origin.id:
+            return 0
+        [(saldo,)] = self.env['bella.puntos'].sudo()._read_group(
+            [('cliente_id', '=', self._origin.id), ('company_id', '=', company.id)], [], ['puntos:sum'])
+        return saldo or 0
 
     @api.depends('bella_cita_ids.estado', 'bella_cita_ids.fecha_inicio', 'bella_cita_ids.total')
     def _compute_bella_visitas(self):
@@ -89,11 +104,17 @@ class ResPartner(models.Model):
             partner.bella_proxima_cita = proximas.get(partner, False)
 
     def _search_bella_proxima_cita(self, operator, value):
-        # Solo hace falta saber si tiene o no un turno pedido: ('bella_proxima_cita', '=', False).
-        if operator not in ('=', '!=') or value is not False:
-            return NotImplemented
-        con_turno = self.env['bella.cita'].search(self._bella_dominio_turnos_pedidos()).cliente_id
-        return [('id', 'not in' if operator == '=' else 'in', con_turno.ids)]
+        dominio = self._bella_dominio_turnos_pedidos()
+        if value is False and operator in ('=', '!='):
+            # "Sin turno pedido" / "con turno pedido".
+            con_turno = self.env['bella.cita'].search(dominio).cliente_id
+            return [('id', 'not in' if operator == '=' else 'in', con_turno.ids)]
+        comparar = COMPARACIONES.get(operator)
+        if not comparar:
+            raise UserError(f'No se puede buscar el próximo turno con "{operator}".')
+        valor = fields.Datetime.to_datetime(value)
+        proximas = self.env['bella.cita']._read_group(dominio, ['cliente_id'], ['fecha_inicio:min'])
+        return [('id', 'in', [cliente.id for cliente, proxima in proximas if comparar(proxima, valor)])]
 
     @api.depends('name', 'mobile', 'phone', 'bella_ultima_visita', 'bella_puntos')
     @api.depends_context('company')

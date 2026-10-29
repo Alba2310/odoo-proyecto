@@ -29,8 +29,8 @@ Sistema de la peluquería Studio Bella para Odoo 18. Depende de `account` (Factu
   el resultado y una foto; la cita muestra los trabajos anteriores de la clienta. Las **alergias** de la clienta
   aparecen en rojo arriba de cada cita.
 - **Comisiones** (*Studio Bella › Comisiones*, Administración): cada estilista tiene un % por servicios y otro por
-  productos. La liquidación junta sus citas cobradas del período, descuenta adelantos, se imprime para firmar y se
-  marca pagada. Cada servicio entra en una sola liquidación.
+  productos. La liquidación junta sus citas cobradas en el período (cuenta el día del cobro, como el cierre de caja),
+  descuenta adelantos, se imprime para firmar y se marca pagada. Cada servicio entra en una sola liquidación.
 - **Programa de puntos** (se activa en *Configuración › Ajustes*): 1 punto cada 10.000 Gs. pagados y cada punto vale
   500 Gs. de descuento (los dos montos se cambian). Los puntos se usan en la ventana de cobro.
 - **Reportes**: servicios realizados por estilista y categoría; productos vendidos (análisis de facturas de Odoo).
@@ -98,12 +98,19 @@ una semana en caché; desde el menú de Odoo siempre se ve la última versión).
 - **Clientas que no vuelven**: la última visita (`bella_ultima_visita`, guardada) es el día de la última cita
   cobrada; las ventas de mostrador no cuentan. "Sin turno pedido" busca citas agendadas o confirmadas desde ahora.
 - **Comisiones**: sobre el precio cobrado con IVA incluido de los servicios y productos de las citas de la
-  estilista (las ventas de mostrador no tienen estilista). El descuento por puntos lo absorbe la peluquería. Los
-  porcentajes salen de la estilista al crear la liquidación y quedan fijos en ella. Pagada, no se modifica ni se borra.
+  estilista (las ventas de mostrador no tienen estilista). El descuento por puntos lo absorbe la peluquería. Entra lo
+  cobrado en el período según la fecha de la factura: una cita que se cobra después de pagar la liquidación de su día
+  entra en la siguiente. No entran las citas con la factura anulada entera por notas de crédito. Los porcentajes salen
+  de la estilista al crear la liquidación y quedan fijos en ella. Pagada, no se modifica ni se borra.
+- **Líneas cobradas**: los servicios y productos de una cita o venta cobrada no se pueden cambiar ni borrar, tampoco
+  por fuera de la pantalla (`bella.linea.cobrada`), y solo Administración ve y mueve `liquidacion_id`.
 - **Puntos**: se ganan sobre lo que se pagó (sin lo pagado con puntos) y nunca para "Consumidor final". Al usarlos,
   el descuento entra en la factura como una línea negativa por cada tasa de IVA, en proporción a lo que suma cada una,
   así el IVA queda calculado sobre lo cobrado. No se usan más puntos de los que hay ni más descuento que el total.
   Los puntos no vencen y una nota de crédito no los devuelve: si hace falta, se corrigen a mano en *Clientes › Puntos*.
+  Cada compañía tiene su propio saldo (`_bella_saldo_puntos`), y al usarlos se bloquea a la clienta hasta el final del
+  cobro para que dos cajas no gasten los mismos puntos. Las visitas y lo gastado, en cambio, cuentan todas las compañías.
+- **Ficha técnica**: la clienta, la estilista, el día y la compañía salen de la cita y la siguen si se corrige.
 
 ## Permisos
 

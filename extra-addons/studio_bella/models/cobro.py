@@ -107,7 +107,9 @@ class BellaCobroMixin(models.AbstractModel):
     def _bella_verificar_puntos(self, puntos):
         if not self._bella_suma_puntos():
             raise UserError('El programa de puntos no está activo para este cobro.')
-        disponibles = self.cliente_id.sudo().bella_puntos
+        # La clienta queda bloqueada hasta que termina el cobro: dos cajas no pueden usar los mismos puntos a la vez.
+        self.env.cr.execute('SELECT id FROM res_partner WHERE id = %s FOR UPDATE', [self.cliente_id.id])
+        disponibles = self.cliente_id._bella_saldo_puntos(self.company_id)
         if puntos < 0 or puntos > disponibles:
             raise UserError(f'{self.cliente_id.name} tiene {disponibles} puntos: no puede usar {puntos}.')
 
@@ -173,7 +175,15 @@ class BellaCobroMixin(models.AbstractModel):
             'factura_id': factura.id,
         })
         self.message_post(body=f'{self.cliente_id.name} ganó {ganados} puntos. '
-                               f'Ahora tiene {self.cliente_id.sudo().bella_puntos}.')
+                               f'Ahora tiene {self.cliente_id._bella_saldo_puntos(company)}.')
+
+    def _bella_factura_anulada(self):
+        """La factura se anuló entera con notas de crédito (una nota parcial no la anula)."""
+        self.ensure_one()
+        factura = self.factura_id
+        notas = factura.reversal_move_ids.filtered(lambda nota: nota.state == 'posted')
+        return bool(notas) and factura.currency_id.compare_amounts(
+            sum(notas.mapped('amount_total')), factura.amount_total) >= 0
 
     def _bella_buscar_diario(self, metodo_pago):
         """El efectivo entra a la caja; la tarjeta y la transferencia, al banco."""
@@ -284,6 +294,36 @@ class BellaCobroMixin(models.AbstractModel):
         action['domain'] = [('id', 'in', self.movimiento_ids.ids)]
         action['context'] = {'create': False}
         return action
+
+
+class BellaLineaCobrada(models.AbstractModel):
+    """Una línea de una cita o venta cobrada ya no cambia: su factura está emitida y puede estar en una liquidación
+    de comisiones. La pantalla ya la muestra de solo lectura; esto la protege también por fuera de la pantalla.
+
+    El modelo que lo hereda define ``_bella_documento`` (la cita o la venta de la línea).
+    """
+    _name = 'bella.linea.cobrada'
+    _description = 'Línea de un documento cobrado'
+
+    def _bella_documento(self):
+        raise NotImplementedError()
+
+    def _bella_verificar_no_cobrada(self):
+        cobrados = self._bella_documento().filtered('factura_id')
+        if cobrados:
+            raise UserError(f'{cobrados[0].name} ya está cobrado: no se pueden cambiar sus servicios ni productos. '
+                            'Para corregirlo, emita una nota de crédito desde la factura.')
+
+    def write(self, vals):
+        if 'liquidacion_id' in vals and any(linea.liquidacion_id.estado == 'pagada' for linea in self):
+            raise UserError('La línea está en una liquidación de comisiones pagada.')
+        if set(vals) - {'liquidacion_id'}:
+            self._bella_verificar_no_cobrada()
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_excepto_cobradas(self):
+        self._bella_verificar_no_cobrada()
 
 
 class BellaLineaProducto(models.AbstractModel):

@@ -57,7 +57,8 @@ class BellaCobroWizard(models.TransientModel):
             documento = wizard._documento()
             valor = documento.company_id.bella_puntos_valor if documento else 0
             wizard.usa_puntos = bool(documento) and documento._bella_suma_puntos()
-            wizard.puntos_disponibles = wizard.cliente_id.bella_puntos if wizard.usa_puntos else 0
+            wizard.puntos_disponibles = (wizard.cliente_id._bella_saldo_puntos(documento.company_id)
+                                         if wizard.usa_puntos else 0)
             # No más puntos de los que tiene ni de los que hacen falta para pagar todo.
             alcanzan = int(wizard.total // valor) if valor > 0 else 0
             wizard.puntos_maximos = min(wizard.puntos_disponibles, alcanzan)

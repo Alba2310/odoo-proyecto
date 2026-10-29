@@ -16,8 +16,10 @@ export MSYS_NO_PATHCONV=1  # Git Bash: que no convierta /etc/odoo/... en rutas d
 
 MODULO="${1:?Falta el módulo, por ejemplo: bash scripts/pruebas.sh studio_bella}"
 BASE="pruebas_$MODULO"
-# El 8079 porque el contenedor web ya usa el 8069. Solo se muestran avisos, errores y el resumen de los tests.
-ODOO=(odoo -c /etc/odoo/odoo.conf -d "$BASE" --http-port=8079 --log-level=warn --log-handler=odoo.tests.result:INFO
+# El 8079 porque el contenedor web ya usa el 8069; para correr dos módulos a la vez, el segundo con otro puerto:
+# PUERTO=8078 bash scripts/pruebas.sh alquileres. Solo se muestran avisos, errores y el resumen de los tests.
+ODOO=(odoo -c /etc/odoo/odoo.conf -d "$BASE" --http-port="${PUERTO:-8079}" --log-level=warn
+      --log-handler=odoo.tests.result:INFO
       --test-enable --test-tags "/$MODULO" --stop-after-init)
 
 if [ ! -d "extra-addons/$MODULO" ]; then

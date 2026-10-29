@@ -93,7 +93,7 @@ class BellaCita(models.Model):
     ficha_anterior_ids = fields.Many2many('bella.ficha.tecnica', string='Trabajos anteriores',
                                           compute='_compute_ficha_anterior_ids')
     cliente_alergias = fields.Text(related='cliente_id.bella_alergias', string='Alergias')
-    cliente_puntos = fields.Integer(related='cliente_id.bella_puntos', string='Puntos de la clienta')
+    cliente_puntos = fields.Integer('Puntos de la clienta', compute='_compute_cliente_puntos')
     puntos_activo = fields.Boolean(related='company_id.bella_puntos_activo')
     cliente_tipo_cabello = fields.Char(related='cliente_id.bella_tipo_cabello', string='Tipo de cabello',
                                        readonly=False)
@@ -182,6 +182,12 @@ class BellaCita(models.Model):
         return (f'¡Hola {self.cliente_id.name}! Te recordamos tu turno en {self.company_id.name}: '
                 f'{self.turno_texto}{servicios}, con {self.estilista_id.name}. '
                 'Si no podés venir, avisanos por acá, así le damos el lugar a otra persona. ¡Te esperamos!')
+
+    @api.depends('cliente_id', 'company_id')
+    def _compute_cliente_puntos(self):
+        # Los puntos son de cada compañía: los de la compañía de la cita.
+        for cita in self:
+            cita.cliente_puntos = cita.cliente_id._bella_saldo_puntos(cita.company_id) if cita.cliente_id else 0
 
     @api.depends('cliente_id', 'ficha_ids')
     def _compute_ficha_anterior_ids(self):
@@ -408,6 +414,7 @@ class BellaCita(models.Model):
 
 class BellaCitaServicio(models.Model):
     _name = 'bella.cita.servicio'
+    _inherit = 'bella.linea.cobrada'
     _description = 'Servicio de la cita'
     _order = 'cita_id, sequence, id'
     _check_company_auto = True
@@ -428,12 +435,17 @@ class BellaCitaServicio(models.Model):
     cliente_id = fields.Many2one(related='cita_id.cliente_id', store=True, string='Cliente')
     fecha = fields.Datetime(related='cita_id.fecha_inicio', store=True, string='Fecha')
     estado = fields.Selection(related='cita_id.estado', store=True, string='Estado de la cita')
+    # Solo Administración liquida comisiones: la recepción no ve ni cambia este campo.
     liquidacion_id = fields.Many2one('bella.liquidacion.comision', string='Liquidación de comisiones',
-                                     readonly=True, copy=False, index=True, ondelete='set null')
+                                     readonly=True, copy=False, index=True, ondelete='set null',
+                                     groups='studio_bella.group_bella_admin')
 
     _sql_constraints = [
         ('duracion_positiva', 'CHECK(duracion >= 0)', 'La duración no puede ser negativa.'),
     ]
+
+    def _bella_documento(self):
+        return self.cita_id
 
     @api.model
     def _domain_servicios(self):
@@ -454,7 +466,7 @@ class BellaCitaServicio(models.Model):
 
 class BellaCitaProducto(models.Model):
     _name = 'bella.cita.producto'
-    _inherit = 'bella.linea.producto'
+    _inherit = ['bella.linea.producto', 'bella.linea.cobrada']
     _description = 'Producto vendido en la cita'
     _order = 'cita_id, sequence, id'
     _check_company_auto = True
@@ -463,4 +475,8 @@ class BellaCitaProducto(models.Model):
     company_id = fields.Many2one(related='cita_id.company_id', store=True)
     currency_id = fields.Many2one(related='cita_id.currency_id')
     liquidacion_id = fields.Many2one('bella.liquidacion.comision', string='Liquidación de comisiones',
-                                     readonly=True, copy=False, index=True, ondelete='set null')
+                                     readonly=True, copy=False, index=True, ondelete='set null',
+                                     groups='studio_bella.group_bella_admin')
+
+    def _bella_documento(self):
+        return self.cita_id
