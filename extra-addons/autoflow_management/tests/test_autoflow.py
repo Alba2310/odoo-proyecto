@@ -60,6 +60,12 @@ class TestAutoflow(AccountTestInvoicingCommon):
     def _sale(self):
         return self.env['sale.order'].create({'partner_id': self.customer.id, 'vehicle_id': self.vehicle.id})
 
+    def _autoflow_user(self):
+        """Usuario de AutoFlow sin el grupo Responsable."""
+        return new_test_user(self.env, login='asesor_autoflow',
+                             groups='base.group_user,autoflow_management.group_autoflow_user',
+                             company_id=self.env.company.id, company_ids=[Command.set(self.env.company.ids)])
+
     def _ready_to_finish(self, order):
         order.inspection_line_ids[:1].state = 'change'
         order.action_inspection_mark_ok()
@@ -79,14 +85,24 @@ class TestAutoflow(AccountTestInvoicingCommon):
         self.assertEqual(vehicle.name, 'Marca de prueba Modelo X 2025')
 
     def test_acquisition_cost_only_for_manager(self):
-        user = new_test_user(self.env, login='asesor_autoflow',
-                             groups='base.group_user,autoflow_management.group_autoflow_user',
-                             company_id=self.env.company.id, company_ids=[Command.set(self.env.company.ids)])
-        vehicle = self.vehicle.with_user(user)
+        vehicle = self.vehicle.with_user(self._autoflow_user())
         self.assertEqual(vehicle.read(['odometer'])[0]['odometer'], 1000, 'El usuario ve el vehículo')
         self.assertFalse(vehicle.fields_get(['acquisition_cost']), 'Solo el Responsable ve el costo')
         with self.assertRaises(AccessError):
             vehicle.read(['acquisition_cost'])
+
+    def test_odometer_decrease_only_for_manager(self):
+        vehicle = self.vehicle.with_user(self._autoflow_user())
+        vehicle.odometer = 1100
+        self.assertEqual(self.vehicle.odometer, 1100, 'Subirlo puede cualquiera')
+        with self.assertRaises(UserError, msg='Bajarlo solo un Responsable'):
+            vehicle.odometer = 900
+        self.assertEqual(self.vehicle.odometer, 1100)
+
+        self.vehicle.odometer = 900
+        note = self.vehicle.message_ids.filtered(lambda message: '1100 → 900 km' in str(message.body))
+        self.assertEqual(len(note), 1, 'La corrección queda en el historial del vehículo')
+        self.assertEqual(note.author_id, self.env.user.partner_id)
 
     # Pruebas de manejo
 
@@ -206,6 +222,17 @@ class TestAutoflow(AccountTestInvoicingCommon):
         self.assertEqual(self.vehicle.state, 'reserved', 'Al salir del taller recupera su estado anterior')
         order.action_reopen()
         self.assertEqual(self.vehicle.state, 'maintenance')
+
+    def test_order_odometer_not_below_vehicle(self):
+        order = self._order(odometer=15000)
+        order.odometer = 1500
+        self.assertEqual(order.odometer, 1500, 'Un error de tipeo se corrige mientras no quede debajo del vehículo')
+        with self.assertRaises(ValidationError, msg='Ni siquiera el Responsable lo deja debajo del vehículo'):
+            order.odometer = 900
+        # Si el del vehículo está mal, el Responsable lo corrige primero en el vehículo.
+        self.vehicle.odometer = 800
+        order.odometer = 900
+        self.assertEqual(order.odometer, 900)
 
     def test_order_amounts(self):
         order = self._order()

@@ -234,6 +234,18 @@ class AutoflowWorkshopOrder(models.Model):
             if not 0 <= order.fuel_level <= 100:
                 raise ValidationError('El nivel de combustible debe estar entre 0 y 100 %.')
 
+    @api.constrains('odometer')
+    def _check_odometer(self):
+        # Igual que en la recepción y para todos: mientras está en el taller, la orden no puede tener menos km
+        # que el vehículo (al finalizar no lo bajaría y quedarían distintos). Si el del vehículo está mal,
+        # un Responsable lo corrige primero en el vehículo, donde queda en el historial.
+        for order in self.filtered(lambda o: o.state in OPEN_STATES):
+            if order.odometer < order.vehicle_id.odometer:
+                raise ValidationError(
+                    f'El kilometraje de la orden {order.name} ({order.odometer}) no puede ser menor que el '
+                    f'registrado para {order.vehicle_id.display_name} ({order.vehicle_id.odometer}). '
+                    'Si el del vehículo está mal, un Responsable de AutoFlow lo corrige en el vehículo.')
+
     def _check_state_change(self, new_state):
         for order in self:
             if order.state == 'done':

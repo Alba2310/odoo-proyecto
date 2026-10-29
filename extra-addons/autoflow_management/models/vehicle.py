@@ -138,7 +138,27 @@ class AutoflowVehicle(models.Model):
 
     def write(self, vals):
         self._normalize_vals(vals)
-        return super().write(vals)
+        lowered = self._check_odometer_decrease(vals)
+        res = super().write(vals)
+        for vehicle, previous in lowered:
+            vehicle.message_post(body=f'Kilometraje corregido a mano por {self.env.user.name}: '
+                                      f'{previous} → {vehicle.odometer} km.')
+        return res
+
+    def _check_odometer_decrease(self, vals):
+        """Bajar el kilometraje es una corrección: solo la hace un Responsable y queda en el historial.
+
+        Devuelve [(vehículo, kilometraje anterior)] de los vehículos a los que se les baja.
+        """
+        if 'odometer' not in vals:
+            return []
+        odometer = vals['odometer'] or 0
+        lowered = [(vehicle, vehicle.odometer) for vehicle in self if odometer < vehicle.odometer]
+        if lowered and not self.env.su and not self.env.user.has_group('autoflow_management.group_autoflow_manager'):
+            vehicle, previous = lowered[0]
+            raise UserError(f'Solo un Responsable de AutoFlow puede bajar el kilometraje de {vehicle.display_name} '
+                            f'({previous} → {odometer} km). Si el valor está mal, pídale que lo corrija.')
+        return lowered
 
     @api.model
     def _normalize_vals(self, vals):

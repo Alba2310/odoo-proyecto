@@ -33,6 +33,8 @@ El stock inicial de ejemplo está en `demo/workshop_parts_stock.xml`.
 - **`@api.onchange`**: al elegir el vehículo en la orden, en la prueba de manejo o en la recepción se proponen
   el cliente y el kilometraje.
 - **Kilometraje**: `AutoflowVehicle._update_odometer` se llama al finalizar una prueba de manejo y una orden.
+  Solo un Responsable puede bajarlo a mano en el vehículo, y queda anotado en su historial. Una orden abierta
+  nunca tiene menos km que el vehículo (igual que en la recepción): si el del vehículo está mal, se corrige ahí primero.
 - **Workflow**: `AutoflowWorkshopOrder.write` detecta el cambio de etapa (botón, barra de estado o arrastre en el kanban):
   - *Listo para entrega*: envía la plantilla `mail_template_vehicle_ready` al cliente y crea una actividad para el asesor.
   - *Finalizado*: valida mecánico, checklist y stock; descuenta los repuestos con movimientos de stock, actualiza
