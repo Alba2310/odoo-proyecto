@@ -10,7 +10,7 @@ DM Sans con títulos en Fraunces y la paleta ciruela y rosa. Ese estilo está en
 
 | Archivo | Contenido |
 |---|---|
-| `index.html` | Portada: celular con el recordatorio, problema/solución, funciones en mosaico, carta de servicios con precios de ejemplo, un turno paso a paso, capturas, recordatorio por WhatsApp, calculadora de turnos perdidos |
+| `index.html` | Portada: celular con el recordatorio, problema/solución, funciones en mosaico, carta de servicios con precios de ejemplo, un turno paso a paso, capturas, recordatorio por WhatsApp, clientas que vuelven (chat con la invitación y los puntos), calculadora de turnos perdidos |
 | `funciones.html` | Detalle de cada parte del sistema con capturas reales, permisos y manual |
 | `demo.html` | Demo interactiva: agendar (con las validaciones del sistema), recordar por WhatsApp, cobrar con factura y reponer stock. Todo simulado en el navegador (`js/demo.js`) |
 | `precios.html` | Planes mensual/anual, comparación y preguntas frecuentes |
@@ -18,6 +18,8 @@ DM Sans con títulos en Fraunces y la paleta ciruela y rosa. Ese estilo está en
 | `llamar/index.html` | Tarjeta con el teléfono: llamar, WhatsApp y copiar el número. Se abre con `tusitio/llamar` |
 
 Las capturas de `img/capturas/` son las del manual de usuario del módulo (`extra-addons/studio_bella/static/manual/img/`).
+Las de turnos por internet, cierre de caja, ficha técnica, clientas que no vuelven, puntos y comisiones se sacaron
+el 29/10/2026 de la base `peluqueria` con Edge sin ventana (1200 × 720), igual que las del manual.
 
 ## Cómo verlo
 

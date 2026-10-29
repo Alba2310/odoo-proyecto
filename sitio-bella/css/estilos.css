@@ -523,6 +523,12 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius
 .subnav a:hover { background: var(--fondo-alt); color: var(--tinta); }
 .subnav a.activo { background: var(--ciruela-500); color: #fff; }
 .subnav .ico { width: 1em; height: 1em; }
+/* Con tantas secciones, en pantallas anchas el índice va en dos renglones en vez de esconder las últimas. */
+@media (min-width: 961px) {
+  .subnav__lista { flex-wrap: wrap; justify-content: center; row-gap: 2px; padding: 8px 0; }
+  .subnav a { padding: 6px 12px; }
+  html:has(.subnav) { scroll-padding-top: calc(var(--alto-cabecera) + 110px); }
+}
 
 .funcion { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
 .funcion + .funcion { margin-top: clamp(72px, 10vw, 130px); }

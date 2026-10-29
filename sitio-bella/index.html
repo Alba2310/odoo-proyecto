@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Studio Bella · Sistema para peluquerías en Odoo 18</title>
-  <meta name="description" content="Studio Bella junta la agenda de tus estilistas, el cobro con factura, los productos con stock y el recordatorio por WhatsApp en un solo sistema, hecho sobre Odoo 18.">
+  <meta name="description" content="Studio Bella junta la agenda de tus estilistas, los turnos por internet, el cobro con factura, las comisiones, los puntos para tus clientas, los productos con stock y el recordatorio por WhatsApp en un solo sistema, hecho sobre Odoo 18.">
   <meta name="theme-color" content="#2B0F2E">
   <meta property="og:title" content="Studio Bella · Tu peluquería ordenada y sin turnos perdidos">
   <meta property="og:description" content="Agenda por estilista, cobro con factura, stock de productos e insumos y recordatorios por WhatsApp.">
@@ -43,7 +43,7 @@
         <div class="heroe__texto">
           <span class="pastilla" data-revelar><b>NUEVO</b> Sistema para peluquerías en Odoo 18</span>
           <h1 data-revelar data-retraso="80">Tu peluquería ordenada, <span class="resaltado">sin turnos perdidos</span>.</h1>
-          <p class="lead" data-revelar data-retraso="160">Studio Bella junta la agenda de tus estilistas, el cobro con factura, los productos y el recordatorio por WhatsApp en un solo sistema. Menos clientes que se olvidan del turno y más tiempo para atender.</p>
+          <p class="lead" data-revelar data-retraso="160">Studio Bella junta la agenda de tus estilistas, los turnos por internet, el cobro con factura, los productos y el recordatorio por WhatsApp en un solo sistema. Menos turnos perdidos, más clientas que vuelven y más tiempo para atender.</p>
           <div class="grupo-botones" data-revelar data-retraso="240">
             <a class="btn btn--acento btn--grande" href="contacto.html">Pedí tu demo gratis <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
             <a class="btn btn--fantasma btn--grande" href="demo.html"><svg class="ico" aria-hidden="true"><use href="#i-play"></use></svg> Probar la demo interactiva</a>
@@ -122,6 +122,8 @@
               <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> El tinte o la keratina se terminan sin que nadie avise.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Cobros anotados en un papel y la factura hecha aparte.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> No sabés cuánto factura cada estilista ni qué servicio se pide más.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Clientas que dejan de venir y nadie se da cuenta.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-x-circulo"></use></svg> Las comisiones de fin de mes, a mano y con discusiones.</li>
             </ul>
           </div>
           <div class="comparacion__flecha" aria-hidden="true"><span><svg class="ico"><use href="#i-flecha"></use></svg></span></div>
@@ -133,6 +135,8 @@
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Cada servicio descuenta sus insumos y el sistema avisa cuándo reponer.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Al cobrar sale la factura con IVA y se calcula el vuelto.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Reportes de lo que factura cada estilista, por categoría.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> La lista de las que no vuelven, con la invitación por WhatsApp lista.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Comisiones calculadas solas, con comprobante para firmar.</li>
             </ul>
           </div>
         </div>
@@ -196,6 +200,42 @@
             <span class="tarjeta__icono c-rojo"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg></span>
             <h3>Reportes</h3>
             <p>Cuánto factura cada estilista y qué servicios se piden más.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="bento__item bento__item--ancho" href="funciones.html#turnos" data-revelar>
+            <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-telefono2"></use></svg></span>
+            <h3>Turnos por internet</h3>
+            <p>Una página para compartir por WhatsApp o Instagram: la clienta elige servicios, estilista, día y hora libre, y el turno entra solo a la agenda.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="bento__item bento__item--miel" href="funciones.html#caja" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-verde"><svg class="ico" aria-hidden="true"><use href="#i-planilla"></use></svg></span>
+            <h3>Cierre de caja</h3>
+            <p>Lo cobrado en el día por forma de pago y el arqueo: te dice si cuadra, si sobra o si falta.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="bento__item" href="funciones.html#ficha" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-violeta"><svg class="ico" aria-hidden="true"><use href="#i-lista"></use></svg></span>
+            <h3>Ficha técnica</h3>
+            <p>La fórmula de color de cada visita y las alergias de la clienta, a la vista en cada cita.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="bento__item bento__item--salvia" href="funciones.html#comisiones" data-revelar>
+            <span class="tarjeta__icono c-ambar"><svg class="ico" aria-hidden="true"><use href="#i-firma"></use></svg></span>
+            <h3>Comisiones</h3>
+            <p>El porcentaje de cada estilista por período, con adelantos y comprobante para firmar.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="bento__item" href="funciones.html#clientas" data-revelar data-retraso="80">
+            <span class="tarjeta__icono c-rojo"><svg class="ico" aria-hidden="true"><use href="#i-estrella"></use></svg></span>
+            <h3>Programa de puntos</h3>
+            <p>Tus clientas suman puntos al pagar y los usan como descuento en la próxima visita.</p>
+            <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
+          </a>
+          <a class="bento__item bento__item--ancho" href="funciones.html#clientas" data-revelar data-retraso="160">
+            <span class="tarjeta__icono c-acento"><svg class="ico" aria-hidden="true"><use href="#i-corazon"></use></svg></span>
+            <h3>Clientas que vuelven</h3>
+            <p>Las que hace semanas no vienen y no tienen turno, con un botón que abre WhatsApp con la invitación, el enlace para reservar y sus puntos.</p>
             <span class="enlace-flecha">Ver más <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></span>
           </a>
         </div>
@@ -273,11 +313,12 @@
             <span class="tarjeta__icono c-ciruela"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg></span>
             <div>
               <h3>La clienta pide su turno</h3>
-              <p>Hacés clic en el horario libre de la agenda, elegís la clienta, la estilista y los servicios. El precio, la duración y el fin del turno se calculan solos.</p>
+              <p>Hacés clic en el horario libre de la agenda, elegís la clienta, la estilista y los servicios. El precio, la duración y el fin del turno se calculan solos. O la clienta lo reserva sola desde la página de turnos por internet.</p>
               <ul class="lista-iconos">
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> No deja dar dos turnos a la misma estilista a la misma hora.</li>
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Respeta el horario de cada una, los feriados y los días de cierre.</li>
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Avisa si la estilista no hace ese servicio.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Los turnos pedidos por internet entran solos a la agenda.</li>
               </ul>
               <div class="paso__nav"><span></span><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente paso <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
             </div>
@@ -303,7 +344,7 @@
               <ul class="lista-iconos">
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Agendada, Confirmada, En atención y Cobrada.</li>
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> “No vino” y “Cancelar” liberan el horario.</li>
-                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Notas con la fórmula de color o las alergias.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Ficha técnica con la fórmula de color, y las alergias en rojo arriba de la cita.</li>
               </ul>
               <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente paso <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
             </div>
@@ -317,6 +358,7 @@
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Emite la factura con IVA 10 % incluido y la deja pagada.</li>
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> El efectivo va a la caja; la tarjeta y la transferencia, al banco.</li>
                 <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Descuenta del stock lo vendido y los insumos usados.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Si la clienta tiene puntos, los usa como descuento.</li>
               </ul>
               <div class="paso__nav"><button class="btn btn--contorno btn--chico" type="button" data-ir="-1"><svg class="ico" aria-hidden="true"><use href="#i-flecha-izq"></use></svg> Anterior</button><button class="btn btn--contorno btn--chico" type="button" data-ir="1">Siguiente paso <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></button></div>
             </div>
@@ -355,6 +397,8 @@
             <button class="pestana" type="button" role="tab" id="tab-recordatorios" aria-controls="gal-recordatorios" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> Recordatorios</button>
             <button class="pestana" type="button" role="tab" id="tab-stock" aria-controls="gal-stock" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-caja"></use></svg> Stock</button>
             <button class="pestana" type="button" role="tab" id="tab-reportes" aria-controls="gal-reportes" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg> Reportes</button>
+            <button class="pestana" type="button" role="tab" id="tab-turnos" aria-controls="gal-turnos" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-telefono2"></use></svg> Turnos online</button>
+            <button class="pestana" type="button" role="tab" id="tab-comisiones" aria-controls="gal-comisiones" aria-selected="false" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-firma"></use></svg> Comisiones</button>
           </div>
 
           <div class="panel-galeria" role="tabpanel" id="gal-agenda" aria-labelledby="tab-agenda">
@@ -447,6 +491,36 @@
               </ul>
             </div>
           </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-turnos" aria-labelledby="tab-turnos" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/turnos.png" data-titulo="Turnos por internet" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/turnos.png" alt="Página de turnos por internet con los horarios libres del lunes" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>La clienta reserva sola</h3>
+              <p>Una página del salón, sin usuario ni contraseña: elige los servicios, la estilista (o cualquiera), el día y la hora libre.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Solo muestra horarios libres de verdad: horario de cada estilista, feriados y citas.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Si pide corte y manicura, se los da uno detrás del otro, con quien hace cada uno.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> El turno entra a la agenda para que la recepción lo confirme.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-galeria" role="tabpanel" id="gal-comisiones" aria-labelledby="tab-comisiones" hidden>
+            <button class="captura" type="button" data-visor="img/capturas/comisiones.png" data-titulo="Liquidación de comisiones" data-grupo="galeria">
+              <span class="navegador"><img src="img/capturas/comisiones.png" alt="Liquidación de comisiones de una estilista con los servicios del período" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <div>
+              <h3>Comisiones sin discusiones</h3>
+              <p>Elegís la estilista y el período: el sistema junta sus servicios y productos cobrados y calcula lo que le corresponde.</p>
+              <ul class="lista-iconos">
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Un porcentaje por servicios y otro por productos.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Descuenta los adelantos que ya se le dieron.</li>
+                <li><svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg> Comprobante para imprimir y firmar; nada se paga dos veces.</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -473,6 +547,41 @@
             <span class="navegador"><img src="img/capturas/cita-whatsapp.png" alt="Cita con los botones Recordatorio por WhatsApp y Recordatorio por correo" width="1200" height="720" loading="lazy"></span>
             <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
           </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Clientas que vuelven -->
+    <section class="seccion seccion--rubor" id="clientas">
+      <div class="contenedor whatsapp-destacado">
+        <div data-revelar>
+          <div class="chat" aria-label="Ejemplo de la invitación a volver que le llega a la clienta">
+            <div class="chat__pantalla">
+              <div class="chat__cabeza">
+                <img src="img/logo.svg" alt="" width="36" height="36">
+                <span><b>Studio Bella</b><small>en línea</small></span>
+              </div>
+              <div class="chat__cuerpo">
+                <span class="chat__fecha">Hoy</span>
+                <p class="burbuja" style="margin:0">¡Hola Natalia! Hace 9 semanas que no te vemos en Studio Bella y te extrañamos. ¿Te reservamos un turno? Podés elegir el día y la hora en studiobella.com.py/turnos o respondernos por acá. Tenés 39 puntos para usar: 19.500 ₲ de descuento.<span class="burbuja__hora">10:04 <svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg></span></p>
+                <p class="burbuja burbuja--recibida" style="margin:0">¡Sí! ¿El sábado tienen lugar para color?<span class="burbuja__hora">10:21</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-revelar data-retraso="150">
+          <span class="etiqueta">Clientas que vuelven</span>
+          <h2>Que tus clientas vuelvan</h2>
+          <p style="font-size:1.06rem;color:var(--suave)">Una clienta que deja de venir casi nunca avisa. Studio Bella te muestra quiénes hace semanas que no vienen y te deja la invitación escrita, con el enlace para reservar y los puntos que tiene para usar.</p>
+          <ul class="lista-iconos">
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Lista de las que no vienen hace 6 semanas, 3 o 6 meses y no tienen turno pedido.</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Programa de puntos: 1 punto cada 10.000 ₲ y cada punto vale 500 ₲ de descuento (los montos los elegís vos).</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Ficha técnica con la fórmula de color de cada visita, para repetirla igual.</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Las alergias de la clienta, en rojo arriba de cada cita.</li>
+          </ul>
+          <div class="grupo-botones" style="margin-top:26px">
+            <a class="btn btn--primario" href="funciones.html#clientas">Ver cómo funciona <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
+          </div>
         </div>
       </div>
     </section>
@@ -588,6 +697,9 @@
             <li><a href="funciones.html#cobro">Cobro y factura</a></li>
             <li><a href="funciones.html#recordatorios">Recordatorios</a></li>
             <li><a href="funciones.html#compras">Compras y stock</a></li>
+            <li><a href="funciones.html#turnos">Turnos por internet</a></li>
+            <li><a href="funciones.html#comisiones">Comisiones</a></li>
+            <li><a href="funciones.html#clientas">Clientas y puntos</a></li>
           </ul>
         </div>
         <div>

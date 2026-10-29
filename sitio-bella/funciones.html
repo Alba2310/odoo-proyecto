@@ -45,12 +45,17 @@
       <div class="contenedor">
         <ul class="subnav__lista">
           <li><a href="#agenda"><svg class="ico" aria-hidden="true"><use href="#i-calendario"></use></svg> Agenda</a></li>
+          <li><a href="#turnos"><svg class="ico" aria-hidden="true"><use href="#i-telefono2"></use></svg> Turnos por internet</a></li>
           <li><a href="#dia"><svg class="ico" aria-hidden="true"><use href="#i-tijeras"></use></svg> Citas de hoy</a></li>
+          <li><a href="#ficha"><svg class="ico" aria-hidden="true"><use href="#i-lista"></use></svg> Ficha técnica</a></li>
           <li><a href="#cobro"><svg class="ico" aria-hidden="true"><use href="#i-dinero"></use></svg> Cobro</a></li>
+          <li><a href="#caja"><svg class="ico" aria-hidden="true"><use href="#i-planilla"></use></svg> Cierre de caja</a></li>
           <li><a href="#recordatorios"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp"></use></svg> Recordatorios</a></li>
+          <li><a href="#clientas"><svg class="ico" aria-hidden="true"><use href="#i-corazon"></use></svg> Clientas y puntos</a></li>
           <li><a href="#productos"><svg class="ico" aria-hidden="true"><use href="#i-gota"></use></svg> Productos e insumos</a></li>
           <li><a href="#compras"><svg class="ico" aria-hidden="true"><use href="#i-camion"></use></svg> Compras</a></li>
           <li><a href="#equipo"><svg class="ico" aria-hidden="true"><use href="#i-usuarios"></use></svg> Estilistas</a></li>
+          <li><a href="#comisiones"><svg class="ico" aria-hidden="true"><use href="#i-firma"></use></svg> Comisiones</a></li>
           <li><a href="#reportes"><svg class="ico" aria-hidden="true"><use href="#i-grafico"></use></svg> Reportes</a></li>
           <li><a href="#permisos"><svg class="ico" aria-hidden="true"><use href="#i-escudo"></use></svg> Permisos</a></li>
         </ul>
@@ -92,21 +97,66 @@
           </div>
         </article>
 
-        <article class="funcion funcion--invertida" id="dia">
+        <article class="funcion funcion--invertida" id="turnos">
           <div class="funcion__texto" data-revelar>
-            <span class="etiqueta etiqueta--acento">Citas de hoy</span>
+            <span class="etiqueta etiqueta--acento">Turnos por internet</span>
+            <h2>Tus clientas reservan solas, a cualquier hora</h2>
+            <p>El salón tiene su página de turnos para compartir por WhatsApp o en Instagram. La clienta elige los servicios, la estilista, el día y la hora, y el turno entra solo a la agenda.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Solo ofrece horarios libres: respeta el horario de cada estilista, los feriados y las citas que ya hay.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> “Cualquiera” le da el turno a la estilista más libre ese día.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Si pide servicios de distintas estilistas (corte y manicura), se los da uno detrás del otro.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Reconoce a la clienta por el celular; si es nueva, la agrega sola.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> La recepción ve los turnos pedidos por internet y los confirma.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/turnos.png" data-titulo="Página de turnos por internet" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/turnos.png" alt="Página de turnos con los horarios libres del lunes" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion" id="dia">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Citas de hoy</span>
             <h2>La recepción, siempre al día</h2>
             <p>Un tablero con las citas del día ordenadas por estado. Cada tarjeta tiene el horario, la clienta, los servicios, el teléfono y el total.</p>
             <ul class="lista-iconos">
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Botones para confirmar, empezar a atender, cobrar o marcar que no vino.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Los turnos cancelados o de clientes que no vinieron liberan el horario.</li>
-              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Notas en cada cita: preferencias, fórmula de color, alergias.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Notas en cada cita: preferencias y pedidos especiales.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Historial completo de citas en la ficha de cada cliente.</li>
             </ul>
           </div>
           <div class="funcion__visual" data-revelar data-retraso="120">
             <button class="captura" type="button" data-visor="img/capturas/citas-de-hoy.png" data-titulo="Citas de hoy" data-grupo="funciones">
               <span class="navegador"><img src="img/capturas/citas-de-hoy.png" alt="Tablero de las citas de hoy por estado" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion funcion--invertida" id="ficha">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta etiqueta--acento">Ficha técnica</span>
+            <h2>La fórmula de cada clienta, siempre a mano</h2>
+            <p>En cada cita se anota el trabajo: la fórmula de color, los productos, el tiempo de pose, cómo quedó y una foto. En la próxima visita, cualquier estilista lo repite igual.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Color, mechas, alisado o tratamiento, con la fórmula y el tiempo de pose.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Los trabajos anteriores de la clienta aparecen en su cita.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Las alergias, en rojo arriba de cada una de sus citas.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Se busca por clienta, por fórmula o por estilista.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/ficha-tecnica.png" data-titulo="Trabajos anteriores en la cita" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/ficha-tecnica.png" alt="Pestaña Ficha técnica de una cita con el trabajo anterior de la clienta" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/cita-alergia.png" data-titulo="Alergias a la vista" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/cita-alergia.png" alt="Cita con el aviso de alergias en rojo arriba" width="1200" height="720" loading="lazy"></span>
               <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
             </button>
           </div>
@@ -123,6 +173,7 @@
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Servicios y productos de la cita en la misma factura.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Si un producto vendido no tiene stock, avisa antes de cobrar.</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Venta de mostrador para quien pasa a comprar sin turno.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> La clienta puede pagar una parte con sus puntos.</li>
             </ul>
             <div class="funcion__extra">
               <span class="chip chip--verde">Efectivo</span>
@@ -142,9 +193,28 @@
           </div>
         </article>
 
-        <article class="funcion funcion--invertida" id="recordatorios">
+        <article class="funcion funcion--invertida" id="caja">
           <div class="funcion__texto" data-revelar>
-            <span class="etiqueta etiqueta--acento">Recordatorios</span>
+            <span class="etiqueta etiqueta--acento">Cierre de caja</span>
+            <h2>Al final del día, la caja cuadra</h2>
+            <p>El cierre muestra lo cobrado en efectivo, con tarjeta y por transferencia. Contás la plata del cajón, la cargás y el sistema te dice si cuadra, si sobra o si falta.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Cambio al abrir, salidas de efectivo y lo que queda para el día siguiente.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Comprobante para imprimir, con el detalle de cada cobro.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Con la caja cerrada no se puede cobrar con esa fecha: solo Administración la reabre.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/cierre-caja.png" data-titulo="Cierre de caja" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/cierre-caja.png" alt="Cierre de caja del día con un faltante de 10.000" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion" id="recordatorios">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Recordatorios</span>
             <h2>Menos turnos vacíos, sin trabajo extra</h2>
             <p>El día antes de cada turno hay que avisar. Studio Bella lo hace por correo solo, y para WhatsApp te deja el mensaje escrito.</p>
             <ul class="lista-iconos">
@@ -162,6 +232,31 @@
             </button>
             <button class="captura" type="button" data-visor="img/capturas/recordatorio-correo.png" data-titulo="El recordatorio por correo" data-grupo="funciones">
               <span class="navegador"><img src="img/capturas/recordatorio-correo.png" alt="Correo de recordatorio guardado en el historial de la cita" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion funcion--invertida" id="clientas">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta etiqueta--acento">Clientas y puntos</span>
+            <h2>Que tus clientas vuelvan</h2>
+            <p>Studio Bella te muestra qué clientas hace semanas que no vienen y te deja la invitación por WhatsApp escrita. Y con el programa de puntos, cada visita les suma un descuento para la próxima.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Lista de las que no vienen hace 6 semanas, 3 o 6 meses y no tienen turno pedido.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> El botón Invitar abre WhatsApp con el mensaje, el enlace para reservar y sus puntos.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> 1 punto cada 10.000 ₲ pagados y cada punto vale 500 ₲ de descuento; los montos los elegís vos.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Los puntos se usan al cobrar y el descuento sale en la factura con el IVA bien calculado.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> En la ficha de cada clienta: última visita, cuántas veces vino y cuánto gastó.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual funcion__visual--doble" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/no-vuelven.png" data-titulo="Clientas que no vuelven" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/no-vuelven.png" alt="Lista de clientas que no vienen hace semanas con el botón Invitar" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+            <button class="captura" type="button" data-visor="img/capturas/puntos-ajustes.png" data-titulo="Programa de puntos" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/puntos-ajustes.png" alt="Ajustes del programa de puntos: 1 punto cada 10.000 y cada punto vale 500" width="1200" height="720" loading="lazy"></span>
               <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
             </button>
           </div>
@@ -239,9 +334,29 @@
           </div>
         </article>
 
-        <article class="funcion funcion--invertida" id="reportes">
+        <article class="funcion funcion--invertida" id="comisiones">
           <div class="funcion__texto" data-revelar>
-            <span class="etiqueta etiqueta--acento">Reportes</span>
+            <span class="etiqueta etiqueta--acento">Comisiones</span>
+            <h2>Las comisiones, sin calculadora ni discusiones</h2>
+            <p>Cada estilista tiene su porcentaje por servicios y por productos. Elegís el período y el sistema junta lo que cobró cada una, descuenta los adelantos y arma el comprobante.</p>
+            <ul class="lista-iconos">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Cuenta los servicios y productos de sus citas cobradas en el período.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Descuenta los adelantos y los vales que ya se le dieron.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Comprobante para imprimir y firmar.</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check-circulo"></use></svg> Cada servicio entra en una sola liquidación: nada se paga dos veces.</li>
+            </ul>
+          </div>
+          <div class="funcion__visual" data-revelar data-retraso="120">
+            <button class="captura" type="button" data-visor="img/capturas/comisiones.png" data-titulo="Liquidación de comisiones" data-grupo="funciones">
+              <span class="navegador"><img src="img/capturas/comisiones.png" alt="Liquidación de comisiones de una estilista con los servicios del período" width="1200" height="720" loading="lazy"></span>
+              <span class="captura__zoom"><svg class="ico" aria-hidden="true"><use href="#i-ampliar"></use></svg> Ampliar</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="funcion" id="reportes">
+          <div class="funcion__texto" data-revelar>
+            <span class="etiqueta">Reportes</span>
             <h2>Sabé qué funciona en tu salón</h2>
             <p>Lo que factura cada estilista, los servicios que más se piden y los productos que más se venden, con filtros por fecha.</p>
             <ul class="lista-iconos">
@@ -278,12 +393,15 @@
             </thead>
             <tbody>
               <tr><th scope="row">Agendar, confirmar y mover citas</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
-              <tr><th scope="row">Cobrar y vender productos</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Cobrar (también con puntos) y vender productos</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Cerrar la caja del día</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Fichas técnicas e invitaciones a volver</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
               <tr><th scope="row">Mandar recordatorios</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
               <tr><th scope="row">Recibir mercadería</th><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
               <tr><th scope="row">Pedidos a proveedores y stock mínimo</th><td class="centro no"><svg class="ico" aria-label="No"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
               <tr><th scope="row">Servicios, precios y estilistas</th><td class="centro no"><svg class="ico" aria-label="No"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
               <tr><th scope="row">Reportes</th><td class="centro no"><svg class="ico" aria-label="No"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
+              <tr><th scope="row">Comisiones, puntos a mano y reabrir la caja</th><td class="centro no"><svg class="ico" aria-label="No"><use href="#i-x"></use></svg></td><td class="centro si"><svg class="ico" aria-label="Sí"><use href="#i-check"></use></svg></td></tr>
             </tbody>
           </table>
         </div>
@@ -291,7 +409,7 @@
           <div class="funcion__texto" data-revelar>
             <span class="etiqueta">Manual de usuario</span>
             <h2>Todo explicado, paso a paso</h2>
-            <p>El manual está dentro del sistema, en Ayuda: 14 capítulos con capturas, desde agendar el primer turno hasta reponer el stock. Se puede imprimir.</p>
+            <p>El manual está dentro del sistema, en Ayuda: 17 capítulos con capturas, desde agendar el primer turno hasta liquidar las comisiones. Se puede imprimir.</p>
             <a class="enlace-flecha" href="demo.html">Probá la demo mientras tanto <svg class="ico" aria-hidden="true"><use href="#i-flecha"></use></svg></a>
           </div>
           <div class="funcion__visual" data-revelar data-retraso="120">
