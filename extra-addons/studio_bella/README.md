@@ -114,8 +114,11 @@ Usuario: `admin` / `admin`.
 ## Tests
 
 ```bash
-docker compose exec -T web odoo -c /etc/odoo/odoo.conf -d peluqueria -u studio_bella --test-enable --test-tags /studio_bella --stop-after-init --http-port=8079
+bash scripts/pruebas.sh studio_bella
 ```
+
+Corren en la base `pruebas_studio_bella` (el script la crea la primera vez), no en `peluqueria`: los tests deshacen
+lo que crean, pero no los números de las citas y facturas, que en la base real quedarían salteados.
 
 Después de cambiar código Python hay que reiniciar Odoo: `docker compose restart web turnos`.
 

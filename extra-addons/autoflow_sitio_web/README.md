@@ -25,5 +25,5 @@ y el Odoo de siempre (puerto 8069) sigue mostrando todas las bases.
 ## Pruebas
 
 ```bash
-docker compose run --rm ventas odoo -d autoflow_ventas -u autoflow_sitio_web --test-enable --test-tags /autoflow_sitio_web --stop-after-init
+bash scripts/pruebas.sh autoflow_sitio_web
 ```

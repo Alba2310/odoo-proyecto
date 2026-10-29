@@ -17,6 +17,7 @@ concesionarias y talleres mecánicos, y Studio Bella, para peluquerías.
 | `sitio-bella` | Sitio web de venta de Studio Bella, con demo interactiva ([detalle](sitio-bella/README.md)) |
 | `sitio-oga` | Sitio web de venta de Óga, una sola página con tablero de prueba ([detalle](sitio-oga/README.md)) |
 | `presentacion` | Imágenes y gráficos de la presentación |
+| `scripts/pruebas.sh` | Corre los tests de un módulo en su propia base de pruebas (ver abajo) |
 | `docker-compose.yml` | Odoo, PostgreSQL, los Odoo de las páginas públicas (turnos y "Se alquila") y los sitios web |
 
 ## Cómo levantarlo en otra computadora
@@ -64,3 +65,13 @@ Para Alquileres: `bash extra-addons/alquileres/scripts/crear_alquileres.sh` (bas
 Para llevarse una base con todos sus datos tal como están: en la computadora de origen, entrar a
 http://localhost:8069/web/database/manager y usar **Backup** (descarga un .zip); en la otra, **Restore** con ese
 archivo. Las dos operaciones piden la contraseña maestra de Odoo.
+
+## Tests
+
+Cada módulo propio tiene sus tests. Se corren con un solo comando, en una base aparte (`pruebas_<módulo>`) que el
+script crea la primera vez, para no tocar las bases que se usan:
+
+```bash
+bash scripts/pruebas.sh studio_bella          # o alquileres, autoflow_management
+bash scripts/pruebas.sh studio_bella --nueva  # borra la base de pruebas y la crea de cero
+```

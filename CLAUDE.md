@@ -27,8 +27,9 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
 - Moneda guaraníes (PYG, sin decimales) e IVA 10 % / 5 % incluido en el precio.
 - La base de la peluquería es `peluqueria` (admin / admin); se crea con
   `bash extra-addons/studio_bella/scripts/crear_peluqueria.sh`.
-- Tests: `docker compose exec -T web odoo -c /etc/odoo/odoo.conf -d peluqueria -u studio_bella --test-enable --test-tags /studio_bella --stop-after-init --http-port=8079`
-  (`--http-port=8079` porque el contenedor `web` ya usa el 8069).
+- Tests: `bash scripts/pruebas.sh studio_bella` (o `alquileres`, `autoflow_management`). Corren en una base aparte,
+  `pruebas_<módulo>`, que el script crea la primera vez; nunca en las bases que usa el usuario.
+  Por dentro usa `--http-port=8079` porque el contenedor `web` ya usa el 8069, así que de a un módulo por vez.
 - Cambios en Python: reiniciar con `docker compose restart web turnos oga`. Cambios solo en XML o JS: alcanza con
   `-u studio_bella` (los archivos de `static/turnos/` ni eso: se leen del disco).
 - No borrar ni regenerar datos de una base que se esté usando: actualizar con `-u`.
@@ -43,5 +44,6 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
 - Una ruta pública (`auth='public'`) solo funciona si Odoo sabe la base: sesión ya iniciada, una sola base o
   `--db-filter`. Por eso los servicios `turnos` (8071) y `oga` (8072) son Odoo aparte con `--db-filter`.
 - Con la caja de un día cerrada no se puede cobrar con esa fecha: no cerrar la caja de hoy en la base en uso.
-- Las secuencias de PostgreSQL (pedidos de compra, etc.) no se deshacen con los tests: pueden quedar saltos de número.
+- Las secuencias de PostgreSQL (pedidos de compra, etc.) no se deshacen con los tests: por eso los tests van en
+  las bases `pruebas_*` y no en las reales.
 - El recordatorio por WhatsApp abre `wa.me` con el mensaje escrito (sin la API paga de WhatsApp Business), por decisión del usuario.

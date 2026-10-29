@@ -59,5 +59,8 @@ desde el día en que se corre.
 ## Pruebas
 
 ```bash
-docker compose exec -T web odoo -c /etc/odoo/odoo.conf -d alquileres -u alquileres --test-enable --test-tags /alquileres --stop-after-init --http-port=8079
+bash scripts/pruebas.sh alquileres
 ```
+
+Corren en la base `pruebas_alquileres` (el script la crea la primera vez), no en `alquileres`, para que los números
+de contratos y recibos de la base real no queden salteados.
