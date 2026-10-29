@@ -39,6 +39,7 @@ El stock inicial de ejemplo está en `demo/workshop_parts_stock.xml`.
     el kilometraje, devuelve el vehículo a su estado anterior y crea la factura en borrador
     (las órdenes en garantía no se facturan al cliente).
 - **Ventas**: desde una prueba de manejo finalizada se crea la cotización; al confirmarla el vehículo queda vendido.
+  Si la venta se cancela vuelve a estar disponible; si está en el taller, queda disponible al salir.
 
 ### Fase 3: interfaz
 

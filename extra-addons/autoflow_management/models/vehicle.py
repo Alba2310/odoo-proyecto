@@ -72,7 +72,9 @@ class AutoflowVehicle(models.Model):
     company_id = fields.Many2one('res.company', string='Compañía', required=True,
                                  default=lambda self: self.env.company)
     currency_id = fields.Many2one(related='company_id.currency_id')
-    acquisition_cost = fields.Monetary('Costo de adquisición', tracking=True)
+    # Solo para el Responsable; el historial del chatter tampoco se lo muestra a los demás.
+    acquisition_cost = fields.Monetary('Costo de adquisición', tracking=True,
+                                       groups='autoflow_management.group_autoflow_manager')
     sale_price = fields.Monetary('Precio de venta', tracking=True)
     product_id = fields.Many2one('product.product', string='Producto de venta', check_company=True,
                                  help='Producto que se usa en la cotización cuando se vende este vehículo.')

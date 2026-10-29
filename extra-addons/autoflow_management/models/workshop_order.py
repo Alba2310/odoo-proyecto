@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
+
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_compare
 
 from .vehicle import VEHICLE_STATES
 
@@ -136,6 +139,15 @@ class AutoflowWorkshopOrder(models.Model):
         changed = self.filtered(lambda order: order.state != new_state)
         changed._check_state_change(new_state)
         reopened = changed.filtered(lambda order: order.state == 'cancel')
+        if new_state == 'done':
+            # La barra de estado manda en la misma escritura los cambios del formulario que no se guardaron
+            # (un repuesto nuevo, el mecánico...): se guardan primero y se valida la orden como va a quedar.
+            other_vals = {key: value for key, value in vals.items() if key != 'state'}
+            if other_vals:
+                super().write(other_vals)
+                vals = {'state': new_state}
+            for order in changed:
+                order._check_can_finish()
         res = super().write(vals)
         if new_state == 'ready':
             changed._notify_vehicle_ready()
@@ -178,10 +190,22 @@ class AutoflowWorkshopOrder(models.Model):
             order.parts_available = not order._get_missing_parts()
 
     def _get_missing_parts(self):
-        """Líneas de repuestos con seguimiento de stock que todavía no se descontaron y no alcanzan."""
+        """Repuestos con seguimiento de stock que todavía no se descontaron y no alcanzan.
+
+        Devuelve {producto: (cantidad necesaria, cantidad en depósito)}. Se suma por producto: dos líneas
+        de 6 del mismo repuesto con 10 en el depósito no alcanzan.
+        """
         self.ensure_one()
-        return self.part_line_ids.filtered(
-            lambda line: line.product_id.is_storable and not line.move_id and line.qty_available < line.quantity)
+        needed = defaultdict(float)
+        available = {}
+        for line in self.part_line_ids.filtered(lambda line: line.product_id.is_storable and not line.move_id):
+            needed[line.product_id] += line.quantity
+            available[line.product_id] = line.qty_available
+        return {
+            product: (quantity, available[product])
+            for product, quantity in needed.items()
+            if float_compare(available[product], quantity, precision_rounding=product.uom_id.rounding) < 0
+        }
 
     @api.onchange('vehicle_id')
     def _onchange_vehicle_id(self):
@@ -216,8 +240,6 @@ class AutoflowWorkshopOrder(models.Model):
                 raise UserError(f'La orden {order.name} ya está finalizada; no se puede cambiar de etapa.')
             if order.state == 'cancel' and new_state != 'received':
                 raise UserError(f'La orden {order.name} está cancelada. Reábrala antes de moverla.')
-            if new_state == 'done':
-                order._check_can_finish()
 
     def _check_can_finish(self):
         self.ensure_one()
@@ -228,9 +250,9 @@ class AutoflowWorkshopOrder(models.Model):
             problems.append('Cargue la mano de obra o los repuestos utilizados.')
         if self.inspection_pending_count:
             problems.append(f'Faltan revisar {self.inspection_pending_count} puntos del checklist de entrega.')
-        for line in self._get_missing_parts():
-            problems.append(f'No hay stock de {line.product_id.display_name}: se necesitan {line.quantity:g} '
-                            f'y en {self.warehouse_id.name} hay {line.qty_available:g}.')
+        for product, (needed, available) in self._get_missing_parts().items():
+            problems.append(f'No hay stock de {product.display_name}: se necesitan {needed:g} '
+                            f'y en {self.warehouse_id.name} hay {available:g}.')
         if problems:
             raise UserError(f'No se puede finalizar la orden {self.name}:\n• ' + '\n• '.join(problems))
 
@@ -457,7 +479,9 @@ class AutoflowWorkshopLaborLine(models.Model):
     name = fields.Char('Trabajo realizado', required=True)
     employee_id = fields.Many2one('hr.employee', string='Mecánico', check_company=True,
                                   compute='_compute_employee_id', store=True, readonly=False, precompute=True)
-    hours = fields.Float('Horas', default=1, required=True)
+    # Con la misma precisión que la cantidad de la factura (0:20 h se guarda como 0,33 h), así el subtotal
+    # de la orden y el del PDF dan lo mismo que la factura.
+    hours = fields.Float('Horas', default=1, required=True, digits='Product Unit of Measure')
     currency_id = fields.Many2one(related='order_id.currency_id')
     price_unit = fields.Monetary('Precio por hora', compute='_compute_price_unit',
                                  store=True, readonly=False, precompute=True)

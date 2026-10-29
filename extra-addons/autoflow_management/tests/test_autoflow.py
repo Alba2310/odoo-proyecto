@@ -2,8 +2,8 @@
 from datetime import datetime, timedelta
 
 from odoo import Command, fields
-from odoo.exceptions import UserError, ValidationError
-from odoo.tests import Form, tagged
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tests import Form, new_test_user, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -57,6 +57,9 @@ class TestAutoflow(AccountTestInvoicingCommon):
             **values,
         })
 
+    def _sale(self):
+        return self.env['sale.order'].create({'partner_id': self.customer.id, 'vehicle_id': self.vehicle.id})
+
     def _ready_to_finish(self, order):
         order.inspection_line_ids[:1].state = 'change'
         order.action_inspection_mark_ok()
@@ -74,6 +77,16 @@ class TestAutoflow(AccountTestInvoicingCommon):
         vehicle = self._create_vehicle('tst vhc 00000000002')
         self.assertEqual(vehicle.vin, 'TSTVHC00000000002', 'El VIN se guarda en mayúsculas y sin espacios')
         self.assertEqual(vehicle.name, 'Marca de prueba Modelo X 2025')
+
+    def test_acquisition_cost_only_for_manager(self):
+        user = new_test_user(self.env, login='asesor_autoflow',
+                             groups='base.group_user,autoflow_management.group_autoflow_user',
+                             company_id=self.env.company.id, company_ids=[Command.set(self.env.company.ids)])
+        vehicle = self.vehicle.with_user(user)
+        self.assertEqual(vehicle.read(['odometer'])[0]['odometer'], 1000, 'El usuario ve el vehículo')
+        self.assertFalse(vehicle.fields_get(['acquisition_cost']), 'Solo el Responsable ve el costo')
+        with self.assertRaises(AccessError):
+            vehicle.read(['acquisition_cost'])
 
     # Pruebas de manejo
 
@@ -103,6 +116,16 @@ class TestAutoflow(AccountTestInvoicingCommon):
         self.assertEqual(drive.odometer_start, 1000, 'Toma el kilometraje del vehículo al salir')
         with self.assertRaises(ValidationError):
             drive.odometer_end = 900
+
+    def test_test_drive_start_takes_current_odometer(self):
+        # Agendada con días de anticipación: el formulario propuso 1000 km, pero el auto anduvo desde entonces.
+        drive = self._test_drive(odometer_start=1000)
+        self.vehicle.odometer = 1300
+        drive.action_start()
+        self.assertEqual(drive.odometer_start, 1300, 'Vale el kilometraje del vehículo al salir')
+        later = self._test_drive(start=self.start + timedelta(days=1), odometer_start=1350)
+        later.action_start()
+        self.assertEqual(later.odometer_start, 1350, 'Si al salir se cargó uno mayor, se respeta')
 
     def test_test_drive_done_updates_vehicle_odometer(self):
         drive = self._test_drive()
@@ -142,6 +165,30 @@ class TestAutoflow(AccountTestInvoicingCommon):
         self.assertEqual(self.vehicle.state, 'sold')
         self.assertEqual(self.vehicle.partner_id, self.customer)
         order._action_cancel()
+        self.assertEqual(self.vehicle.state, 'available')
+
+    def test_sale_cancelled_while_vehicle_in_workshop(self):
+        # Vendido y después al taller: si se cancela la venta, al salir del taller queda disponible.
+        sale = self._sale()
+        sale.action_confirm()
+        order = self._order()
+        self.assertEqual(self.vehicle.state, 'maintenance')
+        with self.assertRaises(UserError, msg='Aunque esté en el taller, ya está vendido'):
+            self._sale().action_confirm()
+        sale._action_cancel()
+        self.assertEqual(self.vehicle.state, 'maintenance', 'Sigue en el taller')
+        order.action_cancel()
+        self.assertEqual(self.vehicle.state, 'available')
+        self.assertFalse(self.vehicle.partner_id)
+
+        # Vendido mientras está en el taller y la venta se cancela antes de que salga: sigue en el taller.
+        order.action_reopen()
+        sale = self._sale()
+        sale.action_confirm()
+        self.assertEqual(self.vehicle.state, 'sold')
+        sale._action_cancel()
+        self.assertEqual(self.vehicle.state, 'maintenance')
+        order.action_cancel()
         self.assertEqual(self.vehicle.state, 'available')
 
     # Órdenes de servicio
@@ -216,6 +263,49 @@ class TestAutoflow(AccountTestInvoicingCommon):
         with self.assertRaises(UserError, msg='No alcanza el stock del repuesto'):
             order.action_done()
         self.assertFalse(order.invoice_id)
+
+    def test_order_done_sums_stock_per_product(self):
+        # Dos líneas del mismo repuesto: 6 + 6 con 10 en el depósito no alcanzan.
+        order = self._order(part_line_ids=[Command.create({'product_id': self.part.id, 'quantity': 6}),
+                                           Command.create({'product_id': self.part.id, 'quantity': 6})])
+        self._ready_to_finish(order)
+        self.assertFalse(order.parts_available)
+        with self.assertRaises(UserError) as error:
+            order.action_done()
+        self.assertIn('se necesitan 12', str(error.exception))
+        self.assertEqual(self.part.with_context(location=self.warehouse.lot_stock_id.id).qty_available, 10)
+
+    def test_order_done_validates_unsaved_changes(self):
+        # Clic en "Finalizado" de la barra de estado con cambios sin guardar: llegan en la misma escritura
+        # que la etapa y se valida la orden como va a quedar.
+        no_stock = self.env['product.product'].create({'name': 'Correa sin stock', 'type': 'consu',
+                                                       'is_storable': True})
+        order = self._order(mechanic_id=False)
+        self._ready_to_finish(order)
+        with self.assertRaises(UserError) as error:
+            order.write({
+                'mechanic_id': self.mechanic.id,
+                'part_line_ids': [Command.create({'product_id': no_stock.id})],
+                'state': 'done',
+            })
+        self.assertIn('Correa sin stock', str(error.exception))
+        self.assertNotIn('mecánico', str(error.exception))
+        self.assertEqual(order.state, 'ready')
+
+        order.write({'mechanic_id': self.mechanic.id, 'state': 'done'})
+        self.assertEqual(order.state, 'done', 'El mecánico cargado en el mismo guardado cuenta')
+        self.assertTrue(order.invoice_id)
+
+    def test_labor_fraction_invoiced_as_in_order(self):
+        # 0:20 h a 100.000 la hora: la factura da lo mismo que la orden y el PDF.
+        order = self._order(part_line_ids=[], labor_line_ids=[
+            Command.create({'name': 'Ajuste', 'hours': 20 / 60, 'price_unit': 100000})])
+        self._ready_to_finish(order)
+        order.action_done()
+        labor_line = order.invoice_id.invoice_line_ids.filtered(lambda line: line.product_id == self.labor_product)
+        self.assertEqual(labor_line.quantity, order.labor_line_ids.hours)
+        self.assertEqual(labor_line.price_subtotal, order.amount_labor)
+        self.assertEqual(order.invoice_id.amount_untaxed, order.amount_total)
 
     def test_warranty_order_is_not_invoiced(self):
         order = self._order(service_type='warranty')

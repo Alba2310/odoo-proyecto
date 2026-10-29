@@ -96,7 +96,8 @@
                 <field name="odometer"/>
                 <field name="partner_id" optional="show"/>
                 <field name="currency_id" column_invisible="1"/>
-                <field name="acquisition_cost" optional="hide" sum="Total"/>
+                <field name="acquisition_cost" optional="hide" sum="Total"
+                       groups="autoflow_management.group_autoflow_manager"/>
                 <field name="sale_price" optional="show"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'available'"

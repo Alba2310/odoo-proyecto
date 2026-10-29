@@ -150,9 +150,11 @@ class AutoflowTestDrive(models.Model):
                 raise UserError(f'La prueba de manejo {drive.name} no está agendada.')
             if drive.vehicle_id.state in BLOCKED_VEHICLE_STATES:
                 raise UserError(f'{drive.vehicle_id.display_name} no está disponible para salir.')
+            # Vale el kilometraje del vehículo al salir, no el de cuando se agendó (pudo haber andado desde
+            # entonces); si al salir se cargó uno mayor, se respeta.
             drive.write({
                 'state': 'in_progress',
-                'odometer_start': drive.odometer_start or drive.vehicle_id.odometer,
+                'odometer_start': max(drive.odometer_start, drive.vehicle_id.odometer),
             })
         return True
 
