@@ -88,6 +88,16 @@ class BellaCita(models.Model):
     origen = fields.Selection(ORIGENES_CITA, string='Pedida por', default='recepcion', required=True, readonly=True,
                               copy=False, help='Internet: la clienta reservó sola desde la página de turnos.')
 
+    # Ficha técnica: lo que se le hace en esta cita y lo que se le hizo antes.
+    ficha_ids = fields.One2many('bella.ficha.tecnica', 'cita_id', string='Ficha técnica', copy=False)
+    ficha_anterior_ids = fields.Many2many('bella.ficha.tecnica', string='Trabajos anteriores',
+                                          compute='_compute_ficha_anterior_ids')
+    cliente_alergias = fields.Text(related='cliente_id.bella_alergias', string='Alergias')
+    cliente_puntos = fields.Integer(related='cliente_id.bella_puntos', string='Puntos de la clienta')
+    puntos_activo = fields.Boolean(related='company_id.bella_puntos_activo')
+    cliente_tipo_cabello = fields.Char(related='cliente_id.bella_tipo_cabello', string='Tipo de cabello',
+                                       readonly=False)
+
     currency_id = fields.Many2one(related='company_id.currency_id')
     total_servicios = fields.Monetary('Total servicios', compute='_compute_totales', store=True)
     total_productos = fields.Monetary('Total productos', compute='_compute_totales', store=True)
@@ -172,6 +182,15 @@ class BellaCita(models.Model):
         return (f'¡Hola {self.cliente_id.name}! Te recordamos tu turno en {self.company_id.name}: '
                 f'{self.turno_texto}{servicios}, con {self.estilista_id.name}. '
                 'Si no podés venir, avisanos por acá, así le damos el lugar a otra persona. ¡Te esperamos!')
+
+    @api.depends('cliente_id', 'ficha_ids')
+    def _compute_ficha_anterior_ids(self):
+        for cita in self:
+            # _origin: en la pantalla, la cita y sus fichas nuevas todavía no tienen id.
+            cita.ficha_anterior_ids = self.env['bella.ficha.tecnica'].search([
+                ('cliente_id', '=', cita.cliente_id._origin.id),
+                ('id', 'not in', cita.ficha_ids._origin.ids),
+            ]) if cita.cliente_id else False
 
     @api.depends('cliente_id.name', 'servicio_ids.servicio_id')
     def _compute_display_name(self):
@@ -263,12 +282,12 @@ class BellaCita(models.Model):
 
     # Cobro (ver bella.cobro.mixin)
 
-    def _bella_cobrar(self, metodo_pago, diario=None, fecha=None):
+    def _bella_cobrar(self, metodo_pago, diario=None, fecha=None, puntos=0):
         if self.estado not in ESTADOS_ABIERTOS:
             raise UserError(f'La cita {self.name} no se puede cobrar: está "{self._estado_texto()}".')
         if not self.servicio_ids and not self.producto_ids:
             raise UserError('Cargue los servicios realizados antes de cobrar la cita.')
-        factura = super()._bella_cobrar(metodo_pago, diario=diario, fecha=fecha)
+        factura = super()._bella_cobrar(metodo_pago, diario=diario, fecha=fecha, puntos=puntos)
         self.with_context(bella_cobrando=True).estado = 'cobrada'
         return factura
 
@@ -409,6 +428,8 @@ class BellaCitaServicio(models.Model):
     cliente_id = fields.Many2one(related='cita_id.cliente_id', store=True, string='Cliente')
     fecha = fields.Datetime(related='cita_id.fecha_inicio', store=True, string='Fecha')
     estado = fields.Selection(related='cita_id.estado', store=True, string='Estado de la cita')
+    liquidacion_id = fields.Many2one('bella.liquidacion.comision', string='Liquidación de comisiones',
+                                     readonly=True, copy=False, index=True, ondelete='set null')
 
     _sql_constraints = [
         ('duracion_positiva', 'CHECK(duracion >= 0)', 'La duración no puede ser negativa.'),
@@ -441,3 +462,5 @@ class BellaCitaProducto(models.Model):
     cita_id = fields.Many2one('bella.cita', string='Cita', required=True, ondelete='cascade', index=True)
     company_id = fields.Many2one(related='cita_id.company_id', store=True)
     currency_id = fields.Many2one(related='cita_id.currency_id')
+    liquidacion_id = fields.Many2one('bella.liquidacion.comision', string='Liquidación de comisiones',
+                                     readonly=True, copy=False, index=True, ondelete='set null')

@@ -120,6 +120,10 @@
                     <widget name="web_ribbon" title="Cobrada" bg_color="text-bg-success" invisible="estado != 'cobrada'"/>
                     <widget name="web_ribbon" title="No vino" bg_color="text-bg-warning" invisible="estado != 'no_asistio'"/>
                     <widget name="web_ribbon" title="Cancelada" bg_color="text-bg-danger" invisible="estado != 'cancelada'"/>
+                    <div class="alert alert-danger d-flex gap-2" role="alert" invisible="not cliente_alergias">
+                        <i class="fa fa-exclamation-triangle mt-1" title="Alergias"/>
+                        <div><strong>Alergias:</strong> <field name="cliente_alergias" class="d-inline"/></div>
+                    </div>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
@@ -128,6 +132,8 @@
                             <field name="cliente_id" readonly="estado not in ('agendada', 'confirmada', 'en_atencion')"
                                    context="{'default_customer_rank': 1}"/>
                             <field name="telefono" widget="phone"/>
+                            <field name="puntos_activo" invisible="1"/>
+                            <field name="cliente_puntos" invisible="not puntos_activo or not cliente_puntos"/>
                         </group>
                         <group string="Turno">
                             <field name="estilista_id" widget="many2one_avatar_employee" options="{'no_create': True}"
@@ -173,14 +179,42 @@
                                 </list>
                             </field>
                         </page>
+                        <page string="Ficha técnica" name="ficha">
+                            <group>
+                                <field name="cliente_tipo_cabello" placeholder="Fino, teñido, 30 % de canas..."/>
+                            </group>
+                            <field name="ficha_ids">
+                                <list>
+                                    <field name="tipo"/>
+                                    <field name="formula"/>
+                                    <field name="tiempo_pose"/>
+                                    <field name="resultado"/>
+                                </list>
+                            </field>
+                            <div invisible="not ficha_anterior_ids">
+                                <h5 class="mt-3">Trabajos anteriores de la clienta</h5>
+                                <field name="ficha_anterior_ids" readonly="1">
+                                    <list>
+                                        <field name="fecha"/>
+                                        <field name="tipo"/>
+                                        <field name="formula"/>
+                                        <field name="tiempo_pose"/>
+                                        <field name="resultado"/>
+                                        <field name="estilista_id" widget="many2one_avatar_employee"/>
+                                    </list>
+                                </field>
+                            </div>
+                        </page>
                         <page string="Notas" name="notas">
-                            <field name="nota" placeholder="Preferencias del cliente, fórmula de color, alergias..."/>
+                            <field name="nota" placeholder="Preferencias de la clienta, pedidos especiales... (la fórmula de color va en Ficha técnica)"/>
                         </page>
                     </notebook>
                     <group>
                         <group string="Cobro" invisible="not factura_id">
                             <field name="metodo_pago"/>
                             <field name="factura_id"/>
+                            <field name="factura_moneda_id" invisible="1"/>
+                            <field name="monto_cobrado"/>
                             <field name="estado_pago"/>
                         </group>
                         <group class="oe_subtotal_footer">

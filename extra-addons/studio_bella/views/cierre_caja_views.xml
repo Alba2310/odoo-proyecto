@@ -115,8 +115,8 @@
                                     <field name="estilista_id" widget="many2one_avatar_employee"/>
                                     <field name="metodo_pago"/>
                                     <field name="factura_id"/>
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="total" sum="Total"/>
+                                    <field name="factura_moneda_id" column_invisible="True"/>
+                                    <field name="monto_cobrado" sum="Total"/>
                                 </list>
                             </field>
                         </page>
@@ -128,8 +128,8 @@
                                     <field name="vendedor_id" widget="many2one_avatar_user"/>
                                     <field name="metodo_pago"/>
                                     <field name="factura_id"/>
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="total" sum="Total"/>
+                                    <field name="factura_moneda_id" column_invisible="True"/>
+                                    <field name="monto_cobrado" sum="Total"/>
                                 </list>
                             </field>
                         </page>
@@ -223,14 +223,14 @@
                                     <td><span t-field="cita.cliente_id"/></td>
                                     <td><span t-field="cita.metodo_pago"/></td>
                                     <td><span t-field="cita.factura_id"/></td>
-                                    <td class="text-end"><span t-field="cita.total"/></td>
+                                    <td class="text-end"><span t-field="cita.monto_cobrado"/></td>
                                 </tr>
                                 <tr t-foreach="cierre.venta_ids" t-as="venta">
                                     <td><span t-field="venta.name"/></td>
                                     <td><span t-field="venta.cliente_id"/></td>
                                     <td><span t-field="venta.metodo_pago"/></td>
                                     <td><span t-field="venta.factura_id"/></td>
-                                    <td class="text-end"><span t-field="venta.total"/></td>
+                                    <td class="text-end"><span t-field="venta.monto_cobrado"/></td>
                                 </tr>
                             </tbody>
                         </table>

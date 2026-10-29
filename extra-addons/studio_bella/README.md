@@ -22,6 +22,17 @@ Sistema de la peluquería Studio Bella para Odoo 18. Depende de `account` (Factu
 - **Cierre de caja** del día: lo cobrado en efectivo, tarjeta y transferencia (según la fecha de la factura),
   arqueo del efectivo (cambio al abrir + efectivo cobrado − salidas = tiene que haber; contado − eso = diferencia),
   lo que queda de cambio y lo que se retira. Se imprime y, cerrado, no deja cobrar con esa fecha.
+- **Clientas que no vuelven** (*Clientes › Clientas que no vuelven*): las que hace más de 6 semanas (o 3 o 6 meses)
+  no vienen y no tienen turno pedido, con su última visita, cuántas veces vinieron y cuánto gastaron. El botón
+  **Invitar** abre `wa.me` con un mensaje que las invita a volver, el enlace de la página de turnos y sus puntos.
+- **Ficha técnica**: en cada cita se anota el trabajo (color, mechas, alisado...) con la fórmula, el tiempo de pose,
+  el resultado y una foto; la cita muestra los trabajos anteriores de la clienta. Las **alergias** de la clienta
+  aparecen en rojo arriba de cada cita.
+- **Comisiones** (*Studio Bella › Comisiones*, Administración): cada estilista tiene un % por servicios y otro por
+  productos. La liquidación junta sus citas cobradas del período, descuenta adelantos, se imprime para firmar y se
+  marca pagada. Cada servicio entra en una sola liquidación.
+- **Programa de puntos** (se activa en *Configuración › Ajustes*): 1 punto cada 10.000 Gs. pagados y cada punto vale
+  500 Gs. de descuento (los dos montos se cambian). Los puntos se usan en la ventana de cobro.
 - **Reportes**: servicios realizados por estilista y categoría; productos vendidos (análisis de facturas de Odoo).
 - **Feriados y cierres**: pestaña agregada al horario de atención; esos días la agenda no da turnos.
 - **Manual de usuario** dentro de Odoo: *Studio Bella › Ayuda › Manual de usuario*.
@@ -52,8 +63,12 @@ una semana en caché; desde el menú de Odoo siempre se ve la última versión).
 | `bella.cierre.caja` | `models/cierre_caja.py` | Cierre de caja del día, con su comprobante imprimible |
 | `product.template` | `models/producto.py` | Agrega la duración y los insumos del servicio, el stock mínimo y el aviso de reponer |
 | `stock.picking` | `models/stock_picking.py` | Al validar una recepción o una salida, revisa los avisos de reponer |
-| `hr.employee` | `models/hr_employee.py` | Agrega "Atiende en Studio Bella" y los servicios que hace cada estilista |
-| `res.partner` | `models/res_partner.py` | Botón "Citas" en la ficha del cliente |
+| `bella.ficha.tecnica` | `models/ficha_tecnica.py` | Trabajo hecho a la clienta: fórmula, tiempo de pose, resultado y foto |
+| `bella.liquidacion.comision` | `models/comision.py` | Comisiones de una estilista en un período, con su comprobante imprimible |
+| `bella.puntos` | `models/puntos.py` | Movimientos de puntos de una clienta (ganados, usados o regalados) |
+| `hr.employee` | `models/hr_employee.py` | Agrega "Atiende en Studio Bella", los servicios que hace y sus % de comisión |
+| `res.partner` | `models/res_partner.py` | Botones "Citas" y "Puntos", pestaña Studio Bella (visitas, alergias, fichas) e invitación a volver |
+| `res.company` / `res.config.settings` | `models/res_company.py` | Programa de puntos y dirección de la página de turnos (*Configuración › Ajustes*) |
 
 ## Reglas de negocio
 
@@ -80,13 +95,22 @@ una semana en caché; desde el menú de Odoo siempre se ve la última versión).
   "Se reserva por internet" (`bella_reserva_online`).
 - **Cierre de caja**: uno por día. Los totales se recalculan con cada cobro de ese día mientras está abierto;
   cerrado, `_bella_cobrar` no deja cobrar con esa fecha y solo Administración lo reabre.
+- **Clientas que no vuelven**: la última visita (`bella_ultima_visita`, guardada) es el día de la última cita
+  cobrada; las ventas de mostrador no cuentan. "Sin turno pedido" busca citas agendadas o confirmadas desde ahora.
+- **Comisiones**: sobre el precio cobrado con IVA incluido de los servicios y productos de las citas de la
+  estilista (las ventas de mostrador no tienen estilista). El descuento por puntos lo absorbe la peluquería. Los
+  porcentajes salen de la estilista al crear la liquidación y quedan fijos en ella. Pagada, no se modifica ni se borra.
+- **Puntos**: se ganan sobre lo que se pagó (sin lo pagado con puntos) y nunca para "Consumidor final". Al usarlos,
+  el descuento entra en la factura como una línea negativa por cada tasa de IVA, en proporción a lo que suma cada una,
+  así el IVA queda calculado sobre lo cobrado. No se usan más puntos de los que hay ni más descuento que el total.
+  Los puntos no vencen y una nota de crédito no los devuelve: si hace falta, se corrigen a mano en *Clientes › Puntos*.
 
 ## Permisos
 
 | Grupo | Puede |
 |---|---|
-| Studio Bella / Recepción | Agendar, vender, cobrar, mandar recordatorios, confirmar turnos pedidos por internet, cerrar la caja y recibir mercadería (incluye Facturación y Usuario de Inventario) |
-| Studio Bella / Administración | Además: reabrir una caja cerrada, pedidos a proveedores, servicios, productos, estilistas, reportes y borrar citas (incluye Administrador de Compras) |
+| Studio Bella / Recepción | Agendar, vender, cobrar (y usar puntos), mandar recordatorios e invitaciones, cargar fichas técnicas, confirmar turnos pedidos por internet, cerrar la caja y recibir mercadería (incluye Facturación y Usuario de Inventario) |
+| Studio Bella / Administración | Además: reabrir una caja cerrada, comisiones, cargar puntos a mano, pedidos a proveedores, servicios, productos, estilistas, reportes y borrar citas y fichas (incluye Administrador de Compras) |
 
 ## Base de datos `peluqueria`
 
@@ -106,8 +130,10 @@ El script hace tres pasos:
 `scripts/configurar_base.py` pone la empresa en guaraníes, crea el IVA 10 % y 5 % incluidos en el precio y carga
 `demo/demo_data.xml` (14 servicios, 13 productos con stock, 4 estilistas, 12 clientes, citas de la semana pasada,
 de hoy, de mañana y de la semana que viene, y los cobros de la semana pasada) y `demo/demo_compras.xml`
-(2 proveedores, stock mínimo, un pedido recibido, uno confirmado esperando la recepción y uno en borrador),
-y cierra la caja de los días de esos cobros (uno con un faltante de 10.000). Las fechas son relativas al día de carga.
+(2 proveedores, stock mínimo, un pedido recibido, uno confirmado esperando la recepción y uno en borrador) y
+`demo/demo_clientas.xml` (programa de puntos activo, % de comisión de cada estilista, alergias, fichas técnicas,
+4 clientas que no vienen hace 8 a 20 semanas y una liquidación de comisiones por pagar), y cierra la caja de los días
+de esos cobros (uno con un faltante de 10.000). Las fechas son relativas al día de carga.
 
 Usuario: `admin` / `admin`.
 

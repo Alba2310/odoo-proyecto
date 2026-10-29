@@ -9,7 +9,7 @@ concesionarias y talleres mecánicos, y Studio Bella, para peluquerías.
 |---|---|
 | `extra-addons/autoflow_management` | Módulo **AutoFlow ERP**: vehículos, pruebas de manejo, órdenes de servicio con kanban, repuestos, checklist de entrega, acta PDF con firma y análisis de fallas por modelo y por mecánico |
 | `extra-addons/autoflow_sitio_web` | Recibe los formularios de contacto de los dos sitios y los guarda como oportunidades en el CRM; hoy no está instalado ([detalle](extra-addons/autoflow_sitio_web/README.md)) |
-| `extra-addons/studio_bella` | Módulo **Studio Bella** (peluquería): agenda de citas por estilista, servicios con insumos, venta de productos con stock, cobro con factura, recordatorios por correo y WhatsApp, compras y recepción de mercadería con stock mínimo, y manual de usuario ([detalle](extra-addons/studio_bella/README.md)) |
+| `extra-addons/studio_bella` | Módulo **Studio Bella** (peluquería): agenda de citas por estilista, servicios con insumos, venta de productos con stock, cobro con factura, recordatorios por correo y WhatsApp, compras y recepción de mercadería con stock mínimo, turnos por internet, cierre de caja, ficha técnica, comisiones, programa de puntos, clientas que no vuelven y manual de usuario ([detalle](extra-addons/studio_bella/README.md)) |
 | `extra-addons/alquileres` | Módulo **Óga** (alquileres): contratos, cobros con aviso por WhatsApp, gastos y ganancia, mantenimiento, actas de entrega y página pública "Se alquila" ([detalle](extra-addons/alquileres/README.md)) |
 | `extra-addons/tienda_*` | Módulos de práctica: inventario, ventas y personal de una tienda |
 | `extra-addons/mi_modulo` | Primer módulo de prueba |

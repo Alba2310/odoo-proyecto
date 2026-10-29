@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Datos de ejemplo de las clientas: programa de puntos, comisiones, fichas técnicas, alergias y clientas que hace
+     tiempo no vienen. Va después de demo_data.xml (usa sus clientes, estilistas y citas). -->
+<odoo>
+    <!-- Programa de puntos: 1 punto cada 10.000 Gs. y cada punto vale 500 Gs. (5 %). La página de turnos de este
+         proyecto está en el puerto 8071 (servicio "turnos" de docker-compose.yml). -->
+    <record id="base.main_company" model="res.company">
+        <field name="bella_puntos_activo" eval="True"/>
+        <field name="bella_puntos_monto">10000</field>
+        <field name="bella_puntos_valor">500</field>
+        <field name="bella_url_turnos">http://127.0.0.1:8071/turnos</field>
+    </record>
+
+    <!-- ============ Comisiones de cada estilista ============ -->
+    <record id="estilista_lorena" model="hr.employee">
+        <field name="bella_comision_servicios">35</field>
+        <field name="bella_comision_productos">10</field>
+    </record>
+    <record id="estilista_camila" model="hr.employee">
+        <field name="bella_comision_servicios">40</field>
+        <field name="bella_comision_productos">10</field>
+    </record>
+    <record id="estilista_diego" model="hr.employee">
+        <field name="bella_comision_servicios">50</field>
+        <field name="bella_comision_productos">10</field>
+    </record>
+    <record id="estilista_fatima" model="hr.employee">
+        <field name="bella_comision_servicios">45</field>
+        <field name="bella_comision_productos">10</field>
+    </record>
+
+    <!-- ============ Alergias y tipo de cabello ============ -->
+    <record id="cliente_maria_jose" model="res.partner">
+        <field name="bella_tipo_cabello">Fino, 40 % de canas</field>
+    </record>
+    <record id="cliente_valeria" model="res.partner">
+        <field name="bella_tipo_cabello">Grueso, largo, con mechas</field>
+    </record>
+    <record id="cliente_carmen" model="res.partner">
+        <field name="bella_alergias">Cuero cabelludo sensible al amoníaco: tintes sin amoníaco y prueba de mechón 48 h antes.</field>
+    </record>
+    <record id="cliente_patricia" model="res.partner">
+        <field name="bella_alergias">Alergia al látex: usar guantes de nitrilo.</field>
+    </record>
+
+    <!-- ============ Fichas técnicas de las citas de la semana pasada ============ -->
+    <record id="ficha_maria_jose" model="bella.ficha.tecnica">
+        <field name="cita_id" ref="cita_01"/>
+        <field name="tipo">color</field>
+        <field name="formula">6.0 + 6.1 en partes iguales (30 g c/u), oxidante 20 vol 60 ml. Solo raíz.</field>
+        <field name="tiempo_pose">35</field>
+        <field name="resultado">Cubrió bien las canas. Volver a hacer la raíz a las 5 semanas.</field>
+    </record>
+    <record id="ficha_valeria" model="bella.ficha.tecnica">
+        <field name="cita_id" ref="cita_05"/>
+        <field name="tipo">mechas</field>
+        <field name="formula">Decolorante en polvo + oxidante 20 vol (1:2), a mano alzada. Tonalizado 9.1 + 9.2 con oxidante 10 vol.</field>
+        <field name="tiempo_pose">45</field>
+        <field name="resultado">Quedó un rubio frío parejo. La próxima, empezar a 3 cm de la raíz.</field>
+    </record>
+    <record id="ficha_ana_lucia" model="bella.ficha.tecnica">
+        <field name="cita_id" ref="cita_07"/>
+        <field name="tipo">alisado</field>
+        <field name="formula">Keratina sin formol, 60 ml. Secado al 100 % y 8 pasadas de plancha a 210 °C por mecha.</field>
+        <field name="tiempo_pose">30</field>
+        <field name="resultado">Lacio con movimiento. No lavar por 72 horas.</field>
+    </record>
+
+    <!-- ============ Clientas que hace tiempo no vienen (de 8 a 20 semanas) ============
+         "relativedelta(weeks=-N, days=-6, weekday=0)" es el lunes de la semana de hace N semanas. -->
+    <record id="cliente_natalia" model="res.partner">
+        <field name="name">Natalia Benítez</field>
+        <field name="phone">0981 456 789</field>
+        <field name="email">natalia.benitez@example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+        <field name="bella_tipo_cabello">Ondulado, teñido</field>
+    </record>
+    <record id="cliente_laura" model="res.partner">
+        <field name="name">Laura Giménez</field>
+        <field name="phone">0972 318 640</field>
+        <field name="city">San Lorenzo</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_cecilia" model="res.partner">
+        <field name="name">Cecilia Morínigo</field>
+        <field name="phone">0985 902 117</field>
+        <field name="city">Luque</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+    <record id="cliente_andrea" model="res.partner">
+        <field name="name">Andrea Sanabria</field>
+        <field name="phone">0994 227 815</field>
+        <field name="email">andrea.sanabria@example.com</field>
+        <field name="city">Asunción</field>
+        <field name="country_id" ref="base.py"/>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <record id="cita_vieja_01" model="bella.cita">
+        <field name="cliente_id" ref="cliente_andrea"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(weeks=-20, days=-6, weekday=0) + relativedelta(days=5, hour=12, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_balayage')})]"/>
+    </record>
+    <record id="cita_vieja_02" model="bella.cita">
+        <field name="cliente_id" ref="cliente_natalia"/>
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(weeks=-15, days=-6, weekday=0) + relativedelta(days=1, hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_tintura_completa')})]"/>
+    </record>
+    <record id="cita_vieja_03" model="bella.cita">
+        <field name="cliente_id" ref="cliente_laura"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(weeks=-12, days=-6, weekday=0) + relativedelta(days=2, hour=18, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_keratina')})]"/>
+        <field name="producto_ids" eval="[Command.create({'producto_id': ref('producto_mascarilla'), 'cantidad': 1})]"/>
+    </record>
+    <record id="cita_vieja_04" model="bella.cita">
+        <field name="cliente_id" ref="cliente_natalia"/>
+        <field name="estilista_id" ref="estilista_camila"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(weeks=-9, days=-6, weekday=0) + relativedelta(days=3, hour=13, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_corte_dama')}),
+                                          Command.create({'servicio_id': ref('servicio_brushing')})]"/>
+    </record>
+    <record id="cita_vieja_05" model="bella.cita">
+        <field name="cliente_id" ref="cliente_cecilia"/>
+        <field name="estilista_id" ref="estilista_fatima"/>
+        <field name="fecha_inicio" eval="(DateTime.today() + relativedelta(weeks=-8, days=-6, weekday=0) + relativedelta(days=4, hour=19, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="servicio_ids" eval="[Command.create({'servicio_id': ref('servicio_semipermanente')}),
+                                          Command.create({'servicio_id': ref('servicio_pedicura')})]"/>
+    </record>
+
+    <record id="ficha_andrea" model="bella.ficha.tecnica">
+        <field name="cita_id" ref="cita_vieja_01"/>
+        <field name="tipo">mechas</field>
+        <field name="formula">Decolorante + oxidante 30 vol, con papel. Tonalizado 10.1 con oxidante 10 vol, 15 minutos.</field>
+        <field name="tiempo_pose">50</field>
+        <field name="resultado">Muy claro en las puntas: la próxima, oxidante 20 vol.</field>
+    </record>
+    <record id="ficha_natalia" model="bella.ficha.tecnica">
+        <field name="cita_id" ref="cita_vieja_02"/>
+        <field name="tipo">color</field>
+        <field name="formula">7.0 + 7.3 (1:1), 40 g de cada uno, oxidante 20 vol 80 ml. De medios a puntas, 10 minutos al final.</field>
+        <field name="tiempo_pose">40</field>
+        <field name="resultado">Castaño claro dorado. Le gustó, repetir igual.</field>
+    </record>
+    <record id="ficha_laura" model="bella.ficha.tecnica">
+        <field name="cita_id" ref="cita_vieja_03"/>
+        <field name="tipo">alisado</field>
+        <field name="formula">Keratina sin formol, 80 ml (cabello largo). 10 pasadas de plancha a 200 °C.</field>
+        <field name="tiempo_pose">35</field>
+    </record>
+
+    <!-- Cobros de esas visitas (ya con el programa de puntos: cada clienta gana sus puntos) -->
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_vieja_01')]"/>
+        <value>tarjeta</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(weeks=-20, days=-6, weekday=0) + relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_vieja_02')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(weeks=-15, days=-6, weekday=0) + relativedelta(days=1)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_vieja_03')]"/>
+        <value>transferencia</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(weeks=-12, days=-6, weekday=0) + relativedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_vieja_04')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(weeks=-9, days=-6, weekday=0) + relativedelta(days=3)).strftime('%Y-%m-%d')"/>
+    </function>
+    <function model="bella.cita" name="_bella_cobrar">
+        <value eval="[ref('cita_vieja_05')]"/>
+        <value>efectivo</value>
+        <value name="fecha" eval="(DateTime.today() + relativedelta(weeks=-8, days=-6, weekday=0) + relativedelta(days=4)).strftime('%Y-%m-%d')"/>
+    </function>
+
+    <!-- Un regalo de cumpleaños cargado a mano -->
+    <record id="puntos_regalo_maria_jose" model="bella.puntos">
+        <field name="cliente_id" ref="cliente_maria_jose"/>
+        <field name="puntos">20</field>
+        <field name="concepto">Regalo de cumpleaños</field>
+    </record>
+
+    <!-- Comisiones de Lorena de los últimos 30 días, por pagar -->
+    <record id="liquidacion_lorena" model="bella.liquidacion.comision">
+        <field name="estilista_id" ref="estilista_lorena"/>
+        <field name="fecha_desde" eval="(DateTime.today() - relativedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="fecha_hasta" eval="DateTime.today().strftime('%Y-%m-%d')"/>
+        <field name="adelantos">50000</field>
+        <field name="nota">El sábado se le dio un adelanto de 50.000 en efectivo.</field>
+    </record>
+</odoo>

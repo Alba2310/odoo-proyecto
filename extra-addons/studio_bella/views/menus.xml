@@ -19,6 +19,8 @@
               action="action_bella_venta" sequence="30"/>
     <menuitem id="menu_bella_caja" name="Cierre de caja" parent="menu_bella_root"
               action="action_bella_cierre_caja" sequence="32"/>
+    <menuitem id="menu_bella_comisiones" name="Comisiones" parent="menu_bella_root"
+              action="action_bella_liquidacion" sequence="33" groups="group_bella_admin"/>
 
     <!-- Compras: se usan las pantallas de Compras e Inventario de Odoo -->
     <menuitem id="menu_bella_compras" name="Compras" parent="menu_bella_root" sequence="35"/>
@@ -30,8 +32,15 @@
               action="stock.action_replenishment" sequence="30" groups="group_bella_admin"/>
     <menuitem id="menu_bella_proveedores" name="Proveedores" parent="menu_bella_compras"
               action="account.res_partner_action_supplier" sequence="40" groups="group_bella_admin"/>
-    <menuitem id="menu_bella_clientes" name="Clientes" parent="menu_bella_root"
-              action="action_bella_clientes" sequence="40"/>
+    <menuitem id="menu_bella_clientes_raiz" name="Clientes" parent="menu_bella_root" sequence="40"/>
+    <menuitem id="menu_bella_clientes" name="Clientes" parent="menu_bella_clientes_raiz"
+              action="action_bella_clientes" sequence="10"/>
+    <menuitem id="menu_bella_no_vuelven" name="Clientas que no vuelven" parent="menu_bella_clientes_raiz"
+              action="action_bella_no_vuelven" sequence="20"/>
+    <menuitem id="menu_bella_fichas" name="Fichas técnicas" parent="menu_bella_clientes_raiz"
+              action="action_bella_ficha_tecnica" sequence="30"/>
+    <menuitem id="menu_bella_puntos" name="Puntos" parent="menu_bella_clientes_raiz"
+              action="action_bella_puntos" sequence="40"/>
 
     <menuitem id="menu_bella_reportes" name="Reportes" parent="menu_bella_root" sequence="80"
               groups="group_bella_admin"/>
@@ -46,6 +55,8 @@
     <menuitem id="menu_bella_productos" parent="menu_bella_config" action="action_bella_productos" sequence="20"/>
     <menuitem id="menu_bella_estilistas" parent="menu_bella_config" action="action_bella_estilistas" sequence="30"/>
     <menuitem id="menu_bella_horarios" parent="menu_bella_config" action="action_bella_horarios" sequence="40"
+              groups="base.group_system"/>
+    <menuitem id="menu_bella_ajustes" parent="menu_bella_config" action="action_bella_ajustes" sequence="50"
               groups="base.group_system"/>
 
     <menuitem id="menu_bella_ayuda" name="Ayuda" parent="menu_bella_root" sequence="95"/>

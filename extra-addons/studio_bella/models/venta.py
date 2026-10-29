@@ -54,10 +54,10 @@ class BellaVenta(models.Model):
 
     # Cobro (ver bella.cobro.mixin)
 
-    def _bella_cobrar(self, metodo_pago, diario=None, fecha=None):
+    def _bella_cobrar(self, metodo_pago, diario=None, fecha=None, puntos=0):
         if self.estado != 'borrador':
             raise UserError(f'La venta {self.name} no está en borrador.')
-        factura = super()._bella_cobrar(metodo_pago, diario=diario, fecha=fecha)
+        factura = super()._bella_cobrar(metodo_pago, diario=diario, fecha=fecha, puntos=puntos)
         self.estado = 'cobrada'
         return factura
 

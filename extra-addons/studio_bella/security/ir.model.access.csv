@@ -11,3 +11,8 @@ access_bella_servicio_insumo_admin,bella.servicio.insumo admin,model_bella_servi
 access_bella_cobro_wizard_recepcion,bella.cobro.wizard recepcion,model_bella_cobro_wizard,group_bella_recepcion,1,1,1,1
 access_bella_cierre_caja_recepcion,bella.cierre.caja recepcion,model_bella_cierre_caja,group_bella_recepcion,1,1,1,0
 access_bella_cierre_caja_admin,bella.cierre.caja admin,model_bella_cierre_caja,group_bella_admin,1,1,1,1
+access_bella_ficha_tecnica_recepcion,bella.ficha.tecnica recepcion,model_bella_ficha_tecnica,group_bella_recepcion,1,1,1,0
+access_bella_ficha_tecnica_admin,bella.ficha.tecnica admin,model_bella_ficha_tecnica,group_bella_admin,1,1,1,1
+access_bella_puntos_recepcion,bella.puntos recepcion,model_bella_puntos,group_bella_recepcion,1,0,0,0
+access_bella_puntos_admin,bella.puntos admin,model_bella_puntos,group_bella_admin,1,1,1,1
+access_bella_liquidacion_comision_admin,bella.liquidacion.comision admin,model_bella_liquidacion_comision,group_bella_admin,1,1,1,1

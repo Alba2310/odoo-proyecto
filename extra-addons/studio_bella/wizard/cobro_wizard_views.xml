@@ -8,9 +8,14 @@
                 <field name="cita_id" invisible="1"/>
                 <field name="venta_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
+                <field name="usa_puntos" invisible="1"/>
                 <div class="text-center mb-3">
                     <div class="text-muted">Total a cobrar a <field name="cliente_id" readonly="1" class="d-inline"/></div>
-                    <h1><field name="total" readonly="1"/></h1>
+                    <h1><field name="total_a_cobrar" readonly="1"/></h1>
+                    <div class="text-muted" invisible="not puntos_canje">
+                        <field name="total" readonly="1" class="d-inline"/> menos <field name="descuento_puntos" class="d-inline"/>
+                        de descuento por puntos
+                    </div>
                 </div>
                 <group>
                     <group>
@@ -20,6 +25,16 @@
                     <group invisible="metodo_pago != 'efectivo'">
                         <field name="monto_recibido"/>
                         <field name="vuelto" class="fw-bold"/>
+                    </group>
+                </group>
+                <group string="Puntos" invisible="not usa_puntos or not puntos_disponibles">
+                    <group>
+                        <field name="puntos_disponibles"/>
+                        <field name="puntos_maximos"/>
+                    </group>
+                    <group>
+                        <field name="puntos_canje"/>
+                        <field name="descuento_puntos" invisible="not puntos_canje"/>
                     </group>
                 </group>
                 <p class="text-muted">

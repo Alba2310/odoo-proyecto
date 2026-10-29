@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bella_puntos_list" model="ir.ui.view">
+        <field name="name">bella.puntos.list</field>
+        <field name="model">bella.puntos</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos de puntos" editable="top" decoration-danger="puntos &lt; 0"
+                  decoration-success="puntos &gt; 0">
+                <field name="fecha"/>
+                <field name="cliente_id"/>
+                <field name="concepto"/>
+                <field name="factura_id" optional="show"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="puntos" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_puntos_search" model="ir.ui.view">
+        <field name="name">bella.puntos.search</field>
+        <field name="model">bella.puntos</field>
+        <field name="arch" type="xml">
+            <search string="Buscar movimientos de puntos">
+                <field name="cliente_id"/>
+                <field name="concepto"/>
+                <filter name="ganados" string="Ganados" domain="[('puntos', '&gt;', 0)]"/>
+                <filter name="usados" string="Usados" domain="[('puntos', '&lt;', 0)]"/>
+                <separator/>
+                <filter name="filtro_fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_cliente" string="Cliente" context="{'group_by': 'cliente_id'}"/>
+                    <filter name="group_mes" string="Mes" context="{'group_by': 'fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_puntos" model="ir.actions.act_window">
+        <field name="name">Puntos de las clientas</field>
+        <field name="res_model">bella.puntos</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_group_cliente': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay puntos</p>
+            <p>Con el programa de puntos activo (Configuración › Ajustes), las clientas ganan puntos al pagar y
+                los usan como descuento en la ventana de cobro. Acá se ven los movimientos y, en Administración, se
+                pueden cargar puntos a mano (por ejemplo, un regalo de cumpleaños).</p>
+        </field>
+    </record>
+</odoo>

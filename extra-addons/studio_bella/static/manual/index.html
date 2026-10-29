@@ -147,7 +147,8 @@
         <li><a href="#caja">Cierre de caja</a></li>
         <li><a href="#recordatorios">Recordatorios por WhatsApp y correo</a></li>
         <li><a href="#turnos">Turnos por internet</a></li>
-        <li><a href="#clientes">Clientes</a></li>
+        <li><a href="#clientes">Clientes, fichas técnicas y puntos</a></li>
+        <li><a href="#comisiones">Comisiones</a></li>
         <li><a href="#compras">Compras y recepción de mercadería</a></li>
         <li><a href="#configuracion">Configuración</a></li>
         <li><a href="#reportes">Reportes</a></li>
@@ -197,9 +198,11 @@
         <tr><td><span class="ruta">Recordatorios</span></td><td>Los turnos de mañana, para avisarles a los clientes por WhatsApp o por correo.</td></tr>
         <tr><td><span class="ruta">Ventas de productos</span></td><td>Ventas de mostrador, sin cita.</td></tr>
         <tr><td><span class="ruta">Compras</span></td><td>Recepción de mercadería; pedidos a proveedores y reposición de stock (solo Administración).</td></tr>
-        <tr><td><span class="ruta">Clientes</span></td><td>Las fichas de los clientes y su historial de citas.</td></tr>
+        <tr><td><span class="ruta">Cierre de caja</span></td><td>Lo cobrado en el día y el arqueo del efectivo.</td></tr>
+        <tr><td><span class="ruta">Comisiones</span></td><td>Lo que se le paga a cada estilista por su trabajo (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Clientes</span></td><td>Las fichas de los clientes, las clientas que no vuelven, las fichas técnicas y los puntos.</td></tr>
         <tr><td><span class="ruta">Reportes</span></td><td>Servicios realizados y productos vendidos (solo Administración).</td></tr>
-        <tr><td><span class="ruta">Configuración</span></td><td>Servicios, productos, estilistas y horarios (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Configuración</span></td><td>Servicios, productos, estilistas, horarios y ajustes (solo Administración).</td></tr>
         <tr><td><span class="ruta">Ayuda</span></td><td>Este manual.</td></tr>
     </table>
     <figure>
@@ -220,9 +223,12 @@
         <tr><td>Recibir la mercadería de los proveedores</td><td class="si">Sí</td><td class="si">Sí</td></tr>
         <tr><td>Confirmar los turnos pedidos por internet</td><td class="si">Sí</td><td class="si">Sí</td></tr>
         <tr><td>Cerrar la caja del día</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Cargar fichas técnicas e invitar a volver a las clientas</td><td class="si">Sí</td><td class="si">Sí</td></tr>
+        <tr><td>Usar los puntos de la clienta al cobrar</td><td class="si">Sí</td><td class="si">Sí</td></tr>
         <tr><td>Reabrir una caja cerrada</td><td class="no">No</td><td class="si">Sí</td></tr>
         <tr><td>Hacer pedidos a proveedores y reponer stock</td><td class="no">No</td><td class="si">Sí</td></tr>
         <tr><td>Ver los reportes</td><td class="no">No</td><td class="si">Sí</td></tr>
+        <tr><td>Liquidar comisiones y cargar puntos a mano</td><td class="no">No</td><td class="si">Sí</td></tr>
         <tr><td>Cargar servicios, productos, stock y estilistas</td><td class="no">No</td><td class="si">Sí</td></tr>
         <tr><td>Borrar citas y ventas</td><td class="no">No</td><td class="si">Sí</td></tr>
     </table>
@@ -355,11 +361,24 @@
             (por ejemplo, el tinte y el oxidante de una tintura).</li>
         <li>La cita pasa a <b>Cobrada</b>. Arriba aparecen los botones <span class="boton">Factura</span>
             y <span class="boton">Mov. de stock</span>.</li>
+        <li>Si el <a href="#puntos">programa de puntos</a> está activo, la clienta <b>gana puntos</b> por lo que pagó.
+            En el historial de la cita queda escrito cuántos ganó y cuántos tiene.</li>
     </ul>
     <figure>
         <img src="img/08-cita-cobrada.png" alt="Cita cobrada con la cinta verde Cobrada y los botones Factura y Mov. de stock">
         <figcaption>Una cita cobrada.</figcaption>
     </figure>
+    <h3 id="pagar-con-puntos">Pagar con puntos</h3>
+    <p>Si la clienta tiene puntos, la ventana de cobro muestra cuántos tiene y hasta cuántos se pueden usar en ese
+       cobro. Escribí en <b>Puntos a usar</b> los que quiera usar: el <b>Total a cobrar</b> baja y el vuelto se calcula
+       sobre el nuevo total. En la factura el descuento aparece como una línea "Descuento por N puntos", con el IVA
+       bien calculado.</p>
+    <div class="nota">
+        <strong>No se pueden usar más puntos de los que hacen falta.</strong>
+        Si los puntos alcanzan para más que el total, el sistema solo deja usar los necesarios; los demás quedan para
+        otra vez. Lo que se paga con puntos no suma puntos nuevos.
+    </div>
+
     <h3>Imprimir o mandar la factura</h3>
     <p>Tocá <span class="boton">Factura</span> en la cita. En la factura, <span class="boton primario">Imprimir</span>
        la descarga en PDF y <span class="boton primario">Enviar</span> se la manda al cliente por correo.</p>
@@ -377,6 +396,8 @@
             <td>Revisá el monto que escribiste.</td></tr>
         <tr><td class="mensaje">Cargue los servicios realizados antes de cobrar la cita.</td>
             <td>La cita no tiene servicios ni productos.</td></tr>
+        <tr><td class="mensaje">Se pueden usar hasta 12 puntos en este cobro.</td>
+            <td>Escribiste más puntos de los que tiene la clienta o de los que hacen falta para el total.</td></tr>
     </table>
     <div class="nota">
         <strong>Los insumos no frenan el cobro.</strong>
@@ -554,9 +575,79 @@
         <img src="img/11-cliente.png" alt="Ficha de cliente con los botones Facturado y Citas">
         <figcaption>La ficha del cliente. El botón <b>Citas</b> muestra su historial; <b>Facturado</b>, lo que se le facturó (sin IVA).</figcaption>
     </figure>
+    <p>En la pestaña <b>Studio Bella</b> de la ficha están su <b>última visita</b>, cuántos días hace que no viene,
+       cuántas veces vino, cuánto gastó en citas y su próximo turno. Ahí también se cargan sus alergias, su tipo de
+       cabello y sus fichas técnicas. Si tiene puntos, arriba aparece el botón <b>Puntos</b> con su saldo.</p>
+
+    <h3 id="ficha-tecnica">Ficha técnica y alergias</h3>
+    <p>La ficha técnica guarda lo que se le hizo a la clienta y con qué, para repetirlo igual la próxima vez aunque
+       la atienda otra estilista.</p>
+    <ol class="pasos">
+        <li>En la cita, abrí la pestaña <b>Ficha técnica</b> y tocá <b>Agregar una línea</b>.</li>
+        <li>Elegí el <b>tipo</b> (color, mechas, alisado, tratamiento u otro) y escribí la <b>fórmula y los productos</b>:
+            por ejemplo, "6.0 + 6.1 en partes iguales (30 g c/u), oxidante 20 vol 60 ml".</li>
+        <li>Anotá el <b>tiempo de pose</b> y, al terminar, el <b>resultado</b> ("cubrió bien las canas; la próxima,
+            raíz a las 5 semanas"). Si querés, subí una <b>foto</b> de cómo quedó.</li>
+        <li>Tocá <span class="boton primario">Guardar y cerrar</span>. La clienta, la estilista y la fecha salen de la cita.</li>
+    </ol>
+    <p>Debajo aparecen los <b>trabajos anteriores de la clienta</b>, con su fórmula y quién los hizo. Todas las fichas
+       se buscan en <span class="ruta">Clientes › Fichas técnicas</span> (por clienta, por fórmula o por estilista).</p>
+    <div class="aviso">
+        <strong>Alergias.</strong>
+        Si la clienta tiene una alergia cargada (en la pestaña <b>Studio Bella</b> de su ficha), aparece en
+        <b>rojo arriba de cada una de sus citas</b>, para que nadie la pase por alto.
+    </div>
+
+    <h3 id="no-vuelven">Clientas que no vuelven</h3>
+    <p>En <span class="ruta">Clientes › Clientas que no vuelven</span> están las clientas que hace más de 6 semanas
+       no vienen y no tienen un turno pedido, de la que hace más tiempo a la más reciente. Se ve su última visita,
+       cuántas veces vino y cuánto gastó.</p>
+    <ol class="pasos">
+        <li>Tocá <span class="boton">Invitar</span> en la fila de la clienta: se abre WhatsApp con un mensaje que la
+            invita a volver, con el enlace de la página de turnos y, si tiene, sus puntos para usar.</li>
+        <li>Revisá el mensaje y tocá <b>Enviar</b> en WhatsApp.</li>
+        <li>En la lista queda la fecha en que la invitaste (<b>Invitada a volver el</b>).</li>
+    </ol>
+    <p>Con los filtros de la barra de búsqueda se puede ver a las que no vienen hace más de 3 o 6 meses, a las que
+       todavía no se invitó o a las que venían seguido. En cuanto la clienta pide un turno, sale de la lista.</p>
+
+    <h3 id="puntos">Programa de puntos</h3>
+    <p>Con el programa activo (se activa en <a href="#ajustes">Ajustes</a>), cada clienta gana <b>1 punto cada
+       10.000 ₲</b> que paga y cada punto vale <b>500 ₲ de descuento</b>: recupera el 5 % de lo que gasta. Los dos
+       montos se pueden cambiar. Los puntos se usan al <a href="#pagar-con-puntos">cobrar</a>.</p>
+    <ul>
+        <li>El saldo de cada clienta está en el botón <b>Puntos</b> de su ficha y en su cita, al lado del teléfono.</li>
+        <li>En <span class="ruta">Clientes › Puntos</span> están todos los movimientos: los ganados, los usados y los
+            cargados a mano. Administración puede agregar puntos (un regalo de cumpleaños) o corregirlos.</li>
+        <li>El cliente "Consumidor final" (ventas de mostrador sin nombre) no suma puntos.</li>
+    </ul>
 
     <!-- 13 ============================================================ -->
-    <h2 id="compras"><span class="num">13.</span>Compras y recepción de mercadería</h2>
+    <h2 id="comisiones"><span class="num">13.</span>Comisiones</h2>
+    <p>Cada estilista cobra un porcentaje de los servicios que hace y de los productos que vende en sus citas. Los
+       porcentajes se cargan en <a href="#estilistas">su ficha</a>. La comisión se calcula sobre lo cobrado, con el
+       IVA incluido (solo Administración).</p>
+    <ol class="pasos">
+        <li>Entrá a <span class="ruta">Studio Bella › Comisiones</span> y tocá <span class="boton primario">Nuevo</span>.</li>
+        <li>Elegí la <b>estilista</b> y el <b>período</b> (por ejemplo, del 1 al 15). Al guardar, el sistema junta los
+            servicios y productos de sus <b>citas cobradas</b> en esas fechas y calcula la comisión.</li>
+        <li>Si se le dio un adelanto, escribilo en <b>Adelantos</b>: se descuenta de lo que hay que pagarle.</li>
+        <li>Tocá <span class="boton">Imprimir</span> para el comprobante que firma la estilista.</li>
+        <li>Al pagarle, tocá <span class="boton primario">Marcar como pagada</span>.</li>
+    </ol>
+    <div class="nota">
+        <strong>Nada se paga dos veces.</strong>
+        Cada servicio entra en una sola liquidación: si se arma otra para las mismas fechas, ya no aparece. Si se cobró
+        alguna cita del período después de crear la liquidación, tocá <span class="boton">Actualizar</span>. Una
+        liquidación pagada no se puede cambiar; para corregirla, <span class="boton">Volver a borrador</span>.
+    </div>
+    <div class="aviso">
+        <strong>Si le pagás con el efectivo de la caja</strong>, cargalo en <b>Salidas de efectivo</b> del
+        <a href="#caja">cierre de caja</a> de ese día, así el arqueo cuadra.
+    </div>
+
+    <!-- 14 ============================================================ -->
+    <h2 id="compras"><span class="num">14.</span>Compras y recepción de mercadería</h2>
     <p>Así se reponen los productos y los insumos: Administración hace el pedido al proveedor, la recepción recibe la
        mercadería cuando llega y el stock sube solo. Todo está en <span class="ruta">Studio Bella › Compras</span>.</p>
 
@@ -617,8 +708,8 @@
     <p>En el pedido, <span class="boton">Crear factura</span> arma la factura del proveedor con lo recibido. Cargá el
        número de la factura que te dio (por ejemplo, 001-001-0004521) y la fecha, y confirmala.</p>
 
-    <!-- 14 ============================================================ -->
-    <h2 id="configuracion"><span class="num">14.</span>Configuración</h2>
+    <!-- 15 ============================================================ -->
+    <h2 id="configuracion"><span class="num">15.</span>Configuración</h2>
     <p>Esta parte es solo para usuarios de <b>Administración</b>.</p>
 
     <h3 id="servicios">Servicios</h3>
@@ -670,7 +761,9 @@
     </figure>
     <p>Para agregar uno, tocá <span class="boton primario">Nuevo</span>, escribí el nombre y en la pestaña
        <b>Studio Bella</b> marcá <b>Atiende en Studio Bella</b> y elegí los <b>servicios que realiza</b>
-       (si se deja vacío, puede hacer todos). Su horario de trabajo está en la pestaña <b>Información de trabajo</b>.</p>
+       (si se deja vacío, puede hacer todos). Su horario de trabajo está en la pestaña <b>Información de trabajo</b>.
+       En la misma pestaña Studio Bella van sus <b>% de comisión</b> por servicios y por productos
+       (ver <a href="#comisiones">Comisiones</a>).</p>
     <figure>
         <img src="img/17-estilista.png" alt="Pestaña Studio Bella de una estilista con sus servicios">
         <figcaption>Lorena es colorista: hace cortes de dama, coloración, tratamientos y peinados.</figcaption>
@@ -690,8 +783,17 @@
         <figcaption>Feriados cargados: Virgen de Caacupé y Navidad.</figcaption>
     </figure>
 
-    <!-- 15 ============================================================ -->
-    <h2 id="reportes"><span class="num">15.</span>Reportes</h2>
+    <h3 id="ajustes">Ajustes</h3>
+    <p>En <span class="ruta">Configuración › Ajustes</span> (solo para el administrador del sistema):</p>
+    <ul>
+        <li><b>Programa de puntos:</b> se activa o se apaga, y se eligen cada cuánto se gana un punto y cuánto vale.</li>
+        <li><b>Página de turnos:</b> la dirección de internet de la página de turnos que va en el mensaje para invitar
+            a volver a las clientas.</li>
+    </ul>
+    <p>Después de cambiar algo, tocá <span class="boton primario">Guardar</span> arriba.</p>
+
+    <!-- 16 ============================================================ -->
+    <h2 id="reportes"><span class="num">16.</span>Reportes</h2>
     <p>En <span class="ruta">Studio Bella › Reportes</span> (solo Administración):</p>
     <h3>Servicios realizados</h3>
     <p>Qué servicios se hicieron y cuánto se facturó, solo de las citas cobradas. De entrada muestra el mes actual;
@@ -713,8 +815,8 @@
         <figcaption>Productos vendidos en el período.</figcaption>
     </figure>
 
-    <!-- 16 ============================================================ -->
-    <h2 id="problemas"><span class="num">16.</span>Problemas frecuentes</h2>
+    <!-- 17 ============================================================ -->
+    <h2 id="problemas"><span class="num">17.</span>Problemas frecuentes</h2>
     <details>
         <summary>Entro al sistema y me aparece otra empresa u otro sistema</summary>
         <p>Estás en otra base de datos. Salí, y en la pantalla de inicio de sesión elegí la base <b>peluqueria</b>

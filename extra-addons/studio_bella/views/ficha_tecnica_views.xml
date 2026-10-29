@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bella_ficha_tecnica_list" model="ir.ui.view">
+        <field name="name">bella.ficha.tecnica.list</field>
+        <field name="model">bella.ficha.tecnica</field>
+        <field name="arch" type="xml">
+            <list string="Fichas técnicas">
+                <field name="fecha"/>
+                <field name="cliente_id"/>
+                <field name="tipo"/>
+                <field name="formula"/>
+                <field name="tiempo_pose" optional="show"/>
+                <field name="resultado" optional="show"/>
+                <field name="estilista_id" widget="many2one_avatar_employee"/>
+                <field name="cita_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_ficha_tecnica_form" model="ir.ui.view">
+        <field name="name">bella.ficha.tecnica.form</field>
+        <field name="model">bella.ficha.tecnica</field>
+        <field name="arch" type="xml">
+            <form string="Ficha técnica">
+                <sheet>
+                    <field name="foto" widget="image" class="oe_avatar" options="{'size': [180, 180]}"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cliente_id" readonly="cita_id"/>
+                            <field name="estilista_id" widget="many2one_avatar_employee" options="{'no_create': True}"/>
+                            <field name="fecha"/>
+                        </group>
+                        <group>
+                            <field name="tipo"/>
+                            <field name="tiempo_pose"/>
+                            <field name="cita_id" readonly="1" invisible="not cita_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Fórmula y productos">
+                        <field name="formula" nolabel="1" colspan="2"
+                               placeholder="Por ejemplo: 6.0 + 6.1 en partes iguales (30 g c/u), oxidante 20 vol 60 ml"/>
+                    </group>
+                    <group string="Resultado y observaciones">
+                        <field name="resultado" nolabel="1" colspan="2"
+                               placeholder="Cómo quedó y qué cambiar la próxima vez"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bella_ficha_tecnica_search" model="ir.ui.view">
+        <field name="name">bella.ficha.tecnica.search</field>
+        <field name="model">bella.ficha.tecnica</field>
+        <field name="arch" type="xml">
+            <search string="Buscar fichas técnicas">
+                <field name="cliente_id"/>
+                <field name="formula"/>
+                <field name="estilista_id"/>
+                <filter name="color" string="Color" domain="[('tipo', '=', 'color')]"/>
+                <filter name="mechas" string="Mechas / decoloración" domain="[('tipo', '=', 'mechas')]"/>
+                <filter name="alisado" string="Alisado / keratina" domain="[('tipo', '=', 'alisado')]"/>
+                <filter name="tratamiento" string="Tratamiento" domain="[('tipo', '=', 'tratamiento')]"/>
+                <separator/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_cliente" string="Cliente" context="{'group_by': 'cliente_id'}"/>
+                    <filter name="group_estilista" string="Estilista" context="{'group_by': 'estilista_id'}"/>
+                    <filter name="group_tipo" string="Tipo" context="{'group_by': 'tipo'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_ficha_tecnica" model="ir.actions.act_window">
+        <field name="name">Fichas técnicas</field>
+        <field name="res_model">bella.ficha.tecnica</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay fichas técnicas</p>
+            <p>Se cargan desde la cita, en la pestaña "Ficha técnica": la fórmula de color, los productos, el tiempo
+                de pose y cómo quedó. En la próxima visita, cualquier estilista ve lo que se le hizo a la clienta.</p>
+        </field>
+    </record>
+</odoo>

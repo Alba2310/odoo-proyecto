@@ -37,6 +37,21 @@
             <field name="model_id" ref="model_bella_venta"/>
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
         </record>
+        <record id="rule_bella_ficha_tecnica_company" model="ir.rule">
+            <field name="name">Fichas técnicas: multicompañía</field>
+            <field name="model_id" ref="model_bella_ficha_tecnica"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_bella_liquidacion_comision_company" model="ir.rule">
+            <field name="name">Liquidaciones de comisiones: multicompañía</field>
+            <field name="model_id" ref="model_bella_liquidacion_comision"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_bella_puntos_company" model="ir.rule">
+            <field name="name">Puntos: multicompañía</field>
+            <field name="model_id" ref="model_bella_puntos"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
         <record id="rule_bella_cierre_caja_company" model="ir.rule">
             <field name="name">Cierres de caja: multicompañía</field>
             <field name="model_id" ref="model_bella_cierre_caja"/>

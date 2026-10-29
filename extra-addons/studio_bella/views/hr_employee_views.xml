@@ -13,6 +13,10 @@
                             <field name="bella_servicio_ids" widget="many2many_tags" options="{'no_create': True}"
                                    invisible="not bella_estilista"/>
                         </group>
+                        <group string="Comisiones" invisible="not bella_estilista">
+                            <field name="bella_comision_servicios" string="% por servicios"/>
+                            <field name="bella_comision_productos" string="% por productos"/>
+                        </group>
                     </group>
                     <p class="text-muted" invisible="not bella_estilista">
                         Las citas solo se pueden dar dentro de su horario de trabajo

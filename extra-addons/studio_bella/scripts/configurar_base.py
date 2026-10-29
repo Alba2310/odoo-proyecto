@@ -10,8 +10,9 @@ Hace esto:
 * Empresa "Studio Bella" en Asunción, en guaraníes, con el ícono como logo y el horario de la peluquería.
 * IVA 10 % y 5 % incluidos en el precio, como impuestos por defecto (el plan contable genérico
   de Odoo trae un impuesto de 15 % que acá se archiva).
-* Carga demo/demo_data.xml (servicios, productos con stock, estilistas, clientes, citas y cobros)
-  y demo/demo_compras.xml (proveedores, stock mínimo y pedidos a proveedores).
+* Carga demo/demo_data.xml (servicios, productos con stock, estilistas, clientes, citas y cobros),
+  demo/demo_compras.xml (proveedores, stock mínimo y pedidos a proveedores) y demo/demo_clientas.xml
+  (programa de puntos, comisiones, fichas técnicas y clientas que hace tiempo no vienen).
 * Cierra la caja de los días de esos cobros.
 """
 import base64
@@ -80,7 +81,8 @@ if not Tax.search([('company_id', '=', company.id), ('name', '=', 'IVA 10 %')]):
 
 # Datos de ejemplo de Studio Bella (las fechas de las citas se calculan desde hoy).
 # Cada archivo se carga una sola vez: se reconoce por uno de sus registros.
-for archivo, registro in (('demo/demo_data.xml', 'cita_01'), ('demo/demo_compras.xml', 'compra_01')):
+for archivo, registro in (('demo/demo_data.xml', 'cita_01'), ('demo/demo_compras.xml', 'compra_01'),
+                          ('demo/demo_clientas.xml', 'cliente_natalia')):
     if not env.ref(f'studio_bella.{registro}', raise_if_not_found=False):
         convert_file(env, 'studio_bella', archivo, {}, mode='init', noupdate=True, kind='demo')
 
@@ -95,6 +97,8 @@ if not env['bella.cierre.caja'].search_count([]):
         if dia.weekday() == 5:
             cierre.write({'retiros': 50000, 'nota': 'Compra de café, azúcar y agua para las clientas.'})
         cierre.efectivo_contado = cierre.efectivo_esperado - (10000 if dia.weekday() == 2 else 0)
+        # Un día sin cobros en efectivo y con faltante, no alcanza para dejar todo el cambio.
+        cierre.queda_en_caja = min(cierre.queda_en_caja, cierre.efectivo_contado)
         cierre.action_cerrar()
 
 env.cr.commit()

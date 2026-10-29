@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_bella" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.studio_bella</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Studio Bella" string="Studio Bella" name="studio_bella"
+                     logo="/studio_bella/static/description/icon.png" groups="studio_bella.group_bella_admin">
+                    <block title="Programa de puntos" name="bella_puntos">
+                        <setting id="bella_puntos_activo" string="Programa de puntos"
+                                 help="Las clientas ganan puntos al pagar y los usan como descuento en otro cobro.">
+                            <field name="bella_puntos_activo"/>
+                            <div class="content-group mt-2" invisible="not bella_puntos_activo">
+                                <div class="row">
+                                    <label for="bella_puntos_monto" string="1 punto cada" class="col-lg-4 o_light_label"/>
+                                    <field name="bella_puntos_monto" class="col-lg-4"/>
+                                </div>
+                                <div class="row">
+                                    <label for="bella_puntos_valor" string="Cada punto vale" class="col-lg-4 o_light_label"/>
+                                    <field name="bella_puntos_valor" class="col-lg-4"/>
+                                </div>
+                                <div class="text-muted">
+                                    Con 1 punto cada 10.000 y cada punto a 500, la clienta recupera el 5 % de lo que paga.
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Clientas" name="bella_clientas">
+                        <setting id="bella_url_turnos" string="Página de turnos"
+                                 help="Dirección que se manda en el mensaje que invita a volver a las clientas.">
+                            <field name="bella_url_turnos" class="w-100"
+                                   placeholder="https://turnos.mipeluqueria.com.py/turnos"/>
+                            <div class="text-muted">Vacía: la dirección de Odoo seguida de /turnos.</div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_bella_ajustes" model="ir.actions.act_window">
+        <field name="name">Ajustes</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'studio_bella', 'bin_size': False}</field>
+    </record>
+</odoo>

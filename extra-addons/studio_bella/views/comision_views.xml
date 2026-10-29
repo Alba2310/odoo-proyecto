@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Comprobante para que la estilista firme lo que cobró -->
+    <record id="action_report_bella_liquidacion" model="ir.actions.report">
+        <field name="name">Liquidación de comisiones</field>
+        <field name="model">bella.liquidacion.comision</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">studio_bella.report_liquidacion_comision</field>
+        <field name="report_file">studio_bella.report_liquidacion_comision</field>
+        <field name="print_report_name">'Comisiones ' + object.name</field>
+        <field name="binding_model_id" ref="model_bella_liquidacion_comision"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="view_bella_liquidacion_list" model="ir.ui.view">
+        <field name="name">bella.liquidacion.comision.list</field>
+        <field name="model">bella.liquidacion.comision</field>
+        <field name="arch" type="xml">
+            <list string="Comisiones" decoration-muted="estado == 'borrador'">
+                <field name="estilista_id" widget="many2one_avatar_employee"/>
+                <field name="fecha_desde"/>
+                <field name="fecha_hasta"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="base_servicios" optional="show" sum="Total"/>
+                <field name="base_productos" optional="hide" sum="Total"/>
+                <field name="comision_servicios" optional="show" sum="Total"/>
+                <field name="comision_productos" optional="show" sum="Total"/>
+                <field name="adelantos" optional="hide" sum="Total"/>
+                <field name="total" sum="Total"/>
+                <field name="fecha_pago" optional="show"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'pagada'"
+                       decoration-info="estado == 'borrador'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bella_liquidacion_form" model="ir.ui.view">
+        <field name="name">bella.liquidacion.comision.form</field>
+        <field name="model">bella.liquidacion.comision</field>
+        <field name="arch" type="xml">
+            <form string="Liquidación de comisiones">
+                <header>
+                    <button name="action_pagar" string="Marcar como pagada" type="object" class="btn-primary"
+                            invisible="estado != 'borrador' or not id"
+                            confirm="¿Marcar las comisiones como pagadas? Estos servicios ya no van a entrar en otra liquidación."/>
+                    <!-- Por si se cobró alguna cita del período después de crear la liquidación. -->
+                    <button name="action_actualizar" string="Actualizar" type="object"
+                            invisible="estado != 'borrador' or not id"/>
+                    <button name="action_borrador" string="Volver a borrador" type="object"
+                            invisible="estado != 'pagada'"/>
+                    <button name="%(action_report_bella_liquidacion)d" string="Imprimir" type="action" icon="fa-print"
+                            invisible="not id"/>
+                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Pagada" bg_color="text-bg-success" invisible="estado != 'pagada'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="estilista_id" widget="many2one_avatar_employee" options="{'no_create': True}"
+                                   readonly="estado != 'borrador'"/>
+                            <label for="fecha_desde" string="Período"/>
+                            <div class="d-flex gap-2 align-items-center">
+                                <field name="fecha_desde" readonly="estado != 'borrador'"/>
+                                <span>al</span>
+                                <field name="fecha_hasta" readonly="estado != 'borrador'"/>
+                            </div>
+                            <field name="fecha_pago" invisible="not fecha_pago"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="id"/>
+                        </group>
+                        <group class="oe_subtotal_footer">
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="base_servicios"/>
+                            <field name="porcentaje_servicios" readonly="estado != 'borrador'"/>
+                            <field name="comision_servicios"/>
+                            <field name="base_productos"/>
+                            <field name="porcentaje_productos" readonly="estado != 'borrador'"/>
+                            <field name="comision_productos"/>
+                            <field name="adelantos" string="- Adelantos" readonly="estado != 'borrador'"/>
+                            <field name="total" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Servicios" name="servicios">
+                            <field name="servicio_ids">
+                                <list create="false" delete="false">
+                                    <field name="fecha" widget="date"/>
+                                    <field name="cita_id"/>
+                                    <field name="cliente_id"/>
+                                    <field name="servicio_id"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="precio" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Productos" name="productos">
+                            <field name="producto_ids">
+                                <list create="false" delete="false">
+                                    <field name="cita_id"/>
+                                    <field name="producto_id"/>
+                                    <field name="cantidad"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="nota" placeholder="Por ejemplo: se pagó por transferencia el sábado."/>
+                        </page>
+                    </notebook>
+                    <p class="text-muted">
+                        Entran los servicios y los productos de las citas cobradas del período que atendió la estilista
+                        y que no están en otra liquidación. Si se paga con el efectivo de la caja, cárguelo en
+                        "Salidas de efectivo" del cierre de caja de ese día.
+                    </p>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bella_liquidacion_search" model="ir.ui.view">
+        <field name="name">bella.liquidacion.comision.search</field>
+        <field name="model">bella.liquidacion.comision</field>
+        <field name="arch" type="xml">
+            <search string="Buscar liquidaciones">
+                <field name="estilista_id"/>
+                <filter name="borradores" string="Por pagar" domain="[('estado', '=', 'borrador')]"/>
+                <filter name="pagadas" string="Pagadas" domain="[('estado', '=', 'pagada')]"/>
+                <separator/>
+                <filter name="filtro_fecha" string="Período" date="fecha_hasta"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_estilista" string="Estilista" context="{'group_by': 'estilista_id'}"/>
+                    <filter name="group_mes" string="Mes" context="{'group_by': 'fecha_hasta:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_liquidacion" model="ir.actions.act_window">
+        <field name="name">Comisiones</field>
+        <field name="res_model">bella.liquidacion.comision</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Liquide las comisiones de una estilista</p>
+            <p>Elija la estilista y el período: el sistema junta los servicios y productos de sus citas cobradas y
+                calcula la comisión con los porcentajes de su ficha (Configuración › Estilistas). Descuente los
+                adelantos, imprima el comprobante para que lo firme y márquela como pagada.</p>
+        </field>
+    </record>
+
+    <template id="report_liquidacion_comision">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="liquidacion">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Liquidación de comisiones</h2>
+                        <p>
+                            <strong t-field="liquidacion.estilista_id"/> ·
+                            del <span t-field="liquidacion.fecha_desde"/> al <span t-field="liquidacion.fecha_hasta"/>
+                            <t t-if="liquidacion.fecha_pago"> · pagada el <span t-field="liquidacion.fecha_pago"/></t>
+                        </p>
+                        <table class="table table-sm mt-3">
+                            <thead>
+                                <tr><th>Fecha</th><th>Cita</th><th>Cliente</th><th>Servicio</th><th class="text-end">Precio</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="liquidacion.servicio_ids" t-as="linea">
+                                    <td><span t-field="linea.fecha" t-options="{'widget': 'date'}"/></td>
+                                    <td><span t-field="linea.cita_id.name"/></td>
+                                    <td><span t-field="linea.cliente_id"/></td>
+                                    <td><span t-field="linea.servicio_id"/></td>
+                                    <td class="text-end"><span t-field="linea.precio"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-sm" t-if="liquidacion.producto_ids">
+                            <thead>
+                                <tr><th>Cita</th><th>Producto vendido</th><th class="text-end">Cantidad</th><th class="text-end">Subtotal</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="liquidacion.producto_ids" t-as="linea">
+                                    <td><span t-field="linea.cita_id.name"/></td>
+                                    <td><span t-field="linea.producto_id"/></td>
+                                    <td class="text-end"><span t-field="linea.cantidad"/></td>
+                                    <td class="text-end"><span t-field="linea.subtotal"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-6 offset-6">
+                                <table class="table table-sm">
+                                    <tr><td>Servicios realizados</td><td class="text-end"><span t-field="liquidacion.base_servicios"/></td></tr>
+                                    <tr><td>Comisión por servicios (<t t-out="'%g' % liquidacion.porcentaje_servicios"/> %)</td>
+                                        <td class="text-end"><span t-field="liquidacion.comision_servicios"/></td></tr>
+                                    <tr t-if="liquidacion.producto_ids"><td>Productos vendidos</td>
+                                        <td class="text-end"><span t-field="liquidacion.base_productos"/></td></tr>
+                                    <tr t-if="liquidacion.producto_ids">
+                                        <td>Comisión por productos (<t t-out="'%g' % liquidacion.porcentaje_productos"/> %)</td>
+                                        <td class="text-end"><span t-field="liquidacion.comision_productos"/></td></tr>
+                                    <tr t-if="liquidacion.adelantos"><td>- Adelantos</td>
+                                        <td class="text-end"><span t-field="liquidacion.adelantos"/></td></tr>
+                                    <tr class="fw-bold"><td>A pagar</td><td class="text-end"><span t-field="liquidacion.total"/></td></tr>
+                                </table>
+                            </div>
+                        </div>
+                        <p t-if="liquidacion.nota" t-field="liquidacion.nota"/>
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <p>_____________________________</p>
+                                <p>Pagó</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>_____________________________</p>
+                                <p>Recibí conforme: <span t-field="liquidacion.estilista_id"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

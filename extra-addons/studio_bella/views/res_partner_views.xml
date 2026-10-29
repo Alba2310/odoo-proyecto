@@ -10,7 +10,48 @@
                         groups="studio_bella.group_bella_recepcion">
                     <field name="bella_cita_count" widget="statinfo" string="Citas"/>
                 </button>
+                <button name="action_bella_ver_puntos" type="object" class="oe_stat_button" icon="fa-star"
+                        groups="studio_bella.group_bella_recepcion" invisible="not bella_puntos">
+                    <field name="bella_puntos" widget="statinfo" string="Puntos"/>
+                </button>
             </div>
+            <notebook position="inside">
+                <page string="Studio Bella" name="studio_bella" groups="studio_bella.group_bella_recepcion">
+                    <group>
+                        <group string="Visitas" name="bella_visitas">
+                            <field name="bella_ultima_visita"/>
+                            <field name="bella_dias_sin_venir" invisible="not bella_ultima_visita"/>
+                            <field name="bella_visitas"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="bella_total_gastado"/>
+                            <field name="bella_proxima_cita"/>
+                        </group>
+                        <group string="Invitar a volver" name="bella_invitar">
+                            <field name="bella_invitacion_url" invisible="1"/>
+                            <field name="bella_invitada_el"/>
+                            <div colspan="2">
+                                <button name="action_bella_invitar" type="object" icon="fa-whatsapp"
+                                        string="Invitar a volver por WhatsApp" class="btn-secondary"
+                                        invisible="not bella_invitacion_url"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Ficha técnica" name="bella_ficha">
+                        <field name="bella_alergias" placeholder="Por ejemplo: alergia a la parafenilendiamina (PPD)"/>
+                        <field name="bella_tipo_cabello" placeholder="Fino, teñido, 30 % de canas..."/>
+                    </group>
+                    <field name="bella_ficha_ids" context="{'default_cliente_id': id}">
+                        <list>
+                            <field name="fecha"/>
+                            <field name="tipo"/>
+                            <field name="formula"/>
+                            <field name="tiempo_pose"/>
+                            <field name="resultado"/>
+                            <field name="estilista_id" widget="many2one_avatar_employee"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
         </field>
     </record>
 
@@ -22,6 +63,68 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Cargue el primer cliente</p>
             <p>Con el correo cargado, el cliente recibe el recordatorio de su cita el día anterior.</p>
+        </field>
+    </record>
+
+    <!-- Clientas que no vuelven: las que hace tiempo no vienen y no tienen turno pedido, para invitarlas por WhatsApp -->
+    <record id="view_partner_list_bella_no_vuelven" model="ir.ui.view">
+        <field name="name">res.partner.list.bella.no_vuelven</field>
+        <field name="model">res.partner</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <list string="Clientas que no vuelven" create="false" default_order="bella_ultima_visita">
+                <field name="name"/>
+                <field name="phone" widget="phone"/>
+                <field name="bella_ultima_visita"/>
+                <field name="bella_dias_sin_venir"/>
+                <field name="bella_visitas"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="bella_total_gastado" optional="show"/>
+                <field name="bella_invitada_el" optional="show"/>
+                <field name="bella_invitacion_url" column_invisible="True"/>
+                <button name="action_bella_invitar" type="object" string="Invitar" icon="fa-whatsapp"
+                        invisible="not bella_invitacion_url" groups="studio_bella.group_bella_recepcion"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_partner_search_bella_no_vuelven" model="ir.ui.view">
+        <field name="name">res.partner.search.bella.no_vuelven</field>
+        <field name="model">res.partner</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <search string="Buscar clientas">
+                <field name="name"/>
+                <field name="phone"/>
+                <filter name="seis_semanas" string="Más de 6 semanas sin venir"
+                        domain="[('bella_ultima_visita', '&lt;', (context_today() - relativedelta(weeks=6)).strftime('%Y-%m-%d'))]"/>
+                <filter name="tres_meses" string="Más de 3 meses sin venir"
+                        domain="[('bella_ultima_visita', '&lt;', (context_today() - relativedelta(months=3)).strftime('%Y-%m-%d'))]"/>
+                <filter name="seis_meses" string="Más de 6 meses sin venir"
+                        domain="[('bella_ultima_visita', '&lt;', (context_today() - relativedelta(months=6)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="sin_turno" string="Sin turno pedido" domain="[('bella_proxima_cita', '=', False)]"/>
+                <separator/>
+                <filter name="no_invitadas" string="Todavía no invitadas"
+                        domain="[('bella_invitada_el', '=', False)]"/>
+                <filter name="frecuentes" string="Venían seguido (3 visitas o más)" domain="[('bella_visitas', '&gt;=', 3)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bella_no_vuelven" model="ir.actions.act_window">
+        <field name="name">Clientas que no vuelven</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_partner_list_bella_no_vuelven"/>
+        <field name="search_view_id" ref="view_partner_search_bella_no_vuelven"/>
+        <field name="domain">[('bella_ultima_visita', '!=', False)]</field>
+        <field name="context">{'search_default_seis_semanas': 1, 'search_default_sin_turno': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todas tus clientas volvieron hace poco</p>
+            <p>Acá aparecen las clientas que hace más de 6 semanas no vienen y no tienen un turno pedido.
+                El botón "Invitar" abre WhatsApp con un mensaje que las invita a volver y el enlace de la página de
+                turnos; solo hay que tocar Enviar. Con los filtros se puede cambiar el tiempo sin venir.</p>
         </field>
     </record>
 </odoo>

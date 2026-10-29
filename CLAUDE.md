@@ -3,7 +3,8 @@
 Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker compose` (ver README.md).
 
 - `studio_bella`: sistema de la peluquería Studio Bella (citas, cobro con factura, productos con stock, compras,
-  recordatorios por correo y WhatsApp, turnos por internet, cierre de caja, manual de usuario).
+  recordatorios por correo y WhatsApp, turnos por internet, cierre de caja, clientas que no vuelven, ficha técnica,
+  comisiones, programa de puntos, manual de usuario).
   Detalle en `extra-addons/studio_bella/README.md`. Su página pública de turnos la atiende el servicio `turnos`
   (puerto 8071, solo la base `peluqueria`): http://127.0.0.1:8071/turnos.
 - `autoflow_management`: concesionaria y taller, en la base `autoflow_py` (admin / admin); su sitio de venta

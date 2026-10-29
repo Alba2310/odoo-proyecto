@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Studio Bella',
-    'summary': 'Peluquería: agenda de citas con estilistas, venta de productos y cobro con factura',
+    'summary': 'Peluquería: agenda de citas con estilistas, venta de productos, cobro con factura, comisiones y puntos',
     'description': """
 Sistema de gestión de la peluquería Studio Bella
 ================================================
@@ -20,9 +20,15 @@ Sistema de gestión de la peluquería Studio Bella
   libres, y el turno entra solo a la agenda.
 * Cierre de caja del día: lo cobrado en efectivo, tarjeta y transferencia, y el arqueo del efectivo
   (cuadra, sobra o falta). Con la caja cerrada no se cobra con esa fecha.
+* Clientas que no vuelven: las que hace semanas no vienen y no tienen turno, con un botón que las
+  invita a volver por WhatsApp.
+* Ficha técnica de cada clienta: fórmulas de color, productos, tiempo de pose, resultado y foto;
+  alergias a la vista en cada cita.
+* Comisiones de las estilistas: liquidación por período, con adelantos y comprobante para firmar.
+* Programa de puntos: las clientas ganan puntos al pagar y los usan como descuento.
 * Reportes de servicios realizados por estilista y de productos vendidos.
 """,
-    'version': '18.0.1.1.0',
+    'version': '18.0.1.2.0',
     'category': 'Services',
     'license': 'LGPL-3',
     'depends': ['account', 'purchase_stock', 'hr'],
@@ -42,13 +48,18 @@ Sistema de gestión de la peluquería Studio Bella
         'views/res_partner_views.xml',
         'views/report_views.xml',
         'views/cierre_caja_views.xml',
+        'views/ficha_tecnica_views.xml',
+        'views/comision_views.xml',
+        'views/puntos_views.xml',
         'views/turnos_templates.xml',
         'views/manual_views.xml',
+        'views/res_config_settings_views.xml',
         'views/menus.xml',
     ],
     'demo': [
         'demo/demo_data.xml',
         'demo/demo_compras.xml',
+        'demo/demo_clientas.xml',
     ],
     'assets': {
         'web.assets_backend': [

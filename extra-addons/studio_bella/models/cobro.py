@@ -24,6 +24,10 @@ class BellaCobroMixin(models.AbstractModel):
     _description = 'Cobro con factura'
 
     factura_id = fields.Many2one('account.move', string='Factura', readonly=True, copy=False)
+    factura_moneda_id = fields.Many2one(related='factura_id.currency_id', string='Moneda de la factura')
+    # Lo que pagó la clienta: el total menos el descuento por puntos, si usó.
+    monto_cobrado = fields.Monetary(related='factura_id.amount_total', string='Cobrado',
+                                    currency_field='factura_moneda_id')
     estado_pago = fields.Selection(related='factura_id.payment_state', string='Estado de pago')
     metodo_pago = fields.Selection(METODOS_PAGO, string='Forma de pago', readonly=True, copy=False)
     movimiento_ids = fields.Many2many('stock.move', string='Movimientos de stock', readonly=True, copy=False)
@@ -49,8 +53,11 @@ class BellaCobroMixin(models.AbstractModel):
 
     # Cobro
 
-    def _bella_cobrar(self, metodo_pago, diario=None, fecha=None):
-        """Emite la factura, registra el pago y descuenta del stock lo vendido y lo usado."""
+    def _bella_cobrar(self, metodo_pago, diario=None, fecha=None, puntos=0):
+        """Emite la factura, registra el pago y descuenta del stock lo vendido y lo usado.
+
+        ``puntos``: los que la clienta usa como descuento (ver ``_bella_descontar_puntos``).
+        """
         self.ensure_one()
         if self.factura_id:
             raise UserError(f'{self.name} ya está cobrado con la factura {self.factura_id.name}.')
@@ -58,6 +65,8 @@ class BellaCobroMixin(models.AbstractModel):
         if not lineas:
             raise UserError('No hay nada para cobrar: cargue al menos un servicio o un producto.')
         self._bella_verificar_stock()
+        if puntos:
+            self._bella_verificar_puntos(puntos)
         diario = diario or self._bella_diario(metodo_pago)
         fecha = fecha or fields.Date.context_today(self)
         self.env['bella.cierre.caja']._verificar_caja_abierta(self.company_id, fecha)
@@ -71,6 +80,8 @@ class BellaCobroMixin(models.AbstractModel):
             'company_id': self.company_id.id,
             'invoice_line_ids': lineas,
         })
+        if puntos:
+            self._bella_descontar_puntos(factura, puntos, fecha)
         factura.action_post()
         # Una factura en cero (por ejemplo, un servicio de cortesía) no tiene nada que pagar.
         if not factura.currency_id.is_zero(factura.amount_residual):
@@ -83,7 +94,86 @@ class BellaCobroMixin(models.AbstractModel):
         self._bella_descontar_stock()
         self.message_post(body=Markup('Cobrado (%s) con la factura %s.') % (
             dict(METODOS_PAGO)[metodo_pago], factura._get_html_link()))
+        self._bella_sumar_puntos(factura, fecha)
         return factura
+
+    # Programa de puntos
+
+    def _bella_suma_puntos(self):
+        """El programa está activo y el cliente es una persona (no "Consumidor final")."""
+        consumidor_final = self.env.ref('studio_bella.cliente_consumidor_final', raise_if_not_found=False)
+        return self.company_id.bella_puntos_activo and self.cliente_id != consumidor_final
+
+    def _bella_verificar_puntos(self, puntos):
+        if not self._bella_suma_puntos():
+            raise UserError('El programa de puntos no está activo para este cobro.')
+        disponibles = self.cliente_id.sudo().bella_puntos
+        if puntos < 0 or puntos > disponibles:
+            raise UserError(f'{self.cliente_id.name} tiene {disponibles} puntos: no puede usar {puntos}.')
+
+    def _bella_descontar_puntos(self, factura, puntos, fecha):
+        """Agrega a la factura (en borrador) el descuento por los puntos usados y los resta del saldo.
+
+        El descuento se reparte entre las tasas de IVA de la factura, en proporción a lo que suma cada una, con una
+        línea negativa por tasa: así el IVA de la factura queda calculado sobre lo que de verdad se cobra.
+        """
+        moneda = factura.currency_id
+        descuento = puntos * self.company_id.bella_puntos_valor
+        lineas = factura.invoice_line_ids.filtered(lambda linea: linea.display_type == 'product')
+        total = sum(lineas.mapped('price_total'))
+        if moneda.compare_amounts(descuento, total) > 0:
+            raise UserError(f'{puntos} puntos son más que el total a cobrar: use menos puntos.')
+
+        por_impuestos = defaultdict(lambda: self.env['account.move.line'])
+        for linea in lineas:
+            por_impuestos[linea.tax_ids] |= linea
+        grupos = [(impuestos, grupo) for impuestos, grupo in por_impuestos.items()
+                  if not moneda.is_zero(sum(grupo.mapped('price_total')))]
+        restante = descuento
+        nuevas = []
+        for indice, (impuestos, grupo) in enumerate(grupos):
+            total_grupo = sum(grupo.mapped('price_total'))
+            parte = restante if indice == len(grupos) - 1 else moneda.round(descuento * total_grupo / total)
+            restante -= parte
+            if all(impuesto.price_include for impuesto in impuestos):
+                precio = parte  # IVA incluido en el precio, como en Paraguay.
+            else:
+                precio = moneda.round(parte * sum(grupo.mapped('price_subtotal')) / total_grupo)
+            nuevas.append(Command.create({
+                'name': f'Descuento por {puntos} puntos',
+                'quantity': 1,
+                'price_unit': -precio,
+                'tax_ids': [Command.set(impuestos.ids)],
+                'account_id': grupo[0].account_id.id,
+            }))
+        factura.invoice_line_ids = nuevas
+        self.env['bella.puntos'].sudo().create({
+            'company_id': self.company_id.id,
+            'cliente_id': self.cliente_id.id,
+            'fecha': fecha,
+            'puntos': -puntos,
+            'concepto': f'Usados en {self.name}',
+            'factura_id': factura.id,
+        })
+
+    def _bella_sumar_puntos(self, factura, fecha):
+        """La clienta gana un punto por cada "Monto por punto" que pagó (sin contar lo que pagó con puntos)."""
+        company = self.company_id
+        if not self._bella_suma_puntos() or company.currency_id.compare_amounts(company.bella_puntos_monto, 0) <= 0:
+            return
+        ganados = int(factura.amount_total // company.bella_puntos_monto)
+        if not ganados:
+            return
+        self.env['bella.puntos'].sudo().create({
+            'company_id': company.id,
+            'cliente_id': self.cliente_id.id,
+            'fecha': fecha,
+            'puntos': ganados,
+            'concepto': f'Ganados en {self.name}',
+            'factura_id': factura.id,
+        })
+        self.message_post(body=f'{self.cliente_id.name} ganó {ganados} puntos. '
+                               f'Ahora tiene {self.cliente_id.sudo().bella_puntos}.')
 
     def _bella_buscar_diario(self, metodo_pago):
         """El efectivo entra a la caja; la tarjeta y la transferencia, al banco."""
