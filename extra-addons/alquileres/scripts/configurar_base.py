@@ -153,10 +153,9 @@ if not env['alquiler.gasto'].search_count([]) and len(propiedades) >= 3 and 'Edi
     cedulas = cycle(['3.456.789', '4.123.555', '5.890.112', '2.987.654', '4.765.321', '5.234.876'])
     for contrato in env['alquiler.contrato'].search([('estado', '=', 'vigente')]):
         contrato.inquilino_id.vat = next(cedulas)
-        reajuste = contrato.fecha_inicio + relativedelta(years=1)
-        while reajuste <= hoy:
-            reajuste += relativedelta(years=1)  # los reajustes que ya pasaron están en el alquiler actual
-        contrato.write({'reajuste_pct': 10, 'fecha_reajuste': reajuste})
+        # El próximo reajuste se propone solo: el primer aniversario después de hoy (los que ya pasaron están en el
+        # alquiler actual).
+        contrato.reajuste_pct = 10
     lucia = env['alquiler.contrato'].search([('inquilino_id.name', '=', 'Lucía Ramírez')], limit=1)
     if lucia:
         env['alquiler.cuota.cargo'].create({'cuota_id': lucia._cuota_para_cargos().id, 'concepto': 'agua',

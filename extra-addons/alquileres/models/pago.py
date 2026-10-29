@@ -91,6 +91,10 @@ class AlquilerPago(models.Model):
     def _mes_texto(self):
         return mes_y_anio(self.cuota_id.periodo)
 
+    def _dias_texto(self):
+        """Si la cuota es proporcional, de cuántos días es y cuáles (para el recibo)."""
+        return self.cuota_id._dias_texto()
+
     def _firma(self):
         return self.propiedad_id.propietario_id.name or self.company_id.name
 

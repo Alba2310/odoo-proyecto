@@ -6,8 +6,11 @@
         <field name="arch" type="xml">
             <form string="Terminar contrato">
                 <p class="text-muted">
-                    La unidad queda libre y se borran las cuotas sin pagar que vencen después de ese día.
-                    Lo que quedó debiendo se paga con el depósito de garantía.
+                    La unidad queda libre y se borran las cuotas sin pagar que vencen después de ese día; la del mes
+                    en que se va se cobra por los días que vive ahí. Lo que quedó debiendo se paga con el depósito de
+                    garantía.
+                    Si se va más adelante, hasta ese día el contrato sigue vigente y se cobran sus cuotas; al día
+                    siguiente se termina solo (ese mismo día todavía puede terminarlo acá para cargar los daños).
                 </p>
                 <group>
                     <group>

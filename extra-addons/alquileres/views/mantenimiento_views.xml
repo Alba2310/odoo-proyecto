@@ -58,7 +58,7 @@
                             invisible="estado != 'nuevo'"/>
                     <button name="action_resolver" string="Resuelto" type="object" class="btn-primary"
                             invisible="estado not in ('nuevo', 'en_proceso')"
-                            confirm="¿Darlo por resuelto? Si tiene costo, se carga como gasto de la propiedad o se le suma al inquilino en su próxima cuota."/>
+                            confirm="¿Darlo por resuelto? Si tiene costo, se carga como gasto de la propiedad y, si lo paga el inquilino, también se le suma en su próxima cuota."/>
                     <button name="action_cancelar" string="Cancelar pedido" type="object"
                             invisible="estado not in ('nuevo', 'en_proceso')"/>
                     <field name="estado" widget="statusbar" statusbar_visible="nuevo,en_proceso,resuelto"/>
@@ -118,7 +118,7 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">No hay pedidos de mantenimiento</p>
             <p>Cuando un inquilino avisa que algo se rompió, cárguelo acá: quién lo arregla, cuánto cuesta y quién
-                paga. Al resolverlo, el costo va solo a los gastos o a la cuota del inquilino.</p>
+                paga. Al resolverlo, el costo va solo a los gastos y, si lo paga el inquilino, también a su cuota.</p>
         </field>
     </record>
 </odoo>

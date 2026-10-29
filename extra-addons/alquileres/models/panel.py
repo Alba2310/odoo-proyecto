@@ -13,12 +13,15 @@ MESES_DEL_GRAFICO = 6
 
 class AlquilerPanel(models.AbstractModel):
     """Los números del Panel (static/src/panel): cobranza del mes, deuda, ocupación, ganancia y lo que hay que
-    atender hoy."""
+    atender hoy. Son los de la empresa activa: con varias empresas no se mezclan."""
     _name = 'alquiler.panel'
     _description = 'Panel de Óga'
 
+    def _empresa(self):
+        return [('company_id', '=', self.env.company.id)]
+
     def _suma(self, modelo, dominio, campo):
-        return self.env[modelo]._read_group(dominio, [], [f'{campo}:sum'])[0][0] or 0
+        return self.env[modelo]._read_group(self._empresa() + dominio, [], [f'{campo}:sum'])[0][0] or 0
 
     @api.model
     def datos(self):
@@ -33,8 +36,8 @@ class AlquilerPanel(models.AbstractModel):
         cobrado = self._suma('alquiler.resultado', [('tipo', '=', 'ingreso'), ('fecha', '>=', inicio_mes),
                                                      ('fecha', '<', fin_mes)], 'ingreso')
         gastos = self._suma('alquiler.gasto', [('fecha', '>=', inicio_mes), ('fecha', '<', fin_mes)], 'monto')
-        vencidas = Cuota.search(Cuota._dominio_vencidas())
-        unidades = self.env['alquiler.unidad'].search([])
+        vencidas = Cuota.search(self._empresa() + Cuota._dominio_vencidas())
+        unidades = self.env['alquiler.unidad'].search(self._empresa())
         alquiladas = unidades.filtered(lambda u: u.estado == 'alquilada')
 
         indicadores = [
@@ -85,8 +88,8 @@ class AlquilerPanel(models.AbstractModel):
     def _propiedades(self, inicio_anio):
         filas = []
         resultado = {propiedad: (ingreso, gasto) for propiedad, ingreso, gasto in self.env['alquiler.resultado']._read_group(
-            [('fecha', '>=', inicio_anio)], ['propiedad_id'], ['ingreso:sum', 'gasto:sum'])}
-        for propiedad in self.env['alquiler.propiedad'].search([]):
+            self._empresa() + [('fecha', '>=', inicio_anio)], ['propiedad_id'], ['ingreso:sum', 'gasto:sum'])}
+        for propiedad in self.env['alquiler.propiedad'].search(self._empresa()):
             ingreso, gasto = resultado.get(propiedad, (0, 0))
             filas.append({
                 'id': propiedad.id,
@@ -105,35 +108,41 @@ class AlquilerPanel(models.AbstractModel):
     def _atender(self, hoy):
         """Lo que hay que hacer: avisos de pago, contratos que vencen, reajustes, reparaciones e interesados."""
         pendientes = []
-        avisos = self.env['alquiler.cuota'].search_count([('estado', '!=', 'pagada'), ('proximo_aviso', '<=', hoy)])
+        avisos = self.env['alquiler.cuota'].search_count(
+            self._empresa() + [('estado', '!=', 'pagada'), ('proximo_aviso', '<=', hoy)])
         if avisos:
             pendientes.append({'icono': 'fa-whatsapp', 'color': 'success',
                                'texto': self._plural(avisos, 'aviso de pago para mandar hoy',
                                                      'avisos de pago para mandar hoy'),
                                'accion': 'alquileres.action_alquiler_avisos'})
         Contrato = self.env['alquiler.contrato']
-        for contrato in Contrato.search([('estado', '=', 'vigente'), ('fecha_fin', '!=', False),
-                                         ('fecha_fin', '<=', hoy + timedelta(days=DIAS_AVISO_VENCIMIENTO))],
-                                        order='fecha_fin'):
-            pendientes.append({'icono': 'fa-calendar-times-o', 'color': 'warning',
-                               'texto': f'El contrato de {contrato.inquilino_id.name} ({contrato.unidad_id.display_name}) '
-                                        f'vence el {fecha_corta(contrato.fecha_fin)}',
+        for contrato in Contrato.search(self._empresa() + [
+                ('estado', '=', 'vigente'), ('fecha_fin', '!=', False),
+                ('fecha_fin', '<=', hoy + timedelta(days=DIAS_AVISO_VENCIMIENTO))], order='fecha_fin'):
+            if contrato.fecha_salida:
+                texto = (f'{contrato.inquilino_id.name} se va de {contrato.unidad_id.display_name} el '
+                         f'{fecha_corta(contrato.fecha_salida)}')
+            else:
+                texto = (f'El contrato de {contrato.inquilino_id.name} ({contrato.unidad_id.display_name}) '
+                         f'vence el {fecha_corta(contrato.fecha_fin)}')
+            pendientes.append({'icono': 'fa-calendar-times-o', 'color': 'warning', 'texto': texto,
                                'modelo': 'alquiler.contrato', 'id': contrato.id})
-        for contrato in Contrato.search([('estado', '=', 'vigente'), ('reajuste_pct', '>', 0),
-                                         ('fecha_reajuste', '<=', hoy + timedelta(days=DIAS_AVISO_REAJUSTE))],
-                                        order='fecha_reajuste'):
+        for contrato in Contrato.search(self._empresa() + [
+                ('estado', '=', 'vigente'), ('reajuste_pct', '>', 0),
+                ('fecha_reajuste', '<=', hoy + timedelta(days=DIAS_AVISO_REAJUSTE))], order='fecha_reajuste'):
             pendientes.append({'icono': 'fa-line-chart', 'color': 'info',
                                'texto': f'Reajuste de {contrato.inquilino_id.name} el '
                                         f'{fecha_corta(contrato.fecha_reajuste)}: de {guaranies(contrato.monto)} a '
                                         f'{guaranies(contrato.monto_reajustado)}',
                                'modelo': 'alquiler.contrato', 'id': contrato.id})
-        reparaciones = self.env['alquiler.mantenimiento'].search([('estado', 'in', ('nuevo', 'en_proceso'))])
+        reparaciones = self.env['alquiler.mantenimiento'].search(
+            self._empresa() + [('estado', 'in', ('nuevo', 'en_proceso'))])
         for pedido in reparaciones.sorted(lambda p: (p.prioridad != '1', p.fecha)):
             urgente = 'Urgente: ' if pedido.prioridad == '1' else ''
             pendientes.append({'icono': 'fa-wrench', 'color': 'danger' if urgente else 'secondary',
                                'texto': f'{urgente}{pedido.name} ({pedido.unidad_id.display_name})',
                                'modelo': 'alquiler.mantenimiento', 'id': pedido.id})
-        interesados = self.env['alquiler.interesado'].search_count([('estado', '=', 'nuevo')])
+        interesados = self.env['alquiler.interesado'].search_count(self._empresa() + [('estado', '=', 'nuevo')])
         if interesados:
             pendientes.append({'icono': 'fa-user-plus', 'color': 'primary',
                                'texto': self._plural(interesados, 'interesado nuevo para contestar',

@@ -85,6 +85,11 @@
                         El contrato vence el <field name="fecha_fin" readonly="1" class="fw-bold"/>.
                         Avísele al inquilino o renuévelo.
                     </div>
+                    <div class="alert alert-warning mb-3" role="status" invisible="estado != 'vigente' or not fecha_salida">
+                        <i class="fa fa-sign-out me-1" title="Se va"/>
+                        El inquilino se va el <field name="fecha_salida" class="fw-bold"/>: hasta ese día se cobran sus
+                        cuotas y al día siguiente el contrato se termina solo y se liquida el depósito.
+                    </div>
                     <div class="alert alert-info mb-3" role="status" invisible="not reajuste_pronto">
                         <i class="fa fa-line-chart me-1" title="Reajuste"/>
                         El <field name="fecha_reajuste" readonly="1" class="fw-bold"/> el alquiler pasa a
@@ -109,8 +114,14 @@
                         </group>
                         <group string="Condiciones">
                             <field name="monto" readonly="estado == 'terminado'"/>
-                            <field name="dia_pago" readonly="estado == 'terminado'"/>
+                            <label for="monto_renovacion" invisible="not fecha_renovacion"/>
+                            <div class="o_row" invisible="not fecha_renovacion">
+                                <field name="monto_renovacion"/>
+                                <span>desde el</span>
+                                <field name="fecha_renovacion"/>
+                            </div>
                             <field name="fecha_inicio" readonly="estado != 'borrador'"/>
+                            <field name="dia_pago" readonly="estado == 'terminado'"/>
                             <field name="fecha_fin" readonly="estado == 'terminado'"/>
                             <field name="proximo_vencimiento" invisible="estado != 'vigente' or not proximo_vencimiento"/>
                             <label for="reajuste_pct"/>
@@ -125,7 +136,7 @@
                         <group string="Depósito de garantía">
                             <field name="deposito" readonly="estado == 'terminado'"/>
                             <field name="deposito_aplicado" invisible="estado != 'terminado'"/>
-                            <field name="deposito_descuento" invisible="estado != 'terminado' or not deposito_descuento"/>
+                            <field name="deposito_descuento" invisible="not deposito_descuento"/>
                             <field name="deposito_motivo" invisible="not deposito_motivo"/>
                             <field name="deposito_a_devolver" invisible="estado != 'terminado'" class="fw-bold"/>
                             <field name="deposito_devuelto" invisible="not deposito_devuelto"/>

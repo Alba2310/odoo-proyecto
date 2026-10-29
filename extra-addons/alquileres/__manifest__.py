@@ -14,7 +14,7 @@
 * Avisos por WhatsApp al inquilino: de pago (3 días antes, el día que vence y cada 3 días si no paga), de que
   vence el contrato y del reajuste. El sistema arma el mensaje y abre WhatsApp; solo falta tocar Enviar.
 * Gastos de cada propiedad y ganancia real por mes; Panel con cobranza, deuda, ocupación y lo que hay que atender.
-* Pedidos de mantenimiento: al resolverlos, el costo va a los gastos o a la cuota del inquilino.
+* Pedidos de mantenimiento: al resolverlos, el costo va a los gastos y, si lo paga el inquilino, a su cuota.
 * Actas de entrada y salida con fotos y lecturas de medidores; al terminar el contrato, el depósito paga lo que
   quedó debiendo y se descuentan los daños.
 * Puntaje de cada inquilino según cómo paga.

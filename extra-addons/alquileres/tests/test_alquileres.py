@@ -2,9 +2,11 @@
 from datetime import date, timedelta
 from urllib.parse import unquote
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import Command, fields
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import TransactionCase, new_test_user, tagged
+from odoo.tests import Form, TransactionCase, new_test_user, tagged
 
 from odoo.addons.alquileres.models.contrato import DIAS_ANTICIPACION
 from odoo.addons.alquileres.models.utiles import en_letras, guaranies, numero_whatsapp
@@ -29,12 +31,13 @@ class AlquileresCommon(TransactionCase):
         cls.inquilino = cls.env['res.partner'].create({'name': 'Juan Pérez', 'phone': '0981 123 456'})
 
     def _contrato(self, **valores):
+        # Empieza un día de pago de hace dos meses: las cuotas son de meses enteros.
         return self.env['alquiler.contrato'].create({
             'unidad_id': self.depto1.id,
             'inquilino_id': self.inquilino.id,
             'monto': 1500000,
             'dia_pago': 5,
-            'fecha_inicio': self.hoy - timedelta(days=60),
+            'fecha_inicio': (self.hoy - relativedelta(months=2)).replace(day=5),
             **valores,
         })
 
@@ -55,13 +58,33 @@ class TestAlquileres(AlquileresCommon):
         # Empieza el 20 de enero y paga los 5: la primera vence el día que empieza, después cada 5.
         contrato = self._contrato(fecha_inicio=date(2025, 1, 20), fecha_fin=date(2025, 5, 19))
         contrato.action_activar()
-        self.assertEqual(contrato.cuota_ids.sorted('fecha_vencimiento').mapped('fecha_vencimiento'),
+        cuotas = contrato.cuota_ids.sorted('fecha_vencimiento')
+        self.assertEqual(cuotas.mapped('fecha_vencimiento'),
                          [date(2025, 1, 20), date(2025, 2, 5), date(2025, 3, 5), date(2025, 4, 5), date(2025, 5, 5)])
-        self.assertEqual(contrato.cuota_ids.sorted('periodo')[0].name, 'Enero 2025')
-        self.assertEqual(set(contrato.cuota_ids.mapped('monto')), {1500000})
+        # El mes de pago va del 5 al 4 del mes siguiente: enero es del 20 de enero al 4 de febrero (16 de 31 días)
+        # y mayo, del 5 al 19 de mayo (15 de 31 días). Los del medio, enteros.
+        self.assertEqual(cuotas.mapped('name'), ['Enero 2025 (16 de 31 días)', 'Febrero 2025', 'Marzo 2025',
+                                                 'Abril 2025', 'Mayo 2025 (15 de 31 días)'])
+        self.assertEqual(cuotas.mapped('monto'), [round(1500000 * 16 / 31), 1500000, 1500000, 1500000,
+                                                  round(1500000 * 15 / 31)])
         # Volver a generar no duplica.
         contrato._generar_cuotas()
         self.assertEqual(len(contrato.cuota_ids), 5)
+        # El recibo dice que es proporcional.
+        pago = self._pagar(cuotas[0])
+        html = self.env['ir.actions.report']._render_qweb_html('alquileres.report_recibo', pago.ids)[0].decode()
+        self.assertIn('(proporcional: 16 de 31 días, del 20 de enero al 4 de febrero)', html)
+        self.assertIn('alquiler de mayo de 2025 (Edificio de prueba · Depto 1, 15 de 31 días): Gs. 725.806',
+                      cuotas[-1]._texto_whatsapp(date(2025, 5, 1)))
+
+    def test_empieza_antes_del_dia_de_pago(self):
+        # Entra el 3 de enero y paga los 5: el 3 y el 4 son del mes de pago que empezó el 5 de diciembre.
+        contrato = self._contrato(fecha_inicio=date(2025, 1, 3), fecha_fin=date(2025, 2, 4))
+        contrato.action_activar()
+        cuotas = contrato.cuota_ids.sorted('fecha_vencimiento')
+        self.assertEqual(cuotas.mapped('name'), ['Diciembre 2024 (2 de 31 días)', 'Enero 2025'])
+        self.assertEqual(cuotas.mapped('fecha_vencimiento'), [date(2025, 1, 3), date(2025, 1, 5)])
+        self.assertEqual(cuotas.mapped('monto'), [round(1500000 * 2 / 31), 1500000])
 
     def test_dia_31_en_meses_cortos(self):
         contrato = self._contrato(dia_pago=31, fecha_inicio=date(2024, 1, 31), fecha_fin=date(2024, 4, 30))
@@ -88,6 +111,18 @@ class TestAlquileres(AlquileresCommon):
             'fecha_inicio': date(2025, 3, 12),
         })
         self.assertEqual(contrato.dia_pago, 12)
+        # Ya tiene día de pago: cambiar la fecha de inicio no lo pisa.
+        contrato.fecha_inicio = date(2025, 3, 20)
+        self.assertEqual(contrato.dia_pago, 12)
+
+        # En el formulario: se propone desde la fecha de inicio, pero el día que escribió el usuario se respeta.
+        formulario = Form(self.env['alquiler.contrato'])
+        formulario.fecha_inicio = date(2025, 3, 12)
+        self.assertEqual(formulario.dia_pago, 12)
+        formulario = Form(self.env['alquiler.contrato'])
+        formulario.dia_pago = 5
+        formulario.fecha_inicio = date(2025, 3, 12)
+        self.assertEqual(formulario.dia_pago, 5)
 
     def test_pagos_parciales_y_total(self):
         contrato = self._contrato()
@@ -159,7 +194,7 @@ class TestAlquileres(AlquileresCommon):
         self.assertIn(self.depto1.color, (3, 10))
 
     def test_avisos_de_pago(self):
-        contrato = self._contrato(fecha_inicio=date(2025, 1, 5), fecha_fin=date(2025, 1, 31))
+        contrato = self._contrato(fecha_inicio=date(2025, 1, 5), fecha_fin=date(2025, 2, 4))
         contrato.action_activar()
         cuota = contrato.cuota_ids
         vence = date(2025, 1, 5)

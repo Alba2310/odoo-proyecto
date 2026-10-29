@@ -26,20 +26,29 @@ class AlquilerResultado(models.Model):
     ganancia = fields.Monetary('Ganancia', readonly=True)
 
     def init(self):
-        # Los pagos con el depósito no son plata nueva: el depósito ya se había cobrado al empezar.
+        # El depósito es del inquilino mientras dura el contrato: no es ingreso cuando se cobra ni cuando se
+        # devuelve. Lo que se usa al terminar sí lo es, el día que se usa: las cuotas que se pagan con él (pagos con
+        # medio "deposito") y el descuento por daños que se retiene.
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(f"""
             CREATE VIEW {self._table} AS (
-                SELECT pago.id * 2 AS id, pago.fecha, 'ingreso' AS tipo,
-                       pago.name || ' · ' || cuota.name AS concepto,
+                SELECT pago.id * 3 AS id, pago.fecha, 'ingreso' AS tipo,
+                       pago.name || ' · ' || cuota.name
+                           || CASE WHEN pago.medio = 'deposito' THEN ' (con el depósito)' ELSE '' END AS concepto,
                        pago.propiedad_id, pago.unidad_id, pago.company_id,
                        pago.monto AS ingreso, 0 AS gasto, pago.monto AS ganancia
                   FROM alquiler_pago pago
                   JOIN alquiler_cuota cuota ON cuota.id = pago.cuota_id
-                 WHERE pago.medio != 'deposito'
                 UNION ALL
-                SELECT gasto.id * 2 + 1, gasto.fecha, 'gasto', gasto.name,
+                SELECT gasto.id * 3 + 1, gasto.fecha, 'gasto', gasto.name,
                        gasto.propiedad_id, gasto.unidad_id, gasto.company_id,
                        0, gasto.monto, -gasto.monto
                   FROM alquiler_gasto gasto
+                UNION ALL
+                SELECT contrato.id * 3 + 2, contrato.fecha_fin, 'ingreso',
+                       'Descuento del depósito por daños · ' || contrato.name,
+                       contrato.propiedad_id, contrato.unidad_id, contrato.company_id,
+                       contrato.deposito_descuento, 0, contrato.deposito_descuento
+                  FROM alquiler_contrato contrato
+                 WHERE contrato.estado = 'terminado' AND contrato.deposito_descuento > 0
             )""")

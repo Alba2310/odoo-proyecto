@@ -13,7 +13,8 @@ class AlquilerTerminarWizard(models.TransientModel):
     fecha = fields.Date('Se va el', required=True, default=fields.Date.context_today)
     deposito = fields.Monetary(related='contrato_id.deposito', string='Depósito de garantía')
     deuda = fields.Monetary('Queda debiendo', compute='_compute_liquidacion',
-                            help='Cuotas sin pagar que vencen hasta ese día. Se pagan con el depósito.')
+                            help='Cuotas sin pagar hasta ese día (la del mes en que se va, por los días que vive '
+                                 'ahí). Se pagan con el depósito.')
     descuento = fields.Monetary('Descuento por daños', help='Arreglos que no son por el uso normal (ver el acta de salida).')
     motivo = fields.Char('Motivo del descuento')
     a_devolver = fields.Monetary('A devolver', compute='_compute_liquidacion')
@@ -21,9 +22,13 @@ class AlquilerTerminarWizard(models.TransientModel):
     @api.depends('contrato_id', 'fecha', 'descuento')
     def _compute_liquidacion(self):
         for asistente in self:
-            pendientes = asistente.contrato_id.cuota_ids.filtered(
-                lambda c: c.estado != 'pagada' and (not asistente.fecha or c.fecha_vencimiento <= asistente.fecha))
-            asistente.deuda = sum(pendientes.mapped('saldo'))
+            contrato = asistente.contrato_id
+            if contrato.estado == 'vigente' and asistente.fecha:
+                # La cuota del mes en que se va, por los días que le tocan; si se va más adelante, también las cuotas
+                # que se van a crear hasta ese día.
+                asistente.deuda = contrato._deuda_al_terminar(asistente.fecha)
+            else:
+                asistente.deuda = sum(contrato.cuota_ids.filtered(lambda c: c.estado != 'pagada').mapped('saldo'))
             asistente.a_devolver = max(asistente.deposito - asistente.deuda - (asistente.descuento or 0), 0)
 
     def action_confirmar(self):

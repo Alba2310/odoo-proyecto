@@ -18,7 +18,7 @@ QUIEN_PAGA = [
 
 class AlquilerMantenimiento(models.Model):
     """Un pedido de reparación ("se rompió la canilla"). Al resolverlo, el costo va a los gastos de la propiedad
-    o, si lo paga el inquilino, se le suma a su próxima cuota."""
+    y, si lo paga el inquilino, además se le suma a su próxima cuota."""
     _name = 'alquiler.mantenimiento'
     _description = 'Pedido de mantenimiento'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -62,24 +62,14 @@ class AlquilerMantenimiento(models.Model):
         return True
 
     def action_resolver(self):
-        """Lo da por resuelto. Si tiene costo, lo carga como gasto de la propiedad o se lo cobra al inquilino."""
+        """Lo da por resuelto. Si tiene costo, lo carga como gasto de la propiedad y, si lo paga el inquilino,
+        además se lo suma a su cuota."""
         hoy = fields.Date.context_today(self)
         for pedido in self:
             if pedido.estado in ('resuelto', 'cancelado'):
                 raise UserError(f'El pedido "{pedido.name}" ya está {dict(ESTADOS_MANTENIMIENTO)[pedido.estado].lower()}.')
             valores = {'estado': 'resuelto', 'fecha_resuelto': hoy}
-            if pedido.costo > 0 and pedido.paga == 'dueno':
-                valores['gasto_id'] = self.env['alquiler.gasto'].create({
-                    'name': pedido.name,
-                    'fecha': hoy,
-                    'propiedad_id': pedido.propiedad_id.id,
-                    'unidad_id': pedido.unidad_id.id,
-                    'categoria': 'reparacion',
-                    'monto': pedido.costo,
-                    'proveedor': pedido.responsable,
-                    'mantenimiento_id': pedido.id,
-                }).id
-            elif pedido.costo > 0:
+            if pedido.costo > 0 and pedido.paga == 'inquilino':
                 contrato = pedido.unidad_id.contrato_id
                 cuota = contrato._cuota_para_cargos() if contrato else None
                 if not cuota:
@@ -94,5 +84,21 @@ class AlquilerMantenimiento(models.Model):
                 }).id
                 contrato.message_post(body=f'Se suma a la cuota de {cuota.name} la reparación "{pedido.name}": '
                                            f'{guaranies(pedido.costo)}.')
+            if pedido.costo > 0:
+                # Al que lo arregla le paga el dueño, aunque después se lo cobre al inquilino: el gasto va siempre, así
+                # la ganancia cuadra (lo que paga el inquilino entra como cobrado con su cuota).
+                # Con sudo: el encargado de cobros carga y resuelve reparaciones, pero solo puede leer los gastos.
+                # La empresa del gasto sale de la propiedad, igual que la del pedido.
+                cobrado = ' (se le cobra al inquilino)' if pedido.paga == 'inquilino' else ''
+                valores['gasto_id'] = self.env['alquiler.gasto'].sudo().create({
+                    'name': f'{pedido.name}{cobrado}',
+                    'fecha': hoy,
+                    'propiedad_id': pedido.propiedad_id.id,
+                    'unidad_id': pedido.unidad_id.id,
+                    'categoria': 'reparacion',
+                    'monto': pedido.costo,
+                    'proveedor': pedido.responsable,
+                    'mantenimiento_id': pedido.id,
+                }).id
             pedido.write(valores)
         return True

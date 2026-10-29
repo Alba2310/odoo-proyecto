@@ -72,6 +72,12 @@ class AlquilerCuota(models.Model):
     periodo = fields.Date('Mes del alquiler', required=True, help='Primer día del mes que se paga.')
     fecha_vencimiento = fields.Date('Vence', required=True)
     monto = fields.Monetary('Alquiler', required=True)
+    # Si el contrato empieza o termina a mitad del mes de pago, la cuota es por los días que el inquilino vive ahí.
+    # Vacíos en las cuotas de antes de que existieran: eran de meses enteros.
+    dias = fields.Integer('Días que paga', readonly=True,
+                          help='Si es menos que los días del mes de pago, el alquiler es en proporción a los días.')
+    dias_periodo = fields.Integer('Días del mes de pago', readonly=True,
+                                  help='Del día de pago de ese mes al día anterior al día de pago del mes siguiente.')
     cargo_ids = fields.One2many('alquiler.cuota.cargo', 'cuota_id', string='Detalle de los cargos')
     cargos = fields.Monetary('Cargos extra', compute='_compute_pagos', store=True,
                              help='ANDE, agua, reparaciones y otros gastos que se le cobran al inquilino con la cuota.')
@@ -99,11 +105,28 @@ class AlquilerCuota(models.Model):
     def _dominio_vencidas(self):
         return [('estado', '!=', 'pagada'), ('fecha_vencimiento', '<', fields.Date.context_today(self))]
 
-    @api.depends('periodo')
+    @api.depends('periodo', 'dias', 'dias_periodo')
     def _compute_name(self):
+        # "Enero 2025" o, si es proporcional, "Enero 2025 (16 de 31 días)".
         for cuota in self:
             periodo = cuota.periodo
-            cuota.name = f'{MESES[periodo.month - 1].capitalize()} {periodo.year}' if periodo else False
+            nombre = f'{MESES[periodo.month - 1].capitalize()} {periodo.year}' if periodo else False
+            if nombre and cuota._proporcional():
+                nombre += f' ({cuota.dias} de {cuota.dias_periodo} días)'
+            cuota.name = nombre
+
+    def _proporcional(self):
+        self.ensure_one()
+        return 0 < self.dias < self.dias_periodo
+
+    def _dias_texto(self):
+        """'16 de 31 días, del 20 de enero al 4 de febrero' si la cuota es proporcional; si no, vacío."""
+        self.ensure_one()
+        if not self._proporcional():
+            return ''
+        hasta = self.fecha_vencimiento + timedelta(days=self.dias - 1)
+        return (f'{self.dias} de {self.dias_periodo} días, del {fecha_corta(self.fecha_vencimiento)} al '
+                f'{fecha_corta(hasta)}')
 
     @api.depends('name', 'inquilino_id.name')
     def _compute_display_name(self):
@@ -152,7 +175,8 @@ class AlquilerCuota(models.Model):
         self.ensure_one()
         hoy = hoy or fields.Date.context_today(self)
         nombre = primer_nombre(self.inquilino_id.name)
-        alquiler = f'alquiler de {mes_y_anio(self.periodo)} ({self.unidad_id.display_name})'
+        proporcion = f', {self.dias} de {self.dias_periodo} días' if self._proporcional() else ''
+        alquiler = f'alquiler de {mes_y_anio(self.periodo)} ({self.unidad_id.display_name}{proporcion})'
         monto = guaranies(self.saldo)
         if self.cargo_ids and not self.pagado:
             monto += f' ({self._detalle()})'

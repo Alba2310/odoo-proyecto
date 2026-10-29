@@ -32,7 +32,8 @@
                             en concepto de alquiler de <strong t-out="pago.unidad_id.display_name"/>
                             <t t-if="pago.propiedad_id.direccion">(<t t-out="pago.propiedad_id.direccion"/>,
                                 <t t-out="pago.propiedad_id.ciudad"/>)</t>,
-                            correspondiente a <strong t-out="pago._mes_texto()"/>.
+                            correspondiente a <strong t-out="pago._mes_texto()"/><t t-if="pago._dias_texto()">
+                                (proporcional: <t t-out="pago._dias_texto()"/>)</t>.
                         </p>
                         <p t-if="pago._detalle_cuota()">Detalle de la cuota: <t t-out="pago._detalle_cuota()"/>.</p>
                         <p>Medio de pago: <span t-field="pago.medio"/>.<t t-if="pago.nota"> <t t-out="pago.nota"/>.</t></p>

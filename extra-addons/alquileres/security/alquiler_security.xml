@@ -20,4 +20,58 @@
                                          Command.link(ref('base.group_partner_manager'))]"/>
         <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
     </record>
+
+    <!-- Con varias empresas, cada una ve solo lo suyo (las que están elegidas arriba a la derecha). -->
+    <data noupdate="1">
+        <record id="rule_alquiler_propiedad_company" model="ir.rule">
+            <field name="name">Propiedades: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_propiedad"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_unidad_company" model="ir.rule">
+            <field name="name">Unidades: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_unidad"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_contrato_company" model="ir.rule">
+            <field name="name">Contratos: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_contrato"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_cuota_company" model="ir.rule">
+            <field name="name">Cuotas: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_cuota"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_pago_company" model="ir.rule">
+            <field name="name">Pagos: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_pago"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_gasto_company" model="ir.rule">
+            <field name="name">Gastos: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_gasto"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_resultado_company" model="ir.rule">
+            <field name="name">Ingresos y gastos: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_resultado"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_mantenimiento_company" model="ir.rule">
+            <field name="name">Mantenimiento: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_mantenimiento"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_acta_company" model="ir.rule">
+            <field name="name">Actas de entrega: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_acta"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_alquiler_interesado_company" model="ir.rule">
+            <field name="name">Interesados: multicompañía</field>
+            <field name="model_id" ref="model_alquiler_interesado"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
 </odoo>
