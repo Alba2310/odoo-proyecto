@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vet_atencion_calendar" model="ir.ui.view">
+        <field name="name">vet.atencion.calendar</field>
+        <field name="model">vet.atencion</field>
+        <field name="arch" type="xml">
+            <calendar string="Agenda" date_start="fecha_inicio" date_stop="fecha_fin" color="profesional_id"
+                      mode="week" quick_create="0" event_open_popup="1">
+                <field name="profesional_id" filters="1" avatar_field="avatar_128"/>
+                <field name="mascota_id"/>
+                <field name="dueno_id"/>
+                <field name="dueno_telefono"/>
+                <field name="servicios_texto"/>
+                <field name="motivo"/>
+                <field name="estado" filters="1"/>
+                <field name="origen"/>
+                <field name="mascota_alertas"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_vet_atencion_list" model="ir.ui.view">
+        <field name="name">vet.atencion.list</field>
+        <field name="model">vet.atencion</field>
+        <field name="arch" type="xml">
+            <list string="Atenciones" decoration-muted="estado in ('cancelada', 'ausente')">
+                <field name="fecha_inicio"/>
+                <field name="name" optional="show"/>
+                <field name="mascota_emoji" string=" " width="30px"/>
+                <field name="mascota_id"/>
+                <field name="dueno_id" optional="show"/>
+                <field name="area" optional="show"/>
+                <field name="servicios_texto"/>
+                <field name="profesional_id" widget="many2one_avatar_employee" optional="show"/>
+                <field name="origen" optional="hide"/>
+                <field name="estado" widget="badge"
+                       decoration-info="estado in ('reservada', 'en_espera')"
+                       decoration-warning="estado in ('en_curso', 'lista')"
+                       decoration-success="estado == 'cobrada'"
+                       decoration-danger="estado == 'ausente'"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total" sum="Total"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_atencion_form" model="ir.ui.view">
+        <field name="name">vet.atencion.form</field>
+        <field name="model">vet.atencion</field>
+        <field name="arch" type="xml">
+            <form string="Atención">
+                <field name="factura_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <header>
+                    <button name="action_llego" type="object" string="Llegó" class="btn-primary"
+                            invisible="estado != 'reservada'"/>
+                    <button name="action_atender" type="object" string="Atender" class="btn-primary"
+                            invisible="estado != 'en_espera'"/>
+                    <button name="action_atender" type="object" string="Atender ya"
+                            invisible="estado != 'reservada'"/>
+                    <button name="action_terminar" type="object" string="Terminar" class="btn-primary"
+                            invisible="estado != 'en_curso'"/>
+                    <button name="action_avisar_lista" type="object" string="Avisar que está lista" icon="fa-whatsapp"
+                            class="btn-success" invisible="estado != 'lista'"/>
+                    <button name="action_cobrar" type="object" string="Cobrar" class="btn-primary"
+                            invisible="estado != 'lista'"/>
+                    <button name="action_cobrar" type="object" string="Cobrar"
+                            invisible="estado not in ('reservada', 'en_espera', 'en_curso')"/>
+                    <button name="action_recordatorio_whatsapp" type="object" string="Recordatorio" icon="fa-whatsapp"
+                            invisible="estado != 'reservada'"/>
+                    <button name="action_imprimir_indicaciones" type="object" string="Indicaciones" icon="fa-print"
+                            invisible="area != 'consultorio' or estado not in ('en_curso', 'lista', 'cobrada')"/>
+                    <button name="action_internar" type="object" string="Internar" icon="fa-bed"
+                            invisible="area != 'consultorio' or estado not in ('en_curso', 'lista', 'cobrada')"/>
+                    <button name="action_ausente" type="object" string="No vino"
+                            invisible="estado not in ('reservada', 'en_espera')"/>
+                    <button name="action_cancelar" type="object" string="Cancelar"
+                            invisible="estado not in ('reservada', 'en_espera')"/>
+                    <button name="action_reabrir" type="object" string="Volver a reservar"
+                            invisible="estado not in ('ausente', 'cancelada')"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="reservada,en_espera,en_curso,lista,cobrada"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_mascota" type="object" class="oe_stat_button" icon="fa-paw">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="mascota_id" readonly="1" nolabel="1"
+                                                                  options="{'no_open': True}"/></span>
+                                <span class="o_stat_text">Ficha</span>
+                            </div>
+                        </button>
+                        <button name="action_ver_factura" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not factura_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="factura_id" readonly="1" nolabel="1"
+                                                                  options="{'no_open': True}"/></span>
+                                <span class="o_stat_text">Factura</span>
+                            </div>
+                        </button>
+                        <button name="action_ver_movimientos" type="object" class="oe_stat_button" icon="fa-cubes"
+                                invisible="not movimiento_count">
+                            <field name="movimiento_count" widget="statinfo" string="Stock"/>
+                        </button>
+                    </div>
+                    <div class="alert alert-danger d-flex gap-2 align-items-center mb-2" role="alert"
+                         invisible="not mascota_alertas">
+                        <i class="fa fa-exclamation-triangle" title="Cuidado"/>
+                        <strong>Cuidado:</strong> <field name="mascota_alertas" class="mb-0"/>
+                    </div>
+                    <div class="alert alert-warning d-flex gap-2 mb-2" role="alert" invisible="not mascota_alergias">
+                        <i class="fa fa-medkit mt-1" title="Alergias"/>
+                        <div><strong>Alergias y enfermedades:</strong> <field name="mascota_alergias" class="mb-0"/></div>
+                    </div>
+                    <div class="oe_title">
+                        <h1 class="d-flex align-items-center gap-2">
+                            <field name="mascota_emoji" class="fs-1"/>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Quién viene">
+                            <field name="mascota_id" readonly="factura_id"
+                                   context="{'default_dueno_id': dueno_id}"/>
+                            <field name="dueno_id" readonly="factura_id"/>
+                            <field name="dueno_telefono" widget="phone"/>
+                            <field name="motivo" placeholder="Por ejemplo: vómitos desde ayer"/>
+                        </group>
+                        <group string="Turno">
+                            <field name="area" widget="radio" options="{'horizontal': true}"
+                                   readonly="estado not in ('reservada', 'en_espera')"/>
+                            <field name="profesional_id" options="{'no_create': True}" readonly="factura_id"/>
+                            <field name="fecha_inicio" readonly="estado not in ('reservada', 'ausente', 'cancelada')"/>
+                            <label for="duracion" string="Dura"/>
+                            <div class="o_row">
+                                <field name="duracion" nolabel="1"/> min, hasta
+                                <field name="fecha_fin" nolabel="1"
+                                       readonly="estado not in ('reservada', 'ausente', 'cancelada')"/>
+                            </div>
+                            <field name="origen" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="factura_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lo que se hizo" name="lineas">
+                            <field name="linea_ids" readonly="factura_id">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="producto_id" context="{'default_vet_area': parent.area}"/>
+                                    <field name="es_aplicacion" column_invisible="True"/>
+                                    <field name="es_almacenable" column_invisible="True"/>
+                                    <field name="lote" invisible="not es_aplicacion" placeholder="Lote"/>
+                                    <field name="cantidad"/>
+                                    <field name="stock_disponible" invisible="not es_almacenable" optional="show"
+                                           decoration-danger="stock_disponible &lt; cantidad"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Consulta" name="consulta" invisible="area != 'consultorio'">
+                            <group>
+                                <group string="Signos">
+                                    <field name="peso"/>
+                                    <field name="temperatura"/>
+                                    <field name="frecuencia_cardiaca"/>
+                                    <field name="frecuencia_respiratoria"/>
+                                    <field name="condicion_corporal"/>
+                                </group>
+                                <group string="Lo que cuenta el dueño">
+                                    <field name="anamnesis" nolabel="1" colspan="2"
+                                           placeholder="Desde cuándo, qué comió, si tomó algún remedio..."/>
+                                </group>
+                            </group>
+                            <group string="Examen y diagnóstico">
+                                <field name="examen" placeholder="Mucosas, hidratación, ganglios, abdomen, piel..."/>
+                                <field name="diagnostico"/>
+                                <field name="tratamiento" placeholder="Lo que se le hizo y se le dio en la consulta"/>
+                            </group>
+                            <group string="Para la casa">
+                                <field name="indicaciones" placeholder="Remedios, dosis y cada cuánto, comida, cuidados"/>
+                                <field name="proximo_control"/>
+                            </group>
+                        </page>
+                        <page string="Peluquería" name="estetica" invisible="area != 'estetica'">
+                            <group>
+                                <field name="estetica_pedido" placeholder="Corte cachorro, dejar las orejas largas, moño..."/>
+                                <field name="estetica_observaciones"
+                                       placeholder="Pulgas, garrapatas, nudos, heridas: se le cuenta al dueño al avisar que está lista"/>
+                                <field name="aviso_lista_el" invisible="not aviso_lista_el"/>
+                            </group>
+                        </page>
+                        <page string="Carnet" name="carnet" invisible="not aplicacion_ids">
+                            <field name="aplicacion_ids" readonly="1">
+                                <list>
+                                    <field name="producto_id"/>
+                                    <field name="fecha"/>
+                                    <field name="lote"/>
+                                    <field name="proxima_fecha"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Cobro" name="cobro" invisible="not factura_id">
+                            <group>
+                                <field name="factura_id" readonly="1"/>
+                                <field name="factura_moneda_id" invisible="1"/>
+                                <field name="monto_cobrado"/>
+                                <field name="forma_pago"/>
+                                <field name="estado_pago"/>
+                            </group>
+                        </page>
+                        <page string="Horarios" name="horarios" invisible="not llegada">
+                            <group>
+                                <field name="llegada"/>
+                                <field name="inicio_atencion"/>
+                                <field name="fin_atencion"/>
+                                <field name="recordatorio_enviado"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- "Llegó sin turno": la ventanita del tablero para pasar una mascota directo a la sala de espera. -->
+    <record id="view_vet_atencion_form_sin_turno" model="ir.ui.view">
+        <field name="name">vet.atencion.form.sin_turno</field>
+        <field name="model">vet.atencion</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <form string="Llegó sin turno">
+                <group>
+                    <field name="mascota_id" placeholder="Buscá por el nombre de la mascota o del dueño"
+                           context="{'default_dueno_id': dueno_id}"/>
+                    <field name="dueno_id" invisible="1"/>
+                    <field name="area" widget="radio" options="{'horizontal': true}"/>
+                    <field name="motivo" placeholder="Por ejemplo: se lastimó la pata"/>
+                    <field name="profesional_id" options="{'no_create': True}" placeholder="Si ya se sabe quién la atiende"/>
+                    <field name="origen" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="A la sala de espera" class="btn-primary" special="save" data-hotkey="q"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vet_atencion_search" model="ir.ui.view">
+        <field name="name">vet.atencion.search</field>
+        <field name="model">vet.atencion</field>
+        <field name="arch" type="xml">
+            <search string="Buscar atenciones">
+                <field name="mascota_id"/>
+                <field name="dueno_id"/>
+                <field name="profesional_id"/>
+                <field name="name"/>
+                <filter name="hoy" string="Hoy"
+                        domain="[('fecha_inicio', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S')),
+                                 ('fecha_inicio', '&lt;', datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter name="fecha" string="Fecha" date="fecha_inicio"/>
+                <separator/>
+                <filter name="consultorio" string="Consultorio" domain="[('area', '=', 'consultorio')]"/>
+                <filter name="estetica" string="Baño y peluquería" domain="[('area', '=', 'estetica')]"/>
+                <separator/>
+                <filter name="abiertas" string="Sin cobrar" domain="[('estado', 'in', ('reservada', 'en_espera', 'en_curso', 'lista'))]"/>
+                <filter name="cobradas" string="Cobradas" domain="[('estado', '=', 'cobrada')]"/>
+                <filter name="no_vinieron" string="No vinieron" domain="[('estado', '=', 'ausente')]"/>
+                <separator/>
+                <filter name="internet" string="Pedidas por internet" domain="[('origen', '=', 'internet')]"/>
+                <filter name="sin_turno" string="Llegaron sin turno" domain="[('origen', '=', 'sin_turno')]"/>
+                <filter name="activas" string="Sin las canceladas" domain="[('estado', '!=', 'cancelada')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_profesional" string="Quién atendió" context="{'group_by': 'profesional_id'}"/>
+                    <filter name="group_area" string="Área" context="{'group_by': 'area'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                    <filter name="group_dia" string="Día" context="{'group_by': 'fecha_inicio:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vet_agenda_consultorio" model="ir.actions.act_window">
+        <field name="name">Agenda del consultorio</field>
+        <field name="res_model">vet.atencion</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="domain">[('area', '=', 'consultorio')]</field>
+        <field name="context">{'default_area': 'consultorio', 'search_default_activas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay turnos</p>
+            <p>Haga clic en un horario, elija la mascota, quién la atiende y qué se le va a hacer.</p>
+        </field>
+    </record>
+
+    <record id="action_vet_agenda_estetica" model="ir.actions.act_window">
+        <field name="name">Agenda de baño y peluquería</field>
+        <field name="res_model">vet.atencion</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="domain">[('area', '=', 'estetica')]</field>
+        <field name="context">{'default_area': 'estetica', 'search_default_activas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay turnos de baño ni peluquería</p>
+            <p>Haga clic en un horario, elija la mascota y el servicio.</p>
+        </field>
+    </record>
+
+    <record id="action_vet_atencion" model="ir.actions.act_window">
+        <field name="name">Atenciones</field>
+        <field name="res_model">vet.atencion</field>
+        <field name="view_mode">list,form,calendar</field>
+    </record>
+
+    <record id="action_vet_atencion_sin_turno" model="ir.actions.act_window">
+        <field name="name">Llegó sin turno</field>
+        <field name="res_model">vet.atencion</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_vet_atencion_form_sin_turno"/>
+        <field name="target">new</field>
+        <field name="context">{'default_origen': 'sin_turno'}</field>
+    </record>
+</odoo>

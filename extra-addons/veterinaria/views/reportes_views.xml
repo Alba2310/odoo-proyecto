@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Lo que se hizo y vendió en las atenciones: por área, por profesional, por especie y por mes -->
+    <record id="view_vet_atencion_linea_pivot" model="ir.ui.view">
+        <field name="name">vet.atencion.linea.pivot</field>
+        <field name="model">vet.atencion.linea</field>
+        <field name="arch" type="xml">
+            <pivot string="Atenciones" sample="1">
+                <field name="categoria_id" type="row"/>
+                <field name="fecha" interval="month" type="col"/>
+                <field name="subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_vet_atencion_linea_graph" model="ir.ui.view">
+        <field name="name">vet.atencion.linea.graph</field>
+        <field name="model">vet.atencion.linea</field>
+        <field name="arch" type="xml">
+            <graph string="Atenciones" type="bar" sample="1">
+                <field name="producto_id"/>
+                <field name="subtotal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_vet_atencion_linea_list" model="ir.ui.view">
+        <field name="name">vet.atencion.linea.list</field>
+        <field name="model">vet.atencion.linea</field>
+        <field name="arch" type="xml">
+            <list string="Lo que se hizo" create="false" edit="false">
+                <field name="fecha"/>
+                <field name="atencion_id"/>
+                <field name="mascota_id"/>
+                <field name="especie_id" optional="show"/>
+                <field name="area" optional="show"/>
+                <field name="producto_id"/>
+                <field name="categoria_id" optional="hide"/>
+                <field name="profesional_id" widget="many2one_avatar_employee"/>
+                <field name="cantidad" sum="Total"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="subtotal" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_atencion_linea_search" model="ir.ui.view">
+        <field name="name">vet.atencion.linea.search</field>
+        <field name="model">vet.atencion.linea</field>
+        <field name="arch" type="xml">
+            <search string="Buscar">
+                <field name="producto_id"/>
+                <field name="profesional_id"/>
+                <field name="mascota_id"/>
+                <field name="categoria_id"/>
+                <filter name="cobradas" string="Cobradas" domain="[('estado', '=', 'cobrada')]"/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+                <separator/>
+                <filter name="consultorio" string="Consultorio" domain="[('area', '=', 'consultorio')]"/>
+                <filter name="estetica" string="Baño y peluquería" domain="[('area', '=', 'estetica')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_profesional" string="Quién atendió" context="{'group_by': 'profesional_id'}"/>
+                    <filter name="group_area" string="Área" context="{'group_by': 'area'}"/>
+                    <filter name="group_especie" string="Especie" context="{'group_by': 'especie_id'}"/>
+                    <filter name="group_producto" string="Servicio o producto" context="{'group_by': 'producto_id'}"/>
+                    <filter name="group_mes" string="Mes" context="{'group_by': 'fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vet_reporte_atenciones" model="ir.actions.act_window">
+        <field name="name">Atenciones</field>
+        <field name="res_model">vet.atencion.linea</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_cobradas': 1}</field>
+    </record>
+</odoo>

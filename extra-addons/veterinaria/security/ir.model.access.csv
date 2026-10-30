@@ -1,0 +1,25 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vet_especie_user,vet.especie user,model_vet_especie,base.group_user,1,0,0,0
+access_vet_especie_admin,vet.especie admin,model_vet_especie,group_vet_admin,1,1,1,1
+access_vet_raza_user,vet.raza user,model_vet_raza,base.group_user,1,0,0,0
+access_vet_raza_personal,vet.raza personal,model_vet_raza,group_vet_personal,1,1,1,0
+access_vet_raza_admin,vet.raza admin,model_vet_raza,group_vet_admin,1,1,1,1
+access_vet_mascota_personal,vet.mascota personal,model_vet_mascota,group_vet_personal,1,1,1,0
+access_vet_mascota_admin,vet.mascota admin,model_vet_mascota,group_vet_admin,1,1,1,1
+access_vet_peso_personal,vet.peso personal,model_vet_peso,group_vet_personal,1,1,1,1
+access_vet_atencion_personal,vet.atencion personal,model_vet_atencion,group_vet_personal,1,1,1,0
+access_vet_atencion_admin,vet.atencion admin,model_vet_atencion,group_vet_admin,1,1,1,1
+access_vet_atencion_linea_personal,vet.atencion.linea personal,model_vet_atencion_linea,group_vet_personal,1,1,1,1
+access_vet_aplicacion_personal,vet.aplicacion personal,model_vet_aplicacion,group_vet_personal,1,1,1,0
+access_vet_aplicacion_admin,vet.aplicacion admin,model_vet_aplicacion,group_vet_admin,1,1,1,1
+access_vet_lugar_personal,vet.lugar personal,model_vet_lugar,group_vet_personal,1,0,0,0
+access_vet_lugar_admin,vet.lugar admin,model_vet_lugar,group_vet_admin,1,1,1,1
+access_vet_internacion_personal,vet.internacion personal,model_vet_internacion,group_vet_personal,1,1,1,0
+access_vet_internacion_admin,vet.internacion admin,model_vet_internacion,group_vet_admin,1,1,1,1
+access_vet_internacion_linea_personal,vet.internacion.linea personal,model_vet_internacion_linea,group_vet_personal,1,1,1,1
+access_vet_control_personal,vet.control personal,model_vet_control,group_vet_personal,1,1,1,0
+access_vet_control_admin,vet.control admin,model_vet_control,group_vet_admin,1,1,1,1
+access_vet_venta_personal,vet.venta personal,model_vet_venta,group_vet_personal,1,1,1,0
+access_vet_venta_admin,vet.venta admin,model_vet_venta,group_vet_admin,1,1,1,1
+access_vet_venta_linea_personal,vet.venta.linea personal,model_vet_venta_linea,group_vet_personal,1,1,1,1
+access_vet_cobro_wizard_personal,vet.cobro.wizard personal,model_vet_cobro_wizard,group_vet_personal,1,1,1,1

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="veterinaria.TableroPatitas">
+        <div class="o_action o_vet_tablero h-100 overflow-auto" t-ref="raiz">
+            <t t-set="datos" t-value="estado.datos"/>
+            <div t-if="datos" class="o_vet_tablero_contenido">
+                <header class="o_vet_cabecera">
+                    <div>
+                        <h1 class="o_vet_titulo"><span class="o_vet_huella" aria-hidden="true">🐾</span> Hoy en Patitas</h1>
+                        <div class="o_vet_fecha">
+                            <t t-out="datos.hoy"/>
+                            <span class="o_vet_pista"><i class="fa fa-arrows me-1"/>Arrastrá las tarjetas de una columna a otra</span>
+                        </div>
+                    </div>
+                    <div class="o_vet_filtros" role="group" aria-label="Área">
+                        <button t-attf-class="o_vet_chip {{ !estado.area ? 'o_vet_chip_activo' : '' }}"
+                                t-on-click="() => this.elegirArea(false)">Todo</button>
+                        <button t-foreach="datos.areas" t-as="area" t-key="area.clave"
+                                t-attf-class="o_vet_chip {{ estado.area === area.clave ? 'o_vet_chip_activo' : '' }}"
+                                t-on-click="() => this.elegirArea(area.clave)" t-out="area.nombre"/>
+                    </div>
+                    <div class="o_vet_acciones">
+                        <button class="btn btn-primary" t-on-click="llegoSinTurno">
+                            <i class="fa fa-plus me-1"/>Llegó sin turno
+                        </button>
+                        <button class="btn btn-light" t-on-click="() => this.abrirAccion('veterinaria.action_vet_agenda_consultorio')">
+                            <i class="fa fa-calendar me-1"/>Agenda
+                        </button>
+                        <button class="btn btn-light" t-on-click="() => this.abrirAccion('veterinaria.action_vet_venta_nueva')">
+                            <i class="fa fa-shopping-basket me-1"/>Venta de mostrador
+                        </button>
+                    </div>
+                </header>
+
+                <section class="o_vet_avisos">
+                    <button class="o_vet_aviso" t-on-click="() => this.abrirAccion('veterinaria.action_vet_avisos')">
+                        <span t-attf-class="o_vet_aviso_numero {{ datos.avisos.vacunas_vencidas ? 'o_vet_rojo' : '' }}"
+                              t-out="datos.avisos.vacunas_vencidas"/>
+                        <span>vacunas vencidas sin avisar</span>
+                    </button>
+                    <button class="o_vet_aviso" t-on-click="() => this.abrirAccion('veterinaria.action_vet_avisos')">
+                        <span class="o_vet_aviso_numero" t-out="datos.avisos.vacunas_semana"/>
+                        <span>dosis que vencen esta semana</span>
+                    </button>
+                    <button class="o_vet_aviso" t-on-click="() => this.abrirAccion('stock.action_replenishment')">
+                        <span t-attf-class="o_vet_aviso_numero {{ datos.avisos.reponer ? 'o_vet_ambar' : '' }}"
+                              t-out="datos.avisos.reponer"/>
+                        <span>productos para reponer</span>
+                    </button>
+                    <div class="o_vet_aviso o_vet_aviso_fijo">
+                        <span class="o_vet_aviso_numero" t-out="datos.avisos.turnos_manana"/>
+                        <span>turnos mañana</span>
+                    </div>
+                    <div class="o_vet_aviso o_vet_aviso_fijo">
+                        <span class="o_vet_aviso_numero o_vet_verde" t-out="datos.avisos.cobrado_hoy"/>
+                        <span>cobrado hoy</span>
+                    </div>
+                </section>
+
+                <section class="o_vet_sala">
+                    <div t-foreach="datos.columnas" t-as="columna" t-key="columna.clave"
+                         t-attf-class="o_vet_columna o_vet_columna_{{ columna.clave }}" t-att-data-clave="columna.clave">
+                        <div class="o_vet_columna_cabeza">
+                            <div>
+                                <h2 t-out="columna.titulo"/>
+                                <span class="o_vet_ayuda" t-out="columna.ayuda"/>
+                            </div>
+                            <span class="o_vet_contador" t-out="columna.tarjetas.length"/>
+                        </div>
+                        <p t-if="!columna.tarjetas.length" class="o_vet_vacio">Nadie por acá.</p>
+                        <article t-foreach="columna.tarjetas" t-as="tarjeta" t-key="tarjeta.id" t-att-data-id="tarjeta.id"
+                                 t-attf-class="o_vet_tarjeta o_vet_arrastrable o_vet_area_{{ tarjeta.area }} {{ tarjeta.atrasado ? 'o_vet_atrasado' : '' }}"
+                                 title="Arrastrala a otra columna para cambiarla de estado">
+                            <div class="o_vet_tarjeta_cuerpo" role="button" tabindex="0"
+                                 t-on-click="() => this.abrir('vet.atencion', tarjeta.id)">
+                                <img t-if="tarjeta.foto" class="o_vet_foto" t-att-src="tarjeta.foto" alt=""/>
+                                <span t-else="" class="o_vet_foto o_vet_foto_emoji" t-out="tarjeta.emoji"/>
+                                <div class="o_vet_tarjeta_texto">
+                                    <div class="o_vet_tarjeta_linea">
+                                        <strong class="o_vet_nombre" t-out="tarjeta.mascota"/>
+                                        <span t-if="columna.clave === 'reservada'" class="o_vet_hora" t-out="tarjeta.hora"/>
+                                        <span t-else="" class="o_vet_desde" t-out="tarjeta.desde"/>
+                                    </div>
+                                    <div class="o_vet_detalle" t-out="tarjeta.detalle"/>
+                                    <div class="o_vet_servicios" t-out="tarjeta.servicios"/>
+                                    <div class="o_vet_detalle">
+                                        <i class="fa fa-user-o me-1"/><t t-out="tarjeta.dueno"/>
+                                        · <i class="fa fa-user-md mx-1"/><t t-out="tarjeta.profesional"/>
+                                    </div>
+                                    <div t-if="tarjeta.alertas" class="o_vet_alerta">
+                                        <i class="fa fa-exclamation-triangle me-1"/><t t-out="tarjeta.alertas"/>
+                                    </div>
+                                    <div class="o_vet_marcas">
+                                        <span t-if="tarjeta.atrasado" class="o_vet_marca o_vet_marca_rojo">Atrasado</span>
+                                        <span t-if="tarjeta.internet" class="o_vet_marca">Por internet</span>
+                                        <span t-if="tarjeta.sin_turno" class="o_vet_marca">Sin turno</span>
+                                        <span t-if="tarjeta.avisada" class="o_vet_marca o_vet_marca_verde">Avisado</span>
+                                        <span t-if="tarjeta.total and columna.clave === 'lista'" class="o_vet_total" t-out="tarjeta.total"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_vet_botones">
+                                <t t-if="columna.clave === 'reservada'">
+                                    <button class="btn btn-sm btn-primary" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.atencion', tarjeta.id, 'action_llego')">Llegó</button>
+                                    <button class="btn btn-sm btn-light" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.atencion', tarjeta.id, 'action_recordatorio_whatsapp')"
+                                            title="Recordatorio por WhatsApp"><i class="fa fa-whatsapp"/></button>
+                                    <button class="btn btn-sm btn-light ms-auto" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.atencion', tarjeta.id, 'action_ausente')">No vino</button>
+                                </t>
+                                <t t-if="columna.clave === 'en_espera'">
+                                    <button class="btn btn-sm btn-primary" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.atencion', tarjeta.id, 'action_atender')">Atender</button>
+                                </t>
+                                <t t-if="columna.clave === 'en_curso'">
+                                    <button class="btn btn-sm btn-primary" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.atencion', tarjeta.id, 'action_terminar')">Terminar</button>
+                                    <button class="btn btn-sm btn-light" t-on-click="() => this.abrir('vet.atencion', tarjeta.id)">
+                                        <i class="fa fa-stethoscope me-1"/>Ficha
+                                    </button>
+                                </t>
+                                <t t-if="columna.clave === 'lista'">
+                                    <button class="btn btn-sm btn-success" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.atencion', tarjeta.id, 'action_avisar_lista')"
+                                            title="Avisar por WhatsApp que puede pasar a retirarla">
+                                        <i class="fa fa-whatsapp me-1"/>Avisar
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.atencion', tarjeta.id, 'action_cobrar')">Cobrar</button>
+                                </t>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="o_vet_estadias">
+                    <div class="o_vet_estadias_cabeza">
+                        <h2><i class="fa fa-bed me-2"/>Internados y hospedados</h2>
+                        <button class="btn btn-sm btn-light" t-on-click="() => this.abrirAccion('veterinaria.action_vet_ocupacion')">
+                            Ver los lugares
+                        </button>
+                    </div>
+                    <p t-if="!datos.estadias.length" class="o_vet_vacio">No hay mascotas internadas ni en el hotel.</p>
+                    <div class="o_vet_estadias_lista">
+                        <article t-foreach="datos.estadias" t-as="estadia" t-key="estadia.id"
+                                 t-attf-class="o_vet_estadia o_vet_estadia_{{ estadia.tipo }} {{ estadia.sin_control ? 'o_vet_atrasado' : '' }}">
+                            <div class="o_vet_tarjeta_cuerpo" role="button" tabindex="0"
+                                 t-on-click="() => this.abrir('vet.internacion', estadia.id)">
+                                <img t-if="estadia.foto" class="o_vet_foto" t-att-src="estadia.foto" alt=""/>
+                                <span t-else="" class="o_vet_foto o_vet_foto_emoji" t-out="estadia.emoji"/>
+                                <div class="o_vet_tarjeta_texto">
+                                    <div class="o_vet_tarjeta_linea">
+                                        <strong class="o_vet_nombre" t-out="estadia.mascota"/>
+                                        <span class="o_vet_lugar" t-out="estadia.lugar"/>
+                                    </div>
+                                    <div class="o_vet_detalle">
+                                        <t t-out="estadia.tipo_texto"/>
+                                        <t t-if="estadia.estado === 'activa'"> · día <t t-out="estadia.dias"/></t>
+                                        <t t-if="estadia.salida"> · <t t-out="estadia.salida"/></t>
+                                    </div>
+                                    <div t-if="estadia.motivo" class="o_vet_servicios" t-out="estadia.motivo"/>
+                                    <div t-if="estadia.estado === 'activa'" t-attf-class="o_vet_detalle {{ estadia.sin_control ? 'o_vet_texto_rojo' : '' }}">
+                                        <i class="fa fa-heartbeat me-1"/>Último control: <t t-out="estadia.control"/>
+                                    </div>
+                                    <div t-if="estadia.alertas" class="o_vet_alerta">
+                                        <i class="fa fa-exclamation-triangle me-1"/><t t-out="estadia.alertas"/>
+                                    </div>
+                                    <div class="o_vet_marcas">
+                                        <span t-if="estadia.estado === 'reservada'" class="o_vet_marca">Llega hoy</span>
+                                        <span t-if="estadia.estado === 'alta'" class="o_vet_marca o_vet_marca_verde">Salió: falta cobrar</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_vet_botones">
+                                <t t-if="estadia.estado === 'reservada'">
+                                    <button class="btn btn-sm btn-primary" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.internacion', estadia.id, 'action_ingresar')">Llegó</button>
+                                </t>
+                                <t t-if="estadia.estado === 'activa'">
+                                    <button class="btn btn-sm btn-primary" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.internacion', estadia.id, 'action_nuevo_control')">
+                                        <i class="fa fa-heartbeat me-1"/>Control
+                                    </button>
+                                    <button class="btn btn-sm btn-success" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.internacion', estadia.id, 'action_whatsapp')"
+                                            title="Mandar el parte del último control por WhatsApp">
+                                        <i class="fa fa-whatsapp me-1"/>Parte
+                                    </button>
+                                </t>
+                                <t t-if="estadia.estado === 'alta'">
+                                    <button class="btn btn-sm btn-primary" t-att-disabled="estado.ocupado"
+                                            t-on-click="() => this.ejecutar('vet.internacion', estadia.id, 'action_cobrar')">Cobrar</button>
+                                </t>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</templates>

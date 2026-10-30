@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Los datos de la mascota, arriba de cada impreso -->
+    <template id="report_datos_mascota">
+        <table class="table table-sm table-borderless mb-3" style="font-size: 0.95em;">
+            <tr>
+                <td style="width: 50%;">
+                    <strong>Mascota:</strong> <span t-out="mascota.name"/><br/>
+                    <strong>Especie:</strong> <span t-out="mascota.especie_id.name"/>
+                    <t t-if="mascota.raza_id"> · <span t-out="mascota.raza_id.name"/></t><br/>
+                    <t t-if="mascota.sexo"><strong>Sexo:</strong> <span t-field="mascota.sexo"/>
+                        <t t-if="mascota.castrado"> (castrad<t t-out="mascota._vet_terminacion()"/>)</t><br/></t>
+                    <t t-if="mascota.fecha_nacimiento"><strong>Nació:</strong> <span t-field="mascota.fecha_nacimiento"/>
+                        (<span t-out="mascota.edad"/>)<br/></t>
+                    <t t-if="mascota.microchip"><strong>Microchip:</strong> <span t-out="mascota.microchip"/></t>
+                </td>
+                <td>
+                    <strong>Dueño:</strong> <span t-out="mascota.dueno_id.name"/><br/>
+                    <t t-if="mascota.dueno_telefono"><strong>Teléfono:</strong> <span t-out="mascota.dueno_telefono"/><br/></t>
+                    <t t-if="mascota.color"><strong>Color y señas:</strong> <span t-out="mascota.color"/><br/></t>
+                    <t t-if="mascota.peso_actual"><strong>Último peso:</strong> <span t-out="('%.1f' % mascota.peso_actual).replace('.', ',')"/> kg</t>
+                </td>
+            </tr>
+        </table>
+        <p t-if="mascota.alergias" class="text-danger"><strong>Alergias y enfermedades:</strong> <span t-out="mascota.alergias"/></p>
+    </template>
+
+    <!-- Carnet de vacunas y desparasitaciones -->
+    <template id="report_carnet_documento">
+        <t t-call="web.external_layout">
+            <t t-set="mascota" t-value="doc"/>
+            <div class="page">
+                <h2>Carnet de vacunas · <span t-out="mascota.name"/></h2>
+                <t t-call="veterinaria.report_datos_mascota"/>
+                <t t-foreach="[('vacuna', 'Vacunas'), ('desparasitacion', 'Desparasitaciones')]" t-as="grupo">
+                    <t t-set="aplicaciones" t-value="mascota.aplicacion_ids.filtered(lambda a: (a.tipo == 'vacuna') == (grupo[0] == 'vacuna')).sorted('fecha')"/>
+                    <h4 class="mt-4" t-out="grupo[1]"/>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Lote</th>
+                                <th>Próxima dosis</th>
+                                <th>Aplicó</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="aplicaciones" t-as="aplicacion">
+                                <td><span t-field="aplicacion.fecha"/></td>
+                                <td><span t-out="aplicacion.producto_id.name"/></td>
+                                <td><span t-out="aplicacion.lote or ''"/></td>
+                                <td><span t-if="not aplicacion.renovada" t-field="aplicacion.proxima_fecha"/></td>
+                                <td><span t-out="aplicacion.profesional_id.name or ''"/></td>
+                            </tr>
+                            <tr t-if="not aplicaciones"><td colspan="5" class="text-muted">Sin registros.</td></tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_carnet">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="veterinaria.report_carnet_documento"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_carnet" model="ir.actions.report">
+        <field name="name">Carnet de vacunas</field>
+        <field name="model">vet.mascota</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">veterinaria.report_carnet</field>
+        <field name="report_file">veterinaria.report_carnet</field>
+        <field name="print_report_name">'Carnet de vacunas - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_vet_mascota"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Historia clínica: las consultas y las internaciones -->
+    <template id="report_historia_documento">
+        <t t-call="web.external_layout">
+            <t t-set="mascota" t-value="doc"/>
+            <div class="page">
+                <h2>Historia clínica · <span t-out="mascota.name"/></h2>
+                <t t-call="veterinaria.report_datos_mascota"/>
+                <t t-set="consultas" t-value="mascota.atencion_ids.filtered(lambda a: a.area == 'consultorio' and a.estado in ('lista', 'cobrada')).sorted('fecha_inicio', reverse=True)"/>
+                <h4 class="mt-3">Consultas</h4>
+                <p t-if="not consultas" class="text-muted">Sin consultas.</p>
+                <div t-foreach="consultas" t-as="consulta" class="mb-3" style="page-break-inside: avoid;">
+                    <div class="border-bottom mb-1">
+                        <strong t-field="consulta.fecha_inicio" t-options="{'widget': 'date'}"/>
+                        · <span t-out="consulta.servicios_texto or 'Consulta'"/>
+                        <t t-if="consulta.profesional_id"> · <span t-out="consulta.profesional_id.name"/></t>
+                    </div>
+                    <div t-if="consulta.motivo or consulta.anamnesis"><strong>Motivo:</strong>
+                        <span t-out="consulta.motivo or ''"/> <span t-out="consulta.anamnesis or ''"/></div>
+                    <div t-if="consulta.peso or consulta.temperatura or consulta.frecuencia_cardiaca">
+                        <t t-if="consulta.peso"><strong>Peso:</strong> <span t-out="('%.1f' % consulta.peso).replace('.', ',')"/> kg · </t>
+                        <t t-if="consulta.temperatura"><strong>T°:</strong> <span t-out="('%.1f' % consulta.temperatura).replace('.', ',')"/> °C · </t>
+                        <t t-if="consulta.frecuencia_cardiaca"><strong>FC:</strong> <span t-out="consulta.frecuencia_cardiaca"/> lpm · </t>
+                        <t t-if="consulta.frecuencia_respiratoria"><strong>FR:</strong> <span t-out="consulta.frecuencia_respiratoria"/> rpm</t>
+                    </div>
+                    <div t-if="consulta.examen"><strong>Examen:</strong> <span t-out="consulta.examen"/></div>
+                    <div t-if="consulta.diagnostico"><strong>Diagnóstico:</strong> <span t-out="consulta.diagnostico"/></div>
+                    <div t-if="consulta.tratamiento"><strong>Tratamiento:</strong> <span t-out="consulta.tratamiento"/></div>
+                    <div t-if="consulta.indicaciones"><strong>Indicaciones:</strong> <span t-out="consulta.indicaciones"/></div>
+                </div>
+                <t t-set="internaciones" t-value="mascota.internacion_ids.filtered(lambda i: i.tipo == 'internacion' and i.estado not in ('cancelada', 'reservada')).sorted('ingreso', reverse=True)"/>
+                <t t-if="internaciones">
+                    <h4 class="mt-3">Internaciones</h4>
+                    <div t-foreach="internaciones" t-as="estadia" class="mb-2" style="page-break-inside: avoid;">
+                        <strong t-field="estadia.ingreso" t-options="{'widget': 'date'}"/>
+                        <t t-if="estadia.egreso"> al <span t-field="estadia.egreso" t-options="{'widget': 'date'}"/></t>
+                        · <span t-out="estadia.lugar_id.name"/>
+                        <div t-if="estadia.motivo"><strong>Motivo:</strong> <span t-out="estadia.motivo"/></div>
+                        <div t-if="estadia.plan"><strong>Plan:</strong> <span t-out="estadia.plan"/></div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_historia">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="veterinaria.report_historia_documento"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_historia" model="ir.actions.report">
+        <field name="name">Historia clínica</field>
+        <field name="model">vet.mascota</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">veterinaria.report_historia</field>
+        <field name="report_file">veterinaria.report_historia</field>
+        <field name="print_report_name">'Historia clínica - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_vet_mascota"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Indicaciones para la casa, con la firma del veterinario -->
+    <template id="report_indicaciones_documento">
+        <t t-call="web.external_layout">
+            <t t-set="mascota" t-value="doc.mascota_id"/>
+            <div class="page">
+                <h2>Indicaciones · <span t-out="mascota.name"/></h2>
+                <p class="text-muted"><span t-field="doc.fecha_inicio" t-options="{'widget': 'date'}"/> · <span t-out="doc.name"/></p>
+                <t t-call="veterinaria.report_datos_mascota"/>
+                <div t-if="doc.diagnostico" class="mb-3"><strong>Diagnóstico:</strong><br/><span t-out="doc.diagnostico"/></div>
+                <div class="mb-3" style="font-size: 1.15em; white-space: pre-line;">
+                    <strong>Indicaciones:</strong><br/>
+                    <span t-out="doc.indicaciones or 'Sin indicaciones.'"/>
+                </div>
+                <p t-if="doc.proximo_control"><strong>Próximo control:</strong> <span t-field="doc.proximo_control"/></p>
+                <div class="row mt-5" style="page-break-inside: avoid;">
+                    <div class="col-6 offset-6 text-center">
+                        <div style="border-top: 1px solid #333; padding-top: 4px;">
+                            <span t-out="doc.profesional_id.name or ''"/>
+                            <t t-if="doc.profesional_id.vet_matricula"><br/>Matrícula <span t-out="doc.profesional_id.vet_matricula"/></t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_indicaciones">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="veterinaria.report_indicaciones_documento"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_indicaciones" model="ir.actions.report">
+        <field name="name">Indicaciones</field>
+        <field name="model">vet.atencion</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">veterinaria.report_indicaciones</field>
+        <field name="report_file">veterinaria.report_indicaciones</field>
+        <field name="print_report_name">'Indicaciones - %s' % object.mascota_id.name</field>
+        <field name="binding_model_id" ref="model_vet_atencion"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Constancia de ingreso (internación u hotel): lo que dejó el dueño, firmada por los dos -->
+    <template id="report_ingreso_documento">
+        <t t-call="web.external_layout">
+            <t t-set="mascota" t-value="doc.mascota_id"/>
+            <div class="page">
+                <h2>Constancia de ingreso · <span t-out="doc._tipo_texto()"/></h2>
+                <p class="text-muted"><span t-out="doc.name"/> · <span t-out="doc.lugar_id.name"/></p>
+                <t t-call="veterinaria.report_datos_mascota"/>
+                <table class="table table-sm">
+                    <tr><th style="width: 30%;">Ingreso</th>
+                        <td><span t-field="doc.ingreso" t-options="{'format': 'dd/MM/yyyy HH:mm'}"/></td></tr>
+                    <tr t-if="doc.salida_prevista"><th>Salida prevista</th>
+                        <td><span t-field="doc.salida_prevista" t-options="{'format': 'dd/MM/yyyy HH:mm'}"/></td></tr>
+                    <tr t-if="doc.motivo"><th>Motivo</th><td><span t-out="doc.motivo"/></td></tr>
+                    <tr t-if="doc.plan"><th>Indicaciones</th><td><span t-out="doc.plan"/></td></tr>
+                    <tr t-if="doc.alimentacion"><th>Alimentación</th><td><span t-out="doc.alimentacion"/></td></tr>
+                    <tr><th>Dejó</th><td><span t-out="doc.pertenencias or 'Nada'"/></td></tr>
+                    <tr t-if="doc.precio_dia"><th>Precio por día</th>
+                        <td><span t-field="doc.precio_dia" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td></tr>
+                </table>
+                <p class="small text-muted">
+                    El dueño autoriza a la veterinaria a cuidar a la mascota durante la estadía y a llamarlo ante
+                    cualquier novedad. Los días se cuentan desde el día de ingreso hasta el de salida.
+                </p>
+                <div class="row mt-5" style="page-break-inside: avoid;">
+                    <div class="col-5 text-center">
+                        <div style="border-top: 1px solid #333; padding-top: 4px;">
+                            <span t-out="doc.dueno_id.name"/><br/>Dueño
+                        </div>
+                    </div>
+                    <div class="col-5 offset-2 text-center">
+                        <div style="border-top: 1px solid #333; padding-top: 4px;">
+                            <span t-out="doc.company_id.name"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_ingreso">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="veterinaria.report_ingreso_documento"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_ingreso" model="ir.actions.report">
+        <field name="name">Constancia de ingreso</field>
+        <field name="model">vet.internacion</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">veterinaria.report_ingreso</field>
+        <field name="report_file">veterinaria.report_ingreso</field>
+        <field name="print_report_name">'Ingreso - %s' % object.mascota_id.name</field>
+        <field name="binding_model_id" ref="model_vet_internacion"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

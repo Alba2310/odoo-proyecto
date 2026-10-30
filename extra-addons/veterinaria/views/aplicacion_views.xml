@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vet_aplicacion_list" model="ir.ui.view">
+        <field name="name">vet.aplicacion.list</field>
+        <field name="model">vet.aplicacion</field>
+        <field name="arch" type="xml">
+            <list string="Vacunas y desparasitaciones" default_order="proxima_fecha, id"
+                  decoration-muted="renovada or not proxima_fecha or no_avisar">
+                <field name="mascota_emoji" string=" " width="30px"/>
+                <field name="mascota_id" column_invisible="context.get('default_mascota_id')"/>
+                <field name="dueno_id" optional="show" column_invisible="context.get('default_mascota_id')"/>
+                <field name="dueno_telefono" widget="phone" optional="show"
+                       column_invisible="context.get('default_mascota_id')"/>
+                <field name="producto_id"/>
+                <field name="tipo" optional="hide"/>
+                <field name="fecha"/>
+                <field name="lote" optional="hide"/>
+                <field name="proxima_fecha"
+                       decoration-danger="proxima_fecha and not renovada and proxima_fecha &lt; current_date"
+                       decoration-warning="proxima_fecha and not renovada and proxima_fecha &gt;= current_date"/>
+                <field name="estado_dosis" widget="badge"
+                       decoration-danger="estado_dosis == 'vencida'"
+                       decoration-warning="estado_dosis == 'por_vencer'"
+                       decoration-success="estado_dosis == 'al_dia'"/>
+                <field name="avisada_el" optional="show"/>
+                <field name="renovada" column_invisible="True"/>
+                <field name="no_avisar" optional="hide"/>
+                <button name="action_avisar_whatsapp" type="object" string="WhatsApp" icon="fa-whatsapp"
+                        class="btn-link text-success" invisible="renovada or not proxima_fecha or no_avisar"
+                        title="Abre WhatsApp con el aviso de todas las dosis pendientes de las mascotas de ese dueño"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_aplicacion_form" model="ir.ui.view">
+        <field name="name">vet.aplicacion.form</field>
+        <field name="model">vet.aplicacion</field>
+        <field name="arch" type="xml">
+            <form string="Vacuna o desparasitación">
+                <header>
+                    <button name="action_avisar_whatsapp" type="object" string="Avisar al dueño" icon="fa-whatsapp"
+                            class="btn-success" invisible="not id or renovada or not proxima_fecha or no_avisar"/>
+                    <field name="estado_dosis" widget="statusbar" statusbar_visible="al_dia,por_vencer,vencida"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="mascota_id" readonly="atencion_id"/>
+                            <field name="dueno_id"/>
+                            <field name="producto_id" options="{'no_create': True}" readonly="atencion_id"/>
+                            <field name="lote"/>
+                            <field name="profesional_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="fecha" readonly="atencion_id"/>
+                            <field name="proxima_fecha"/>
+                            <field name="avisada_el"/>
+                            <field name="no_avisar"/>
+                            <field name="renovada"/>
+                            <field name="atencion_id" readonly="1" invisible="not atencion_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="observaciones" placeholder="Por ejemplo: la trajo aplicada de otra veterinaria"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vet_aplicacion_search" model="ir.ui.view">
+        <field name="name">vet.aplicacion.search</field>
+        <field name="model">vet.aplicacion</field>
+        <field name="arch" type="xml">
+            <search string="Buscar vacunas y desparasitaciones">
+                <field name="mascota_id"/>
+                <field name="dueno_id"/>
+                <field name="producto_id"/>
+                <field name="lote"/>
+                <filter name="vencidas" string="Vencidas"
+                        domain="[('proxima_fecha', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="semana" string="Vencen esta semana"
+                        domain="[('proxima_fecha', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('proxima_fecha', '&lt;=', (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="mes" string="Vencen en 30 días"
+                        domain="[('proxima_fecha', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('proxima_fecha', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="sin_avisar" string="Sin avisar" domain="[('avisada_el', '=', False)]"/>
+                <separator/>
+                <filter name="vacunas" string="Vacunas" domain="[('tipo', '=', 'vacuna')]"/>
+                <filter name="desparasitaciones" string="Desparasitaciones" domain="[('tipo', '!=', 'vacuna')]"/>
+                <filter name="fecha" string="Aplicada" date="fecha"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_producto" string="Producto" context="{'group_by': 'producto_id'}"/>
+                    <filter name="group_dueno" string="Dueño" context="{'group_by': 'dueno_id'}"/>
+                    <filter name="group_mes" string="Mes de la próxima dosis" context="{'group_by': 'proxima_fecha:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Las dosis por aplicar: lo que hay que avisarle a los dueños. -->
+    <record id="action_vet_avisos" model="ir.actions.act_window">
+        <field name="name">Vacunas para avisar</field>
+        <field name="res_model">vet.aplicacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('renovada', '=', False), ('no_avisar', '=', False), ('proxima_fecha', '!=', False),
+                              ('mascota_id.fallecida', '=', False)]</field>
+        <field name="context">{'search_default_mes': 1, 'search_default_vencidas': 1, 'search_default_sin_avisar': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay dosis para avisar</p>
+            <p>Acá aparecen las vacunas y desparasitaciones a las que se les acerca la próxima dosis. El botón
+                WhatsApp le escribe al dueño con todas las de sus mascotas juntas.</p>
+        </field>
+    </record>
+
+    <record id="action_vet_aplicacion" model="ir.actions.act_window">
+        <field name="name">Vacunas y desparasitaciones</field>
+        <field name="res_model">vet.aplicacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

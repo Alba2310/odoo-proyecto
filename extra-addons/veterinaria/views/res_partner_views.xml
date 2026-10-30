@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_patitas" model="ir.ui.view">
+        <field name="name">res.partner.form.veterinaria</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_vet_ver_mascotas" type="object" class="oe_stat_button" icon="fa-paw"
+                        groups="veterinaria.group_vet_personal">
+                    <field name="vet_mascota_count" widget="statinfo" string="Mascotas"/>
+                </button>
+            </div>
+            <notebook position="inside">
+                <page string="Mascotas" name="patitas" groups="veterinaria.group_vet_personal">
+                    <field name="vet_mascota_ids" context="{'default_dueno_id': id}">
+                        <list>
+                            <field name="emoji" string=" " width="30px"/>
+                            <field name="name"/>
+                            <field name="especie_id"/>
+                            <field name="raza_id"/>
+                            <field name="edad"/>
+                            <field name="proxima_dosis_texto"/>
+                            <field name="alertas" class="text-danger"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="action_vet_duenos" model="ir.actions.act_window">
+        <field name="name">Dueños</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('vet_mascota_ids', '!=', False)]</field>
+        <field name="context">{'default_customer_rank': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay dueños</p>
+            <p>Aparecen acá en cuanto se les carga una mascota.</p>
+        </field>
+    </record>
+</odoo>

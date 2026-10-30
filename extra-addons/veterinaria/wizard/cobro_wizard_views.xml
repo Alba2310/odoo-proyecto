@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vet_cobro_wizard_form" model="ir.ui.view">
+        <field name="name">vet.cobro.wizard.form</field>
+        <field name="model">vet.cobro.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cobrar">
+                <field name="currency_id" invisible="1"/>
+                <field name="atencion_id" invisible="1"/>
+                <field name="internacion_id" invisible="1"/>
+                <field name="venta_id" invisible="1"/>
+                <div class="d-flex justify-content-between align-items-baseline mb-3">
+                    <div>
+                        <div class="fw-semibold"><field name="cliente_id" readonly="1" options="{'no_open': True}"/></div>
+                        <div class="text-muted"><field name="concepto"/></div>
+                    </div>
+                    <div class="fs-2 fw-bold"><field name="total"/></div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button name="action_todo_efectivo" type="object" string="Todo en efectivo" icon="fa-money"
+                            class="btn-outline-secondary"/>
+                    <button name="action_todo_tarjeta" type="object" string="Todo con tarjeta" icon="fa-credit-card"
+                            class="btn-outline-secondary"/>
+                    <button name="action_todo_transferencia" type="object" string="Todo por transferencia o QR"
+                            icon="fa-qrcode" class="btn-outline-secondary"/>
+                </div>
+                <group>
+                    <group string="Cómo paga">
+                        <field name="tarjeta"/>
+                        <field name="transferencia"/>
+                        <field name="efectivo"/>
+                        <field name="falta" invisible="not falta" decoration-danger="falta != 0"/>
+                    </group>
+                    <group string="Vuelto" invisible="not efectivo">
+                        <field name="entrega"/>
+                        <field name="vuelto" invisible="not entrega" class="fs-4 fw-bold"/>
+                    </group>
+                </group>
+                <p class="text-muted small">
+                    Lo que no se paga con tarjeta ni transferencia queda en efectivo. Se emite la factura y se
+                    registra un pago por cada forma de pago.
+                </p>
+                <footer>
+                    <button name="action_cobrar" type="object" string="Cobrar y emitir la factura" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

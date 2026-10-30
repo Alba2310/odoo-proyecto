@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Página pública de turnos (/reservar): una conversación donde el dueño cuenta quién es su mascota, qué
+         necesita, cuándo puede venir y sus datos. Los servicios y profesionales llegan en data-datos;
+         static/reserva/reserva.js arma la conversación. -->
+    <template id="pagina_reserva" name="Patitas: turnos por internet">&lt;!DOCTYPE html&gt;
+        <html lang="es">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Pedí un turno para tu mascota · <t t-out="clinica"/></title>
+                <meta name="theme-color" content="#2B59C3"/>
+                <link rel="icon" href="/veterinaria/static/description/icon.png"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;display=swap"/>
+                <link rel="stylesheet" t-attf-href="/veterinaria/static/reserva/reserva.css?v={{ version }}"/>
+                <script t-attf-src="/veterinaria/static/reserva/reserva.js?v={{ version }}" defer="defer"></script>
+            </head>
+            <body>
+                <div class="fondo" aria-hidden="true">
+                    <span class="huella h1">🐾</span><span class="huella h2">🐾</span><span class="huella h3">🐾</span>
+                </div>
+                <main class="app" id="app" t-att-data-datos="datos">
+                    <header class="cabeza">
+                        <img class="cabeza__logo" src="/veterinaria/static/description/icon.png" alt="" width="48" height="48"/>
+                        <div class="cabeza__texto">
+                            <h1 t-out="clinica"/>
+                            <p><span class="punto"></span>Turnos por internet</p>
+                        </div>
+                        <button class="cabeza__reiniciar" id="reiniciar" type="button" hidden="hidden">Empezar de nuevo</button>
+                    </header>
+                    <section class="chat" id="chat" aria-live="polite"></section>
+                    <section class="respuesta" id="respuesta"></section>
+                    <noscript><p class="aviso">Para pedir el turno, activá JavaScript en el navegador o llamanos.</p></noscript>
+                </main>
+            </body>
+        </html>
+    </template>
+</odoo>

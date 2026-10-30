@@ -19,6 +19,16 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
   La página la atiende el servicio `oga` (puerto 8072, solo esa base): http://se-alquila.localhost:8072/se-alquila.
   Se crea con
   `bash extra-addons/alquileres/scripts/crear_alquileres.sh`. Detalle en `extra-addons/alquileres/README.md`.
+- `veterinaria` (producto **Patitas**): veterinaria (mascotas con línea de tiempo y peso, historia clínica, carnet
+  de vacunas con aviso de la próxima dosis, baño y peluquería, internación y hotel, cobro mixto con factura, stock y
+  compras, tablero "Hoy en Patitas", turnos por internet tipo chat). A pedido del usuario, con identidad y pantallas
+  propias, distintas de Studio Bella. Base `veterinaria` (admin / admin), se crea con
+  `bash extra-addons/veterinaria/scripts/crear_veterinaria.sh`. La página `/reservar` la atiende el servicio
+  `patitas` (puerto 8073, solo esa base): http://patitas.localhost:8073/reservar. Detalle en
+  `extra-addons/veterinaria/README.md`.
+- `sitio-patitas/`: sitio de venta de Patitas (puerto 5503). A pedido del usuario, que no se parezca en nada a los
+  otros tres y que sea divertido: mascota interactiva, "un día" que corre al bajar, un juego de la sala de espera,
+  álbum de figuritas. El formulario abre WhatsApp, como el de Óga.
 - `tienda_*` y `mi_modulo`: módulos de práctica.
 
 ## Cómo trabajar
@@ -28,10 +38,10 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
 - Moneda guaraníes (PYG, sin decimales) e IVA 10 % / 5 % incluido en el precio.
 - La base de la peluquería es `peluqueria` (admin / admin); se crea con
   `bash extra-addons/studio_bella/scripts/crear_peluqueria.sh`.
-- Tests: `bash scripts/pruebas.sh studio_bella` (o `alquileres`, `autoflow_management`). Corren en una base aparte,
+- Tests: `bash scripts/pruebas.sh studio_bella` (o `alquileres`, `veterinaria`, `autoflow_management`). Corren en una base aparte,
   `pruebas_<módulo>`, que el script crea la primera vez; nunca en las bases que usa el usuario.
   Por dentro usa `--http-port=8079` porque el contenedor `web` ya usa el 8069, así que de a un módulo por vez.
-- Cambios en Python: reiniciar con `docker compose restart web turnos oga`. Cambios solo en XML o JS: alcanza con
+- Cambios en Python: reiniciar con `docker compose restart web turnos oga patitas`. Cambios solo en XML o JS: alcanza con
   `-u studio_bella` (los archivos de `static/turnos/` ni eso: se leen del disco).
 - No borrar ni regenerar datos de una base que se esté usando: actualizar con `-u`.
 

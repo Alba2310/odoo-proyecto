@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_recordatorio_turno" model="mail.template">
+            <field name="name">Patitas: recordatorio del turno</field>
+            <field name="model_id" ref="model_vet_atencion"/>
+            <field name="subject">Mañana {{ object.mascota_id.name }} tiene turno en {{ object.company_id.name }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.dueno_id.id }}</field>
+            <field name="lang">{{ object.dueno_id.lang }}</field>
+            <field name="description">Se envía al dueño el día antes del turno (tarea programada diaria)</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Hola <t t-out="object.dueno_id.name or ''">Ana</t>,</p>
+    <p>Te recordamos el turno de <strong t-out="object.mascota_id.name or ''">Toby</strong> en
+        <t t-out="object.company_id.name or ''">Patitas</t>:</p>
+    <ul>
+        <li>Cuándo: <strong t-out="object.turno_texto or ''">martes 4 de noviembre a las 10:00</strong></li>
+        <li t-if="object.servicios_texto">Para: <t t-out="object.servicios_texto">Consulta general</t></li>
+        <li t-if="object.profesional_id">Lo atiende: <t t-out="object.profesional_id.name or ''">Dra. Laura</t></li>
+    </ul>
+    <p>
+        Si no pueden venir, avisanos respondiendo este correo<t t-if="object.company_id.phone"> o llamando
+        al <t t-out="object.company_id.phone">021 000 000</t></t>, así le damos el lugar a otra mascota.
+    </p>
+    <p>¡Los esperamos!<br/><t t-out="object.company_id.name or ''">Patitas</t></p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_aviso_vacuna" model="mail.template">
+            <field name="name">Patitas: se acerca la próxima dosis</field>
+            <field name="model_id" ref="model_vet_aplicacion"/>
+            <field name="subject">A {{ object.mascota_id.name }} le toca {{ object.producto_id.name }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.dueno_id.id }}</field>
+            <field name="lang">{{ object.dueno_id.lang }}</field>
+            <field name="description">Se envía al dueño unos días antes de la próxima dosis (tarea programada diaria)</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Hola <t t-out="object.dueno_id.name or ''">Ana</t>,</p>
+    <p>
+        Te recordamos que a <strong t-out="object.mascota_id.name or ''">Toby</strong> le toca
+        <strong t-out="object.producto_id.name or ''">Vacuna antirrábica</strong> el
+        <strong t-out="format_date(object.proxima_fecha) or ''">12/11/2026</strong>.
+    </p>
+    <p>
+        Podés reservar el turno en
+        <a t-att-href="object.url_reserva" t-out="object.url_reserva">la página de turnos</a>
+        o respondiendo este correo.
+    </p>
+    <p>¡Gracias por cuidar a <t t-out="object.mascota_id.name or ''">Toby</t>!<br/>
+        <t t-out="object.company_id.name or ''">Patitas</t></p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

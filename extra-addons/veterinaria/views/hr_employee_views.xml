@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_patitas" model="ir.ui.view">
+        <field name="name">hr.employee.form.veterinaria</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Patitas" name="patitas">
+                    <group>
+                        <group>
+                            <field name="vet_atiende"/>
+                            <field name="vet_matricula" invisible="vet_atiende not in ('consultorio', 'ambas')"/>
+                        </group>
+                        <group invisible="not vet_atiende">
+                            <field name="vet_servicio_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <p class="text-muted" invisible="not vet_atiende">
+                        Solo se le dan turnos dentro de su horario de trabajo (pestaña "Información de trabajo"),
+                        también desde la página de turnos por internet.
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_vet_profesionales" model="ir.actions.act_window">
+        <field name="name">Profesionales</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('vet_atiende', '!=', False)]</field>
+        <field name="context" eval="{'default_vet_atiende': 'consultorio', 'default_resource_calendar_id': ref('horario_patitas')}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue a quienes atienden</p>
+            <p>Veterinarios y peluqueros, cada uno con su horario de trabajo.</p>
+        </field>
+    </record>
+
+    <record id="action_vet_horario" model="ir.actions.act_window">
+        <field name="name">Horario de atención</field>
+        <field name="res_model">resource.calendar</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="horario_patitas"/>
+    </record>
+</odoo>

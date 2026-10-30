@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Hoy en Patitas: el tablero de la recepción (static/src/tablero) -->
+    <record id="action_vet_tablero" model="ir.actions.client">
+        <field name="name">Hoy en Patitas</field>
+        <field name="tag">veterinaria.tablero</field>
+    </record>
+
+    <menuitem id="menu_vet_root" name="Patitas" web_icon="veterinaria,static/description/icon.png"
+              groups="group_vet_personal" sequence="24"/>
+
+    <menuitem id="menu_vet_hoy" name="Hoy" parent="menu_vet_root" action="action_vet_tablero" sequence="1"/>
+
+    <menuitem id="menu_vet_agenda" name="Agenda" parent="menu_vet_root" sequence="10"/>
+    <menuitem id="menu_vet_agenda_consultorio" name="Consultorio" parent="menu_vet_agenda"
+              action="action_vet_agenda_consultorio" sequence="1"/>
+    <menuitem id="menu_vet_agenda_estetica" name="Baño y peluquería" parent="menu_vet_agenda"
+              action="action_vet_agenda_estetica" sequence="2"/>
+    <menuitem id="menu_vet_atenciones" name="Todas las atenciones" parent="menu_vet_agenda"
+              action="action_vet_atencion" sequence="10"/>
+
+    <menuitem id="menu_vet_mascotas_raiz" name="Mascotas" parent="menu_vet_root" sequence="20"/>
+    <menuitem id="menu_vet_mascotas" name="Mascotas" parent="menu_vet_mascotas_raiz" action="action_vet_mascota"
+              sequence="1"/>
+    <menuitem id="menu_vet_duenos" name="Dueños" parent="menu_vet_mascotas_raiz" action="action_vet_duenos"
+              sequence="2"/>
+    <menuitem id="menu_vet_avisos" name="Vacunas para avisar" parent="menu_vet_mascotas_raiz"
+              action="action_vet_avisos" sequence="5"/>
+    <menuitem id="menu_vet_aplicaciones" name="Carnet: todas las aplicaciones" parent="menu_vet_mascotas_raiz"
+              action="action_vet_aplicacion" sequence="6"/>
+
+    <menuitem id="menu_vet_internacion_raiz" name="Internación y hotel" parent="menu_vet_root" sequence="30"/>
+    <menuitem id="menu_vet_ocupacion" name="Adentro ahora" parent="menu_vet_internacion_raiz"
+              action="action_vet_ocupacion" sequence="1"/>
+    <menuitem id="menu_vet_internaciones" name="Estadías y reservas" parent="menu_vet_internacion_raiz"
+              action="action_vet_internacion" sequence="2"/>
+
+    <menuitem id="menu_vet_caja" name="Caja" parent="menu_vet_root" sequence="40"/>
+    <menuitem id="menu_vet_ventas" name="Venta de mostrador" parent="menu_vet_caja" action="action_vet_venta"
+              sequence="1"/>
+    <menuitem id="menu_vet_facturas" name="Facturas" parent="menu_vet_caja"
+              action="account.action_move_out_invoice_type" sequence="2"/>
+
+    <menuitem id="menu_vet_compras" name="Compras" parent="menu_vet_root" sequence="50" groups="group_vet_admin"/>
+    <menuitem id="menu_vet_reponer" name="Para reponer" parent="menu_vet_compras"
+              action="stock.action_replenishment" sequence="1"/>
+    <menuitem id="menu_vet_pedidos" name="Pedidos a proveedores" parent="menu_vet_compras"
+              action="purchase.purchase_rfq" sequence="2"/>
+    <menuitem id="menu_vet_recepciones" name="Mercadería que llega" parent="menu_vet_compras"
+              action="stock.action_picking_tree_incoming" sequence="3"/>
+    <menuitem id="menu_vet_stock" name="Productos con stock" parent="menu_vet_compras"
+              action="action_vet_productos_stock" sequence="4"/>
+
+    <menuitem id="menu_vet_reportes" name="Reportes" parent="menu_vet_root" sequence="60" groups="group_vet_admin"/>
+    <menuitem id="menu_vet_reporte_atenciones" name="Atenciones" parent="menu_vet_reportes"
+              action="action_vet_reporte_atenciones" sequence="1"/>
+    <menuitem id="menu_vet_reporte_ventas" name="Facturación" parent="menu_vet_reportes"
+              action="account.action_account_invoice_report_all" sequence="2"/>
+
+    <menuitem id="menu_vet_config" name="Configuración" parent="menu_vet_root" sequence="90" groups="group_vet_admin"/>
+    <menuitem id="menu_vet_productos" name="Servicios y productos" parent="menu_vet_config"
+              action="action_vet_productos" sequence="1"/>
+    <menuitem id="menu_vet_profesionales" name="Profesionales" parent="menu_vet_config"
+              action="action_vet_profesionales" sequence="2"/>
+    <menuitem id="menu_vet_horario" name="Horario de atención" parent="menu_vet_config"
+              action="action_vet_horario" sequence="3"/>
+    <menuitem id="menu_vet_lugares" name="Lugares de internación y hotel" parent="menu_vet_config"
+              action="action_vet_lugar" sequence="4"/>
+    <menuitem id="menu_vet_especies" name="Especies y razas" parent="menu_vet_config"
+              action="action_vet_especie" sequence="5"/>
+    <menuitem id="menu_vet_ajustes" name="Ajustes" parent="menu_vet_config" action="action_vet_ajustes"
+              sequence="10"/>
+</odoo>

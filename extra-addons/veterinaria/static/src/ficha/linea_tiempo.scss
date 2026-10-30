@@ -1,0 +1,134 @@
+// Línea de tiempo de la mascota: un color por tipo de evento.
+$vet-colores: (
+    consulta: #2b59c3,
+    estetica: #e8590c,
+    vacuna: #2f9e44,
+    desparasitacion: #0c8599,
+    internacion: #7048e8,
+    hotel: #9c36b5,
+    nacimiento: #f59f00,
+    fallecimiento: #868e96,
+);
+
+.o_vet_linea_tiempo {
+    padding: 0.5rem 0;
+
+    .o_vet_peso {
+        background: #f5f6fb;
+        border-radius: 14px;
+        padding: 0.75rem 1rem 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .o_vet_peso_titulo {
+        display: flex;
+        gap: 0.75rem;
+        align-items: baseline;
+    }
+
+    .o_vet_peso_svg {
+        width: 100%;
+        max-height: 170px;
+        overflow: visible;
+    }
+
+    .o_vet_peso_linea {
+        fill: none;
+        stroke: #2b59c3;
+        stroke-width: 3;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+    }
+
+    .o_vet_peso_punto {
+        fill: #fff;
+        stroke: #2b59c3;
+        stroke-width: 2.5;
+    }
+
+    .o_vet_peso_texto {
+        font-size: 11px;
+        font-weight: 700;
+        fill: #1f2544;
+    }
+
+    .o_vet_linea_filtros {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .o_vet_eventos {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 0 0.25rem;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: 1.15rem;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            width: 2px;
+            background: #dee2e6;
+        }
+    }
+
+    .o_vet_evento {
+        display: flex;
+        gap: 0.9rem;
+        padding: 0.45rem 0.5rem 0.45rem 0;
+        position: relative;
+        border-radius: 10px;
+    }
+
+    .o_vet_evento_abre {
+        cursor: pointer;
+
+        &:hover {
+            background: #f5f6fb;
+        }
+    }
+
+    .o_vet_evento_icono {
+        flex-shrink: 0;
+        width: 1.9rem;
+        height: 1.9rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        z-index: 1;
+        box-shadow: 0 0 0 3px #fff;
+    }
+
+    @each $tipo, $color in $vet-colores {
+        .o_vet_evento_#{$tipo} .o_vet_evento_icono {
+            background: $color;
+        }
+    }
+
+    .o_vet_evento_fecha {
+        font-size: 0.78rem;
+        color: #868e96;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .o_vet_evento_titulo {
+        font-weight: 700;
+    }
+
+    .o_vet_evento_detalle {
+        white-space: pre-line;
+    }
+
+    .o_vet_evento_quien {
+        font-size: 0.8rem;
+        color: #868e96;
+    }
+}

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_patitas" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.veterinaria</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="46"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Patitas" string="Patitas" name="veterinaria"
+                     logo="/veterinaria/static/description/icon.png" groups="veterinaria.group_vet_admin">
+                    <block title="Avisos a los dueños" name="vet_avisos">
+                        <setting id="vet_url_reserva" string="Página de turnos"
+                                 help="Dirección que va en los avisos de vacunas, para que el dueño pida el turno solo.">
+                            <field name="vet_url_reserva" class="w-100" placeholder="https://turnos.miveterinaria.com.py/reservar"/>
+                            <div class="text-muted">Vacía: la dirección de Odoo seguida de /reservar.</div>
+                        </setting>
+                        <setting id="vet_dias_aviso_vacuna" string="Aviso de vacunas por correo"
+                                 help="Cuántos días antes de la próxima dosis le llega el correo al dueño.">
+                            <field name="vet_dias_aviso_vacuna" class="w-auto"/> días antes
+                        </setting>
+                    </block>
+                    <block title="Internación y hotel" name="vet_internacion">
+                        <setting id="vet_productos_dia" string="Precio por día"
+                                 help="Lo que se cobra por cada día, según el tipo de estadía (se cambia en cada una).">
+                            <div class="row">
+                                <label for="vet_producto_internacion_id" string="Internación" class="col-lg-4 o_light_label"/>
+                                <field name="vet_producto_internacion_id" class="col-lg-8"/>
+                            </div>
+                            <div class="row">
+                                <label for="vet_producto_hotel_id" string="Hotel" class="col-lg-4 o_light_label"/>
+                                <field name="vet_producto_hotel_id" class="col-lg-8"/>
+                            </div>
+                        </setting>
+                        <setting id="vet_horas_control" string="Controles de los internados"
+                                 help="Si un internado pasa más tiempo sin control, el tablero lo marca en rojo.">
+                            Cada <field name="vet_horas_control" class="w-auto"/> horas
+                        </setting>
+                    </block>
+                    <block title="Cobros" name="vet_cobros">
+                        <setting id="vet_diarios" string="Dónde entra cada pago"
+                                 help="Si se deja vacío, el efectivo va al diario de caja y lo demás al de banco.">
+                            <div class="row">
+                                <label for="vet_diario_efectivo_id" string="Efectivo" class="col-lg-4 o_light_label"/>
+                                <field name="vet_diario_efectivo_id" class="col-lg-8"/>
+                            </div>
+                            <div class="row">
+                                <label for="vet_diario_tarjeta_id" string="Tarjeta" class="col-lg-4 o_light_label"/>
+                                <field name="vet_diario_tarjeta_id" class="col-lg-8"/>
+                            </div>
+                            <div class="row">
+                                <label for="vet_diario_transferencia_id" string="Transferencia / QR" class="col-lg-4 o_light_label"/>
+                                <field name="vet_diario_transferencia_id" class="col-lg-8"/>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_vet_ajustes" model="ir.actions.act_window">
+        <field name="name">Ajustes</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'veterinaria', 'bin_size': False}</field>
+    </record>
+</odoo>

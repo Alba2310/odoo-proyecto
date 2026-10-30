@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- no_gap: la numeración no salta si una transacción se deshace. -->
+        <record id="sequence_vet_atencion" model="ir.sequence">
+            <field name="name">Atenciones</field>
+            <field name="code">vet.atencion</field>
+            <field name="prefix">AT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="sequence_vet_internacion" model="ir.sequence">
+            <field name="name">Internaciones y estadías</field>
+            <field name="code">vet.internacion</field>
+            <field name="prefix">EST/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="sequence_vet_venta" model="ir.sequence">
+            <field name="name">Ventas de mostrador</field>
+            <field name="code">vet.venta</field>
+            <field name="prefix">MOS/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,474 @@
+// Colores de Patitas: azul del consultorio, naranja de la peluquería, violeta de la internación y verde del hotel.
+$vet-azul: #2b59c3;
+$vet-azul-claro: #e8eefc;
+$vet-naranja: #e8590c;
+$vet-naranja-claro: #fff0e6;
+$vet-violeta: #7048e8;
+$vet-violeta-claro: #f0ebff;
+$vet-verde: #2f9e44;
+$vet-verde-claro: #e9f7ec;
+$vet-rojo: #e03131;
+$vet-girasol: #ffb400;
+$vet-fondo: #f5f6fb;
+$vet-tinta: #1f2544;
+
+.o_vet_tablero {
+    background: $vet-fondo;
+    color: $vet-tinta;
+
+    // Los botones principales del tablero, con el azul de Patitas.
+    .btn-primary {
+        background-color: $vet-azul;
+        border-color: $vet-azul;
+
+        &:hover,
+        &:focus {
+            background-color: darken($vet-azul, 8%);
+            border-color: darken($vet-azul, 8%);
+        }
+    }
+
+    .o_vet_tablero_contenido {
+        padding: 1.25rem 1.5rem 2rem;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    .o_vet_cabecera {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .o_vet_titulo {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    .o_vet_huella {
+        display: inline-block;
+        transform: rotate(-12deg);
+    }
+
+    .o_vet_fecha {
+        color: lighten($vet-tinta, 35%);
+        font-weight: 500;
+    }
+
+    .o_vet_filtros {
+        display: flex;
+        gap: 0.4rem;
+        background: #fff;
+        padding: 0.3rem;
+        border-radius: 999px;
+        box-shadow: 0 1px 2px rgba(31, 37, 68, 0.08);
+    }
+
+    .o_vet_chip {
+        border: 0;
+        background: transparent;
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        font-weight: 600;
+        color: lighten($vet-tinta, 25%);
+
+        &:hover {
+            background: $vet-fondo;
+        }
+    }
+
+    .o_vet_chip_activo,
+    .o_vet_chip_activo:hover {
+        background: $vet-azul;
+        color: #fff;
+    }
+
+    .o_vet_acciones {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-left: auto;
+    }
+
+    // Avisos del día
+
+    .o_vet_avisos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .o_vet_aviso {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.1rem;
+        border: 0;
+        background: #fff;
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        box-shadow: 0 1px 2px rgba(31, 37, 68, 0.08);
+        color: lighten($vet-tinta, 25%);
+        font-size: 0.85rem;
+    }
+
+    button.o_vet_aviso:hover {
+        box-shadow: 0 4px 14px rgba(31, 37, 68, 0.12);
+    }
+
+    .o_vet_aviso_numero {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: $vet-tinta;
+        line-height: 1.2;
+    }
+
+    .o_vet_rojo {
+        color: $vet-rojo;
+    }
+
+    .o_vet_ambar {
+        color: darken($vet-girasol, 12%);
+    }
+
+    .o_vet_verde {
+        color: $vet-verde;
+    }
+
+    // Sala de espera
+
+    .o_vet_sala {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(240px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        @media (max-width: 1200px) {
+            grid-template-columns: repeat(2, minmax(240px, 1fr));
+        }
+
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .o_vet_columna {
+        background: rgba(255, 255, 255, 0.55);
+        border-radius: 18px;
+        padding: 0.75rem;
+        min-height: 160px;
+        border-top: 4px solid $vet-azul;
+    }
+
+    .o_vet_columna_en_espera {
+        border-top-color: $vet-girasol;
+    }
+
+    .o_vet_columna_en_curso {
+        border-top-color: $vet-violeta;
+    }
+
+    .o_vet_columna_lista {
+        border-top-color: $vet-verde;
+    }
+
+    .o_vet_columna_cabeza {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.6rem;
+
+        h2 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin: 0;
+        }
+    }
+
+    .o_vet_ayuda {
+        font-size: 0.78rem;
+        color: lighten($vet-tinta, 40%);
+    }
+
+    .o_vet_contador {
+        min-width: 2rem;
+        text-align: center;
+        font-weight: 800;
+        background: #fff;
+        border-radius: 999px;
+        padding: 0.1rem 0.6rem;
+    }
+
+    .o_vet_vacio {
+        color: lighten($vet-tinta, 45%);
+        font-style: italic;
+        margin: 0.5rem 0.25rem;
+    }
+
+    .o_vet_tarjeta,
+    .o_vet_estadia {
+        background: #fff;
+        border-radius: 14px;
+        margin-bottom: 0.6rem;
+        box-shadow: 0 1px 3px rgba(31, 37, 68, 0.1);
+        border-left: 5px solid $vet-azul;
+        overflow: hidden;
+        transition: box-shadow 0.15s, transform 0.15s;
+
+        &:hover {
+            box-shadow: 0 6px 18px rgba(31, 37, 68, 0.14);
+            transform: translateY(-1px);
+        }
+    }
+
+    .o_vet_area_estetica {
+        border-left-color: $vet-naranja;
+    }
+
+    .o_vet_estadia_internacion {
+        border-left-color: $vet-violeta;
+    }
+
+    .o_vet_estadia_hotel {
+        border-left-color: $vet-verde;
+    }
+
+    .o_vet_atrasado {
+        box-shadow: 0 0 0 2px rgba($vet-rojo, 0.55);
+    }
+
+    // Arrastrar las tarjetas de la sala de espera
+
+    .o_vet_pista {
+        margin-left: 0.75rem;
+        font-size: 0.8rem;
+        color: lighten($vet-tinta, 45%);
+    }
+
+    .o_vet_arrastrable {
+        cursor: grab;
+        touch-action: pan-y;
+    }
+
+    .o_vet_arrastrando,
+    .o_vet_arrastrable.o_dragged {
+        cursor: grabbing;
+        transform: rotate(2deg) scale(1.02);
+        box-shadow: 0 14px 30px rgba(31, 37, 68, 0.25);
+        z-index: 10;
+    }
+
+    .o_vet_hueco {
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: rgba($vet-azul, 0.06);
+        border: 2px dashed rgba($vet-azul, 0.45);
+        box-shadow: none;
+
+        > * {
+            visibility: hidden;
+        }
+    }
+
+    .o_vet_columna_destino {
+        background: rgba($vet-azul, 0.08);
+        outline: 2px dashed rgba($vet-azul, 0.5);
+        outline-offset: -2px;
+    }
+
+    .o_vet_tarjeta_cuerpo {
+        display: flex;
+        gap: 0.7rem;
+        padding: 0.7rem 0.75rem 0.4rem;
+        cursor: pointer;
+    }
+
+    .o_vet_foto {
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .o_vet_foto_emoji {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+        background: $vet-azul-claro;
+    }
+
+    .o_vet_area_estetica .o_vet_foto_emoji {
+        background: $vet-naranja-claro;
+    }
+
+    .o_vet_estadia_internacion .o_vet_foto_emoji {
+        background: $vet-violeta-claro;
+    }
+
+    .o_vet_estadia_hotel .o_vet_foto_emoji {
+        background: $vet-verde-claro;
+    }
+
+    .o_vet_tarjeta_texto {
+        min-width: 0;
+        flex: 1;
+        font-size: 0.85rem;
+    }
+
+    .o_vet_tarjeta_linea {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+
+    .o_vet_nombre {
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    .o_vet_hora {
+        font-weight: 800;
+        color: $vet-azul;
+    }
+
+    .o_vet_desde,
+    .o_vet_lugar {
+        font-size: 0.78rem;
+        color: lighten($vet-tinta, 35%);
+        white-space: nowrap;
+    }
+
+    .o_vet_lugar {
+        font-weight: 700;
+    }
+
+    .o_vet_detalle {
+        color: lighten($vet-tinta, 35%);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .o_vet_servicios {
+        font-weight: 600;
+        margin: 0.1rem 0;
+    }
+
+    .o_vet_alerta,
+    .o_vet_texto_rojo {
+        color: $vet-rojo;
+        font-weight: 700;
+    }
+
+    .o_vet_marcas {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 0.3rem;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    .o_vet_marca {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 0.05rem 0.5rem;
+        border-radius: 999px;
+        background: $vet-azul-claro;
+        color: $vet-azul;
+    }
+
+    .o_vet_marca_rojo {
+        background: lighten($vet-rojo, 40%);
+        color: $vet-rojo;
+    }
+
+    .o_vet_marca_verde {
+        background: $vet-verde-claro;
+        color: $vet-verde;
+    }
+
+    .o_vet_total {
+        margin-left: auto;
+        font-weight: 800;
+    }
+
+    .o_vet_botones {
+        display: flex;
+        gap: 0.4rem;
+        padding: 0 0.75rem 0.65rem 4.2rem;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    // Internados y hospedados
+
+    .o_vet_estadias {
+        background: rgba(255, 255, 255, 0.55);
+        border-radius: 18px;
+        padding: 0.75rem 1rem 0.5rem;
+        border-top: 4px solid $vet-violeta;
+    }
+
+    .o_vet_estadias_cabeza {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.6rem;
+
+        h2 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin: 0;
+        }
+    }
+
+    .o_vet_estadias_lista {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 0 0.75rem;
+    }
+}
+
+// Ficha de la mascota y lista de mascotas
+
+.o_vet_mascotas {
+    .o_vet_emoji {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: $vet-azul-claro;
+        font-size: 2.1rem;
+    }
+}
+
+.o_vet_lugares {
+    .o_vet_lugar_ocupado {
+        border-left: 5px solid $vet-violeta;
+    }
+
+    .o_vet_lugar_libre {
+        border-left: 5px solid $vet-verde;
+    }
+
+    .o_vet_emoji_chico {
+        font-size: 1.6rem;
+    }
+}

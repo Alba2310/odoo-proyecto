@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- En qué agenda se ofrece, cuánto dura, si es una vacuna y el stock mínimo -->
+    <record id="view_product_template_form_patitas" model="ir.ui.view">
+        <field name="name">product.template.form.veterinaria</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Patitas" name="patitas">
+                    <group>
+                        <group string="Agenda">
+                            <field name="vet_area"/>
+                            <field name="vet_duracion" invisible="vet_area not in ('consultorio', 'estetica')"/>
+                            <field name="vet_reserva_online" invisible="vet_area not in ('consultorio', 'estetica')"/>
+                            <field name="vet_especie_ids" widget="many2many_tags" options="{'no_create': True}"
+                                   invisible="not vet_reserva_online or vet_area not in ('consultorio', 'estetica')"/>
+                        </group>
+                        <group string="Carnet de la mascota">
+                            <field name="vet_aplicacion"/>
+                            <field name="vet_dias_refuerzo" invisible="not vet_aplicacion"/>
+                        </group>
+                        <group string="Reposición" invisible="not is_storable">
+                            <field name="vet_stock_minimo"/>
+                            <field name="vet_stock_maximo"/>
+                            <field name="vet_por_reponer" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="not vet_por_reponer">
+                        El stock está por debajo del mínimo: hay que reponer.
+                    </div>
+                    <p class="text-muted">
+                        Una vacuna o un antiparasitario puede tener stock (las dosis de la heladera): al cobrar se
+                        descuenta y al terminar la atención queda anotado en el carnet con la fecha de la próxima dosis.
+                        Los productos debajo del mínimo aparecen en Compras › Para reponer.
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_vet_producto_list" model="ir.ui.view">
+        <field name="name">product.template.list.veterinaria</field>
+        <field name="model">product.template</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <list string="Servicios y productos" decoration-danger="vet_por_reponer">
+                <field name="name"/>
+                <field name="categ_id"/>
+                <field name="vet_area" optional="show"/>
+                <field name="vet_duracion" string="Min" optional="show"/>
+                <field name="vet_aplicacion" optional="show"/>
+                <field name="vet_reserva_online" string="Por internet" optional="hide"/>
+                <field name="is_storable" column_invisible="True"/>
+                <field name="vet_por_reponer" column_invisible="True"/>
+                <field name="qty_available" string="En stock" invisible="not is_storable"/>
+                <field name="vet_stock_minimo" string="Mínimo" optional="show" invisible="not is_storable"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="list_price" string="Precio" widget="monetary"/>
+                <field name="taxes_id" widget="many2many_tags" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_producto_search" model="ir.ui.view">
+        <field name="name">product.template.search.veterinaria</field>
+        <field name="model">product.template</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <search string="Buscar">
+                <field name="name"/>
+                <field name="categ_id"/>
+                <filter name="servicios" string="Servicios" domain="[('type', '=', 'service')]"/>
+                <filter name="con_stock" string="Con stock" domain="[('is_storable', '=', True)]"/>
+                <separator/>
+                <filter name="consultorio" string="Consultorio" domain="[('vet_area', '=', 'consultorio')]"/>
+                <filter name="estetica" string="Baño y peluquería" domain="[('vet_area', '=', 'estetica')]"/>
+                <filter name="internacion" string="Internación y hotel" domain="[('vet_area', '=', 'internacion')]"/>
+                <filter name="aplicaciones" string="Vacunas y antiparasitarios" domain="[('vet_aplicacion', '!=', False)]"/>
+                <separator/>
+                <filter name="archivados" string="Archivados" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_categoria" string="Categoría" context="{'group_by': 'categ_id'}"/>
+                    <filter name="group_area" string="Se usa en" context="{'group_by': 'vet_area'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vet_productos" model="ir.actions.act_window">
+        <field name="name">Servicios y productos</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_vet_producto_list"/>
+        <field name="search_view_id" ref="view_vet_producto_search"/>
+        <field name="domain" eval="[('categ_id', 'child_of', ref('categoria_patitas'))]"/>
+        <field name="context" eval="{'default_categ_id': ref('categoria_patitas'), 'search_default_group_categoria': 1}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue los servicios y productos</p>
+            <p>Consultas, vacunas, baños, días de hotel, alimentos y remedios, cada uno en su categoría de Patitas.</p>
+        </field>
+    </record>
+
+    <record id="action_vet_productos_stock" model="ir.actions.act_window">
+        <field name="name">Productos con stock</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_vet_producto_list"/>
+        <field name="search_view_id" ref="view_vet_producto_search"/>
+        <field name="domain" eval="[('categ_id', 'child_of', ref('categoria_patitas')), ('is_storable', '=', True)]"/>
+        <field name="context" eval="{'default_categ_id': ref('categoria_patitas'), 'default_is_storable': True}"/>
+    </record>
+</odoo>

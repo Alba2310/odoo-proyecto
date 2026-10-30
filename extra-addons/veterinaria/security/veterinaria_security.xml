@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_patitas" model="ir.module.category">
+        <field name="name">Patitas</field>
+        <field name="description">Veterinaria</field>
+        <field name="sequence">46</field>
+    </record>
+
+    <!-- Personal: recepción, veterinarios y peluqueros. Da turnos, atiende, carga la historia clínica, interna,
+         vende y cobra. Por eso emite facturas, registra pagos y mueve stock. -->
+    <record id="group_vet_personal" model="res.groups">
+        <field name="name">Personal</field>
+        <field name="category_id" ref="module_category_patitas"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_partner_manager')),
+                                         Command.link(ref('account.group_account_invoice')),
+                                         Command.link(ref('stock.group_stock_user'))]"/>
+    </record>
+
+    <!-- Administración: además configura servicios, productos, profesionales y lugares, compra a proveedores,
+         ve los reportes y puede borrar. -->
+    <record id="group_vet_admin" model="res.groups">
+        <field name="name">Administración</field>
+        <field name="category_id" ref="module_category_patitas"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_vet_personal')),
+                                         Command.link(ref('stock.group_stock_manager')),
+                                         Command.link(ref('purchase.group_purchase_manager')),
+                                         Command.link(ref('hr.group_hr_user'))]"/>
+        <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="rule_vet_mascota_company" model="ir.rule">
+            <field name="name">Mascotas: multicompañía</field>
+            <field name="model_id" ref="model_vet_mascota"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vet_atencion_company" model="ir.rule">
+            <field name="name">Atenciones: multicompañía</field>
+            <field name="model_id" ref="model_vet_atencion"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vet_aplicacion_company" model="ir.rule">
+            <field name="name">Vacunas y desparasitaciones: multicompañía</field>
+            <field name="model_id" ref="model_vet_aplicacion"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vet_internacion_company" model="ir.rule">
+            <field name="name">Internaciones y estadías: multicompañía</field>
+            <field name="model_id" ref="model_vet_internacion"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vet_lugar_company" model="ir.rule">
+            <field name="name">Lugares de internación: multicompañía</field>
+            <field name="model_id" ref="model_vet_lugar"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vet_venta_company" model="ir.rule">
+            <field name="name">Ventas de mostrador: multicompañía</field>
+            <field name="model_id" ref="model_vet_venta"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vet_peso_company" model="ir.rule">
+            <field name="name">Pesos: multicompañía</field>
+            <field name="model_id" ref="model_vet_peso"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vet_control_company" model="ir.rule">
+            <field name="name">Controles de internación: multicompañía</field>
+            <field name="model_id" ref="model_vet_control"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

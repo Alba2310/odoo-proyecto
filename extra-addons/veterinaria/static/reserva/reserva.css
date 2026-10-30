@@ -1,0 +1,588 @@
+/* Patitas: turnos por internet. Una conversación clara y alegre: azul, girasol y burbujas redondas. */
+:root {
+    --azul: #2b59c3;
+    --azul-oscuro: #1d3f8f;
+    --azul-claro: #e8eefc;
+    --girasol: #ffb400;
+    --girasol-claro: #fff4d6;
+    --tinta: #1f2544;
+    --gris: #6b7194;
+    --borde: #dfe3f0;
+    --fondo: #eef2fb;
+    --blanco: #fff;
+    --rojo: #d63939;
+    --verde-wa: #1f9d55;
+    --radio: 22px;
+    --sombra: 0 2px 10px rgba(31, 37, 68, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--tinta);
+    background: var(--fondo);
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+    color: inherit;
+}
+
+/* Huellas grandes del fondo */
+.fondo {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.huella {
+    position: absolute;
+    font-size: 160px;
+    opacity: 0.06;
+    filter: grayscale(1);
+}
+
+.h1 { top: 6%; left: -40px; transform: rotate(-20deg); }
+.h2 { top: 45%; right: -50px; transform: rotate(25deg); }
+.h3 { bottom: -30px; left: 30%; transform: rotate(-5deg); }
+
+.app {
+    position: relative;
+    z-index: 1;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 16px 32px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cabecera, como la de un chat */
+.cabeza {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 -16px;
+    padding: 12px 16px;
+    background: rgba(238, 242, 251, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--borde);
+}
+
+.cabeza__logo {
+    border-radius: 14px;
+    box-shadow: var(--sombra);
+}
+
+.cabeza__texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.cabeza h1 {
+    font-family: "Fredoka", "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cabeza p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--gris);
+}
+
+.punto {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: #2fb344;
+    vertical-align: 1px;
+}
+
+.cabeza__reiniciar {
+    border: 0;
+    background: none;
+    color: var(--azul);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 6px 8px;
+}
+
+/* Mensajes */
+.chat {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 0 8px;
+}
+
+.mensaje {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    max-width: 88%;
+    scroll-margin-top: 90px; /* que la cabecera fija no tape la pregunta */
+}
+
+.mensaje--bot {
+    align-self: flex-start;
+}
+
+.mensaje--yo {
+    align-self: flex-end;
+}
+
+.mensaje__avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.burbuja {
+    padding: 10px 14px;
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    word-wrap: break-word;
+}
+
+.mensaje--bot .burbuja {
+    background: var(--blanco);
+    border-bottom-left-radius: 6px;
+}
+
+.mensaje--yo .burbuja {
+    background: var(--azul);
+    color: var(--blanco);
+    border-bottom-right-radius: 6px;
+    font-weight: 700;
+}
+
+.burbuja__cambiar {
+    margin-left: 10px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--blanco);
+    border-radius: 999px;
+    padding: 1px 9px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mensaje--nuevo {
+    animation: aparecer 0.35s ease-out;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+}
+
+.mensaje--tarjeta {
+    max-width: 100%;
+    width: 100%;
+    margin-left: 38px;
+    max-width: calc(100% - 38px);
+}
+
+.resumen,
+.listo {
+    width: 100%;
+    margin: 0;
+    background: var(--blanco);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    padding: 14px 16px;
+}
+
+.resumen__fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--borde);
+}
+
+.resumen__fila:last-child {
+    border-bottom: 0;
+    font-weight: 800;
+}
+
+.resumen dt {
+    color: var(--gris);
+}
+
+.resumen dd {
+    margin: 0;
+    text-align: right;
+    font-weight: 700;
+}
+
+/* Lo que contesta el dueño */
+.respuesta {
+    margin-top: 8px;
+    background: var(--blanco);
+    border-radius: var(--radio);
+    box-shadow: 0 6px 24px rgba(31, 37, 68, 0.1);
+    padding: 16px;
+}
+
+.respuesta:empty {
+    display: none;
+}
+
+.escribir {
+    display: flex;
+    gap: 8px;
+}
+
+.campo {
+    width: 100%;
+    border: 2px solid var(--borde);
+    border-radius: 14px;
+    padding: 11px 14px;
+    background: var(--blanco);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.campo:focus {
+    border-color: var(--azul);
+}
+
+textarea.campo {
+    resize: vertical;
+}
+
+.boton {
+    border: 0;
+    border-radius: 14px;
+    padding: 11px 20px;
+    background: var(--azul);
+    color: var(--blanco);
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.boton:hover:not(:disabled) {
+    background: var(--azul-oscuro);
+}
+
+.boton:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.boton:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.boton--ancho {
+    width: 100%;
+}
+
+.boton--wa {
+    background: var(--verde-wa);
+    display: block;
+}
+
+.boton--wa:hover {
+    background: #17804a !important;
+}
+
+.boton--claro {
+    background: var(--azul-claro);
+    color: var(--azul);
+}
+
+.boton--claro:hover:not(:disabled) {
+    background: #d7e1fa;
+}
+
+/* Opciones para tocar */
+.opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.opciones--especies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.opcion {
+    border: 2px solid var(--borde);
+    background: var(--blanco);
+    border-radius: 16px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.opcion:hover:not(:disabled) {
+    border-color: var(--azul);
+}
+
+.opcion:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.opcion--elegida {
+    border-color: var(--azul);
+    background: var(--azul-claro);
+}
+
+.opcion--destacada {
+    background: var(--girasol-claro);
+    border-color: var(--girasol);
+}
+
+.opcion--especie {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    padding: 14px 8px;
+}
+
+.opcion__emoji {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.opcion--servicio {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 210px;
+}
+
+.opcion__detalle {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--gris);
+}
+
+.grupo + .grupo {
+    margin-top: 14px;
+}
+
+.grupo__titulo {
+    font-family: "Fredoka", "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 8px;
+}
+
+.grupo__titulo small {
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    color: var(--gris);
+}
+
+.pie-paso {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.pie-paso--columna {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.pie-paso__total {
+    font-weight: 700;
+    color: var(--gris);
+}
+
+/* Días y horas */
+.dias {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 2px 2px 8px;
+    scroll-snap-type: x proximity;
+}
+
+.dia {
+    flex: 0 0 74px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid var(--borde);
+    border-radius: 16px;
+    background: var(--blanco);
+    padding: 8px 4px;
+    cursor: pointer;
+    scroll-snap-align: center;
+}
+
+.dia:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.dia--elegido {
+    border-color: var(--azul);
+    background: var(--azul);
+    color: var(--blanco);
+}
+
+.dia__semana {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.dia__numero {
+    font-family: "Fredoka", "Nunito", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+.dia__mes {
+    font-size: 0.75rem;
+}
+
+.horas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.hora {
+    border: 2px solid var(--borde);
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 9px 4px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.hora:hover,
+.hora--elegida {
+    border-color: var(--azul);
+    background: var(--azul-claro);
+}
+
+/* Formulario */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.etiqueta span {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Mensajes de estado */
+.aviso {
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: #fdecec;
+    color: var(--rojo);
+    font-weight: 700;
+}
+
+.cargando {
+    margin: 0;
+    color: var(--gris);
+    font-weight: 700;
+}
+
+.cargando::before {
+    content: "🐾 ";
+    display: inline-block;
+    animation: latido 1s ease-in-out infinite;
+}
+
+@keyframes latido {
+    50% { transform: scale(1.25); }
+}
+
+.ayuda {
+    color: var(--gris);
+    font-size: 0.9rem;
+    margin: 6px 0 0;
+}
+
+.listo {
+    text-align: center;
+}
+
+.listo__icono {
+    font-size: 2.6rem;
+}
+
+.listo h2 {
+    font-family: "Fredoka", "Nunito", sans-serif;
+    font-weight: 600;
+    margin: 4px 0;
+}
+
+.listo__texto {
+    font-weight: 700;
+    margin: 0;
+}
+
+@media (max-width: 420px) {
+    .mensaje {
+        max-width: 94%;
+    }
+
+    .escribir {
+        flex-direction: column;
+    }
+}

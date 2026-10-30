@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Categorías para ordenar los servicios y productos de la veterinaria (los reportes agrupan por ellas). -->
+        <record id="categoria_patitas" model="product.category">
+            <field name="name">Patitas</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+        <record id="categoria_consultorio" model="product.category">
+            <field name="name">Consultorio</field>
+            <field name="parent_id" ref="categoria_patitas"/>
+        </record>
+        <record id="categoria_vacunas" model="product.category">
+            <field name="name">Vacunas y antiparasitarios</field>
+            <field name="parent_id" ref="categoria_patitas"/>
+        </record>
+        <record id="categoria_estetica" model="product.category">
+            <field name="name">Baño y peluquería</field>
+            <field name="parent_id" ref="categoria_patitas"/>
+        </record>
+        <record id="categoria_internacion" model="product.category">
+            <field name="name">Internación y hotel</field>
+            <field name="parent_id" ref="categoria_patitas"/>
+        </record>
+        <record id="categoria_farmacia" model="product.category">
+            <field name="name">Farmacia</field>
+            <field name="parent_id" ref="categoria_patitas"/>
+        </record>
+        <record id="categoria_alimentos" model="product.category">
+            <field name="name">Alimentos</field>
+            <field name="parent_id" ref="categoria_patitas"/>
+        </record>
+        <record id="categoria_accesorios" model="product.category">
+            <field name="name">Accesorios e higiene</field>
+            <field name="parent_id" ref="categoria_patitas"/>
+        </record>
+
+        <!-- Cliente de las ventas de mostrador cuando no se pide factura a nombre de alguien. -->
+        <record id="cliente_consumidor_final" model="res.partner">
+            <field name="name">Consumidor final</field>
+            <field name="customer_rank">1</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="veterinaria.LineaTiempo">
+        <div class="o_vet_linea_tiempo">
+            <p t-if="!props.record.resId" class="text-muted">Guardá la ficha para ver su historia.</p>
+            <t t-elif="estado.cargado">
+                <t t-set="peso" t-value="grafico"/>
+                <div t-if="peso" class="o_vet_peso">
+                    <div class="o_vet_peso_titulo">
+                        <strong>Peso</strong>
+                        <span class="text-muted">de <t t-out="peso.primero.texto"/> a <t t-out="peso.ultimo.texto"/></span>
+                    </div>
+                    <svg t-att-viewBox="'0 0 ' + peso.ancho + ' ' + peso.alto" class="o_vet_peso_svg" role="img"
+                         aria-label="Evolución del peso">
+                        <polyline t-att-points="peso.linea" class="o_vet_peso_linea"/>
+                        <g t-foreach="peso.puntos" t-as="punto" t-key="punto.clave">
+                            <circle t-att-cx="punto.x" t-att-cy="punto.y" r="4.5" class="o_vet_peso_punto">
+                                <title t-out="punto.fecha + ': ' + punto.texto"/>
+                            </circle>
+                            <text t-att-x="punto.x" t-att-y="punto.y - 10" class="o_vet_peso_texto" text-anchor="middle"
+                                  t-out="punto.texto"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="o_vet_linea_filtros">
+                    <button t-attf-class="btn btn-sm {{ !estado.filtro ? 'btn-primary' : 'btn-light' }}"
+                            t-on-click="() => this.elegir(false)">Todo</button>
+                    <button t-attf-class="btn btn-sm {{ estado.filtro === 'consulta' ? 'btn-primary' : 'btn-light' }}"
+                            t-on-click="() => this.elegir('consulta')"><i class="fa fa-stethoscope me-1"/>Consultas</button>
+                    <button t-attf-class="btn btn-sm {{ estado.filtro === 'vacuna' ? 'btn-primary' : 'btn-light' }}"
+                            t-on-click="() => this.elegir('vacuna')"><i class="fa fa-eyedropper me-1"/>Vacunas</button>
+                    <button t-attf-class="btn btn-sm {{ estado.filtro === 'estetica' ? 'btn-primary' : 'btn-light' }}"
+                            t-on-click="() => this.elegir('estetica')"><i class="fa fa-bath me-1"/>Peluquería</button>
+                    <button t-attf-class="btn btn-sm {{ estado.filtro === 'internacion' ? 'btn-primary' : 'btn-light' }}"
+                            t-on-click="() => this.elegir('internacion')"><i class="fa fa-bed me-1"/>Internaciones</button>
+                </div>
+
+                <p t-if="!eventos.length" class="text-muted mt-3">Todavía no hay nada para mostrar.</p>
+                <ol t-else="" class="o_vet_eventos">
+                    <li t-foreach="eventos" t-as="evento" t-key="evento.clave"
+                        t-attf-class="o_vet_evento o_vet_evento_{{ evento.tipo }} {{ evento.modelo ? 'o_vet_evento_abre' : '' }}"
+                        t-on-click="() => this.abrir(evento)">
+                        <span class="o_vet_evento_icono"><i t-attf-class="fa {{ icono(evento.tipo) }}"/></span>
+                        <div class="o_vet_evento_texto">
+                            <div class="o_vet_evento_fecha" t-out="fecha(evento.fecha)"/>
+                            <div class="o_vet_evento_titulo" t-out="evento.titulo"/>
+                            <div t-if="evento.detalle" class="o_vet_evento_detalle" t-out="evento.detalle"/>
+                            <div t-if="evento.quien" class="o_vet_evento_quien"><i class="fa fa-user-md me-1"/><t t-out="evento.quien"/></div>
+                        </div>
+                    </li>
+                </ol>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vet_venta_list" model="ir.ui.view">
+        <field name="name">vet.venta.list</field>
+        <field name="model">vet.venta</field>
+        <field name="arch" type="xml">
+            <list string="Ventas de mostrador" decoration-muted="estado == 'cancelada'">
+                <field name="fecha"/>
+                <field name="name"/>
+                <field name="dueno_id"/>
+                <field name="vendedor_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="forma_pago" optional="show"/>
+                <field name="estado" widget="badge" decoration-info="estado == 'borrador'"
+                       decoration-success="estado == 'cobrada'"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_venta_form" model="ir.ui.view">
+        <field name="name">vet.venta.form</field>
+        <field name="model">vet.venta</field>
+        <field name="arch" type="xml">
+            <form string="Venta de mostrador">
+                <field name="factura_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <header>
+                    <button name="action_cobrar" type="object" string="Cobrar" class="btn-primary"
+                            invisible="estado != 'borrador'"/>
+                    <button name="action_cancelar" type="object" string="Cancelar" invisible="estado != 'borrador'"/>
+                    <button name="action_reabrir" type="object" string="Reabrir" invisible="estado != 'cancelada'"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador,cobrada"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_factura" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not factura_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="factura_id" readonly="1" nolabel="1"
+                                                                  options="{'no_open': True}"/></span>
+                                <span class="o_stat_text">Factura</span>
+                            </div>
+                        </button>
+                        <button name="action_ver_movimientos" type="object" class="oe_stat_button" icon="fa-cubes"
+                                invisible="not movimiento_count">
+                            <field name="movimiento_count" widget="statinfo" string="Stock"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="dueno_id" readonly="estado != 'borrador'"/>
+                            <field name="fecha" readonly="estado != 'borrador'"/>
+                        </group>
+                        <group>
+                            <field name="vendedor_id" readonly="estado != 'borrador'"/>
+                            <field name="forma_pago" invisible="not forma_pago"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="estado != 'borrador'"/>
+                        </group>
+                    </group>
+                    <field name="linea_ids" readonly="estado != 'borrador'">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="producto_id"/>
+                            <field name="cantidad"/>
+                            <field name="es_almacenable" column_invisible="True"/>
+                            <field name="stock_disponible" invisible="not es_almacenable"
+                                   decoration-danger="stock_disponible &lt; cantidad"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="precio_unitario"/>
+                            <field name="subtotal" sum="Total"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="total" class="oe_subtotal_footer_separator"/>
+                    </group>
+                    <field name="nota" placeholder="Notas"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vet_venta_search" model="ir.ui.view">
+        <field name="name">vet.venta.search</field>
+        <field name="model">vet.venta</field>
+        <field name="arch" type="xml">
+            <search string="Buscar ventas">
+                <field name="name"/>
+                <field name="dueno_id"/>
+                <field name="linea_ids" string="Producto" filter_domain="[('linea_ids.producto_id', 'ilike', self)]"/>
+                <filter name="abiertas" string="Abiertas" domain="[('estado', '=', 'borrador')]"/>
+                <filter name="cobradas" string="Cobradas" domain="[('estado', '=', 'cobrada')]"/>
+                <filter name="fecha" string="Fecha" date="fecha"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vet_venta" model="ir.actions.act_window">
+        <field name="name">Venta de mostrador</field>
+        <field name="res_model">vet.venta</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue la primera venta</p>
+            <p>Alimentos, pipetas, collares: lo que se vende sin atender a la mascota.</p>
+        </field>
+    </record>
+
+    <record id="action_vet_venta_nueva" model="ir.actions.act_window">
+        <field name="name">Venta de mostrador</field>
+        <field name="res_model">vet.venta</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

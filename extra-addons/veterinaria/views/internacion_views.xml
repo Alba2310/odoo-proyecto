@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Lugares: el mapa de jaulas y caniles, con quién está en cada uno. -->
+    <record id="view_vet_lugar_kanban" model="ir.ui.view">
+        <field name="name">vet.lugar.kanban</field>
+        <field name="model">vet.lugar</field>
+        <field name="arch" type="xml">
+            <kanban class="o_vet_lugares" create="false" action="action_abrir_estadia" type="object">
+                <field name="estado_lugar"/>
+                <field name="estadia_id"/>
+                <field name="proxima_reserva_id"/>
+                <templates>
+                    <t t-name="card" t-attf-class="o_vet_lugar o_vet_lugar_{{ record.estado_lugar.raw_value }}">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="tipo" class="small text-muted"/>
+                        </div>
+                        <div t-if="record.estadia_id.raw_value" class="d-flex align-items-center gap-2 mt-2">
+                            <span class="o_vet_emoji_chico"><field name="mascota_emoji"/></span>
+                            <div>
+                                <field name="mascota_nombre" class="fw-semibold"/>
+                                <div class="small text-muted"><field name="estadia_texto"/></div>
+                            </div>
+                        </div>
+                        <div t-else="" class="mt-2 text-success fw-semibold">Libre</div>
+                        <div t-if="record.proxima_reserva_id.raw_value" class="small text-muted mt-1">
+                            <i class="fa fa-calendar me-1" title="Reserva"/>Reservado: <field name="reserva_texto"/>
+                        </div>
+                        <div t-if="record.nota.raw_value" class="small text-muted"><field name="nota"/></div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_vet_lugar_list" model="ir.ui.view">
+        <field name="name">vet.lugar.list</field>
+        <field name="model">vet.lugar</field>
+        <field name="arch" type="xml">
+            <list string="Lugares" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="tipo"/>
+                <field name="nota"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_vet_ocupacion" model="ir.actions.act_window">
+        <field name="name">Adentro ahora</field>
+        <field name="res_model">vet.lugar</field>
+        <field name="view_mode">kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue las jaulas y caniles</p>
+            <p>En Configuración › Lugares de internación y hotel.</p>
+        </field>
+    </record>
+
+    <record id="action_vet_lugar" model="ir.actions.act_window">
+        <field name="name">Lugares de internación y hotel</field>
+        <field name="res_model">vet.lugar</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- Estadías -->
+    <record id="view_vet_internacion_list" model="ir.ui.view">
+        <field name="name">vet.internacion.list</field>
+        <field name="model">vet.internacion</field>
+        <field name="arch" type="xml">
+            <list string="Internaciones y hotel" decoration-muted="estado == 'cancelada'">
+                <field name="name"/>
+                <field name="tipo"/>
+                <field name="mascota_emoji" string=" " width="30px"/>
+                <field name="mascota_id"/>
+                <field name="dueno_id" optional="show"/>
+                <field name="lugar_id"/>
+                <field name="ingreso"/>
+                <field name="salida_prevista" optional="show"/>
+                <field name="egreso" optional="show"/>
+                <field name="estado" widget="badge"
+                       decoration-info="estado == 'reservada'"
+                       decoration-warning="estado in ('activa', 'alta')"
+                       decoration-success="estado == 'cobrada'"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_internacion_calendar" model="ir.ui.view">
+        <field name="name">vet.internacion.calendar</field>
+        <field name="model">vet.internacion</field>
+        <field name="arch" type="xml">
+            <calendar string="Ocupación" date_start="ingreso" date_stop="salida_prevista" color="lugar_id" mode="month"
+                      quick_create="0" event_open_popup="1">
+                <field name="lugar_id" filters="1"/>
+                <field name="mascota_id"/>
+                <field name="dueno_id"/>
+                <field name="tipo" filters="1"/>
+                <field name="estado"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_vet_internacion_form" model="ir.ui.view">
+        <field name="name">vet.internacion.form</field>
+        <field name="model">vet.internacion</field>
+        <field name="arch" type="xml">
+            <form string="Estadía">
+                <field name="factura_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <header>
+                    <button name="action_ingresar" type="object" string="Llegó" class="btn-primary"
+                            invisible="estado != 'reservada'"/>
+                    <button name="action_nuevo_control" type="object" string="Nuevo control" class="btn-primary"
+                            icon="fa-heartbeat" invisible="estado != 'activa'"/>
+                    <button name="action_whatsapp" type="object" string="Contarle al dueño" icon="fa-whatsapp"
+                            class="btn-success" invisible="estado not in ('reservada', 'activa', 'alta')"/>
+                    <button name="action_dar_alta" type="object" string="Dar de alta" invisible="estado != 'activa'"
+                            confirm="¿Sale ahora? Se cuentan los días hasta hoy."/>
+                    <button name="action_cobrar" type="object" string="Cobrar" class="btn-primary"
+                            invisible="estado != 'alta'"/>
+                    <button name="action_imprimir_ingreso" type="object" string="Constancia de ingreso" icon="fa-print"
+                            invisible="not id or estado == 'cancelada'"/>
+                    <button name="action_cancelar" type="object" string="Cancelar"
+                            invisible="estado not in ('reservada', 'activa')"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="reservada,activa,alta,cobrada"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_factura" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not factura_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="factura_id" readonly="1" nolabel="1"
+                                                                  options="{'no_open': True}"/></span>
+                                <span class="o_stat_text">Factura</span>
+                            </div>
+                        </button>
+                        <button name="action_ver_movimientos" type="object" class="oe_stat_button" icon="fa-cubes"
+                                invisible="not movimiento_count">
+                            <field name="movimiento_count" widget="statinfo" string="Stock"/>
+                        </button>
+                    </div>
+                    <div class="alert alert-danger d-flex gap-2 align-items-center mb-2" role="alert"
+                         invisible="not mascota_alertas">
+                        <i class="fa fa-exclamation-triangle" title="Cuidado"/>
+                        <strong>Cuidado:</strong> <field name="mascota_alertas" class="mb-0"/>
+                    </div>
+                    <div class="alert alert-warning d-flex gap-2 mb-2" role="alert" invisible="not mascota_alergias">
+                        <i class="fa fa-medkit mt-1" title="Alergias"/>
+                        <div><strong>Alergias y enfermedades:</strong> <field name="mascota_alergias" class="mb-0"/></div>
+                    </div>
+                    <div class="oe_title">
+                        <field name="tipo" widget="radio" options="{'horizontal': true}" readonly="estado != 'reservada' and id"/>
+                        <h1 class="d-flex align-items-center gap-2">
+                            <field name="mascota_emoji" class="fs-1"/>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Quién se queda">
+                            <field name="mascota_id" readonly="factura_id"/>
+                            <field name="dueno_id" readonly="factura_id"/>
+                            <field name="dueno_telefono" widget="phone"/>
+                            <field name="profesional_id" options="{'no_create': True}" invisible="tipo == 'hotel'"/>
+                            <field name="atencion_id" invisible="not atencion_id"/>
+                        </group>
+                        <group string="Dónde y cuándo">
+                            <field name="lugar_id" options="{'no_create': True}" readonly="estado in ('alta', 'cobrada')"/>
+                            <field name="ingreso" readonly="estado not in ('reservada', 'activa')"/>
+                            <field name="salida_prevista" readonly="estado not in ('reservada', 'activa')"/>
+                            <field name="egreso" invisible="not egreso"/>
+                            <field name="dias_hasta_hoy" invisible="estado != 'activa'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Indicaciones" name="indicaciones">
+                            <group>
+                                <field name="motivo" placeholder="Diagnóstico o por qué se queda"/>
+                                <field name="plan" placeholder="Por ejemplo: suero 500 ml cada 12 h, antibiótico cada 8 h"/>
+                                <field name="alimentacion"/>
+                                <field name="pertenencias" placeholder="Correa, cama, su comida, juguetes..."/>
+                            </group>
+                        </page>
+                        <page string="Controles" name="controles">
+                            <field name="control_ids" readonly="estado != 'activa'"
+                                   context="{'default_internacion_id': id}">
+                                <list>
+                                    <field name="fecha"/>
+                                    <field name="temperatura"/>
+                                    <field name="peso" optional="show"/>
+                                    <field name="frecuencia_cardiaca" optional="hide"/>
+                                    <field name="animo" widget="badge"
+                                           decoration-success="animo == 'bien'"
+                                           decoration-warning="animo == 'decaido'"
+                                           decoration-danger="animo == 'muy_decaido'"/>
+                                    <field name="comio"/>
+                                    <field name="orino" optional="show"/>
+                                    <field name="defeco" optional="show"/>
+                                    <field name="medicacion"/>
+                                    <field name="responsable_id" widget="many2one_avatar_user" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Cobro" name="cobro">
+                            <group>
+                                <group string="Estadía">
+                                    <field name="producto_dia_id" readonly="factura_id"/>
+                                    <field name="precio_dia" readonly="factura_id"/>
+                                    <field name="dias_a_cobrar" readonly="factura_id"/>
+                                    <field name="total_dias"/>
+                                </group>
+                                <group string="Factura" invisible="not factura_id">
+                                    <field name="factura_moneda_id" invisible="1"/>
+                                    <field name="monto_cobrado"/>
+                                    <field name="forma_pago"/>
+                                    <field name="estado_pago"/>
+                                </group>
+                            </group>
+                            <separator string="Medicación y extras"/>
+                            <field name="linea_ids" readonly="factura_id">
+                                <list editable="bottom">
+                                    <field name="fecha"/>
+                                    <field name="producto_id"/>
+                                    <field name="cantidad"/>
+                                    <field name="es_almacenable" column_invisible="True"/>
+                                    <field name="stock_disponible" invisible="not es_almacenable" optional="show"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="precio_unitario"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vet_internacion_search" model="ir.ui.view">
+        <field name="name">vet.internacion.search</field>
+        <field name="model">vet.internacion</field>
+        <field name="arch" type="xml">
+            <search string="Buscar estadías">
+                <field name="mascota_id"/>
+                <field name="dueno_id"/>
+                <field name="lugar_id"/>
+                <filter name="adentro" string="Adentro" domain="[('estado', '=', 'activa')]"/>
+                <filter name="reservadas" string="Reservadas" domain="[('estado', '=', 'reservada')]"/>
+                <filter name="por_cobrar" string="Por cobrar" domain="[('estado', '=', 'alta')]"/>
+                <separator/>
+                <filter name="internaciones" string="Internaciones" domain="[('tipo', '=', 'internacion')]"/>
+                <filter name="hotel" string="Hotel" domain="[('tipo', '=', 'hotel')]"/>
+                <filter name="ingreso" string="Ingreso" date="ingreso"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_tipo" string="Tipo" context="{'group_by': 'tipo'}"/>
+                    <filter name="group_lugar" string="Lugar" context="{'group_by': 'lugar_id'}"/>
+                    <filter name="group_estado" string="Estado" context="{'group_by': 'estado'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vet_internacion" model="ir.actions.act_window">
+        <field name="name">Internaciones y hotel</field>
+        <field name="res_model">vet.internacion</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay estadías</p>
+            <p>Interne una mascota desde su consulta (botón Internar) o cargue una reserva del hotel.</p>
+        </field>
+    </record>
+
+    <!-- Control de un internado: se carga en una ventana desde la estadía o desde el tablero. -->
+    <record id="view_vet_control_form" model="ir.ui.view">
+        <field name="name">vet.control.form</field>
+        <field name="model">vet.control</field>
+        <field name="arch" type="xml">
+            <form string="Control">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="internacion_id" readonly="1" invisible="context.get('default_internacion_id')"/>
+                            <field name="fecha"/>
+                            <field name="temperatura"/>
+                            <field name="peso"/>
+                            <field name="frecuencia_cardiaca"/>
+                        </group>
+                        <group>
+                            <field name="animo" widget="radio"/>
+                            <field name="comio" widget="radio"/>
+                            <field name="orino"/>
+                            <field name="defeco"/>
+                            <field name="responsable_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="medicacion" placeholder="Qué se le dio y cuánto"/>
+                        <field name="observaciones" placeholder="Esto se le cuenta al dueño en el parte por WhatsApp"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

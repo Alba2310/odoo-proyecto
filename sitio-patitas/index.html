@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patitas · El sistema para veterinarias que hasta tu perro entiende</title>
+  <meta name="description" content="Patitas ordena la veterinaria: turnos, historia clínica, carnet de vacunas, baño y peluquería, internación y hotel, cobro con factura y avisos por WhatsApp. Hecho en Paraguay.">
+  <meta name="theme-color" content="#FFC93C">
+  <link rel="icon" href="img/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800;900&display=swap">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/main.js" defer></script>
+  <script src="js/juego.js" defer></script>
+</head>
+<body>
+  <!-- Huellitas que se van llenando a medida que se baja por la página -->
+  <div class="rastro" aria-hidden="true"><div class="rastro__lleno" id="rastro"></div></div>
+
+  <header class="barra">
+    <a class="barra__logo" href="#arriba" aria-label="Patitas, volver arriba">
+      <img src="img/icon.png" alt="" width="40" height="40">
+      <span>Patitas</span>
+    </a>
+    <nav class="barra__links" aria-label="Atajos">
+      <a href="#dia">Un día</a>
+      <a href="#juego">El juego</a>
+      <a href="#album">Figuritas</a>
+      <a href="#precios">Precios</a>
+    </nav>
+    <a class="boton boton--chico boton--coral" href="#huella">¡Lo quiero!</a>
+  </header>
+
+  <main id="arriba">
+    <!-- 1. Portada: la mascota de Patitas -->
+    <section class="portada">
+      <div class="portada__texto">
+        <p class="etiqueta etiqueta--girada">Sistema para veterinarias · Hecho en Paraguay</p>
+        <h1>Tu veterinaria, <span class="subrayado">sin papelitos</span>.</h1>
+        <p class="portada__bajada">
+          Turnos, historia clínica, vacunas, baños, internados y la caja, en un solo lugar.
+          Y a los dueños les llega todo por WhatsApp. Tan fácil que <strong id="quien-entiende">hasta tu perro</strong> lo entiende.
+        </p>
+        <div class="portada__botones">
+          <a class="boton boton--azul" href="#juego">🎮 Jugá un minuto</a>
+          <a class="boton boton--blanco" href="#dia">Mirá un día en Patitas</a>
+        </div>
+        <div class="cambiar" role="group" aria-label="¿De perros o de gatos?">
+          <span>Soy más de</span>
+          <button class="cambiar__opcion cambiar__opcion--activa" type="button" data-especie="perro" aria-pressed="true">🐶 perros</button>
+          <button class="cambiar__opcion" type="button" data-especie="gato" aria-pressed="false">🐱 gatos</button>
+        </div>
+      </div>
+
+      <div class="portada__mascota">
+        <button class="mascota" id="mascota" type="button" aria-label="Tocá a la mascota de Patitas">
+          <svg viewBox="0 0 300 320" class="mascota__svg perro" id="mascota-svg" aria-hidden="true">
+            <!-- Orejas de perro -->
+            <g class="solo-perro">
+              <ellipse class="oreja oreja--izq" cx="62" cy="130" rx="36" ry="72" transform="rotate(18 62 130)"/>
+              <ellipse class="oreja oreja--der" cx="238" cy="130" rx="36" ry="72" transform="rotate(-18 238 130)"/>
+            </g>
+            <!-- Orejas de gato -->
+            <g class="solo-gato">
+              <polygon class="oreja" points="60,140 80,30 140,85"/>
+              <polygon class="oreja" points="240,140 220,30 160,85"/>
+              <polygon class="oreja-adentro" points="78,118 88,58 124,90"/>
+              <polygon class="oreja-adentro" points="222,118 212,58 176,90"/>
+            </g>
+            <circle class="cara" cx="150" cy="160" r="98"/>
+            <circle class="cachete" cx="88" cy="190" r="15"/>
+            <circle class="cachete" cx="212" cy="190" r="15"/>
+            <g class="ojo" data-ojo>
+              <circle class="ojo__blanco" cx="112" cy="140" r="22"/>
+              <circle class="ojo__pupila" cx="112" cy="140" r="11"/>
+              <circle class="ojo__brillo" cx="108" cy="135" r="3.5"/>
+            </g>
+            <g class="ojo" data-ojo>
+              <circle class="ojo__blanco" cx="188" cy="140" r="22"/>
+              <circle class="ojo__pupila" cx="188" cy="140" r="11"/>
+              <circle class="ojo__brillo" cx="184" cy="135" r="3.5"/>
+            </g>
+            <ellipse class="hocico" cx="150" cy="200" rx="50" ry="38"/>
+            <ellipse class="nariz" cx="150" cy="184" rx="17" ry="12"/>
+            <path class="boca" d="M150 196 v10 M150 206 q-14 14 -26 2 M150 206 q14 14 26 2"/>
+            <path class="lengua" d="M140 214 q10 30 20 0 z"/>
+            <g class="solo-gato bigotes">
+              <path d="M98 196 h-48 M98 206 l-46 10 M202 196 h48 M202 206 l46 10"/>
+            </g>
+            <!-- Collar con la chapita -->
+            <rect class="collar" x="78" y="248" width="144" height="20" rx="10"/>
+            <circle class="chapita" cx="150" cy="284" r="20"/>
+            <text class="chapita__letra" x="150" y="292" text-anchor="middle">P</text>
+          </svg>
+          <span class="globo" id="globo" aria-live="polite"></span>
+        </button>
+        <p class="pista">👆 Tocalo</p>
+        <span class="figu figu--1" aria-hidden="true">¡Sin papel!</span>
+        <span class="figu figu--2" aria-hidden="true">Vacunas al día ✔</span>
+        <span class="figu figu--3" aria-hidden="true">WhatsApp 💬</span>
+      </div>
+    </section>
+
+    <!-- Cinta que pasa -->
+    <div class="cinta" aria-hidden="true">
+      <div class="cinta__texto">
+        🐶 Turnos · 🩺 Historia clínica · 💉 Carnet de vacunas · 🛁 Baño y peluquería · 🏥 Internación · 🏨 Hotel ·
+        💳 Cobro mixto · 📦 Stock · 💬 WhatsApp · 🐱 Turnos por internet ·
+        🐶 Turnos · 🩺 Historia clínica · 💉 Carnet de vacunas · 🛁 Baño y peluquería · 🏥 Internación · 🏨 Hotel ·
+        💳 Cobro mixto · 📦 Stock · 💬 WhatsApp · 🐱 Turnos por internet ·
+      </div>
+    </div>
+
+    <!-- 2. Un día en Patitas: el reloj corre a medida que se baja -->
+    <section class="dia" id="dia">
+      <div class="dia__ventana" aria-hidden="true">
+        <div class="cielo" id="cielo" data-momento="amanecer">
+          <div class="astro" id="astro"></div>
+          <div class="estrellas"></div>
+          <div class="reloj" id="reloj">07:30</div>
+          <div class="clinica">
+            <div class="clinica__cartel">🐾 Patitas</div>
+            <div class="clinica__puerta"></div>
+            <div class="clinica__ventana"></div>
+            <div class="clinica__ventana clinica__ventana--2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dia__pasos">
+        <h2 class="dia__titulo">Un día en Patitas <span>(bajá despacito)</span></h2>
+
+        <article class="paso" data-hora="07:30" data-momento="amanecer">
+          <p class="paso__hora">07:30</p>
+          <h3>Antes de abrir, ya entraron turnos</h3>
+          <p>Los dueños piden turno desde el celular, como si chatearan con vos. Elige la mascota, qué necesita y la hora libre.</p>
+          <div class="mini mini--chat">
+            <p class="burbuja burbuja--ella">¿Cómo se llama tu mascota?</p>
+            <p class="burbuja burbuja--yo">Luna 🐶</p>
+            <p class="burbuja burbuja--ella">¡Listo! Luna tiene turno el lunes a las 10:30 🎉</p>
+          </div>
+        </article>
+
+        <article class="paso" data-hora="08:00" data-momento="manana">
+          <p class="paso__hora">08:00</p>
+          <h3>Abrís y ves todo el día de un vistazo</h3>
+          <p>El tablero "Hoy" muestra quién tiene turno, quién espera, a quién están atendiendo y a quién hay que cobrar. Las tarjetas se arrastran.</p>
+          <div class="mini mini--tablero">
+            <div><b>Turnos</b><span>🐶</span><span>🐱</span><span>🐰</span></div>
+            <div><b>Espera</b><span>🐶</span></div>
+            <div><b>Atención</b><span>🐱</span></div>
+            <div><b>Cobrar</b><span>🐶</span></div>
+          </div>
+        </article>
+
+        <article class="paso" data-hora="09:40" data-momento="manana">
+          <p class="paso__hora">09:40</p>
+          <h3>Llega Toby sin turno, cojeando</h3>
+          <p>Un toque en "Llegó sin turno" y pasa a la sala de espera. Si muerde, sale en rojo en todas las pantallas.</p>
+          <div class="mini mini--tarjeta">
+            <span class="mini__emoji">🐶</span>
+            <div><b>Toby</b> · Caniche · 4 años<br><small>Cojea de la pata trasera</small><br><em class="alerta">⚠ Muerde: usar bozal</em></div>
+          </div>
+        </article>
+
+        <article class="paso" data-hora="11:15" data-momento="mediodia">
+          <p class="paso__hora">11:15</p>
+          <h3>Vacuna de Michi: al carnet solita</h3>
+          <p>Al terminar la atención, la vacuna queda en el carnet con el lote, y Patitas calcula cuándo le toca la próxima.</p>
+          <div class="mini mini--carnet">
+            <p><b>Carnet de Michi 🐱</b></p>
+            <p>Triple felina · Lote L-2026</p>
+            <p>Próxima dosis: <b>en un año</b></p>
+            <span class="sello">¡APLICADA!</span>
+          </div>
+        </article>
+
+        <article class="paso" data-hora="13:30" data-momento="tarde">
+          <p class="paso__hora">13:30</p>
+          <h3>Coco quedó precioso</h3>
+          <p>Terminó el baño y con un toque le avisás a la dueña por WhatsApp. Gratis: sale de tu WhatsApp, sin pagar nada extra.</p>
+          <div class="mini mini--wa">
+            <p class="wa">¡Hola Laura! Coco ya está listo y perfumado 🛁 Podés pasar a retirarlo cuando quieras.<small>13:31 ✔✔</small></p>
+          </div>
+        </article>
+
+        <article class="paso" data-hora="16:00" data-momento="tarde">
+          <p class="paso__hora">16:00</p>
+          <h3>Rocky sigue internado</h3>
+          <p>Cada control queda anotado: temperatura, peso, si comió, la medicación. Y el parte del día le llega al dueño.</p>
+          <div class="mini mini--control">
+            <span>🌡 38,6 °C</span><span>🍽 Comió poco</span><span>😊 Animado</span><span>💊 Antibiótico</span>
+          </div>
+        </article>
+
+        <article class="paso" data-hora="18:45" data-momento="atardecer">
+          <p class="paso__hora">18:45</p>
+          <h3>Paga una parte en efectivo y otra con tarjeta</h3>
+          <p>No hay drama: repartís el total, Patitas calcula el vuelto, emite la factura y descuenta del stock lo que se vendió.</p>
+          <div class="mini mini--ticket">
+            <p><span>Efectivo</span><b>80.000</b></p>
+            <p><span>Tarjeta</span><b>50.000</b></p>
+            <p class="ticket__total"><span>Total</span><b>Gs. 130.000</b></p>
+            <p class="ticket__ok">Factura emitida ✔</p>
+          </div>
+        </article>
+
+        <article class="paso" data-hora="21:00" data-momento="noche">
+          <p class="paso__hora">21:00</p>
+          <h3>Mientras dormís…</h3>
+          <p>Patitas les escribe a los dueños que tienen turno mañana o una vacuna por vencer. Vos descansá.</p>
+          <div class="mini mini--sobre">💌 <span>3 recordatorios enviados</span></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. El juego -->
+    <section class="juego" id="juego" aria-labelledby="juego-titulo">
+      <div class="juego__cabeza">
+        <h2 id="juego-titulo">¡Que no se te junte la sala!</h2>
+        <p>Llegan mascotas sin parar. Pasalas al consultorio (hay lugar para dos), esperá que terminen y cobrales.
+          Si una espera demasiado, se va. <b>Arrastrá</b> las tarjetas o <b>tocalas</b> para pasarlas a la columna siguiente.</p>
+      </div>
+      <div class="juego__marcador">
+        <span>⏱ <b id="juego-tiempo">60</b> s</span>
+        <span>🐾 <b id="juego-puntos">0</b> atendidas</span>
+        <span>💰 <b id="juego-plata">Gs. 0</b></span>
+        <span id="juego-vidas" aria-label="Vidas">❤️❤️❤️</span>
+        <button class="juego__sonido" id="juego-sonido" type="button" aria-pressed="true" title="Sonido">🔊</button>
+      </div>
+      <div class="juego__tablero" id="juego-tablero">
+        <div class="juego__columna" data-columna="sala"><h3>🛋 Sala de espera</h3><div class="juego__lista"></div></div>
+        <div class="juego__columna" data-columna="consultorio"><h3>🩺 Consultorio <small>(2 lugares)</small></h3><div class="juego__lista"></div></div>
+        <div class="juego__columna" data-columna="cobrar"><h3>💳 Para cobrar</h3><div class="juego__lista"></div></div>
+        <div class="juego__cartel" id="juego-cartel">
+          <div class="juego__cartel-caja">
+            <p class="juego__cartel-emoji" id="juego-cartel-emoji">🐶</p>
+            <h3 id="juego-cartel-titulo">¿Te animás a atender un día entero en 60 segundos?</h3>
+            <p id="juego-cartel-texto">Tocá o arrastrá cada mascota a la columna que sigue.</p>
+            <div class="juego__cartel-botones">
+              <button class="boton boton--azul" id="juego-empezar" type="button">¡Empezar!</button>
+              <a class="boton boton--blanco" id="juego-compartir" hidden target="_blank" rel="noopener">Desafiar a un colega</a>
+            </div>
+            <p class="juego__record" id="juego-record"></p>
+          </div>
+        </div>
+      </div>
+      <p class="juego__aviso" id="juego-aviso" aria-live="polite"></p>
+    </section>
+
+    <!-- 4. Álbum de figuritas -->
+    <section class="album" id="album" aria-labelledby="album-titulo">
+      <div class="album__tapa">
+        <h2 id="album-titulo">Álbum Patitas 2026</h2>
+        <p>Todo lo que hace el sistema, en figuritas. Tocalas para darlas vuelta.</p>
+        <p class="album__contador" id="album-contador">Abriste 0 de 12</p>
+      </div>
+      <div class="album__figuritas" id="album-figuritas"></div>
+    </section>
+
+    <!-- 5. Precios: chapitas de collar -->
+    <section class="precios" id="precios" aria-labelledby="precios-titulo">
+      <h2 id="precios-titulo">Elegí el tamaño</h2>
+      <p class="precios__bajada">Como los collares: hay uno para cada veterinaria. Precios de referencia por mes, con IVA.</p>
+      <div class="collar-tira" aria-hidden="true"></div>
+      <div class="chapitas" id="chapitas"></div>
+      <p class="precios__nota">Todos incluyen la instalación, la carga de tus servicios y productos, y una capacitación para tu equipo.</p>
+    </section>
+
+    <!-- 6. Preguntas peludas -->
+    <section class="preguntas" aria-labelledby="preguntas-titulo">
+      <h2 id="preguntas-titulo">Preguntas peludas</h2>
+      <div class="charla">
+        <details class="charla__item">
+          <summary><span class="charla__quien">🐶</span>¿Los WhatsApp salen solos?</summary>
+          <p><span class="charla__quien">🐱</span>Con un toque: Patitas abre WhatsApp con el mensaje escrito y vos tocás Enviar. Es gratis, sin pagar la
+            API de WhatsApp Business. Los recordatorios por correo sí salen solos.</p>
+        </details>
+        <details class="charla__item">
+          <summary><span class="charla__quien">🐰</span>¿Hace factura electrónica (SIFEN)?</summary>
+          <p><span class="charla__quien">🐱</span>Todavía no: emite la factura del sistema contable de Odoo. La conexión con SIFEN se puede agregar más adelante.</p>
+        </details>
+        <details class="charla__item">
+          <summary><span class="charla__quien">🐹</span>¿Lo puedo usar en la tablet de la recepción?</summary>
+          <p><span class="charla__quien">🐱</span>Sí. Funciona en el navegador de la compu, la tablet o el celular, y las tarjetas del tablero se arrastran con el dedo.</p>
+        </details>
+        <details class="charla__item">
+          <summary><span class="charla__quien">🐦</span>Tengo dos sucursales, ¿sirve?</summary>
+          <p><span class="charla__quien">🐱</span>Sí: cada sucursal con sus mascotas, su caja y su stock, y vos ves todo junto.</p>
+        </details>
+        <details class="charla__item">
+          <summary><span class="charla__quien">🐢</span>¿Y si ya tengo mis fichas en un cuaderno o en Excel?</summary>
+          <p><span class="charla__quien">🐱</span>Te ayudamos a pasar los dueños, las mascotas y las vacunas al sistema, así arrancás con todo cargado.</p>
+        </details>
+        <details class="charla__item">
+          <summary><span class="charla__quien">🐶</span>¿Mis datos son míos?</summary>
+          <p><span class="charla__quien">🐱</span>Totalmente. Patitas está hecho sobre Odoo: podés exportar todo cuando quieras.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- 7. Contacto: dejá tu huella -->
+    <section class="huella" id="huella" aria-labelledby="huella-titulo">
+      <div class="huella__texto">
+        <h2 id="huella-titulo">Dejá tu huella 🐾</h2>
+        <p>Contanos de tu veterinaria y te escribimos para mostrarte Patitas con tus propios datos. Sin compromiso.</p>
+        <p class="huella__otros">
+          ¿Preferís otra forma? <a id="contacto-whatsapp" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+          o <a id="contacto-email">mandanos un correo</a>.
+        </p>
+        <a class="huella__demo" id="contacto-demo" target="_blank" rel="noopener">🐶 Probá la página de turnos como si fueras un dueño</a>
+      </div>
+      <form class="formulario" id="formulario" novalidate>
+        <label>Tu nombre<input name="nombre" autocomplete="name" maxlength="80" required></label>
+        <label>Nombre de la veterinaria<input name="veterinaria" maxlength="80"></label>
+        <label>Ciudad<input name="ciudad" maxlength="60" placeholder="Asunción, Luque, Encarnación..."></label>
+        <label>Celular<input name="telefono" type="tel" inputmode="tel" autocomplete="tel" maxlength="30" placeholder="0981 123 456" required></label>
+        <fieldset class="formulario__personas">
+          <legend>¿Cuántos atienden?</legend>
+          <label><input type="radio" name="personas" value="1 o 2" checked> 1 o 2</label>
+          <label><input type="radio" name="personas" value="3 a 5"> 3 a 5</label>
+          <label><input type="radio" name="personas" value="más de 5"> Más de 5</label>
+        </fieldset>
+        <p class="formulario__error" id="formulario-error" role="alert" hidden></p>
+        <button class="sellar" type="submit"><span class="sellar__pata">🐾</span> Sellar y mandar por WhatsApp</button>
+        <span class="formulario__sello" id="formulario-sello" aria-hidden="true">🐾</span>
+      </form>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="pie__huellas" aria-hidden="true">🐾 🐾 🐾 🐾 🐾 🐾 🐾</div>
+    <p><b>Patitas</b> · Sistema para veterinarias · Hecho en Paraguay</p>
+    <p class="pie__secreto">Psst: escribí <kbd>guau</kbd> en cualquier parte de la página.</p>
+  </footer>
+</body>
+</html>

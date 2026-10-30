@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Especies y razas más comunes en las veterinarias de Paraguay. Se pueden agregar más desde
+         Configuración › Especies y razas. -->
+    <data noupdate="1">
+        <record id="especie_perro" model="vet.especie">
+            <field name="name">Perro</field>
+            <field name="icono">perro</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="especie_gato" model="vet.especie">
+            <field name="name">Gato</field>
+            <field name="icono">gato</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="especie_conejo" model="vet.especie">
+            <field name="name">Conejo</field>
+            <field name="icono">conejo</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="especie_ave" model="vet.especie">
+            <field name="name">Ave</field>
+            <field name="icono">ave</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="especie_roedor" model="vet.especie">
+            <field name="name">Hámster o cobayo</field>
+            <field name="icono">roedor</field>
+            <field name="sequence">5</field>
+        </record>
+        <record id="especie_reptil" model="vet.especie">
+            <field name="name">Tortuga o reptil</field>
+            <field name="icono">reptil</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="raza_perro_mestizo" model="vet.raza"><field name="name">Mestizo</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_caniche" model="vet.raza"><field name="name">Caniche</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_labrador" model="vet.raza"><field name="name">Labrador</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_golden" model="vet.raza"><field name="name">Golden retriever</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_ovejero" model="vet.raza"><field name="name">Ovejero alemán</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_shih_tzu" model="vet.raza"><field name="name">Shih tzu</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_yorkshire" model="vet.raza"><field name="name">Yorkshire</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_bulldog_frances" model="vet.raza"><field name="name">Bulldog francés</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_pitbull" model="vet.raza"><field name="name">Pitbull</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_rottweiler" model="vet.raza"><field name="name">Rottweiler</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_chihuahua" model="vet.raza"><field name="name">Chihuahua</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_salchicha" model="vet.raza"><field name="name">Salchicha</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_beagle" model="vet.raza"><field name="name">Beagle</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_pug" model="vet.raza"><field name="name">Pug</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_maltes" model="vet.raza"><field name="name">Maltés</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_border_collie" model="vet.raza"><field name="name">Border collie</field><field name="especie_id" ref="especie_perro"/></record>
+        <record id="raza_perro_husky" model="vet.raza"><field name="name">Husky siberiano</field><field name="especie_id" ref="especie_perro"/></record>
+
+        <record id="raza_gato_comun" model="vet.raza"><field name="name">Común europeo</field><field name="especie_id" ref="especie_gato"/></record>
+        <record id="raza_gato_siames" model="vet.raza"><field name="name">Siamés</field><field name="especie_id" ref="especie_gato"/></record>
+        <record id="raza_gato_persa" model="vet.raza"><field name="name">Persa</field><field name="especie_id" ref="especie_gato"/></record>
+        <record id="raza_gato_angora" model="vet.raza"><field name="name">Angora</field><field name="especie_id" ref="especie_gato"/></record>
+        <record id="raza_gato_maine_coon" model="vet.raza"><field name="name">Maine coon</field><field name="especie_id" ref="especie_gato"/></record>
+
+        <record id="raza_conejo_belier" model="vet.raza"><field name="name">Belier</field><field name="especie_id" ref="especie_conejo"/></record>
+        <record id="raza_conejo_enano" model="vet.raza"><field name="name">Enano</field><field name="especie_id" ref="especie_conejo"/></record>
+        <record id="raza_ave_canario" model="vet.raza"><field name="name">Canario</field><field name="especie_id" ref="especie_ave"/></record>
+        <record id="raza_ave_loro" model="vet.raza"><field name="name">Loro</field><field name="especie_id" ref="especie_ave"/></record>
+        <record id="raza_ave_cotorra" model="vet.raza"><field name="name">Cotorra</field><field name="especie_id" ref="especie_ave"/></record>
+    </data>
+</odoo>

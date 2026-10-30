@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mascotas: fichas con foto (o el dibujo de la especie), alertas y la próxima dosis a la vista. -->
+    <record id="view_vet_mascota_kanban" model="ir.ui.view">
+        <field name="name">vet.mascota.kanban</field>
+        <field name="model">vet.mascota</field>
+        <field name="arch" type="xml">
+            <kanban class="o_vet_mascotas" sample="1">
+                <field name="foto"/>
+                <field name="fallecida"/>
+                <templates>
+                    <t t-name="card" class="flex-row gap-3 align-items-center">
+                        <aside class="o_vet_avatar flex-shrink-0">
+                            <img t-if="record.foto.raw_value" class="rounded-circle object-fit-cover" width="64" height="64"
+                                 t-att-src="kanban_image('vet.mascota', 'foto', record.id.raw_value)" alt="Foto"/>
+                            <span t-else="" class="o_vet_emoji"><field name="emoji"/></span>
+                        </aside>
+                        <main class="flex-grow-1 min-w-0">
+                            <div class="d-flex align-items-baseline gap-2">
+                                <field name="name" class="fw-bold fs-5"/>
+                                <span t-if="record.fallecida.raw_value" class="badge text-bg-secondary">Falleció</span>
+                            </div>
+                            <div class="text-muted small">
+                                <field name="especie_id"/><t t-if="record.raza_id.raw_value"> · <field name="raza_id"/></t>
+                                <t t-if="record.edad.raw_value"> · <field name="edad"/></t>
+                            </div>
+                            <div class="small"><i class="fa fa-user-o me-1" title="Dueño"/><field name="dueno_id"/></div>
+                            <div t-if="record.alertas.raw_value" class="small text-danger fw-semibold">
+                                <i class="fa fa-exclamation-triangle me-1" title="Cuidado"/><field name="alertas"/>
+                            </div>
+                            <div t-if="record.proxima_dosis_texto.raw_value" class="small text-muted">
+                                <i class="fa fa-eyedropper me-1" title="Próxima dosis"/>Le toca <field name="proxima_dosis_texto"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_vet_mascota_list" model="ir.ui.view">
+        <field name="name">vet.mascota.list</field>
+        <field name="model">vet.mascota</field>
+        <field name="arch" type="xml">
+            <list string="Mascotas" decoration-muted="fallecida">
+                <field name="emoji" string=" " width="30px"/>
+                <field name="name"/>
+                <field name="especie_id"/>
+                <field name="raza_id" optional="show"/>
+                <field name="sexo" optional="show"/>
+                <field name="edad" optional="show"/>
+                <field name="peso_actual" optional="show"/>
+                <field name="dueno_id"/>
+                <field name="dueno_telefono" widget="phone" optional="show"/>
+                <field name="alertas" class="text-danger" optional="show"/>
+                <field name="proxima_dosis" optional="hide"/>
+                <field name="fallecida" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_mascota_form" model="ir.ui.view">
+        <field name="name">vet.mascota.form</field>
+        <field name="model">vet.mascota</field>
+        <field name="arch" type="xml">
+            <form string="Mascota">
+                <header>
+                    <button name="action_nueva_atencion" type="object" string="Darle un turno" class="btn-primary"
+                            invisible="not id or fallecida"/>
+                    <button name="action_imprimir_carnet" type="object" string="Carnet de vacunas" icon="fa-print"
+                            invisible="not id"/>
+                    <button name="action_imprimir_historia" type="object" string="Historia clínica" icon="fa-print"
+                            invisible="not id"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_atenciones" type="object" class="oe_stat_button" icon="fa-stethoscope">
+                            <field name="atencion_count" widget="statinfo" string="Atenciones"/>
+                        </button>
+                        <button name="action_ver_aplicaciones" type="object" class="oe_stat_button" icon="fa-eyedropper">
+                            <field name="aplicacion_count" widget="statinfo" string="Vacunas"/>
+                        </button>
+                        <button name="action_ver_internaciones" type="object" class="oe_stat_button" icon="fa-bed">
+                            <field name="internacion_count" widget="statinfo" string="Estadías"/>
+                        </button>
+                        <button name="action_ver_pesos" type="object" class="oe_stat_button" icon="fa-line-chart">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="peso_actual" nolabel="1"/> kg</span>
+                                <span class="o_stat_text">Peso</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Falleció" bg_color="text-bg-secondary" invisible="not fallecida"/>
+                    <widget name="web_ribbon" title="Archivada" bg_color="text-bg-danger" invisible="active or fallecida"/>
+                    <field name="active" invisible="1"/>
+                    <div class="alert alert-danger d-flex gap-2 align-items-center mb-3" role="alert" invisible="not alertas">
+                        <i class="fa fa-exclamation-triangle" title="Cuidado"/>
+                        <strong>Cuidado:</strong> <field name="alertas" readonly="1" class="mb-0"/>
+                    </div>
+                    <field name="foto" widget="image" class="oe_avatar" options="{'preview_image': 'foto', 'size': [128, 128]}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Por ejemplo: Toby"/></h1>
+                        <div class="text-muted" invisible="not edad">
+                            <field name="emoji" class="d-inline me-1"/><field name="edad" class="d-inline"/>
+                            <span invisible="not proxima_dosis_texto"> · le toca <field name="proxima_dosis_texto" class="d-inline"/></span>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Dueño">
+                            <field name="dueno_id" context="{'default_customer_rank': 1}"/>
+                            <field name="dueno_telefono" widget="phone"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="La mascota">
+                            <field name="especie_id" options="{'no_create': True}"/>
+                            <field name="raza_id" context="{'default_especie_id': especie_id}"/>
+                            <field name="sexo" widget="radio" options="{'horizontal': true}"/>
+                            <field name="castrado"/>
+                            <field name="fecha_nacimiento"/>
+                        </group>
+                        <group>
+                            <field name="color"/>
+                            <field name="microchip"/>
+                            <field name="alimentacion"/>
+                        </group>
+                        <group>
+                            <field name="alertas" placeholder="Muerde, usar bozal, se pone nervioso..."/>
+                            <field name="fallecida"/>
+                            <field name="fecha_fallecimiento" invisible="not fallecida"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Línea de tiempo" name="linea_tiempo">
+                            <widget name="vet_linea_tiempo"/>
+                        </page>
+                        <page string="Alergias y enfermedades" name="alergias">
+                            <field name="alergias" placeholder="Alergias a medicamentos o alimentos, enfermedades crónicas, cirugías anteriores..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vet_mascota_search" model="ir.ui.view">
+        <field name="name">vet.mascota.search</field>
+        <field name="model">vet.mascota</field>
+        <field name="arch" type="xml">
+            <search string="Buscar mascotas">
+                <field name="name" string="Mascota o dueño"/>
+                <field name="dueno_id"/>
+                <field name="microchip"/>
+                <field name="especie_id"/>
+                <field name="raza_id"/>
+                <filter name="perros" string="Perros" domain="[('especie_id.icono', '=', 'perro')]"/>
+                <filter name="gatos" string="Gatos" domain="[('especie_id.icono', '=', 'gato')]"/>
+                <filter name="otras" string="Otras" domain="[('especie_id.icono', 'not in', ('perro', 'gato'))]"/>
+                <separator/>
+                <filter name="con_alertas" string="Con cuidado especial" domain="[('alertas', '!=', False)]"/>
+                <filter name="vivas" string="Sin las fallecidas" domain="[('fallecida', '=', False)]"/>
+                <separator/>
+                <filter name="archivadas" string="Archivadas" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_especie" string="Especie" context="{'group_by': 'especie_id'}"/>
+                    <filter name="group_raza" string="Raza" context="{'group_by': 'raza_id'}"/>
+                    <filter name="group_dueno" string="Dueño" context="{'group_by': 'dueno_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vet_mascota" model="ir.actions.act_window">
+        <field name="name">Mascotas</field>
+        <field name="res_model">vet.mascota</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_vivas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargue la primera mascota</p>
+            <p>Cada mascota tiene su dueño, su historia clínica, su carnet de vacunas y su línea de tiempo.</p>
+        </field>
+    </record>
+
+    <!-- Pesos: el gráfico de la evolución -->
+    <record id="view_vet_peso_graph" model="ir.ui.view">
+        <field name="name">vet.peso.graph</field>
+        <field name="model">vet.peso</field>
+        <field name="arch" type="xml">
+            <graph string="Evolución del peso" type="line" sample="1">
+                <field name="fecha" interval="day"/>
+                <field name="peso" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_vet_peso_list" model="ir.ui.view">
+        <field name="name">vet.peso.list</field>
+        <field name="model">vet.peso</field>
+        <field name="arch" type="xml">
+            <list string="Pesos" editable="top">
+                <field name="fecha"/>
+                <field name="mascota_id" column_invisible="context.get('default_mascota_id')"/>
+                <field name="peso"/>
+                <field name="origen" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_vet_peso" model="ir.actions.act_window">
+        <field name="name">Peso</field>
+        <field name="res_model">vet.peso</field>
+        <field name="view_mode">list,graph</field>
+    </record>
+
+    <!-- Especies y razas -->
+    <record id="view_vet_especie_list" model="ir.ui.view">
+        <field name="name">vet.especie.list</field>
+        <field name="model">vet.especie</field>
+        <field name="arch" type="xml">
+            <list string="Especies">
+                <field name="sequence" widget="handle"/>
+                <field name="emoji" string=" " width="30px"/>
+                <field name="name"/>
+                <field name="icono"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vet_especie_form" model="ir.ui.view">
+        <field name="name">vet.especie.form</field>
+        <field name="model">vet.especie</field>
+        <field name="arch" type="xml">
+            <form string="Especie">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="icono"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <field name="raza_ids">
+                        <list editable="bottom">
+                            <field name="name"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vet_especie" model="ir.actions.act_window">
+        <field name="name">Especies y razas</field>
+        <field name="res_model">vet.especie</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
