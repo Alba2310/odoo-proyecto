@@ -15,14 +15,15 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
 - `autoflow_sitio_web`: guardaba en un CRM los formularios de los dos sitios (campo `producto`). Su base
   `autoflow_ventas` y el servicio `ventas` (8070) se quitaron el 2026-10-28; los sitios tienen `CONFIG.odoo` vacío.
 - `alquileres` (producto **Óga**): control de alquileres (contratos, cobros con aviso por WhatsApp, gastos y
-  ganancia, mantenimiento, actas, depósito, página pública "Se alquila"), base `alquileres` (admin / admin).
+  ganancia, mantenimiento, actas, depósito, página pública "Se alquila", manual de usuario), base `alquileres`
+  (admin / admin).
   La página la atiende el servicio `oga` (puerto 8072, solo esa base): http://se-alquila.localhost:8072/se-alquila.
   Se crea con
   `bash extra-addons/alquileres/scripts/crear_alquileres.sh`. Detalle en `extra-addons/alquileres/README.md`.
 - `veterinaria` (producto **Patitas**): veterinaria (mascotas con línea de tiempo y peso, historia clínica, carnet
   de vacunas con aviso de la próxima dosis, baño y peluquería, internación y hotel, cobro mixto con factura, stock y
-  compras, tablero "Hoy en Patitas", turnos por internet tipo chat). A pedido del usuario, con identidad y pantallas
-  propias, distintas de Studio Bella. Base `veterinaria` (admin / admin), se crea con
+  compras, tablero "Hoy en Patitas", turnos por internet tipo chat, manual de usuario). A pedido del usuario, con
+  identidad y pantallas propias, distintas de Studio Bella. Base `veterinaria` (admin / admin), se crea con
   `bash extra-addons/veterinaria/scripts/crear_veterinaria.sh`. La página `/reservar` la atiende el servicio
   `patitas` (puerto 8073, solo esa base): http://patitas.localhost:8073/reservar. Detalle en
   `extra-addons/veterinaria/README.md`.

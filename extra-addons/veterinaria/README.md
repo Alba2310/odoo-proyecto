@@ -43,6 +43,9 @@ Está pensado para venderlo a cualquier veterinaria: no tiene datos de una en pa
   El turno entra a la agenda y la mascota y el dueño se reconocen solos (por el celular y el nombre) o se crean.
 - **Recordatorio del turno** por correo el día antes (tarea diaria a las 10:00) y por WhatsApp con un clic.
 - **Reportes**: lo que se hizo y vendió en las atenciones por área, profesional, especie y mes; facturación de Odoo.
+- **Manual de usuario** (*Patitas › Ayuda*): el recorrido de un día en la veterinaria, paso a paso y con capturas
+  (`static/manual/index.html`, se muestra dentro de Odoo). Las capturas salen de una base aparte con los datos de
+  ejemplo, no de `veterinaria`.
 
 Los mensajes de WhatsApp abren `wa.me` con el texto escrito (gratis, sin la API paga de WhatsApp Business): falta
 tocar Enviar en el WhatsApp abierto en la computadora.

@@ -70,4 +70,7 @@
               action="action_vet_especie" sequence="5"/>
     <menuitem id="menu_vet_ajustes" name="Ajustes" parent="menu_vet_config" action="action_vet_ajustes"
               sequence="10"/>
+
+    <menuitem id="menu_vet_ayuda" name="Ayuda" parent="menu_vet_root" sequence="95"/>
+    <menuitem id="menu_vet_manual" parent="menu_vet_ayuda" action="action_vet_manual" sequence="10"/>
 </odoo>

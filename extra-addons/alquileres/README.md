@@ -31,6 +31,8 @@ Base `alquileres` (admin / admin). "Óga" es "casa" en guaraní; el nombre técn
    contrato terminaba a mitad de un mes de pago, esa cuota pasa a cobrar también los días de la renovación, con el
    alquiler nuevo, sin cobrar dos veces los mismos días.
 10. **Se alquila › Interesados**: los que dejaron sus datos en la página pública. **Ver la página** la abre.
+11. **Ayuda › Manual de usuario**: este recorrido paso a paso, con capturas (`static/manual/index.html`, se muestra
+    dentro de Odoo). Las capturas salen de una base aparte con los datos de ejemplo, no de `alquileres`.
 
 ## Cómo funciona
 

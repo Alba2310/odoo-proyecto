@@ -42,6 +42,7 @@
         'views/res_partner_views.xml',
         'views/wizard_views.xml',
         'views/se_alquila_templates.xml',
+        'views/manual_views.xml',
         'views/menus.xml',
     ],
     'assets': {

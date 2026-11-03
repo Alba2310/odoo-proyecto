@@ -45,6 +45,7 @@ Patitas: sistema para veterinarias
         'views/report_templates.xml',
         'views/reserva_templates.xml',
         'views/res_config_settings_views.xml',
+        'views/manual_views.xml',
         'views/menus.xml',
     ],
     'assets': {

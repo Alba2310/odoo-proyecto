@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de Óga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;600;700&display=swap">
+<style>
+    /* Los colores y letras de Óga (los mismos de la página "Se alquila") */
+    :root {
+        --fondo: #f6f1e8;
+        --papel: #fffdf8;
+        --tinta: #1f2a28;
+        --suave: #5d6966;
+        --linea: #e4dccd;
+        --verde: #0f5c55;
+        --verde-claro: #d9ece8;
+        --terracota: #c8643b;
+        --terracota-claro: #f8e6dc;
+        --wa: #1f9d55;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        margin: 0;
+        background: var(--fondo);
+        color: var(--tinta);
+        font: 16.5px/1.7 "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    h1, h2, h3, .titulo { font-family: "Bricolage Grotesque", "Figtree", system-ui, sans-serif; line-height: 1.15; }
+
+    /* Un cuadernillo: una sola columna de papel sobre el fondo crema */
+    .hoja {
+        max-width: 900px; margin: 32px auto 60px; padding: 0 0 40px;
+        background: var(--papel); border: 1px solid var(--linea); border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(31, 42, 40, .06), 0 14px 40px rgba(31, 42, 40, .08);
+    }
+    .hoja > * { padding-left: 64px; padding-right: 64px; }
+
+    /* Tapa con el ñandutí */
+    .tapa {
+        position: relative; overflow: hidden; padding-top: 56px; padding-bottom: 44px;
+        background: var(--verde); color: #fff; border-radius: 6px 6px 0 0;
+    }
+    .tapa svg { position: absolute; right: -70px; top: -70px; width: 320px; height: 320px; opacity: .9; }
+    .tapa .sello { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .12em;
+                   text-transform: uppercase; font-size: 13px; opacity: .9; }
+    .tapa .sello img { width: 40px; height: 40px; border-radius: 10px; background: #fff; }
+    .tapa h1 { position: relative; margin: 22px 0 10px; font-size: 52px; max-width: 13ch; }
+    .tapa p { position: relative; margin: 0; max-width: 52ch; font-size: 18px; opacity: .92; }
+
+    /* Índice: "¿Qué querés hacer?" en tarjetas numeradas */
+    .indice { padding-top: 36px; }
+    .indice h2 { margin: 0 0 16px; font-size: 26px; }
+    .indice ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+    .indice li a {
+        display: grid; grid-template-columns: 44px 1fr; align-items: baseline;
+        padding: 9px 0; border-bottom: 1px solid var(--linea); color: var(--tinta); text-decoration: none;
+    }
+    .indice li a span { font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; color: var(--terracota); font-size: 20px; }
+    .indice li a:hover b { color: var(--verde); text-decoration: underline; }
+    .indice li small { grid-column: 2; color: var(--suave); font-size: 14px; }
+
+    /* Capítulos: número grande en terracota y una línea */
+    .capitulo { padding-top: 54px; }
+    .capitulo > header {
+        display: grid; grid-template-columns: auto 1fr; gap: 0 18px; align-items: end;
+        padding-bottom: 14px; margin-bottom: 18px; border-bottom: 2px solid var(--tinta);
+    }
+    .capitulo > header .n { font: 700 64px/0.8 "Bricolage Grotesque", sans-serif; color: var(--terracota); }
+    .capitulo > header h2 { margin: 0; font-size: 32px; }
+    .capitulo > header p { grid-column: 2; margin: 4px 0 0; color: var(--suave); }
+    h3 { margin: 30px 0 8px; font-size: 21px; color: var(--verde); }
+    p, li { max-width: 72ch; }
+    a { color: var(--verde); }
+
+    figure { margin: 20px 0 28px; }
+    figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 8px; }
+    figcaption { margin-top: 8px; font-size: 14px; color: var(--suave); padding-left: 12px; border-left: 3px solid var(--terracota); }
+    .celulares { display: flex; flex-wrap: wrap; gap: 22px; }
+    .celulares figure { flex: 1 1 220px; max-width: 290px; }
+
+    /* Pasos: números en círculo de línea */
+    ol.pasos { list-style: none; padding: 0; counter-reset: paso; }
+    ol.pasos > li { position: relative; padding: 2px 0 12px 46px; counter-increment: paso; }
+    ol.pasos > li::before {
+        content: counter(paso); position: absolute; left: 0; top: 0;
+        width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--verde);
+        text-align: center; line-height: 26px; color: var(--verde); font-weight: 700;
+    }
+
+    .boton {
+        display: inline-block; padding: 0 9px; border-radius: 6px; white-space: nowrap;
+        background: #efe9dd; border: 1px solid var(--linea); font-size: 14.5px; font-weight: 700;
+    }
+    .boton.primario { background: var(--verde); border-color: var(--verde); color: #fff; }
+    .boton.wa { background: var(--wa); border-color: var(--wa); color: #fff; }
+    .ruta { white-space: nowrap; font-weight: 700; color: var(--verde); border-bottom: 2px solid var(--verde-claro); }
+
+    /* Notas al margen y avisos */
+    .al-margen {
+        margin: 22px 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--verde);
+        color: var(--tinta); font-size: 15.5px;
+    }
+    .al-margen strong:first-child { display: block; color: var(--verde); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
+    .cuidado { margin: 22px 0; padding: 14px 18px; background: var(--terracota-claro); border-radius: 8px; font-size: 15.5px; }
+    .cuidado strong:first-child { display: block; color: var(--terracota); }
+
+    .ejemplo {
+        margin: 18px 0 24px; padding: 16px 20px; border: 1px dashed var(--terracota); border-radius: 8px;
+        background: #fffaf3; font-size: 15.5px;
+    }
+    .ejemplo strong:first-child { display: block; font-family: "Bricolage Grotesque", sans-serif; color: var(--terracota); }
+
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 24px; font-size: 15px; }
+    th, td { padding: 9px 12px; border-bottom: 1px solid var(--linea); text-align: left; vertical-align: top; }
+    th { border-bottom: 2px solid var(--tinta); font-weight: 700; }
+    td.mensaje { font-style: italic; }
+
+    .ciclo { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 18px 0 8px; counter-reset: c; }
+    .ciclo div { position: relative; padding: 12px 14px 12px 16px; border-top: 3px solid var(--verde); font-size: 14.5px; counter-increment: c; }
+    .ciclo div::before { content: counter(c); font: 700 22px "Bricolage Grotesque", sans-serif; color: var(--terracota); display: block; }
+    .ciclo b { display: block; }
+
+    details { margin: 10px 0; padding: 10px 0; border-bottom: 1px solid var(--linea); }
+    summary { cursor: pointer; font-weight: 700; }
+
+    .volver { display: inline-block; margin-top: 18px; font-size: 14px; color: var(--suave); }
+    .pie { padding-top: 40px; color: var(--suave); font-size: 14px; }
+
+    @media (max-width: 760px) {
+        .hoja { margin: 0; border: 0; border-radius: 0; }
+        .hoja > * { padding-left: 18px; padding-right: 18px; }
+        .tapa h1 { font-size: 38px; }
+        .tapa svg { width: 190px; height: 190px; right: -75px; top: -75px; opacity: .55; }
+        .tapa .sello { position: relative; }
+        .indice ol { grid-template-columns: 1fr; }
+        .capitulo > header .n { font-size: 46px; }
+        .capitulo > header h2 { font-size: 25px; }
+        .ciclo { grid-template-columns: 1fr 1fr; }
+        .ruta { white-space: normal; }
+    }
+    @media print {
+        body { background: #fff; }
+        .hoja { margin: 0; border: 0; box-shadow: none; max-width: none; }
+        .hoja > * { padding-left: 0; padding-right: 0; }
+        .tapa { padding: 30px; }
+        .capitulo { break-before: page; }
+        .volver { display: none; }
+        figure, table, .al-margen, .cuidado, .ejemplo { break-inside: avoid; }
+        a { color: inherit; text-decoration: none; }
+    }
+</style>
+</head>
+<body>
+
+<div class="hoja">
+
+<header class="tapa">
+    <!-- Ñandutí: el encaje paraguayo, en líneas -->
+    <svg viewBox="-100 -100 200 200" aria-hidden="true">
+        <g fill="none" stroke="#f6f1e8" stroke-width="1.2">
+            <circle r="92" stroke-opacity=".35"/><circle r="70" stroke-opacity=".5"/>
+            <circle r="46" stroke-opacity=".7"/><circle r="22"/>
+            <g stroke-opacity=".6">
+                <path d="M0-92V92M-92 0H92M-65-65L65 65M-65 65L65-65"/>
+                <path d="M-35-85L35 85M-85-35L85 35M-35 85L35-85M-85 35L85-35" stroke-opacity=".35"/>
+            </g>
+            <g stroke="#c8643b" stroke-width="2">
+                <path d="M0-46Q12-58 0-70Q-12-58 0-46Z M46 0Q58 12 70 0Q58-12 46 0Z M0 46Q12 58 0 70Q-12 58 0 46Z M-46 0Q-58 12 -70 0Q-58-12 -46 0Z"/>
+            </g>
+            <circle r="6" fill="#c8643b" stroke="none"/>
+        </g>
+    </svg>
+    <div class="sello"><img src="../description/icon.png" alt="">Óga · control de alquileres</div>
+    <h1>Manual de usuario</h1>
+    <p>Cómo llevar las casas y los departamentos en alquiler: contratos, cobros con aviso por WhatsApp, recibos, gastos
+        y ganancia, reparaciones, actas de entrega y la página "Se alquila".</p>
+</header>
+
+<nav class="indice" id="indice" aria-label="Índice">
+    <h2>¿Qué querés hacer?</h2>
+    <ol>
+        <li><a href="#empezar"><span>1</span><b>Empezar</b><small>Entrar, los menús y los permisos</small></a></li>
+        <li><a href="#panel"><span>2</span><b>Ver cómo va todo</b><small>El Panel y el Control</small></a></li>
+        <li><a href="#propiedades"><span>3</span><b>Cargar las propiedades</b><small>Casas, edificios y unidades</small></a></li>
+        <li><a href="#contratos"><span>4</span><b>Hacer un contrato</b><small>Del borrador al PDF para firmar</small></a></li>
+        <li><a href="#avisos"><span>5</span><b>Avisar a los inquilinos</b><small>Los avisos de hoy por WhatsApp</small></a></li>
+        <li><a href="#cobrar"><span>6</span><b>Cobrar y dar el recibo</b><small>Pagos totales, parciales y cargos extra</small></a></li>
+        <li><a href="#gastos"><span>7</span><b>Anotar gastos y ver la ganancia</b><small>Por propiedad y por mes</small></a></li>
+        <li><a href="#mantenimiento"><span>8</span><b>Arreglar algo</b><small>Pedidos de mantenimiento</small></a></li>
+        <li><a href="#actas"><span>9</span><b>Entregar o recibir la unidad</b><small>Actas con fotos y medidores</small></a></li>
+        <li><a href="#vencimiento"><span>10</span><b>Reajustar, renovar o terminar</b><small>Y devolver el depósito</small></a></li>
+        <li><a href="#se-alquila"><span>11</span><b>Conseguir inquilino</b><small>La página "Se alquila" e interesados</small></a></li>
+        <li><a href="#preguntas"><span>12</span><b>Preguntas frecuentes</b><small>Lo que más se consulta</small></a></li>
+    </ol>
+    <div class="ciclo" aria-label="El mes en Óga">
+        <div><b>Se crea la cuota</b>Sola, unos días antes de que venza.</div>
+        <div><b>Se avisa</b>3 días antes, el día que vence y cada 3 días si no paga.</div>
+        <div><b>Se cobra</b>Pago y recibo numerado.</div>
+        <div><b>Se ve la ganancia</b>Lo cobrado menos los gastos.</div>
+    </div>
+    <p style="color:var(--suave);font-size:14px">Las capturas son de los datos de ejemplo: inquilinos y teléfonos inventados.</p>
+</nav>
+
+<!-- 1 ============================================================ -->
+<section class="capitulo" id="empezar">
+    <header><span class="n">1</span><h2>Empezar</h2><p>Entrar al sistema, los menús y quién puede hacer qué.</p></header>
+    <ol class="pasos">
+        <li>Abrí el acceso directo <b>Alquileres</b> del escritorio, o entrá en el navegador a
+            <a href="http://alquileres.localhost:8069/odoo?db=alquileres" target="_top">http://alquileres.localhost:8069/odoo?db=alquileres</a>.</li>
+        <li>Escribí tu usuario y tu contraseña y tocá <span class="boton primario">Iniciar sesión</span>.</li>
+        <li>Si no se abre solo, en el menú de aplicaciones (los cuadraditos de arriba a la izquierda) elegí
+            <span class="ruta">Óga</span>.</li>
+    </ol>
+    <figure>
+        <img src="img/01-menu-apps.png" alt="Menú de aplicaciones de Odoo con Óga">
+        <figcaption>Óga en el menú de aplicaciones.</figcaption>
+    </figure>
+
+    <h3>Los menús</h3>
+    <table>
+        <tr><th>Menú</th><th>Para qué sirve</th></tr>
+        <tr><td><span class="ruta">Panel</span></td><td>Cómo va el mes: cobrado, deuda, ocupación, ganancia y lo que hay que atender.</td></tr>
+        <tr><td><span class="ruta">Control</span></td><td>Todas las unidades en tarjetas, en verde, amarillo o rojo según cómo pagan.</td></tr>
+        <tr><td><span class="ruta">Avisos de hoy</span></td><td>A quién hay que escribirle hoy por el pago.</td></tr>
+        <tr><td><span class="ruta">Cobros y gastos</span></td><td>Las cuotas, los pagos con sus recibos y los gastos (estos, solo el Administrador).</td></tr>
+        <tr><td><span class="ruta">Contratos</span></td><td>Los contratos, las actas de entrega y los inquilinos.</td></tr>
+        <tr><td><span class="ruta">Mantenimiento</span></td><td>Los pedidos de reparación.</td></tr>
+        <tr><td><span class="ruta">Se alquila</span></td><td>Los interesados que dejaron sus datos y la página pública.</td></tr>
+        <tr><td><span class="ruta">Reportes</span></td><td>Ganancia por propiedad y cobros por mes (solo el Administrador).</td></tr>
+        <tr><td><span class="ruta">Configuración</span></td><td>Las propiedades y sus unidades (solo el Administrador).</td></tr>
+        <tr><td><span class="ruta">Ayuda</span></td><td>Este manual. Arriba a la derecha están los botones para imprimirlo o abrirlo en otra pestaña.</td></tr>
+    </table>
+
+    <h3>Quién puede hacer qué</h3>
+    <table>
+        <tr><th>Permiso</th><th>Puede</th></tr>
+        <tr><td><b>Encargado de cobros</b></td><td>Registrar pagos y cargos extra, mandar avisos, cargar reparaciones y actas.</td></tr>
+        <tr><td><b>Administrador</b></td><td>Todo lo anterior y además: propiedades, contratos, gastos y reportes.</td></tr>
+    </table>
+    <p>Los permisos se eligen en <span class="ruta">Ajustes › Usuarios y compañías › Usuarios</span>, en la línea
+        <b>Alquileres</b> de cada usuario.</p>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 2 ============================================================ -->
+<section class="capitulo" id="panel">
+    <header><span class="n">2</span><h2>Ver cómo va todo</h2><p>El Panel es la pantalla de inicio.</p></header>
+    <figure>
+        <img src="img/02-panel.png" alt="Panel de Óga con cobrado, deuda, ocupación, ganancia, gráfico y lo que hay que atender">
+        <figcaption>El Panel, el 3 de noviembre: todavía no venció casi nada del mes, por eso lo cobrado está en cero.</figcaption>
+    </figure>
+    <ul>
+        <li><b>Cobrado en el mes</b>: lo que entró, de todo lo que vence este mes.</li>
+        <li><b>Deben</b>: lo vencido y sin pagar, y cuántos inquilinos están atrasados.</li>
+        <li><b>Ocupación</b>: cuántas unidades están alquiladas.</li>
+        <li><b>Ganancia del mes</b>: lo cobrado menos los gastos del mes.</li>
+        <li><b>Cobrado y gastos de los últimos meses</b>, en el gráfico, y <b>Propiedades en el año</b>: cuánto dejó cada una.</li>
+        <li><b>Para atender</b>: los avisos de pago de hoy, los contratos que vencen, los reajustes que llegan, las
+            reparaciones pendientes (las urgentes en rojo) y los interesados nuevos. Tocando cada renglón se abre lo que hay que hacer.</li>
+    </ul>
+
+    <h3>El Control</h3>
+    <p><span class="ruta">Control</span> muestra cada unidad con su inquilino, el alquiler y el día de pago, agrupadas por
+        propiedad. El color dice cómo está:</p>
+    <figure>
+        <img src="img/04-control.png" alt="Tarjetas de cada unidad: al día, vence en 2 días, debe, libre">
+        <figcaption>Verde: al día. Amarillo: vence en estos días. Rojo: debe. Blanco: libre.</figcaption>
+    </figure>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 3 ============================================================ -->
+<section class="capitulo" id="propiedades">
+    <header><span class="n">3</span><h2>Cargar las propiedades</h2><p>Se hace una vez, al empezar. Solo el Administrador.</p></header>
+    <p>Una <b>propiedad</b> es una casa o un edificio. Cada una tiene <b>unidades</b>, que es lo que se alquila: una casa
+        tiene una sola (se crea sola), un edificio tiene un departamento por unidad.</p>
+    <ol class="pasos">
+        <li><span class="ruta">Configuración › Propiedades</span> › <span class="boton primario">Nuevo</span>.</li>
+        <li>Escribí el nombre (por ejemplo, <i>Edificio Ypacaraí</i>), elegí el tipo (casa o edificio), la ciudad y la
+            dirección. Si administrás propiedades de otros, elegí el <b>dueño</b>.</li>
+        <li>Si es un edificio, en la pestaña <b>Unidades</b> agregá cada departamento con su piso, una descripción corta y
+            el <b>alquiler de referencia</b>.</li>
+    </ol>
+    <figure>
+        <img src="img/06-edificio.png" alt="Edificio Ypacaraí con sus cinco departamentos">
+        <figcaption>El Edificio Ypacaraí: cinco departamentos, cuatro alquilados.</figcaption>
+    </figure>
+    <p>En cada unidad (<span class="ruta">Configuración › Unidades</span>) está también lo que sale en la página
+        <a href="#se-alquila">"Se alquila"</a> cuando queda libre: la foto, los dormitorios, los baños y una descripción.</p>
+    <figure>
+        <img src="img/07-unidad.png" alt="Unidad Depto 3 libre con los datos para la página Se alquila y el botón Nuevo contrato">
+        <figcaption>El Depto 3 está libre. <span class="boton primario">Nuevo contrato</span> empieza un contrato con esta unidad.</figcaption>
+    </figure>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 4 ============================================================ -->
+<section class="capitulo" id="contratos">
+    <header><span class="n">4</span><h2>Hacer un contrato</h2><p>El contrato es la base de todo: de él salen las cuotas, los avisos y los recibos.</p></header>
+    <ol class="pasos">
+        <li><span class="ruta">Contratos › Contratos</span> › <span class="boton primario">Nuevo</span> (o
+            <span class="boton primario">Nuevo contrato</span> desde una unidad libre).</li>
+        <li>Elegí la <b>unidad</b> y el <b>inquilino</b>. Si es nuevo, escribí su nombre y tocá <b>Crear y editar</b>
+            para cargar su cédula y su teléfono. El <b>teléfono (WhatsApp)</b> es al que van los avisos.</li>
+        <li>Si tiene <b>garante</b>, elegilo también.</li>
+        <li>En <b>Condiciones</b>: el alquiler mensual, desde y hasta cuándo, el <b>día de pago</b> y el
+            <b>reajuste anual</b> (por ejemplo, 10 %).</li>
+        <li>El <b>depósito de garantía</b>. Si querés agregar algo al contrato impreso, escribilo en la pestaña
+            <b>Cláusulas adicionales</b>.</li>
+        <li>Tocá <span class="boton primario">Activar contrato</span>: la unidad pasa a alquilada y se crean las cuotas.</li>
+        <li><span class="boton">Imprimir para firmar</span> saca el contrato en PDF.</li>
+    </ol>
+    <figure>
+        <img src="img/09-contrato.png" alt="Contrato vigente de Lucía Ramírez con las condiciones, el depósito y las cuotas">
+        <figcaption>Un contrato vigente. <b>Cómo paga</b> es el puntaje del inquilino (ver abajo).</figcaption>
+    </figure>
+    <figure>
+        <img src="img/11-contrato-pdf.png" alt="Contrato de alquiler de vivienda impreso con sus cláusulas">
+        <figcaption>El contrato impreso. Es un modelo: conviene que lo revise un abogado antes de usarlo.</figcaption>
+    </figure>
+
+    <h3>Las cuotas</h3>
+    <p>Hay una cuota por mes, y se crean solas cada mañana unos días antes de que venzan. Cada cuota paga un mes por
+        adelantado: del día de pago al día anterior del mes siguiente. Se ven en la pestaña <b>Cuotas</b> del contrato y
+        en <span class="ruta">Cobros y gastos › Cuotas</span>.</p>
+    <figure>
+        <img src="img/10-contrato-cuotas.png" alt="Pestaña Cuotas del contrato con las cuotas pagadas y la de noviembre pendiente">
+        <figcaption>Las cuotas de Lucía: noviembre tiene 85.000 Gs de agua como cargo extra.</figcaption>
+    </figure>
+    <div class="ejemplo">
+        <strong>Si entra o se va a mitad de mes</strong>
+        La primera y la última cuota se cobran por los días que vive ahí. Por ejemplo, si el día de pago es el 1 y entra
+        el 16 de enero, la primera cuota se llama <i>"Enero 2025 (16 de 31 días)"</i> y cobra la parte proporcional. El
+        recibo lo aclara.
+    </div>
+
+    <h3>El puntaje del inquilino</h3>
+    <p>Las estrellitas de <b>Cómo paga</b> salen de sus cuotas: cuántas pagó a tiempo (hasta 3 días después de vencer)
+        y cuántos días se atrasa en promedio. Sirven para decidir si renovarle o cuánto reajustar. También se ve en la
+        ficha del inquilino (<span class="ruta">Contratos › Inquilinos</span>).</p>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 5 ============================================================ -->
+<section class="capitulo" id="avisos">
+    <header><span class="n">5</span><h2>Avisar a los inquilinos</h2><p>Todas las mañanas, una mirada a <span class="ruta">Avisos de hoy</span>.</p></header>
+    <p>La lista junta las cuotas a las que les toca aviso hoy. Óga avisa <b>3 días antes</b> de que venza, <b>el día que
+        vence</b> y, si no paga, <b>cada 3 días</b>. En rojo, las atrasadas.</p>
+    <figure>
+        <img src="img/12-avisos.png" alt="Avisos de hoy: cuatro cuotas con los botones Avisar por WhatsApp y Registrar pago">
+        <figcaption>Cuatro avisos para hoy: dos que vencen pronto y dos atrasados.</figcaption>
+    </figure>
+    <ol class="pasos">
+        <li>Tocá <span class="boton wa">Avisar por WhatsApp</span> en la línea. Se abre WhatsApp con el mensaje ya escrito.</li>
+        <li>Tocá <b>Enviar</b> en WhatsApp. La cuota sale de la lista hasta el próximo aviso.</li>
+    </ol>
+    <table>
+        <tr><th>Cuándo</th><th>El mensaje</th></tr>
+        <tr><td>Antes de vencer</td><td class="mensaje">¡Hola Lucía! Te recordamos que el 5 de noviembre vence el alquiler
+            de noviembre de 2026 (Edificio Ypacaraí · Depto 1): Gs. 1.385.000 (alquiler Gs. 1.300.000 + Agua del mes
+            Gs. 85.000). ¡Gracias!</td></tr>
+        <tr><td>El día que vence</td><td class="mensaje">¡Hola Lucía! Te recordamos que hoy vence el alquiler de noviembre
+            de 2026 (Edificio Ypacaraí · Depto 1): Gs. 1.385.000 (…). ¡Gracias!</td></tr>
+        <tr><td>Atrasado</td><td class="mensaje">¡Hola Carlos! El alquiler de noviembre de 2026 (Casa Itauguá) venció el
+            1 de noviembre y figura pendiente: Gs. 2.300.000. Si ya pagaste, avisanos por acá así lo registramos.
+            ¡Gracias!</td></tr>
+    </table>
+    <div class="al-margen">
+        <strong>Por qué hay que tocar Enviar</strong>
+        Óga arma el mensaje y abre WhatsApp (el de la computadora o el del celular), pero no lo manda solo: así es
+        gratis y sale desde tu número. Mandarlos solos necesitaría la API paga de WhatsApp Business.
+    </div>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 6 ============================================================ -->
+<section class="capitulo" id="cobrar">
+    <header><span class="n">6</span><h2>Cobrar y dar el recibo</h2><p>Pagos totales o parciales, con recibo numerado.</p></header>
+    <ol class="pasos">
+        <li>Abrí la cuota (desde <span class="ruta">Avisos de hoy</span>, el contrato o
+            <span class="ruta">Cobros y gastos › Cuotas</span>) y tocá <span class="boton primario">Registrar pago</span>.</li>
+        <li>Revisá la <b>fecha</b>, el <b>monto</b> (viene lo que falta pagar; si paga una parte, cambialo) y el
+            <b>medio de pago</b>: efectivo, transferencia, billetera (Tigo Money, Personal…) u otro.</li>
+        <li>Si te mandó el comprobante, subilo en <b>Comprobante</b>. En <b>Nota</b> podés aclarar quién pagó.</li>
+        <li>Tocá <span class="boton primario">Registrar pago</span>.</li>
+    </ol>
+    <figure>
+        <img src="img/14-registrar-pago.png" alt="Ventana Registrar pago de la cuota de noviembre de Lucía Ramírez">
+        <figcaption>Registrar el pago de la cuota de noviembre.</figcaption>
+    </figure>
+    <p>Se crea el recibo con su número. Desde el pago, <span class="boton primario">Imprimir recibo</span> saca el PDF
+        (con el monto en letras) y <span class="boton">Avisar el pago por WhatsApp</span> le confirma al inquilino:</p>
+    <figure>
+        <img src="img/39-pago.png" alt="Pago REC/2026/0027 con los botones Imprimir recibo y Avisar el pago por WhatsApp">
+        <figcaption>El pago, en <span class="ruta">Cobros y gastos › Pagos y recibos</span>.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/15-recibo.png" alt="Recibo de alquiler impreso por 1.300.000 guaraníes">
+        <figcaption>El recibo impreso.</figcaption>
+    </figure>
+    <p class="mensaje" style="font-style:italic">"¡Hola Lucía! Recibimos tu pago de Gs. 1.300.000 del alquiler de octubre
+        de 2026 (Edificio Ypacaraí · Depto 1). Recibo N° REC/2026/0027. ¡Muchas gracias!"</p>
+
+    <h3>Pagos parciales</h3>
+    <p>Si paga una parte, la cuota queda en <b>Pago parcial</b> con lo que falta, sigue en los avisos y cuenta los días de
+        atraso. Cuando paga el resto, se registra otro pago en la misma cuota.</p>
+    <figure>
+        <img src="img/17-cuota-parcial.png" alt="Cuota de octubre de Jorge Villalba con pago parcial: pagó 800.000 y faltan 500.000">
+        <figcaption>Jorge pagó 800.000 de 1.300.000: faltan 500.000 y lleva 19 días de atraso.</figcaption>
+    </figure>
+
+    <h3>Cargos extra: ANDE, agua, reparaciones</h3>
+    <p>Lo que el inquilino tiene que pagar además del alquiler se agrega en la cuota, en <b>Cargos extra</b>: el
+        concepto, un detalle y el monto. Se suma al total, sale en el aviso de WhatsApp y se cobra junto con el alquiler.</p>
+    <figure>
+        <img src="img/13-cuota.png" alt="Cuota de noviembre de Lucía con un cargo extra de agua">
+        <figcaption>La cuota de noviembre: alquiler 1.300.000 + agua 85.000.</figcaption>
+    </figure>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 7 ============================================================ -->
+<section class="capitulo" id="gastos">
+    <header><span class="n">7</span><h2>Anotar gastos y ver la ganancia</h2><p>Solo el Administrador.</p></header>
+    <p><span class="ruta">Cobros y gastos › Gastos</span> › <span class="boton primario">Nuevo</span>: lo que gasta el
+        dueño en cada propiedad (impuesto inmobiliario, la luz del pasillo, la limpieza, una pintura). Elegí la
+        propiedad (y la unidad, si es de una sola), la categoría, el monto y a quién se le pagó; si querés, subí el
+        comprobante.</p>
+    <figure>
+        <img src="img/19-gastos.png" alt="Lista de gastos por propiedad, categoría y monto">
+        <figcaption>Los gastos del año.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/20-gasto.png" alt="Gasto: pintura completa del Depto 3, 1.200.000 guaraníes">
+        <figcaption>Un gasto de una sola unidad.</figcaption>
+    </figure>
+    <p>Las reparaciones resueltas cargan su gasto solas (ver <a href="#mantenimiento">Mantenimiento</a>).</p>
+
+    <h3>La ganancia</h3>
+    <p><span class="ruta">Reportes › Ganancia por propiedad</span>: lo cobrado, los gastos y la ganancia de cada propiedad
+        en el año. Tocando el <b>+</b> de una propiedad o de <b>Total</b> se abre por mes o por unidad.</p>
+    <figure>
+        <img src="img/21-ganancia.png" alt="Tabla con lo cobrado, los gastos y la ganancia de cada propiedad en 2026">
+        <figcaption>Cuánto dejó cada propiedad en el año.</figcaption>
+    </figure>
+    <div class="al-margen">
+        <strong>El depósito de garantía</strong>
+        No es ganancia cuando se cobra ni cuando se devuelve. Sí cuenta lo que se usa al terminar el contrato: las
+        cuotas que se pagan con él y lo que se retiene por daños.
+    </div>
+    <p><span class="ruta">Reportes › Cobros por mes</span>: cuánto vencía cada mes, cuánto se pagó y cuánto falta.</p>
+    <figure>
+        <img src="img/22-cobros-mes.png" alt="Tabla por mes con el alquiler, lo pagado y lo que falta pagar">
+        <figcaption>Octubre tiene 500.000 sin cobrar: es la cuota de Jorge.</figcaption>
+    </figure>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 8 ============================================================ -->
+<section class="capitulo" id="mantenimiento">
+    <header><span class="n">8</span><h2>Arreglar algo</h2><p>Cuando el inquilino avisa que algo se rompió.</p></header>
+    <ol class="pasos">
+        <li><span class="ruta">Mantenimiento</span> › <span class="boton primario">Nuevo</span>: qué pasó, la unidad,
+            quién avisó y la fecha. Marcá la estrellita si es <b>urgente</b>. Podés agregar una foto.</li>
+        <li>Cuando alguien se encarga, escribí <b>quién lo arregla</b> y tocá <span class="boton">Empezar</span>.</li>
+        <li>Cuando está arreglado, cargá el <b>costo</b>, elegí quién <b>paga</b> (el dueño o el inquilino) y tocá
+            <span class="boton primario">Resuelto</span>.</li>
+    </ol>
+    <figure>
+        <img src="img/23-mantenimiento.png" alt="Pedidos de mantenimiento en columnas: nuevo, en proceso, resuelto">
+        <figcaption>Los pedidos por estado. La estrella marca los urgentes.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/24-reparacion.png" alt="Reparación resuelta: cambio de cerradura, pagó el dueño, con su gasto">
+        <figcaption>Una reparación resuelta: el costo ya está en los gastos.</figcaption>
+    </figure>
+    <div class="ejemplo">
+        <strong>¿Quién paga?</strong>
+        Al resolverla, el costo siempre va a los gastos de la propiedad (el dueño le paga al que lo arregla). Si lo paga
+        el inquilino, además se le agrega como cargo extra en su próxima cuota. Así la ganancia cuadra: sale como
+        gasto y entra cuando el inquilino paga.
+    </div>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 9 ============================================================ -->
+<section class="capitulo" id="actas">
+    <header><span class="n">9</span><h2>Entregar o recibir la unidad</h2><p>El acta deja escrito en qué estado estaba.</p></header>
+    <ol class="pasos">
+        <li>En el contrato, tocá el botón <b>Acta de entrega</b> de arriba (o <span class="ruta">Contratos › Actas de
+            entrega</span> › <span class="boton primario">Nuevo</span>).</li>
+        <li>Elegí si es de <b>entrada</b> (se le entrega al inquilino) o de <b>salida</b> (la devuelve).</li>
+        <li>Cargá las lecturas de los medidores de ANDE y de agua y cuántas llaves se entregan.</li>
+        <li>En <b>Estado de la unidad</b>, revisá cada cosa (paredes, pisos, baño, cocina…) y anotá su estado. En
+            <b>Fotos</b> subí las fotos y en <b>Observaciones</b>, lo demás.</li>
+        <li><span class="boton primario">Imprimir</span> saca el acta para que la firmen los dos.</li>
+    </ol>
+    <figure>
+        <img src="img/26-acta.png" alt="Acta de entrada del Depto 5 con medidores, llaves y el estado de cada cosa">
+        <figcaption>El acta de entrada del Depto 5.</figcaption>
+    </figure>
+    <p>Al terminar el contrato, comparando el acta de entrada con la de salida se ve qué se dañó, y eso se descuenta del depósito.</p>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 10 ============================================================ -->
+<section class="capitulo" id="vencimiento">
+    <header><span class="n">10</span><h2>Reajustar, renovar o terminar</h2><p>Lo que pasa cuando se cumple el año o el inquilino se va.</p></header>
+
+    <h3>Reajuste anual</h3>
+    <p>Un mes antes de la fecha del reajuste, el contrato muestra un aviso y el botón
+        <span class="boton">Avisar el reajuste</span>, que le escribe al inquilino:</p>
+    <p class="mensaje" style="font-style:italic">"¡Hola Lucía! Te avisamos que desde el 5 de junio el alquiler de Edificio
+        Ypacaraí · Depto 1 pasa de Gs. 1.300.000 a Gs. 1.430.000 (reajuste anual del 10 %, como dice el contrato). ¡Gracias!"</p>
+    <p>Ese día el alquiler nuevo se aplica solo, y las cuotas que vencen desde entonces salen con el monto nuevo.</p>
+
+    <h3>Cuando vence el contrato</h3>
+    <p>Dos meses antes, el contrato avisa que vence y aparece <span class="boton">Avisar que vence</span>, para preguntarle al
+        inquilino si quiere renovar.</p>
+    <figure>
+        <img src="img/38-contrato-vence.png" alt="Contrato de Ana Duarte con el aviso de que vence y el botón Avisar que vence">
+        <figcaption>El contrato de Ana vence el 4 de diciembre.</figcaption>
+    </figure>
+    <p><span class="boton">Renovar</span> pide la <b>nueva fecha de fin</b> y el <b>alquiler mensual</b> de la renovación,
+        que rige desde que empieza (las cuotas que faltan del plazo actual siguen con el alquiler de ahora).</p>
+    <figure>
+        <img src="img/29-renovar.png" alt="Ventana Renovar contrato con la nueva fecha de fin y el alquiler">
+        <figcaption>Renovar un año más con el alquiler nuevo.</figcaption>
+    </figure>
+
+    <h3>Terminar el contrato y el depósito</h3>
+    <ol class="pasos">
+        <li>Tocá <span class="boton">Terminar contrato</span> y elegí el día en que <b>se va</b>.</li>
+        <li>Óga calcula lo que <b>queda debiendo</b> hasta ese día (la última cuota, por los días que vivió ahí), que se
+            paga con el depósito.</li>
+        <li>Si hubo daños, escribí el <b>descuento por daños</b> y el motivo.</li>
+        <li>Queda lo que hay que <b>devolver</b>. Tocá <span class="boton primario">Terminar contrato</span>.</li>
+        <li>Cuando le devolvés la plata, en el contrato tocá <span class="boton">Ya devolví el depósito</span>.</li>
+    </ol>
+    <figure>
+        <img src="img/28-terminar.png" alt="Ventana Terminar contrato con el depósito, lo que queda debiendo y lo que hay que devolver">
+        <figcaption>Jorge se va hoy: de su depósito de 1.300.000 se descuentan 38.710 y se le devuelven 1.261.290.</figcaption>
+    </figure>
+    <div class="ejemplo">
+        <strong>¿Por qué 38.710?</strong>
+        La cuota de octubre de Jorge cubría del 15 de octubre al 14 de noviembre. Si se va el 3 de noviembre, vivió
+        20 de esos 31 días: le corresponden 838.710 Gs. Ya había pagado 800.000, así que debe 38.710.
+    </div>
+    <p>La unidad queda libre y se borran las cuotas sin pagar que vencen después de ese día. Si se va más adelante,
+        hasta ese día el contrato sigue vigente (se cobran sus cuotas y la unidad sigue alquilada) y al día siguiente
+        se termina solo.</p>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 11 ============================================================ -->
+<section class="capitulo" id="se-alquila">
+    <header><span class="n">11</span><h2>Conseguir inquilino</h2><p>Una página pública con las unidades libres.</p></header>
+    <p>Las unidades libres que tienen marcado <b>Mostrar en la página "Se alquila"</b> aparecen solas, con su foto, el
+        precio, los dormitorios y la descripción. Cuando se alquilan, desaparecen. La página se abre con
+        <span class="ruta">Se alquila › Ver la página</span>: compartí esa dirección en Marketplace, Instagram o por WhatsApp.</p>
+    <figure>
+        <img src="img/34-se-alquila.png" alt="Página Se alquila con el Depto 3 de Ypacaraí">
+        <figcaption>La página "Se alquila", en la computadora.</figcaption>
+    </figure>
+    <div class="celulares">
+        <figure>
+            <img src="img/35-se-alquila-movil.png" alt="Página Se alquila en el celular con los botones Consultar y Dejar mis datos">
+            <figcaption>En el celular: <b>Consultar</b> abre WhatsApp y <b>Dejar mis datos</b> el formulario.</figcaption>
+        </figure>
+        <div style="flex:2 1 300px">
+            <p>El interesado puede escribir directamente por WhatsApp al teléfono de la empresa o dejar su nombre, su
+                teléfono y un mensaje. Los que dejan sus datos aparecen en <span class="ruta">Se alquila › Interesados</span>
+                y en el Panel.</p>
+            <p>Cada interesado avanza por <b>Nuevo → Contactado → Visita agendada → Alquiló</b> (o <b>Descartado</b>).
+                <span class="boton wa">Escribirle por WhatsApp</span> abre la conversación.</p>
+        </div>
+    </div>
+    <figure>
+        <img src="img/32-interesados.png" alt="Interesados en columnas: nuevo y contactado">
+        <figcaption>Los interesados, por etapa.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/33-interesado.png" alt="Interesada Sofía Martínez con su mensaje y el botón Escribirle por WhatsApp">
+        <figcaption>Sofía dejó sus datos desde la página.</figcaption>
+    </figure>
+    <div class="cuidado">
+        <strong>El nombre y el teléfono de tu empresa</strong>
+        Salen en los recibos, en el contrato y en la página (el botón Consultar escribe a ese teléfono). Se cambian en
+        <span class="ruta">Ajustes › Usuarios y compañías › Compañías</span>: el nombre, el logo, la dirección y el teléfono.
+    </div>
+    <a class="volver" href="#indice">↑ Volver al índice</a>
+</section>
+
+<!-- 12 ============================================================ -->
+<section class="capitulo" id="preguntas">
+    <header><span class="n">12</span><h2>Preguntas frecuentes</h2></header>
+    <details>
+        <summary>No aparece la cuota de este mes.</summary>
+        <p>Las cuotas se crean solas cada mañana, unos 10 días antes de que venzan. Si el contrato está en borrador, falta
+            tocar <b>Activar contrato</b>.</p>
+    </details>
+    <details>
+        <summary>Registré un pago con un monto equivocado.</summary>
+        <p>Abrí el pago en <span class="ruta">Cobros y gastos › Pagos y recibos</span>; el Administrador puede borrarlo y
+            se vuelve a registrar bien. El recibo nuevo sale con otro número.</p>
+    </details>
+    <details>
+        <summary>El inquilino pagó por adelantado dos meses.</summary>
+        <p>Registrá el pago en cada cuota. Si la cuota del mes siguiente todavía no existe, esperá a que se cree o
+            registralo cuando aparezca.</p>
+    </details>
+    <details>
+        <summary>El WhatsApp no se abre.</summary>
+        <p>Revisá que el contrato tenga el <b>teléfono (WhatsApp)</b> del inquilino. El mensaje se abre en WhatsApp Web, en
+            WhatsApp de escritorio o en el celular: tiene que estar iniciado.</p>
+    </details>
+    <details>
+        <summary>¿Puedo usar Óga desde el celular?</summary>
+        <p>Sí, desde el navegador del celular. Es práctico para registrar un pago o cargar una reparación con una foto en
+            el momento.</p>
+    </details>
+    <details>
+        <summary>¿Puedo llevar las propiedades de varios dueños?</summary>
+        <p>Sí: en cada propiedad se elige su dueño, y en <span class="ruta">Configuración › Propiedades</span> se
+            pueden agrupar por dueño.</p>
+    </details>
+</section>
+
+<p class="pie">Óga · control de alquileres sobre Odoo 18 · "Óga" quiere decir "casa" en guaraní.</p>
+</div>
+
+</body>
+</html>

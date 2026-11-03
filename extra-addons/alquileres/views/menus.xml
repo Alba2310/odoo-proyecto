@@ -49,4 +49,7 @@
               action="action_alquiler_propiedad" sequence="10"/>
     <menuitem id="menu_alquiler_unidades" name="Unidades" parent="menu_alquiler_config"
               action="action_alquiler_unidad" sequence="20"/>
+
+    <menuitem id="menu_alquiler_ayuda" name="Ayuda" parent="menu_alquiler_root" sequence="95"/>
+    <menuitem id="menu_alquiler_manual" parent="menu_alquiler_ayuda" action="action_alquiler_manual" sequence="10"/>
 </odoo>

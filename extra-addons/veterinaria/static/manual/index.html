@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de Patitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+    /* Los colores y letras de Patitas (los mismos de la página /reservar) */
+    :root {
+        --azul: #2b59c3;
+        --azul-oscuro: #1d3f8f;
+        --azul-claro: #e8eefc;
+        --girasol: #ffb400;
+        --girasol-claro: #fff4d6;
+        --tinta: #1f2544;
+        --gris: #6b7194;
+        --borde: #dfe3f0;
+        --fondo: #eef2fb;
+        --rojo: #d63939;
+        --rojo-claro: #fdecec;
+        --verde: #1f9d55;
+        --radio: 22px;
+        --sombra: 0 2px 10px rgba(31, 37, 68, .08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+    body {
+        margin: 0;
+        background: var(--fondo);
+        color: var(--tinta);
+        font: 16px/1.65 "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    h1, h2, h3, .titulo { font-family: "Fredoka", "Nunito", system-ui, sans-serif; font-weight: 600; }
+
+    /* Barra de arriba: la marca y los capítulos en "chips" que se deslizan */
+    .barra {
+        position: sticky; top: 0; z-index: 5;
+        background: #fff; border-bottom: 1px solid var(--borde); box-shadow: var(--sombra);
+    }
+    .barra .marca {
+        display: flex; align-items: center; gap: 10px;
+        max-width: 1080px; margin: 0 auto; padding: 10px 20px 4px;
+    }
+    .barra .marca img { width: 34px; height: 34px; border-radius: 9px; }
+    .barra .marca .titulo { font-size: 19px; color: var(--azul-oscuro); }
+    .barra .marca .titulo span { color: var(--gris); font-family: "Nunito", sans-serif; font-weight: 600; font-size: 15px; }
+    .chips {
+        display: flex; gap: 8px; overflow-x: auto; scrollbar-width: thin;
+        max-width: 1080px; margin: 0 auto; padding: 8px 20px 12px;
+    }
+    .chips a {
+        flex: none; padding: 5px 14px; border-radius: 999px;
+        background: var(--azul-claro); color: var(--azul-oscuro);
+        font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap;
+    }
+    .chips a:hover, .chips a.activo { background: var(--azul); color: #fff; }
+
+    main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    /* Portada */
+    .portada {
+        position: relative; overflow: hidden;
+        display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px;
+        padding: 36px 40px; border-radius: 28px; color: #fff; background: var(--azul);
+    }
+    .portada::after {
+        content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px;
+        border-radius: 50%; background: var(--girasol); opacity: .95;
+    }
+    .portada > * { position: relative; z-index: 1; }
+    .portada h1 { margin: 0; font-size: 40px; line-height: 1.1; }
+    .portada p { margin: 10px 0 0; font-size: 18px; max-width: 56ch; opacity: .95; }
+    .portada img { position: relative; z-index: 1; width: 132px; height: 132px; border-radius: 30px;
+                   box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+
+    /* Mapa del día: cómo se recorre el sistema */
+    .recorrido { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 22px 0 0; }
+    .recorrido a {
+        display: block; padding: 14px 16px; border-radius: 18px; background: #fff; box-shadow: var(--sombra);
+        color: var(--tinta); text-decoration: none; border: 2px solid transparent;
+    }
+    .recorrido a:hover { border-color: var(--girasol); }
+    .recorrido .hora { display: block; font-family: "Fredoka", sans-serif; color: var(--azul); font-size: 15px; }
+    .recorrido b { display: block; font-size: 16px; }
+    .recorrido small { color: var(--gris); }
+
+    /* Cada capítulo es una tarjeta */
+    section {
+        margin: 26px 0; padding: 30px 36px 18px; border-radius: var(--radio);
+        background: #fff; box-shadow: var(--sombra);
+    }
+    section > h2 {
+        display: flex; align-items: center; gap: 14px;
+        margin: 0 0 14px; font-size: 28px; color: var(--azul-oscuro);
+    }
+    section > h2 .num {
+        flex: none; display: grid; place-items: center; width: 46px; height: 46px;
+        border-radius: 50% 50% 46% 46%; background: var(--girasol); color: var(--tinta); font-size: 22px;
+    }
+    h3 { margin: 28px 0 8px; font-size: 20px; color: var(--tinta); }
+    p, li { max-width: 74ch; }
+    a { color: var(--azul); }
+    .intro { font-size: 17px; color: var(--gris); margin-top: 0; }
+
+    figure { margin: 18px 0 26px; }
+    figure img {
+        display: block; max-width: 100%; height: auto;
+        border: 1px solid var(--borde); border-radius: 16px; box-shadow: 0 8px 24px rgba(31, 37, 68, .12);
+    }
+    figcaption { margin-top: 8px; font-size: 14px; color: var(--gris); }
+    .celulares { display: flex; flex-wrap: wrap; gap: 22px; }
+    .celulares figure { flex: 1 1 220px; max-width: 290px; }
+    .celulares img { border-radius: 26px; border: 6px solid var(--tinta); }
+
+    /* Pasos numerados con huellita */
+    ol.pasos { list-style: none; padding: 0; counter-reset: paso; }
+    ol.pasos > li { position: relative; padding: 3px 0 12px 48px; counter-increment: paso; }
+    ol.pasos > li::before {
+        content: counter(paso); position: absolute; left: 0; top: 0;
+        display: grid; place-items: center; width: 32px; height: 32px;
+        border-radius: 50% 50% 44% 44%; background: var(--azul); color: #fff;
+        font: 600 16px "Fredoka", sans-serif;
+    }
+    ol.pasos > li::after {
+        content: ""; position: absolute; left: 4px; top: -7px; width: 24px; height: 9px;
+        background:
+            radial-gradient(circle, var(--azul) 3.5px, transparent 4px) 0 0 / 8px 9px repeat-x;
+    }
+
+    .boton {
+        display: inline-block; padding: 1px 10px; border-radius: 999px; white-space: nowrap;
+        background: var(--azul-claro); border: 1px solid #c9d5f4; color: var(--azul-oscuro);
+        font-size: 14px; font-weight: 800;
+    }
+    .boton.primario { background: var(--azul); border-color: var(--azul); color: #fff; }
+    .boton.wa { background: var(--verde); border-color: var(--verde); color: #fff; }
+    .ruta { white-space: nowrap; font-weight: 800; color: var(--azul-oscuro); }
+    .ruta::before { content: "☰ "; color: var(--girasol); }
+
+    /* Consejos como globitos de chat; avisos en rojo */
+    .globo {
+        position: relative; margin: 20px 0 22px 46px; padding: 12px 18px;
+        border-radius: 20px 20px 20px 6px; background: var(--girasol-claro); max-width: 78ch;
+    }
+    .globo::before {
+        content: "🐾"; position: absolute; left: -46px; bottom: 0;
+        display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+        background: var(--girasol); font-size: 18px;
+    }
+    .ojo { margin: 20px 0; padding: 12px 18px; border-radius: 16px; background: var(--rojo-claro); border: 2px dashed #f2b3b3; }
+    .globo strong:first-child, .ojo strong:first-child { display: block; font-family: "Fredoka", sans-serif; font-weight: 600; }
+
+    table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0 24px; font-size: 15px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--borde); text-align: left; vertical-align: top; }
+    th { background: var(--azul-claro); color: var(--azul-oscuro); font-weight: 800; }
+    th:first-child { border-radius: 12px 0 0 12px; }
+    th:last-child { border-radius: 0 12px 12px 0; }
+    td.mensaje { font-style: italic; }
+
+    /* Las columnas del tablero, en chiquito */
+    .columnas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 22px; }
+    .columnas div { padding: 12px 14px; border-radius: 16px; background: var(--fondo); font-size: 14.5px; }
+    .columnas b { display: block; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 16px; color: var(--azul-oscuro); }
+
+    details { margin: 10px 0; padding: 12px 18px; border-radius: 16px; background: var(--fondo); }
+    details[open] { background: var(--azul-claro); }
+    summary { cursor: pointer; font-weight: 800; }
+
+    .pie { text-align: center; margin-top: 40px; color: var(--gris); font-size: 14px; }
+
+    @media (max-width: 760px) {
+        main { padding: 18px 12px 60px; }
+        section { padding: 22px 16px 10px; }
+        section > h2 { font-size: 23px; }
+        .portada { grid-template-columns: 1fr; padding: 26px 22px; }
+        .portada::after { width: 150px; height: 150px; right: -50px; top: auto; bottom: -50px; }
+        .ruta { white-space: normal; }
+        .portada img { width: 90px; height: 90px; }
+        .portada h1 { font-size: 30px; }
+        .columnas { grid-template-columns: 1fr 1fr; }
+        .globo { margin-left: 40px; }
+    }
+    @media print {
+        body { background: #fff; }
+        .barra { display: none; }
+        main { padding: 0; max-width: none; }
+        section { box-shadow: none; padding: 0; margin: 0; break-before: page; }
+        .recorrido a, figure img { box-shadow: none; }
+        figure, table, .globo, .ojo, .columnas { break-inside: avoid; }
+        details { background: none; padding: 0; }
+        a { color: inherit; text-decoration: none; }
+    }
+</style>
+</head>
+<body>
+
+<header class="barra">
+    <div class="marca">
+        <img src="../description/icon.png" alt="">
+        <span class="titulo">Patitas <span>· manual de usuario</span></span>
+    </div>
+    <nav class="chips" aria-label="Capítulos">
+        <a href="#empezar">Para empezar</a>
+        <a href="#hoy">Hoy en Patitas</a>
+        <a href="#turnos">Turnos</a>
+        <a href="#atender">Atender</a>
+        <a href="#cobrar">Cobrar</a>
+        <a href="#mascotas">Mascotas</a>
+        <a href="#vacunas">Vacunas</a>
+        <a href="#peluqueria">Peluquería</a>
+        <a href="#internacion">Internación y hotel</a>
+        <a href="#compras">Stock y compras</a>
+        <a href="#internet">Turnos por internet</a>
+        <a href="#reportes">Reportes</a>
+        <a href="#configuracion">Configuración</a>
+        <a href="#preguntas">Preguntas</a>
+    </nav>
+</header>
+
+<main>
+
+<div class="portada">
+    <div>
+        <h1>Manual de Patitas</h1>
+        <p>Cómo se usa el sistema de la veterinaria, paso a paso: los turnos, la sala de espera, la historia clínica,
+           el carnet de vacunas, la internación, el cobro y las compras.</p>
+    </div>
+    <img src="../description/icon.png" alt="">
+</div>
+
+<p class="intro" style="margin-top:22px">Este manual sigue el recorrido de un día en la veterinaria. Tocá una etapa
+    para ir directo a esa parte. Las capturas son de los datos de ejemplo: mascotas, dueños y teléfonos inventados.</p>
+<div class="recorrido">
+    <a href="#hoy"><span class="hora">8:00</span><b>Abrir el tablero</b><small>Quién viene hoy y qué hay que avisar</small></a>
+    <a href="#turnos"><span class="hora">8:15</span><b>Dar turnos</b><small>Por teléfono, en el mostrador o por internet</small></a>
+    <a href="#atender"><span class="hora">9:30</span><b>Atender</b><small>Sala de espera, consulta e historia clínica</small></a>
+    <a href="#cobrar"><span class="hora">10:00</span><b>Cobrar</b><small>Factura y pago mixto con vuelto</small></a>
+    <a href="#vacunas"><span class="hora">12:00</span><b>Avisar vacunas</b><small>Un WhatsApp por dueño</small></a>
+    <a href="#internacion"><span class="hora">18:00</span><b>Controlar internados</b><small>Control y parte al dueño</small></a>
+</div>
+
+<!-- 1 ============================================================ -->
+<section id="empezar">
+    <h2><span class="num">1</span>Para empezar</h2>
+    <h3>Cómo entrar</h3>
+    <ol class="pasos">
+        <li>Abrí el navegador y entrá a la dirección del sistema. En la computadora donde está instalado es
+            <a href="http://localhost:8069/web/login?db=veterinaria" target="_top">http://localhost:8069/web/login?db=veterinaria</a>.</li>
+        <li>Escribí tu usuario y tu contraseña y tocá <span class="boton primario">Iniciar sesión</span>.</li>
+        <li>Con el botón de los cuadraditos (arriba a la izquierda) abrís el menú de aplicaciones: elegí
+            <span class="ruta">Patitas</span>. Se abre directamente <b>Hoy en Patitas</b>, el tablero de la recepción.</li>
+    </ol>
+    <figure>
+        <img src="img/01-menu-apps.png" alt="Menú de aplicaciones de Odoo abierto, con Patitas en la lista">
+        <figcaption>El menú de aplicaciones. Patitas tiene su propia barra de menús arriba.</figcaption>
+    </figure>
+    <div class="globo">
+        <strong>¿Te abre otro sistema?</strong>
+        Si en la misma computadora hay otras bases de Odoo, el navegador vuelve a abrir la última que usaste. Entrá con
+        el enlace de arriba, que ya elige la base <b>veterinaria</b>, o en la pantalla de inicio de sesión tocá
+        <span class="boton">Base de datos › Seleccionar</span>.
+    </div>
+
+    <h3>Los menús</h3>
+    <table>
+        <tr><th>Menú</th><th>Para qué sirve</th></tr>
+        <tr><td><span class="ruta">Hoy</span></td><td>El tablero del día: la sala de espera, los internados y los avisos.</td></tr>
+        <tr><td><span class="ruta">Agenda</span></td><td>Los turnos del consultorio y de baño y peluquería, y la lista de todas las atenciones.</td></tr>
+        <tr><td><span class="ruta">Mascotas</span></td><td>Las fichas de las mascotas y de los dueños, las vacunas para avisar y el carnet.</td></tr>
+        <tr><td><span class="ruta">Internación y hotel</span></td><td>Quién está adentro ahora, las estadías y las reservas del hotel.</td></tr>
+        <tr><td><span class="ruta">Caja</span></td><td>Venta de mostrador y facturas.</td></tr>
+        <tr><td><span class="ruta">Compras</span></td><td>Productos para reponer, pedidos a proveedores y mercadería que llega (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Reportes</span></td><td>Lo que se hizo y se vendió, y la facturación (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Configuración</span></td><td>Servicios, productos, profesionales, horario, lugares, especies y ajustes (solo Administración).</td></tr>
+        <tr><td><span class="ruta">Ayuda</span></td><td>Este manual. Arriba a la derecha están los botones para imprimirlo o abrirlo en otra pestaña.</td></tr>
+    </table>
+
+    <h3>Quién puede hacer qué</h3>
+    <p>Cada usuario tiene uno de estos dos permisos (se elige en <span class="ruta">Ajustes › Usuarios</span>, en la
+        línea <b>Patitas</b>):</p>
+    <table>
+        <tr><th>Permiso</th><th>Puede</th></tr>
+        <tr><td><b>Personal</b></td><td>Dar turnos, atender, cargar la historia clínica y el carnet, internar y cargar
+            controles, vender, cobrar y mandar avisos.</td></tr>
+        <tr><td><b>Administración</b></td><td>Todo lo anterior y además: servicios, productos, profesionales, lugares,
+            especies, compras, reportes, ajustes y borrar.</td></tr>
+    </table>
+</section>
+
+<!-- 2 ============================================================ -->
+<section id="hoy">
+    <h2><span class="num">2</span>Hoy en Patitas</h2>
+    <p class="intro">La pantalla de la recepción. Conviene dejarla abierta todo el día: se actualiza sola cada minuto.</p>
+    <figure>
+        <img src="img/02-hoy.png" alt="Tablero Hoy en Patitas con cuatro columnas de tarjetas de mascotas">
+        <figcaption>Arriba, los avisos del día; abajo, la sala de espera en cuatro columnas.</figcaption>
+    </figure>
+
+    <h3>La sala de espera, en cuatro columnas</h3>
+    <div class="columnas">
+        <div><b>Turnos de hoy</b>Los que tienen turno y todavía no llegaron.</div>
+        <div><b>Sala de espera</b>Llegaron y esperan. Dice hace cuánto.</div>
+        <div><b>En atención</b>Están en el consultorio o en la bañera.</div>
+        <div><b>Para retirar y cobrar</b>Terminadas: falta que las busquen y cobrar.</div>
+    </div>
+    <p>Cada tarjeta muestra la mascota (con su foto o un dibujo de su especie), la raza y la edad, qué viene a hacerse,
+        el dueño, quién la atiende y, en rojo, sus alertas (por ejemplo <i>"Muerde: usar bozal"</i>). Las que vinieron
+        sin turno tienen la etiqueta <b>Sin turno</b> y las que se pidieron desde la página, <b>Por internet</b>.
+        Tocando la tarjeta se abre la atención completa.</p>
+    <table>
+        <tr><th>Botón en la tarjeta</th><th>Qué hace</th></tr>
+        <tr><td><span class="boton primario">Llegó</span></td><td>La pasa a la sala de espera y anota la hora en que llegó.</td></tr>
+        <tr><td>Ícono de WhatsApp</td><td>Abre el recordatorio del turno para mandarle al dueño.</td></tr>
+        <tr><td><span class="boton">No vino</span></td><td>La saca de la agenda como ausente.</td></tr>
+        <tr><td><span class="boton primario">Atender</span></td><td>La pasa a <b>En atención</b>. Si llegó sin turno, la atiende quien toca el botón.</td></tr>
+        <tr><td><span class="boton primario">Terminar</span></td><td>La deja lista para retirar y anota en el carnet las vacunas que se aplicaron.</td></tr>
+        <tr><td><span class="boton wa">Avisar</span></td><td>En baño y peluquería: le avisa al dueño que ya puede pasar a buscarla.</td></tr>
+        <tr><td><span class="boton primario">Cobrar</span></td><td>Abre la caja (ver <a href="#cobrar">Cobrar</a>).</td></tr>
+    </table>
+    <div class="globo">
+        <strong>Arrastrar también sirve</strong>
+        Las tarjetas se arrastran de una columna a otra con el mouse o con el dedo. Hacia adelante hace lo mismo que el
+        botón de ese paso. Hacia atrás lo deshace: por ejemplo, si tocaste <b>Atender</b> por error, la devolvés a la
+        sala de espera. A <b>Cobrada</b> solo se llega con el botón Cobrar.
+    </div>
+
+    <h3>Los números de arriba</h3>
+    <p><b>Vacunas vencidas sin avisar</b> y <b>dosis que vencen esta semana</b> abren la lista para avisar a los
+        dueños; <b>productos para reponer</b> abre la pantalla de reposición. También muestra los turnos de mañana y
+        lo cobrado hoy. Los botones <span class="boton">Todo</span> <span class="boton">Consultorio</span>
+        <span class="boton">Baño y peluquería</span> filtran el tablero por área, y
+        <span class="boton primario">+ Llegó sin turno</span> anota a una mascota que vino sin turno.</p>
+
+    <h3>Internados y hospedados</h3>
+    <figure>
+        <img src="img/03-hoy-internados.png" alt="Parte de abajo del tablero con las mascotas internadas y en el hotel">
+        <figcaption>Abajo del tablero: quién está internado o en el hotel, en qué lugar y su último control.</figcaption>
+    </figure>
+    <p>Desde acá se carga un <span class="boton primario">Control</span> o se manda el
+        <span class="boton wa">Parte</span> al dueño. Si un internado pasa más de 8 horas sin control, su tarjeta se
+        pone en rojo (las horas se cambian en los <a href="#configuracion">Ajustes</a>). Las reservas del hotel que
+        llegan hoy tienen el botón <span class="boton primario">Llegó</span>.</p>
+</section>
+
+<!-- 3 ============================================================ -->
+<section id="turnos">
+    <h2><span class="num">3</span>Dar un turno</h2>
+    <p class="intro">El consultorio y baño y peluquería tienen cada uno su agenda.</p>
+    <ol class="pasos">
+        <li>Entrá a <span class="ruta">Agenda › Consultorio</span> (o <span class="ruta">Agenda › Baño y peluquería</span>).</li>
+        <li>Tocá el día y la hora en el calendario. Se abre el turno nuevo.</li>
+        <li>Elegí la <b>mascota</b> (el dueño y su teléfono se completan solos). Si es nueva, escribí su nombre y tocá
+            <b>Crear y editar</b> para cargar la ficha.</li>
+        <li>Elegí quién la <b>atiende</b> y escribí el <b>motivo</b> (por ejemplo, <i>"vómitos desde ayer"</i>).</li>
+        <li>En <b>Lo que se hizo</b> agregá el servicio (consulta, vacuna, baño...). La duración del turno sale de los
+            servicios y se puede cambiar.</li>
+    </ol>
+    <figure>
+        <img src="img/04-agenda.png" alt="Calendario semanal de la agenda del consultorio">
+        <figcaption>La agenda del consultorio. A la derecha se filtra por profesional y por estado.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/05-turno.png" alt="Turno reservado de Nala con los botones Llegó, Atender ya, Cobrar, Recordatorio, No vino y Cancelar">
+        <figcaption>Un turno reservado. El cartel amarillo muestra las alergias y enfermedades de la mascota, y
+            <b>Ficha</b> abre su ficha completa.</figcaption>
+    </figure>
+    <div class="ojo">
+        <strong>Lo que el sistema no deja hacer</strong>
+        Dos turnos del mismo profesional a la misma hora, turnos fuera de su horario de trabajo, ni darle un turno a
+        alguien de otra área. Si el profesional tiene cargados los servicios que hace,
+        solo se le pueden dar esos. Las vacunas las aplica cualquiera del consultorio.
+    </div>
+
+    <h3>Otras formas de dar un turno</h3>
+    <ul>
+        <li>Desde la ficha de la mascota, con <span class="boton primario">Darle un turno</span>.</li>
+        <li>Si llega sin turno: en el tablero, <span class="boton primario">+ Llegó sin turno</span>, elegí la mascota y
+            tocá <span class="boton primario">A la sala de espera</span>. No ocupa lugar en la agenda.</li>
+        <li>El dueño lo pide solo desde la <a href="#internet">página de turnos por internet</a>.</li>
+    </ul>
+
+    <h3>El recordatorio del turno</h3>
+    <p>El día antes, a las 10:00, el sistema le manda un correo a los dueños que tienen correo cargado. Para los demás,
+        el botón <span class="boton wa">Recordatorio</span> del turno (o el ícono de WhatsApp en el tablero) abre
+        WhatsApp con el mensaje ya escrito:</p>
+    <div class="globo">
+        <i>¡Hola Jorge! Te recordamos el turno de Nala en Veterinaria Patitas: martes 3 de noviembre a las 11:30
+        (Control). Si no pueden venir, avisanos por acá así le damos el lugar a otra mascota.</i>
+    </div>
+    <p>Solo falta tocar <b>Enviar</b> en WhatsApp. El mensaje se manda desde el WhatsApp que esté abierto en esa
+        computadora (WhatsApp Web o de escritorio).</p>
+</section>
+
+<!-- 4 ============================================================ -->
+<section id="atender">
+    <h2><span class="num">4</span>Recibir y atender</h2>
+    <p class="intro">Cada atención pasa por estos pasos: <b>Turno reservado → En sala de espera → En atención →
+        Terminada → Cobrada</b>. Se ven arriba a la derecha y en las columnas del tablero.</p>
+    <ol class="pasos">
+        <li>Cuando llega, tocá <span class="boton primario">Llegó</span>. Queda en la sala de espera con la hora de llegada.</li>
+        <li>Cuando pasa al consultorio, <span class="boton primario">Atender</span>. Si no tenía profesional, queda a
+            nombre de quien tocó el botón.</li>
+        <li>Durante la consulta, cargá lo que se hizo y la historia clínica (abajo).</li>
+        <li>Al final, <span class="boton primario">Terminar</span>. Las vacunas y antiparasitarios que se aplicaron
+            quedan anotados en el carnet.</li>
+    </ol>
+    <figure>
+        <img src="img/06-sala-espera.png" alt="Atención de Firulais en la sala de espera, con el botón Atender">
+        <figcaption>Firulais llegó sin turno y espera. Todavía no tiene profesional: lo atiende quien toque Atender.</figcaption>
+    </figure>
+
+    <h3>Lo que se hizo</h3>
+    <p>En la pestaña <b>Lo que se hizo</b> van los servicios y productos: la consulta, la vacuna, el remedio que se
+        llevó. En las vacunas escribí el <b>lote</b>, que queda en el carnet. La columna <b>En stock</b> avisa si falta
+        algún producto.</p>
+    <figure>
+        <img src="img/08-lo-que-se-hizo.png" alt="Atención en curso con los botones Terminar, Cobrar, Indicaciones e Internar">
+        <figcaption>Kiara, en atención. El cartel rojo es su alerta (<i>"Cardíaca: no sedar sin consultar"</i>).</figcaption>
+    </figure>
+
+    <h3>La historia clínica</h3>
+    <p>La pestaña <b>Consulta</b> tiene lo que cuenta el dueño, los signos (peso, temperatura, frecuencias, condición
+        corporal), el examen físico, el diagnóstico, el tratamiento, las <b>indicaciones para la casa</b> y la fecha del
+        próximo control. El peso que se carga acá va al gráfico de la ficha.</p>
+    <figure>
+        <img src="img/07-consulta.png" alt="Pestaña Consulta con signos, lo que cuenta el dueño, examen y diagnóstico">
+        <figcaption>La historia clínica de una consulta de Toby.</figcaption>
+    </figure>
+    <p><span class="boton">Indicaciones</span> imprime las indicaciones para el dueño, con el diagnóstico, la firma y la
+        matrícula del veterinario:</p>
+    <figure>
+        <img src="img/12-indicaciones.png" alt="Hoja de indicaciones impresa para Toby">
+        <figcaption>Las indicaciones impresas.</figcaption>
+    </figure>
+
+    <h3>Si no vino o hay que cambiar algo</h3>
+    <ul>
+        <li><span class="boton">No vino</span>: la marca como ausente. <span class="boton">Cancelar</span>: el turno se
+            cancela (por ejemplo, si el dueño avisó).</li>
+        <li><span class="boton">Atender ya</span>: en un turno reservado, lo pasa directo a atención sin pasar por la sala.</li>
+        <li><span class="boton">Reabrir</span> o <span class="boton">Volver a reservar</span>: deshace un ausente o una cancelación.</li>
+        <li><span class="boton">Internar</span>: si en la consulta se decide internarla (ver <a href="#internacion">Internación</a>).</li>
+    </ul>
+</section>
+
+<!-- 5 ============================================================ -->
+<section id="cobrar">
+    <h2><span class="num">5</span>Cobrar</h2>
+    <p class="intro">Se cobra con factura, en efectivo, con tarjeta, por transferencia o QR, o una parte con cada uno.</p>
+    <ol class="pasos">
+        <li>Tocá <span class="boton primario">Cobrar</span> en la atención (o en la tarjeta del tablero).</li>
+        <li>Si paga todo de una forma, tocá <span class="boton">Todo en efectivo</span>,
+            <span class="boton">Todo con tarjeta</span> o <span class="boton">Todo por transferencia o QR</span>.</li>
+        <li>Si paga una parte con cada una, escribí lo de la tarjeta y lo de la transferencia: el resto queda en efectivo.</li>
+        <li>En <b>Entrega en efectivo</b> escribí con cuánto paga: el sistema calcula el <b>vuelto</b>.</li>
+        <li>Tocá <span class="boton primario">Cobrar y emitir la factura</span>.</li>
+    </ol>
+    <figure>
+        <img src="img/09-cobrar.png" alt="Ventana Cobrar con 100.000 con tarjeta, 30.000 en efectivo y vuelto de 20.000">
+        <figcaption>Pago mixto: 100.000 Gs con tarjeta y 30.000 en efectivo. Entrega 50.000: el vuelto es 20.000.</figcaption>
+    </figure>
+    <p>Se emite la factura y se registra un pago por cada forma de pago, cada uno en su caja (efectivo) o banco
+        (tarjeta y transferencia). Los productos con stock se descuentan. La atención queda <b>Cobrada</b> y ya no
+        se puede cambiar; en la pestaña <b>Cobro</b> se ve la factura y cómo pagó.</p>
+    <figure>
+        <img src="img/10-cobrada.png" alt="Atención cobrada con la pestaña Cobro: factura, monto y forma de pago">
+        <figcaption>Una atención cobrada. Arriba, el botón <b>Factura</b> abre la factura de Odoo.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/26-factura.png" alt="Factura de Odoo con la consulta y la ecografía, pagada">
+        <figcaption>La factura, con la mascota y el profesional en el encabezado y el IVA incluido.</figcaption>
+    </figure>
+    <div class="ojo">
+        <strong>Cuándo no deja cobrar</strong>
+        Si falta stock de algún producto que se vende (hay que corregir el stock o sacarlo de la lista), o si el total
+        de la factura no coincide con el de la atención (pasa si un producto tiene el IVA sin incluir en el precio).
+        En la internación sí deja cobrar aunque falte stock, porque los remedios ya se usaron: avisa que el stock
+        quedó en negativo.
+    </div>
+
+    <h3>Venta de mostrador</h3>
+    <p>Para vender alimento, pipetas o accesorios sin atender a la mascota: <span class="ruta">Caja › Venta de mostrador</span>
+        (o el botón <span class="boton">Venta de mostrador</span> del tablero) › <span class="boton primario">Nuevo</span>.
+        Elegí el cliente (o dejá <i>Consumidor final</i>), agregá los productos y tocá
+        <span class="boton primario">Cobrar</span>. Se cobra igual que una atención.</p>
+    <figure>
+        <img src="img/25-venta.png" alt="Venta de mostrador cobrada con arena sanitaria y alimento para gato">
+        <figcaption>Una venta de mostrador cobrada, con su factura y el movimiento de stock.</figcaption>
+    </figure>
+</section>
+
+<!-- 6 ============================================================ -->
+<section id="mascotas">
+    <h2><span class="num">6</span>Mascotas y dueños</h2>
+    <p class="intro"><span class="ruta">Mascotas › Mascotas</span>: todas las mascotas, con su dueño, sus alertas y la
+        próxima vacuna. Las fallecidas no se muestran (se ven quitando el filtro).</p>
+    <figure>
+        <img src="img/13-mascotas.png" alt="Tarjetas de las mascotas con especie, raza, edad, dueño y próxima vacuna">
+        <figcaption>Las mascotas. En rojo, las alertas; abajo de cada una, la próxima dosis.</figcaption>
+    </figure>
+
+    <h3>La ficha de la mascota</h3>
+    <p>Tiene el dueño, la especie y la raza, el sexo, si está castrada, la fecha de nacimiento (la edad se calcula
+        sola), el color, el microchip, qué come y la foto. Dos campos importantes:</p>
+    <ul>
+        <li><b>Cuidado</b>: una alerta corta que se ve en rojo en todo el sistema (<i>"Muerde, usar bozal"</i>).</li>
+        <li><b>Alergias y enfermedades</b> (en su pestaña): sale en amarillo en cada atención.</li>
+    </ul>
+    <figure>
+        <img src="img/14-ficha.png" alt="Ficha de Toby con los botones Darle un turno, Carnet de vacunas e Historia clínica">
+        <figcaption>La ficha de Toby. Arriba, los botones de sus atenciones, vacunas, estadías y pesos.</figcaption>
+    </figure>
+    <p>En la pestaña <b>Línea de tiempo</b> está todo lo que se le hizo, del más nuevo al más viejo, con el gráfico de
+        su peso. Los botones <b>Consultas</b>, <b>Vacunas</b>, <b>Peluquería</b> e <b>Internaciones</b> filtran la línea.</p>
+    <figure>
+        <img src="img/14b-linea-tiempo.png" alt="Línea de tiempo de Toby con el gráfico del peso y sus atenciones">
+        <figcaption>El peso de Toby y su historia.</figcaption>
+    </figure>
+    <p><span class="boton">Carnet de vacunas</span> e <span class="boton">Historia clínica</span> imprimen esos
+        documentos para darle al dueño. Si la mascota murió, marcá <b>Falleció</b>: deja de recibir avisos.</p>
+
+    <h3>Los dueños</h3>
+    <p><span class="ruta">Mascotas › Dueños</span>. En la ficha de cada dueño, la pestaña <b>Mascotas</b> muestra todas
+        las suyas. Cargá el <b>celular</b> (para WhatsApp) y el <b>correo</b> (para los avisos automáticos).</p>
+    <figure>
+        <img src="img/15-dueno.png" alt="Ficha de Ana Benítez con la pestaña Mascotas: Michi y Toby">
+        <figcaption>Ana Benítez y sus dos mascotas.</figcaption>
+    </figure>
+</section>
+
+<!-- 7 ============================================================ -->
+<section id="vacunas">
+    <h2><span class="num">7</span>Vacunas y desparasitaciones</h2>
+    <p class="intro">El carnet se arma solo: no hay que cargar las vacunas aparte.</p>
+    <ol class="pasos">
+        <li>En la atención, agregá la vacuna o el antiparasitario en <b>Lo que se hizo</b>, con su lote.</li>
+        <li>Al <span class="boton primario">Terminar</span> queda anotado en el carnet, con la fecha, el lote, quién la
+            aplicó y la <b>próxima dosis</b>, que se calcula con los días que tiene cargado el producto (por ejemplo,
+            la antirrábica a los 365 días).</li>
+        <li>La próxima dosis se puede corregir a mano en la pestaña <b>Carnet</b> de la atención (los cachorros, por
+            ejemplo, cada tres semanas).</li>
+    </ol>
+    <figure>
+        <img src="img/11-carnet-atencion.png" alt="Pestaña Carnet de una atención con la vacuna, el lote y la próxima dosis">
+        <figcaption>La pestaña Carnet de una atención: lo que se anotó y cuándo le toca de nuevo.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/16-carnet.png" alt="Carnet de vacunas impreso de Max">
+        <figcaption>El carnet impreso, desde la ficha de la mascota.</figcaption>
+    </figure>
+
+    <h3>Avisar a los dueños</h3>
+    <p><span class="ruta">Mascotas › Vacunas para avisar</span> junta las dosis que ya vencieron o vencen en los próximos
+        30 días y que todavía no se avisaron. En rojo, las vencidas; en amarillo, las que vencen pronto.</p>
+    <figure>
+        <img src="img/17-vacunas-avisar.png" alt="Lista de vacunas para avisar con su estado y el botón WhatsApp">
+        <figcaption>Las vacunas para avisar. El botón WhatsApp de cada línea le escribe al dueño.</figcaption>
+    </figure>
+    <p>El botón <span class="boton wa">WhatsApp</span> arma <b>un solo mensaje por dueño con todas las dosis de todas sus
+        mascotas</b>, y las marca como avisadas:</p>
+    <div class="globo">
+        <i>¡Hola Ana! Te escribimos de Veterinaria Patitas para recordarte las próximas dosis:<br>
+        • Toby: Vacuna antirrábica, que le tocaba el 29 de septiembre (ya está vencida).<br>
+        • Toby: Vacuna séxtuple, que le tocaba el 29 de septiembre (ya está vencida).<br>
+        • Toby: Desparasitación interna (comprimido), el domingo 8 de noviembre.<br>
+        • Michi: Vacuna triple felina, el martes 10 de noviembre.<br>
+        • Michi: Vacuna antirrábica, el martes 10 de noviembre.<br>
+        Podés reservar el turno en http://patitas.localhost:8073/reservar o respondernos por acá.</i>
+    </div>
+    <p>Además, unos días antes de cada dosis (7, se cambia en los <a href="#configuracion">Ajustes</a>) le llega un
+        correo a los dueños que tienen correo cargado. Si un dueño no quiere más avisos de una dosis, marcala
+        <b>No avisar más</b>. Cuando se aplica una dosis nueva del mismo producto, la anterior deja de avisarse.</p>
+</section>
+
+<!-- 8 ============================================================ -->
+<section id="peluqueria">
+    <h2><span class="num">8</span>Baño y peluquería</h2>
+    <p class="intro">Funciona igual que el consultorio, con su propia agenda en <span class="ruta">Agenda › Baño y peluquería</span>.</p>
+    <p>En la atención, la pestaña <b>Peluquería</b> tiene <b>Qué pidió el dueño</b> (<i>"corte cortito"</i>) y
+        <b>Lo que encontramos</b> (pulgas, nudos, garrapatas). Al terminar, el botón
+        <span class="boton wa">Avisar que está lista</span> le escribe al dueño:</p>
+    <figure>
+        <img src="img/19-peluqueria.png" alt="Atención de baño y corte de Coco terminada, con el botón Avisar que está lista">
+        <figcaption>Coco, terminado. Lo que encontraron va en el mensaje.</figcaption>
+    </figure>
+    <div class="globo">
+        <i>¡Hola Laura! Coco ya está listo y perfumado. Podés pasar a retirarlo cuando quieras. Te contamos: Tenía unas
+        garrapatas: le pusimos pipeta.</i>
+    </div>
+    <p>Cuando lo vienen a buscar, se cobra con <span class="boton primario">Cobrar</span>, como siempre.</p>
+</section>
+
+<!-- 9 ============================================================ -->
+<section id="internacion">
+    <h2><span class="num">9</span>Internación y hotel</h2>
+    <p class="intro">Las mascotas que se quedan: internadas por un tratamiento o en el hotel mientras los dueños viajan.
+        Cada una ocupa un lugar (jaula, canil, gatera) y se cobra por día.</p>
+    <figure>
+        <img src="img/20-adentro.png" alt="Lugares de internación y hotel, ocupados y libres">
+        <figcaption><span class="ruta">Internación y hotel › Adentro ahora</span>: quién está en cada lugar y las reservas.</figcaption>
+    </figure>
+
+    <h3>Internar desde una consulta</h3>
+    <ol class="pasos">
+        <li>En la consulta, tocá <span class="boton">Internar</span>. Se crea la estadía con la mascota, el dueño y el veterinario.</li>
+        <li>Elegí el <b>lugar</b> y completá en <b>Indicaciones</b> el motivo, el plan, la alimentación y las pertenencias que dejó.</li>
+        <li><span class="boton">Constancia de ingreso</span> imprime la hoja para que firme el dueño.</li>
+    </ol>
+
+    <h3>Reservar el hotel</h3>
+    <p><span class="ruta">Internación y hotel › Estadías y reservas</span> › <span class="boton primario">Nuevo</span>, tipo
+        <b>Hotel / guardería</b>, con la fecha de entrada y la salida prevista. Queda <b>Reservada</b> (las reservas del
+        mismo lugar no se pisan). El día que llega, <span class="boton primario">Llegó</span>.</p>
+    <figure>
+        <img src="img/24-estadias.png" alt="Lista de internaciones y estadías de hotel con su estado">
+        <figcaption>Todas las estadías: reservadas, adentro y cobradas.</figcaption>
+    </figure>
+
+    <h3>Los controles y el parte al dueño</h3>
+    <p><span class="boton primario">Nuevo control</span> (en la estadía o en el tablero) anota la temperatura, el peso, la
+        frecuencia cardíaca, el ánimo, si comió, orinó y defecó, la medicación que se le dio y las observaciones.</p>
+    <figure>
+        <img src="img/22-control.png" alt="Ventana para cargar el control de Rocky">
+        <figcaption>El control de Rocky. Las observaciones van en el parte al dueño.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/21-internacion.png" alt="Internación de Rocky en la Jaula 1 con la pestaña Controles">
+        <figcaption>La internación de Rocky con sus controles.</figcaption>
+    </figure>
+    <p><span class="boton wa">Contarle al dueño</span> (o <b>Parte</b> en el tablero) le manda el último control por WhatsApp:</p>
+    <div class="globo">
+        <i>¡Hola Carlos! Te contamos cómo está Rocky (martes 3 a las 08:00): animado, comió poco, temperatura 38,7 °C.
+        Le dimos: Amoxicilina. Movió la cola cuando lo saludamos. Cualquier novedad te avisamos.</i>
+    </div>
+
+    <h3>El alta y el cobro</h3>
+    <ol class="pasos">
+        <li><span class="boton">Dar de alta</span> cuando se va. Queda <b>Salió, falta cobrar</b> y el lugar se libera.</li>
+        <li>En la pestaña <b>Cobro</b> se ve el precio por día y los <b>días a cobrar</b> (del día de ingreso al de salida,
+            como mínimo uno), que se pueden corregir. Los remedios y extras se agregan abajo, en
+            <b>Medicación y extras</b>.</li>
+        <li><span class="boton primario">Cobrar</span>, igual que una atención.</li>
+    </ol>
+    <figure>
+        <img src="img/23-hotel.png" alt="Estadía de Luna en el hotel con la pestaña Cobro: precio por día y días a cobrar">
+        <figcaption>Luna en el hotel: 4 días a 70.000 Gs.</figcaption>
+    </figure>
+</section>
+
+<!-- 10 ============================================================ -->
+<section id="compras">
+    <h2><span class="num">10</span>Stock y compras</h2>
+    <p class="intro">Solo Administración. Los productos con stock se descuentan solos al cobrar; acá se repone.</p>
+    <h3>Qué hay que pedir</h3>
+    <p><span class="ruta">Compras › Para reponer</span> muestra los productos con su stock, el mínimo y el máximo
+        ("pedir hasta"). Los que bajaron del mínimo tienen cantidad <b>Por ordenar</b> y el botón
+        <span class="boton">Orden</span>, que arma el pedido al proveedor.</p>
+    <figure>
+        <img src="img/27-reponer.png" alt="Pantalla de reabastecimiento con stock, mínimo, máximo y por ordenar">
+        <figcaption>El alimento para gato bajó del mínimo: hay que pedir 11.</figcaption>
+    </figure>
+    <h3>El pedido y la mercadería que llega</h3>
+    <ol class="pasos">
+        <li><span class="ruta">Compras › Pedidos a proveedores</span>: revisá el pedido y tocá <span class="boton primario">Confirmar pedido</span>.</li>
+        <li>Cuando llega la mercadería: <span class="boton primario">Recibir productos</span> en el pedido (o
+            <span class="ruta">Compras › Mercadería que llega</span>), corregí las cantidades si vino distinto y
+            <span class="boton primario">Validar</span>. El stock sube.</li>
+    </ol>
+    <figure>
+        <img src="img/28-pedido.png" alt="Orden de compra a Distribuidora Agrovet con vacunas y meloxicam">
+        <figcaption>Un pedido confirmado, esperando la mercadería.</figcaption>
+    </figure>
+    <figure>
+        <img src="img/29-recepcion.png" alt="Recepción de la mercadería con el botón Validar">
+        <figcaption>La recepción: se valida cuando llega.</figcaption>
+    </figure>
+    <p><span class="ruta">Compras › Productos con stock</span> lista todo lo que se vende con su stock actual. El mínimo y
+        el "pedir hasta" de cada producto se cargan en su ficha (ver <a href="#configuracion">Configuración</a>).</p>
+</section>
+
+<!-- 11 ============================================================ -->
+<section id="internet">
+    <h2><span class="num">11</span>Turnos por internet</h2>
+    <p class="intro">Una página que funciona como un chat: el dueño pide el turno desde el celular, a cualquier hora.</p>
+    <div class="celulares">
+        <figure>
+            <img src="img/r1-chat.png" alt="Chat de turnos: el nombre de la mascota y la especie">
+            <figcaption>1. Cómo se llama y qué es.</figcaption>
+        </figure>
+        <figure>
+            <img src="img/r2-chat.png" alt="Chat de turnos: los servicios con su duración y precio">
+            <figcaption>2. Qué necesita (solo lo que es para su especie).</figcaption>
+        </figure>
+        <figure>
+            <img src="img/r3-chat.png" alt="Chat de turnos: los días y los horarios libres">
+            <figcaption>3. Con quién, qué día y a qué hora.</figcaption>
+        </figure>
+    </div>
+    <p>Después deja su nombre y su celular, confirma, y el turno entra a la agenda con la etiqueta <b>Por internet</b>.
+        Si el dueño o la mascota ya existen, el sistema los reconoce por el celular y el nombre; si no, los crea.
+        Al final, la página le muestra el turno confirmado y un botón para avisarle a la veterinaria por WhatsApp.</p>
+    <table>
+        <tr><th>Regla</th><th></th></tr>
+        <tr><td>Horarios</td><td>Cada 30 minutos, dentro del horario de cada profesional, con al menos una hora de
+            anticipación y hasta 14 días adelante.</td></tr>
+        <tr><td>Servicios</td><td>Solo los marcados <b>Se reserva por internet</b>, y de una sola área por turno.</td></tr>
+        <tr><td>Límite</td><td>Hasta 3 turnos pendientes por dueño.</td></tr>
+    </table>
+    <div class="globo">
+        <strong>¿Dónde está la página?</strong>
+        La dirección está en <span class="ruta">Configuración › Ajustes</span> (<b>Página de turnos</b>). Compartila en
+        Instagram, en el estado de WhatsApp o en un código QR en el mostrador. También va en los avisos de vacunas.
+    </div>
+</section>
+
+<!-- 12 ============================================================ -->
+<section id="reportes">
+    <h2><span class="num">12</span>Reportes</h2>
+    <p class="intro">Solo Administración.</p>
+    <p><span class="ruta">Reportes › Atenciones</span>: lo que se hizo y se vendió en las atenciones cobradas. Se puede
+        ver por mes, área, profesional, especie o producto, en tabla o en gráfico (botones arriba a la derecha). Con
+        <span class="boton">Medidas</span> se elige qué sumar.</p>
+    <figure>
+        <img src="img/32-reporte-grafico.png" alt="Gráfico de barras con lo facturado por cada servicio y producto">
+        <figcaption>Lo cobrado por cada servicio y producto.</figcaption>
+    </figure>
+    <p><span class="ruta">Reportes › Facturación</span> es el análisis de facturas de Odoo: todo lo facturado, también
+        las ventas de mostrador y las internaciones.</p>
+</section>
+
+<!-- 13 ============================================================ -->
+<section id="configuracion">
+    <h2><span class="num">13</span>Configuración</h2>
+    <p class="intro">Solo Administración. Se hace una vez al empezar y cuando algo cambia.</p>
+
+    <h3>Servicios y productos</h3>
+    <p><span class="ruta">Configuración › Servicios y productos</span>. En cada uno, el precio de venta (con el IVA
+        incluido) y la pestaña <b>Patitas</b>:</p>
+    <table>
+        <tr><th>Campo</th><th>Para qué</th></tr>
+        <tr><td>Se usa en</td><td>Consultorio, baño y peluquería o internación: en qué agenda aparece.</td></tr>
+        <tr><td>Duración del turno</td><td>Los minutos que ocupa en la agenda.</td></tr>
+        <tr><td>Se reserva por internet / Para</td><td>Si aparece en la página de turnos y para qué especies.</td></tr>
+        <tr><td>Es una</td><td>Vacuna o antiparasitario: entonces va al carnet.</td></tr>
+        <tr><td>Próxima dosis a los (días)</td><td>Cuándo toca la siguiente.</td></tr>
+        <tr><td>Stock mínimo / Pedir hasta</td><td>Cuándo aparece en <i>Para reponer</i> y cuánto pedir.</td></tr>
+    </table>
+    <figure>
+        <img src="img/34-vacuna.png" alt="Producto Vacuna séxtuple con la pestaña Patitas">
+        <figcaption>La vacuna séxtuple: consultorio, 15 minutos, por internet para perros, próxima dosis a los 365 días.</figcaption>
+    </figure>
+    <div class="ojo">
+        <strong>El IVA</strong>
+        Los precios llevan el IVA incluido (10 % o 5 %). Las tasas de los productos de ejemplo son de muestra:
+        confirmalas con tu contador.
+    </div>
+
+    <h3>Profesionales</h3>
+    <p><span class="ruta">Configuración › Profesionales</span>: los veterinarios y peluqueros. En la pestaña
+        <b>Patitas</b>: en qué área atiende, su matrícula (sale en las indicaciones) y, si querés limitarlo, los
+        servicios que hace. Su horario de trabajo está en la pestaña <b>Información de trabajo</b>.</p>
+    <figure>
+        <img src="img/35-profesional.png" alt="Ficha de la Dra. Laura Giménez con la pestaña Patitas">
+        <figcaption>La Dra. Giménez atiende en el consultorio.</figcaption>
+    </figure>
+
+    <h3>Horario, lugares y especies</h3>
+    <ul>
+        <li><span class="ruta">Configuración › Horario de atención</span>: los días y horas de la veterinaria. Los turnos
+            (también los de internet) solo se dan dentro del horario de cada profesional.</li>
+        <li><span class="ruta">Configuración › Lugares de internación y hotel</span>: las jaulas, caniles y gateras, y para qué se usa cada uno.</li>
+        <li><span class="ruta">Configuración › Especies y razas</span>: las especies que se atienden (con su dibujo) y sus razas.</li>
+    </ul>
+    <figure>
+        <img src="img/36-horario.png" alt="Horario de atención de lunes a viernes de 8 a 19 y sábados de 8 a 13">
+        <figcaption>El horario de atención.</figcaption>
+    </figure>
+
+    <h3>Ajustes</h3>
+    <figure>
+        <img src="img/39-ajustes.png" alt="Ajustes de Patitas: página de turnos, avisos, precio por día, controles y cobros">
+        <figcaption><span class="ruta">Configuración › Ajustes</span>.</figcaption>
+    </figure>
+    <table>
+        <tr><th>Ajuste</th><th>Para qué</th></tr>
+        <tr><td>Página de turnos</td><td>La dirección que va en los avisos de vacunas.</td></tr>
+        <tr><td>Aviso de vacunas por correo</td><td>Cuántos días antes de la dosis llega el correo.</td></tr>
+        <tr><td>Precio por día</td><td>El producto que se cobra por cada día de internación y de hotel.</td></tr>
+        <tr><td>Controles de los internados</td><td>Después de cuántas horas sin control el tablero lo marca en rojo.</td></tr>
+        <tr><td>Dónde entra cada pago</td><td>La caja o el banco de cada forma de pago.</td></tr>
+    </table>
+    <p>El nombre, el logo, la dirección y el teléfono de la veterinaria (que salen en las facturas, el carnet y la página
+        de turnos) se cambian en <span class="ruta">Ajustes › Usuarios y compañías › Compañías</span>.</p>
+</section>
+
+<!-- 14 ============================================================ -->
+<section id="preguntas">
+    <h2><span class="num">14</span>Preguntas frecuentes</h2>
+    <details>
+        <summary>Toqué un botón por error en el tablero. ¿Cómo lo deshago?</summary>
+        <p>Arrastrá la tarjeta a la columna anterior. Si ya estaba terminada, lo que se anotó en el carnet se borra y
+            se vuelve a anotar cuando termine de nuevo. Una atención cobrada ya no se puede volver atrás.</p>
+    </details>
+    <details>
+        <summary>¿Por qué no me deja dar un turno a esa hora?</summary>
+        <p>Porque el profesional ya tiene otro turno, no trabaja a esa hora, o no atiende en esa área o ese
+            servicio. Probá con otro profesional o dejalo vacío para el consultorio.</p>
+    </details>
+    <details>
+        <summary>El WhatsApp no se abre.</summary>
+        <p>El dueño tiene que tener el celular cargado en su ficha. El mensaje se abre en WhatsApp Web o en WhatsApp de
+            escritorio: tiene que estar iniciado en esa computadora. Patitas no manda mensajes solo: siempre falta
+            tocar Enviar.</p>
+    </details>
+    <details>
+        <summary>¿Cómo corrijo una factura ya emitida?</summary>
+        <p>Abrila desde el botón <b>Factura</b> de la atención y hacé una <b>Nota de crédito</b>. Una atención cobrada no
+            se modifica.</p>
+    </details>
+    <details>
+        <summary>Una vacuna no apareció en el carnet.</summary>
+        <p>El producto tiene que estar marcado como vacuna o antiparasitario en su pestaña Patitas, y la atención
+            tiene que estar terminada o cobrada.</p>
+    </details>
+    <details>
+        <summary>¿Puedo usar Patitas desde el celular?</summary>
+        <p>Sí, desde el navegador del celular o la tableta. El tablero se acomoda a la pantalla y las tarjetas se arrastran con el dedo.</p>
+    </details>
+</section>
+
+<p class="pie">Patitas · sistema para veterinarias sobre Odoo 18</p>
+</main>
+
+<script>
+    // Marca en la barra el capítulo que se está leyendo. Solo se corre la barra de capítulos: scrollIntoView
+    // movería también la página y cortaría el desplazamiento del usuario (o el salto a un capítulo).
+    const barra = document.querySelector(".chips");
+    const enlaces = [...barra.querySelectorAll("a")];
+    const observador = new IntersectionObserver((entradas) => {
+        for (const entrada of entradas) {
+            if (entrada.isIntersecting) {
+                enlaces.forEach((a) => a.classList.toggle("activo", a.getAttribute("href") === "#" + entrada.target.id));
+                const activo = enlaces.find((a) => a.classList.contains("activo"));
+                if (activo) {
+                    const desde = activo.getBoundingClientRect().left - barra.getBoundingClientRect().left;
+                    barra.scrollTo({ left: barra.scrollLeft + desde - (barra.clientWidth - activo.offsetWidth) / 2 });
+                }
+            }
+        }
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    document.querySelectorAll("section[id]").forEach((s) => observador.observe(s));
+</script>
+
+</body>
+</html>
