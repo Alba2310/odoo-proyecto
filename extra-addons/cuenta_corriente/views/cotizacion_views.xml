@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Una cotización del dólar por día, en guaraníes por cada dólar. Las facturas y los pagos en dólares usan la de
+         su fecha (o la última anterior, si ese día no se cargó). La del BCP se carga y se corrige sola cada 30
+         minutos (data/cron.xml); el botón la trae en el momento. También se puede cargar o corregir a mano: queda
+         "A mano" y la tarea no la toca. -->
+    <record id="cotizacion_view_list" model="ir.ui.view">
+        <field name="name">res.currency.rate.list.cotizacion</field>
+        <field name="model">res.currency.rate</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <list string="Cotizaciones del dólar" editable="top">
+                <header>
+                    <button name="action_traer_cotizacion_bcp" type="object" string="Traer la del BCP"
+                            icon="fa-refresh" class="btn-primary" display="always"/>
+                </header>
+                <!-- Odoo le cambia el título a la primera columna inverse_company_rate por "PYG por unidad": esta
+                     queda oculta para que la que se ve diga "Guaraníes por 1 USD". -->
+                <field name="inverse_company_rate" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_rate" column_invisible="1"/>
+                <field name="rate" column_invisible="1"/>
+                <field name="name" string="Fecha"/>
+                <field name="inverse_company_rate" string="Guaraníes por 1 USD" digits="[16,2]"/>
+                <field name="origen" widget="badge" decoration-success="origen == 'bcp'"
+                       decoration-warning="origen == 'manual'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_cotizaciones" model="ir.actions.act_window">
+        <field name="name">Cotizaciones del dólar</field>
+        <field name="res_model">res.currency.rate</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="cotizacion_view_list"/>
+        <field name="domain" eval="[('currency_id', '=', ref('base.USD'))]"/>
+        <field name="context" eval="{'default_currency_id': ref('base.USD')}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay cotizaciones del dólar</p>
+            <p>Cuántos guaraníes vale un dólar cada día. La referencial del BCP se carga y se corrige sola cada 30
+                minutos; con <b>Traer la del BCP</b> se carga en el momento. Las facturas y los pagos en dólares pasan a
+                guaraníes con la cotización de su fecha.</p>
+        </field>
+    </record>
+</odoo>

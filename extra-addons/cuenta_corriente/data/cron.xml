@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cada 30 minutos trae la cotización referencial del BCP (la última publicada) y la deja como la de hoy: la
+             crea al empezar el día y la corrige apenas el BCP publica la nueva. No toca una cargada a mano. Si la
+             computadora estaba apagada, corre apenas se levanta Odoo. -->
+        <record id="cron_cotizacion_dolar" model="ir.cron">
+            <field name="name">Cuenta corriente: cotización del dólar del BCP</field>
+            <field name="model_id" ref="base.model_res_currency_rate"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_actualizar_cotizacion_dolar()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="nextcall" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

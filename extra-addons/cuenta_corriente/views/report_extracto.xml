@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Apaisado: entran las diez columnas sin achicar demasiado la letra. Los márgenes son los del A4 de Odoo
+         (base.paperformat_euro): con menos, el encabezado de la empresa se encima con el título. -->
+    <record id="paperformat_extracto" model="report.paperformat">
+        <field name="name">Extracto de cuenta (A4 apaisado)</field>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">52</field>
+        <field name="margin_bottom">32</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">52</field>
+        <field name="dpi">90</field>
+        <field name="css_margins" eval="True"/>
+    </record>
+
+    <!-- También aparece en Imprimir de la ficha y de la lista de clientes: ahí sale toda la cuenta hasta hoy. -->
+    <record id="action_report_extracto" model="ir.actions.report">
+        <field name="name">Extracto de cuenta corriente</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cuenta_corriente.reporte_extracto</field>
+        <field name="report_file">cuenta_corriente.reporte_extracto</field>
+        <field name="print_report_name">'Extracto de cuenta - %s' % object.name</field>
+        <field name="paperformat_id" ref="paperformat_extracto"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[(4, ref('account.group_account_invoice')), (4, ref('account.group_account_readonly'))]"/>
+    </record>
+
+    <!-- Los montos van sin símbolo: la columna dice si son guaraníes o dólares. -->
+    <template id="reporte_extracto">
+        <t t-call="web.html_container">
+            <t t-set="gs" t-value="{'widget': 'float', 'precision': 0}"/>
+            <t t-set="usd" t-value="{'widget': 'float', 'precision': 2}"/>
+            <t t-foreach="docs" t-as="cliente">
+                <t t-set="extracto" t-value="extractos[cliente.id]"/>
+                <t t-set="debe" t-value="moneda_gs.compare_amounts(extracto['saldo_gs'], 0)"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row mb-3">
+                            <div class="col-7">
+                                <h3 class="mb-1">Extracto de cuenta corriente</h3>
+                                <div class="fs-5 fw-bold" t-field="cliente.name"/>
+                                <div t-if="cliente.vat">RUC <span t-field="cliente.vat"/></div>
+                                <div class="text-muted">
+                                    <t t-if="desde">Del <span t-esc="desde" t-options="{'widget': 'date'}"/> al</t>
+                                    <t t-else="">Hasta el</t>
+                                    <span t-esc="hasta" t-options="{'widget': 'date'}"/>
+                                </div>
+                            </div>
+                            <div class="col-5 text-end">
+                                <div class="border rounded px-3 py-2 d-inline-block text-start">
+                                    <div class="text-muted">
+                                        Saldo al <span t-esc="hasta" t-options="{'widget': 'date'}"/>
+                                    </div>
+                                    <div class="fs-4 fw-bold">Gs <span t-esc="extracto['saldo_gs']" t-options="gs"/></div>
+                                    <div class="fs-5 fw-bold">USD <span t-esc="extracto['saldo_usd']" t-options="usd"/></div>
+                                    <div t-if="debe &gt; 0">Saldo a pagar por el cliente</div>
+                                    <div t-elif="debe &lt; 0">Saldo a favor del cliente</div>
+                                    <div t-else="">Sin deuda</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm o_main_table" style="font-size: 13px;">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Detalle</th>
+                                    <th class="text-end">Cotización</th>
+                                    <th class="text-end">Debe Gs</th>
+                                    <th class="text-end">Haber Gs</th>
+                                    <th class="text-end">Saldo Gs</th>
+                                    <th class="text-end">Debe USD</th>
+                                    <th class="text-end">Haber USD</th>
+                                    <th class="text-end">Saldo USD</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-if="desde" class="fst-italic">
+                                    <td><span t-esc="desde" t-options="{'widget': 'date'}"/></td>
+                                    <td colspan="5">Saldo anterior</td>
+                                    <td class="text-end fw-bold"><span t-esc="extracto['anterior_gs']" t-options="gs"/></td>
+                                    <td colspan="2"/>
+                                    <td class="text-end fw-bold"><span t-esc="extracto['anterior_usd']" t-options="usd"/></td>
+                                </tr>
+                                <tr t-foreach="extracto['movimientos']" t-as="mov">
+                                    <td><span t-field="mov.date"/></td>
+                                    <td><span t-field="mov.tipo_movimiento"/></td>
+                                    <td><span t-field="mov.detalle"/></td>
+                                    <td class="text-end"><span t-if="mov.cotizacion" t-esc="mov.cotizacion" t-options="usd"/></td>
+                                    <td class="text-end"><span t-if="mov.debit" t-esc="mov.debit" t-options="gs"/></td>
+                                    <td class="text-end"><span t-if="mov.credit" t-esc="mov.credit" t-options="gs"/></td>
+                                    <td class="text-end fw-bold"><span t-esc="mov.saldo_gs" t-options="gs"/></td>
+                                    <td class="text-end"><span t-if="mov.debe_usd" t-esc="mov.debe_usd" t-options="usd"/></td>
+                                    <td class="text-end"><span t-if="mov.haber_usd" t-esc="mov.haber_usd" t-options="usd"/></td>
+                                    <td class="text-end fw-bold"><span t-esc="mov.saldo_usd" t-options="usd"/></td>
+                                </tr>
+                                <tr t-if="not extracto['movimientos']">
+                                    <td colspan="10" class="text-center text-muted">No hay movimientos en este período.</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="4">Totales del período</td>
+                                    <td class="text-end"><span t-esc="extracto['debit']" t-options="gs"/></td>
+                                    <td class="text-end"><span t-esc="extracto['credit']" t-options="gs"/></td>
+                                    <td class="text-end"><span t-esc="extracto['saldo_gs']" t-options="gs"/></td>
+                                    <td class="text-end"><span t-esc="extracto['debe_usd']" t-options="usd"/></td>
+                                    <td class="text-end"><span t-esc="extracto['haber_usd']" t-options="usd"/></td>
+                                    <td class="text-end"><span t-esc="extracto['saldo_usd']" t-options="usd"/></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="small text-muted mt-3">
+                            <p class="mb-1">
+                                <b>Cómo leer este extracto.</b> Debe: lo que el cliente pasa a deber (facturas).
+                                Haber: lo que pagó o se le descontó (cobros y notas de crédito). Saldo: lo que debía
+                                después de cada movimiento; si es negativo, es saldo a su favor.
+                            </p>
+                            <p class="mb-0">
+                                Lo hecho en dólares pasa a guaraníes con la cotización del día de cada movimiento
+                                (columna Cotización), y lo hecho en guaraníes pasa a dólares con la de su día. El
+                                ajuste por cotización es la diferencia en guaraníes que aparece cuando el dólar
+                                cambió entre la factura y el cobro.
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

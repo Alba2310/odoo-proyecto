@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- En la ficha del cliente: el saldo en guaraníes y en dólares, que abre sus movimientos, y el extracto en PDF. -->
+    <record id="res_partner_view_form_cuenta_corriente" model="ir.ui.view">
+        <field name="name">res.partner.form.cuenta.corriente</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button type="object" name="action_ver_cuenta_corriente" class="oe_stat_button" icon="fa-exchange"
+                        groups="account.group_account_invoice,account.group_account_readonly">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="moneda_usd_id" invisible="1"/>
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="saldo_gs" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="saldo_usd" widget="monetary" options="{'currency_field': 'moneda_usd_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Saldo</span>
+                    </div>
+                </button>
+                <button type="object" name="action_extracto" class="oe_stat_button" icon="fa-file-pdf-o"
+                        string="Extracto PDF" groups="account.group_account_invoice,account.group_account_readonly"/>
+            </div>
+        </field>
+    </record>
+
+    <!-- Clientes: quién debe y cuánto, con los botones para ver sus movimientos o bajar su extracto. -->
+    <record id="clientes_view_list" model="ir.ui.view">
+        <field name="name">res.partner.list.cuenta.corriente</field>
+        <field name="model">res.partner</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <list string="Clientes">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="moneda_usd_id" column_invisible="1"/>
+                <field name="name" string="Cliente"/>
+                <field name="vat" string="RUC" optional="show"/>
+                <field name="mobile" string="Celular" optional="show"/>
+                <field name="saldo_gs" sum="Total" class="fw-bold"/>
+                <field name="saldo_usd" sum="Total" class="fw-bold"/>
+                <button name="action_ver_cuenta_corriente" type="object" string="Movimientos" icon="fa-list"
+                        class="btn-link"/>
+                <button name="action_extracto" type="object" string="Extracto PDF" icon="fa-file-pdf-o"
+                        class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="clientes_view_search" model="ir.ui.view">
+        <field name="name">res.partner.search.cuenta.corriente</field>
+        <field name="model">res.partner</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <search string="Clientes">
+                <field name="name" string="Cliente"
+                       filter_domain="['|', '|', ('complete_name', 'ilike', self), ('vat', 'ilike', self), ('mobile', 'ilike', self)]"/>
+                <filter name="customer" string="Clientes" domain="[('customer_rank', '>', 0)]"/>
+                <filter name="con_saldo" string="Con saldo pendiente" domain="[('con_saldo', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_clientes" model="ir.actions.act_window">
+        <field name="name">Clientes</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="clientes_view_list"/>
+        <field name="search_view_id" ref="clientes_view_search"/>
+        <field name="context">{'search_default_customer': 1, 'res_partner_search_mode': 'customer', 'default_customer_rank': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay clientes</p>
+            <p>Acá se ve cuánto debe cada cliente, en guaraníes y en dólares. Con <b>Movimientos</b> se ven sus
+                facturas y cobros; con <b>Extracto PDF</b> se descarga su estado de cuenta.</p>
+        </field>
+    </record>
+</odoo>

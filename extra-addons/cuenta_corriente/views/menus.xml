@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Facturas y Cobros son las pantallas de Facturación de Odoo. -->
+    <menuitem id="menu_raiz" name="Cuenta corriente" web_icon="cuenta_corriente,static/description/icon.png"
+              groups="account.group_account_invoice,account.group_account_readonly" sequence="56">
+        <menuitem id="menu_clientes" name="Clientes" action="action_clientes" sequence="1"/>
+        <menuitem id="menu_cuenta_corriente" name="Movimientos" action="action_cuenta_corriente" sequence="2"/>
+        <menuitem id="menu_extracto" name="Extracto en PDF" action="action_extracto" sequence="3"/>
+        <menuitem id="menu_facturas" name="Facturas" action="account.action_move_out_invoice" sequence="4"/>
+        <menuitem id="menu_pagos" name="Cobros" action="account.action_account_payments" sequence="5"/>
+        <!-- Cargar cotizaciones es del administrador de Facturación (es quien puede modificarlas en Odoo). -->
+        <menuitem id="menu_cotizaciones" name="Cotización del dólar" action="action_cotizaciones" sequence="6"
+                  groups="account.group_account_manager"/>
+    </menuitem>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- La factura (y la nota de crédito) de Odoo con el total en guaraníes y en dólares, a la izquierda de los
+         totales, donde sobra lugar: debajo de ellos no entraba y se iba solo a una segunda hoja. -->
+    <template id="report_invoice_document_dos_monedas" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='payment_term']" position="inside">
+            <t t-set="dos_monedas" t-value="o._montos_en_dos_monedas()"/>
+            <div t-if="dos_monedas" name="dos_monedas" class="d-inline-block mb-3 border p-2 avoid-page-break-inside"
+                 style="min-width: 320px;">
+                <table class="table table-borderless table-sm mb-0">
+                    <tr class="fw-bold border-bottom">
+                        <td/>
+                        <td class="text-end">Guaraníes</td>
+                        <td class="text-end">Dólares</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td class="text-end text-nowrap">
+                            <span t-esc="dos_monedas['total_gs']" t-options="{'widget': 'float', 'precision': 0}"/>
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <span t-esc="dos_monedas['total_usd']" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr t-if="'saldo_gs' in dos_monedas" class="fw-bold">
+                        <td>Saldo a pagar</td>
+                        <td class="text-end text-nowrap">
+                            <span t-esc="dos_monedas['saldo_gs']" t-options="{'widget': 'float', 'precision': 0}"/>
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <span t-esc="dos_monedas['saldo_usd']" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                </table>
+                <div t-if="dos_monedas['cotizacion']" class="small text-muted mt-1">
+                    Cotización del <span t-esc="dos_monedas['fecha']" t-options="{'widget': 'date'}"/>:
+                    1 USD = <span t-esc="dos_monedas['cotizacion']" t-options="{'widget': 'float', 'precision': 2}"/> Gs
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- El recibo de cobro de Odoo con el monto en guaraníes y en dólares. -->
+    <template id="report_payment_receipt_document_dos_monedas" inherit_id="account.report_payment_receipt_document">
+        <xpath expr="//table[@name='invoices']" position="before">
+            <t t-set="dos_monedas" t-value="o.move_id and o.move_id._montos_en_dos_monedas()"/>
+            <div t-if="dos_monedas" name="dos_monedas" class="mb-4 border p-2 d-inline-block">
+                <div class="fw-bold">Monto recibido</div>
+                <div class="fs-5">
+                    Gs <span t-esc="dos_monedas['total_gs']" t-options="{'widget': 'float', 'precision': 0}"/>
+                    · USD <span t-esc="dos_monedas['total_usd']" t-options="{'widget': 'float', 'precision': 2}"/>
+                </div>
+                <div t-if="dos_monedas['cotizacion']" class="small text-muted">
+                    Cotización del <span t-esc="dos_monedas['fecha']" t-options="{'widget': 'date'}"/>:
+                    1 USD = <span t-esc="dos_monedas['cotizacion']" t-options="{'widget': 'float', 'precision': 2}"/> Gs
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

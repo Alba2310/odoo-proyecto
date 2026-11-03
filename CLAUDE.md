@@ -26,6 +26,12 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
   `bash extra-addons/veterinaria/scripts/crear_veterinaria.sh`. La página `/reservar` la atiende el servicio
   `patitas` (puerto 8073, solo esa base): http://patitas.localhost:8073/reservar. Detalle en
   `extra-addons/veterinaria/README.md`.
+- `cuenta_corriente`: cuenta corriente de cada cliente con Debe, Haber y saldo en guaraníes y en dólares (lo hecho
+  en USD pasa a Gs con la cotización del día del movimiento), extracto en PDF, y la factura y el recibo de Odoo con
+  los montos en las dos monedas; la cotización referencial del BCP se carga sola cada 30 minutos (de DolarPy,
+  dolar.melizeche.com). Sobre la Facturación de Odoo. Base `cuenta_corriente`
+  (admin / admin), se crea con `bash extra-addons/cuenta_corriente/scripts/crear_cuenta_corriente.sh`. Detalle en
+  `extra-addons/cuenta_corriente/README.md`.
 - `sitio-patitas/`: sitio de venta de Patitas (puerto 5503). A pedido del usuario, que no se parezca en nada a los
   otros tres y que sea divertido: mascota interactiva, "un día" que corre al bajar, un juego de la sala de espera,
   álbum de figuritas. El formulario abre WhatsApp, como el de Óga.
@@ -38,7 +44,7 @@ Módulos propios de Odoo 18 Community en `extra-addons/`, levantados con `docker
 - Moneda guaraníes (PYG, sin decimales) e IVA 10 % / 5 % incluido en el precio.
 - La base de la peluquería es `peluqueria` (admin / admin); se crea con
   `bash extra-addons/studio_bella/scripts/crear_peluqueria.sh`.
-- Tests: `bash scripts/pruebas.sh studio_bella` (o `alquileres`, `veterinaria`, `autoflow_management`). Corren en una base aparte,
+- Tests: `bash scripts/pruebas.sh studio_bella` (o `alquileres`, `veterinaria`, `cuenta_corriente`, `autoflow_management`). Corren en una base aparte,
   `pruebas_<módulo>`, que el script crea la primera vez; nunca en las bases que usa el usuario.
   Por dentro usa `--http-port=8079` porque el contenedor `web` ya usa el 8069, así que de a un módulo por vez.
 - Cambios en Python: reiniciar con `docker compose restart web turnos oga patitas`. Cambios solo en XML o JS: alcanza con

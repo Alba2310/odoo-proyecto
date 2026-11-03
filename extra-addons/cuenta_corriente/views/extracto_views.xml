@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="extracto_view_form" model="ir.ui.view">
+        <field name="name">cuenta.corriente.extracto.form</field>
+        <field name="model">cuenta.corriente.extracto</field>
+        <field name="arch" type="xml">
+            <form string="Extracto de cuenta">
+                <p class="text-muted">
+                    Un PDF con los movimientos del cliente y su saldo, en guaraníes y en dólares, para imprimir o
+                    mandarle.
+                </p>
+                <group>
+                    <field name="partner_id" options="{'no_create': True}"
+                           context="{'res_partner_search_mode': 'customer'}"/>
+                    <field name="fecha_desde" placeholder="Desde el primer movimiento"/>
+                    <field name="fecha_hasta"/>
+                </group>
+                <footer>
+                    <button name="action_descargar_pdf" type="object" string="Descargar PDF" icon="fa-download"
+                            class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_extracto" model="ir.actions.act_window">
+        <field name="name">Extracto de cuenta</field>
+        <field name="res_model">cuenta.corriente.extracto</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

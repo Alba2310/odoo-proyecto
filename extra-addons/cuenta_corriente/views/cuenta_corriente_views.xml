@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Movimientos de la cuenta corriente: qué fue cada uno (tipo y detalle en palabras), el Debe y el Haber en
+         guaraníes (los de la contabilidad) y en dólares, y el saldo que quedó. Al pasar el mouse por el título de
+         una columna se ve qué significa. Al tocar una línea se abre la factura o el cobro. Los ceros quedan en
+         blanco para que se lea como un extracto. -->
+    <record id="cuenta_corriente_view_list" model="ir.ui.view">
+        <field name="name">account.move.line.list.cuenta.corriente</field>
+        <field name="model">account.move.line</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos" create="0" edit="0" delete="0" default_order="date, id"
+                  action="action_open_business_doc" type="object">
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="moneda_usd_id" column_invisible="1"/>
+                <field name="date" string="Fecha"/>
+                <field name="partner_id" string="Cliente" optional="hide"/>
+                <field name="tipo_movimiento" widget="badge" width="160px"
+                       decoration-info="tipo_movimiento == 'factura'"
+                       decoration-success="tipo_movimiento == 'cobro'"
+                       decoration-warning="tipo_movimiento in ('nota_credito', 'devolucion')"
+                       decoration-muted="tipo_movimiento == 'ajuste'"
+                       help="Factura: lo que se le vendió. Cobro: lo que pagó. Nota de crédito: una devolución o un descuento. Ajuste por cotización: la diferencia en guaraníes cuando el dólar cambió entre la factura y el cobro."/>
+                <field name="detalle"/>
+                <field name="move_name" string="Comprobante" optional="hide"/>
+                <field name="date_maturity" string="Vence" optional="hide"/>
+                <field name="moneda_texto" optional="show" help="En qué moneda se hizo el movimiento."/>
+                <field name="cotizacion" invisible="not cotizacion" optional="show"
+                       help="Guaraníes por cada dólar el día del movimiento: con esta cotización se pasó de una moneda a la otra."/>
+                <!-- digits: los totales de los grupos no saben la moneda y saldrían con dos decimales. -->
+                <field name="debit" string="Debe Gs" sum="Debe Gs" invisible="not debit" digits="[16,0]"
+                       help="Lo que el cliente pasa a deber (facturas), en guaraníes."/>
+                <field name="credit" string="Haber Gs" sum="Haber Gs" invisible="not credit" digits="[16,0]"
+                       help="Lo que el cliente pagó o se le descontó (cobros y notas de crédito), en guaraníes."/>
+                <field name="saldo_gs" digits="[16,0]" class="fw-bold"
+                       help="Lo que el cliente debía después de este movimiento, en guaraníes. Negativo: saldo a su favor."/>
+                <field name="debe_usd" sum="Debe USD" invisible="not debe_usd"
+                       help="Lo que el cliente pasa a deber, en dólares."/>
+                <field name="haber_usd" sum="Haber USD" invisible="not haber_usd"
+                       help="Lo que el cliente pagó o se le descontó, en dólares."/>
+                <field name="saldo_usd" class="fw-bold"
+                       help="Lo que el cliente debía después de este movimiento, en dólares. Negativo: saldo a su favor."/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cuenta_corriente_view_search" model="ir.ui.view">
+        <field name="name">account.move.line.search.cuenta.corriente</field>
+        <field name="model">account.move.line</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <search string="Movimientos">
+                <field name="partner_id" string="Cliente" operator="child_of"/>
+                <field name="move_name" string="Comprobante"/>
+                <filter name="facturas" string="Facturas" domain="[('move_id.move_type', '=', 'out_invoice')]"/>
+                <filter name="cobros" string="Cobros" domain="[('move_id.origin_payment_id', '!=', False)]"/>
+                <filter name="notas_credito" string="Notas de crédito"
+                        domain="[('move_id.move_type', '=', 'out_refund')]"/>
+                <separator/>
+                <filter name="sin_cancelar" string="Sin cancelar" domain="[('reconciled', '=', False)]"
+                        help="Facturas que falta cobrar y cobros que todavía no se aplicaron a una factura"/>
+                <separator/>
+                <filter name="fecha" string="Fecha" date="date"/>
+                <group>
+                    <filter name="agrupar_cliente" string="Cliente" context="{'group_by': 'partner_id'}"/>
+                    <filter name="agrupar_mes" string="Mes" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_cuenta_corriente" model="ir.actions.act_window">
+        <field name="name">Movimientos</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="cuenta_corriente_view_list"/>
+        <field name="search_view_id" ref="cuenta_corriente_view_search"/>
+        <!-- El mismo que DOMINIO_CUENTA_CORRIENTE en models/account_move_line.py -->
+        <field name="domain">[('parent_state', '=', 'posted'), ('account_type', '=', 'asset_receivable')]</field>
+        <field name="context">{'search_default_agrupar_cliente': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay movimientos de clientes</p>
+            <p>Las facturas, las notas de crédito y los cobros de los clientes aparecen acá al confirmarlos, con el
+                Debe, el Haber y el saldo en guaraníes y en dólares.</p>
+        </field>
+    </record>
+</odoo>
